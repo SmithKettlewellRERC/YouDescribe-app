@@ -12,7 +12,7 @@ ReactDOM.render((
     <Route path='/' component={App} >
       <IndexRoute component={Home} />
       <Route path="video" component={Video} />
-      <Route path='life' component={NotFound} />
+      <Route path='*' component={NotFound} />
     </Route>
   </Router>
 ), document.getElementById('main-container'));
