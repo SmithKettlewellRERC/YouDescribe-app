@@ -19,7 +19,7 @@ class App extends Component {
     this.setState(stateObj);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     console.log('componentDidmount');
   }
 

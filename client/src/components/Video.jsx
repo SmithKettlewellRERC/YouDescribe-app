@@ -4,11 +4,13 @@ import React, {Component} from 'react';
 class Video extends Component {
 	constructor(props) {
 		super(props);
+		this.testData = [
+			{time: 120.25, url: 'url'},
+			{time: 150.85, url: 'url2'}
+		];
 	}
 
 	componentDidMount() {
-		// console.log('componentDidmount');
-
 		let player = new YT.Player('player', {
 			height: '390',
 			width: '640',
