@@ -21,7 +21,7 @@ class Video extends Component {
 		});
 
 		function onPlayerReady() {
-			player.seekTo(110);
+			player.seekTo(116);
 			let time;
 			let n = setInterval(function(){
 				time = player.getCurrentTime();
@@ -29,18 +29,36 @@ class Video extends Component {
 
 				if (time > 120.040 && time < 120.050) {
 					console.log('do this at 120.040');
+
+					//play this audio when it get to 120.040
+					// playSound('http://www.kozco.com/tech/piano2.wav');
+					const play = function() {
+						playSound('http://www.kozco.com/tech/piano2.wav', time);
+						
+					};
+
+					play();
 				}
 
 				if (time > 120.060 && time < 120.070 ) {
 					console.log('do this at 120.060');
+
 				}
            
-				if (time > 120.080) {
-					console.log('do this at 120.080');
+				if (time > 140) {
+					console.log('do this at 121');
 					player.stopVideo();
 					clearInterval(n);
 				}
 			}, 10); 
+		}
+
+		// function to play video with url input
+		function playSound(url, time) {
+			let audio = new Audio(url);
+			audio.play();
+			console.log('PLAYING VIDEO XXXXXxxxXXXXXXXXXXXXXXXX');
+			console.log('the video is played at: ',time);
 		}
 	}
 
