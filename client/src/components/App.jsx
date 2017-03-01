@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 import Navbar from './Navbar.jsx';
 
 class App extends Component {
@@ -18,13 +19,14 @@ class App extends Component {
     this.setState(stateObj);
   }
 
-  componentDidMount() {
-    console.log('componentDidMount');
+  componentWillMount() {
+    console.log('componentDidmount');
   }
 
   render() {
     return (
       <div>
+        <Link to="/video">Video</Link>
         <Navbar />
         {React.cloneElement(this.props.children, {
           updateState: this.updateState,
