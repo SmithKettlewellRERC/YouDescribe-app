@@ -48,7 +48,6 @@ class Video extends Component {
 			
 
 				if (time > 128) {
-					console.log('do this at 128');
 					player.stopVideo();
 					clearInterval(n);
 				}
