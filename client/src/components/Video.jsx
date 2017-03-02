@@ -4,13 +4,17 @@ import React, {Component} from 'react';
 class Video extends Component {
 	constructor(props) {
 		super(props);
-		this.testData = [
-			{time: 120.25, url: 'url'},
-			{time: 150.85, url: 'url2'}
-		];
+
+		//data need to sorted by time first 
 	}
 
 	componentDidMount() {
+		let testData = [
+			{time: 120.25, url: 'http://www.kozco.com/tech/piano2.wav'},
+			{time: 150.85, url: 'http://www.brainybetty.com/FacebookFans/Feb112010/ChillingMusic.wav'}
+		];
+
+
 		let player = new YT.Player('player', {
 			height: '390',
 			width: '640',
@@ -28,11 +32,15 @@ class Video extends Component {
 				console.log(time);
 			
 				let play = function() {
-					playSound('http://www.kozco.com/tech/piano2.wav', time);
+					console.log(testData);
+
+					playSound(testData[0].url, time);
 				};
 
 				let play2 = function() {
-					playSound('http://www.brainybetty.com/FacebookFans/Feb112010/ChillingMusic.wav', time);
+					console.log(testData);
+
+					playSound(testData[1].url, time);
 				}; 
 
 				if (time > 120.040 && time < 120.050) {
