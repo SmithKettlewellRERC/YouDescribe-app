@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Navbar from './Navbar.jsx';
+import Navbar from '../../components/navbar/Navbar.jsx';
+import Footer from '../../components/footer/Footer.jsx';
 
 class App extends Component {
   constructor(props) {
@@ -30,6 +31,7 @@ class App extends Component {
           updateState: this.updateState,
           getState: this.getState,
         })}
+        <Footer />
       </div>
     );
   }
