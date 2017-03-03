@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react';
 import { Howl } from 'howler';
 // import myYouTube from './myYouTube.jsx';
@@ -13,8 +14,8 @@ class VideoPlayer extends Component {
 		//of the array
 
 		let testData = [
-			{time: 120.040, url: 'http://www.kozco.com/tech/piano2.wav'},
-			{time: 125, url: 'http://www.ee.columbia.edu/~dpwe/sounds/music/temple_of_love-sisters_of_mercy.wav'}
+			{time: 10, url: 'http://www.kozco.com/tech/piano2.wav'},
+			{time: 20, url: 'http://www.ee.columbia.edu/~dpwe/sounds/music/temple_of_love-sisters_of_mercy.wav'}
 		];
 
 		let arr = [
@@ -27,26 +28,74 @@ class VideoPlayer extends Component {
 			'http://www.ee.columbia.edu/~dpwe/sounds/music/around_the_world-atc.wav'
 		];
 
-		let time = 0;
+		let i = 0; 
 
-
-		let sound = new Howl({
-			src: [			'http://www.ee.columbia.edu/~dpwe/sounds/music/temple_of_love-sisters_of_mercy.wav'],
-			html5: true,
-			autoplay: false,
-			onload: letplay
+		arr.forEach( (url) => {
+			let sound = new Howl({
+				src: [url],
+				html5: true,
+				autoplay: false,
+				onload: letplay
+			});
 		});
 
-		sound.play();
+		function letplay() {
+			if (i < arr.length - 1) {
+				i+=1;
+				console.log('how many video loaded ', i);
+			} else {
+				console.log('every video is loaded')
 
-		let n = setInterval( function () {
-			console.log(time += 0.1);
-			console.log('the state of audio is ',sound.state());
-			console.log('buffered time is ', sound.buffered.end(0));
-		}, 100)
+				let player = new YT.Player('player', {
+					height: '390',
+					width: '640',
+					videoId: 'JW5meKfy3fY',
+					events: {
+						'onReady': onPlayerReady
+					}
+				});
 
-		function letplay(){
-			console.log('video is loaded')
+				function onPlayerReady() {
+					let time;
+					let i = 0;
+					let n = setInterval(function(){
+						time = player.getCurrentTime();
+						// console.log(time);
+						let timedEvent;
+
+						if (testData[i]) {
+							timedEvent = Number(testData[i].time);
+						} else {
+							timedEvent = Infinity;
+						}
+
+						if (time > timedEvent) {
+							playSound(testData[i].url, time);
+							i = i + 1;
+						}
+					
+
+						if (time > 30) {
+							player.stopVideo();
+							clearInterval(n);
+						}
+					}, 10);
+				}
+			}
+		}
+
+		function playSound(url, time) {
+			let arr = [];
+			arr.push(url);
+			let audio = new Howl({
+				src: arr,
+				html5: true
+			});
+
+			audio.play();
+			console.log(arr);
+			console.log('PLAYING VIDEO XXXXXxxxXXXXXXXXXXXXXXXX');
+			console.log('the audio is played at: ',time);
 		}
 	}
 
