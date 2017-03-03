@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { IndexLink, Link } from 'react-router';
 import path from 'path';
 
+import SearchBar from '../search-bar/SearchBar.jsx';
+import NavLink from '../nav-link/NavLink.jsx';
+import SignIn from '../sign-in/SignIn.jsx';
+
 class Navbar extends Component {
   constructor(props) {
     super(props);
@@ -41,6 +45,9 @@ class Navbar extends Component {
         <div className="w3-top">
           <div className="w3-bar w3-white w3-card-2" id="myNavbar">
             <Link to="/" className="w3-bar-item w3-button w3-wide"><img src={path.join(__dirname, 'assets', 'img', 'logo_youdescribe.png')} /></Link>
+            <div className="w3-left">
+              <Link to="/authoring-tool" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
+            </div>
             {/* Right-sided navbar links */}
             <div className="w3-right w3-hide-small">
               <Link to="/authoring-tool" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>

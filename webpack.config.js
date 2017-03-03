@@ -22,7 +22,7 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loaders: ExtractTextPlugin.extract('css!sass'),
+        loader: ExtractTextPlugin.extract('css-loader!sass-loader'),
       },
     ],
   },
@@ -33,7 +33,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new ExtractTextPlugin({
-      filename: './client/build/main.css',
+      filename: './main.css',
       allChunks: true,
     }),
   ],
