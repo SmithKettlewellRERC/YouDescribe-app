@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react';
 import { Howl } from 'howler';
 // import myYouTube from './myYouTube.jsx';
@@ -14,55 +15,36 @@ class VideoPlayer extends Component {
 
 		let testData = [
 			{time: 120.040, url: 'http://www.kozco.com/tech/piano2.wav'},
-			{time: 125, url: 'http://www.brainybetty.com/FacebookFans/Feb112010/ChillingMusic.wav'}
+			{time: 125, url: 'http://www.ee.columbia.edu/~dpwe/sounds/music/temple_of_love-sisters_of_mercy.wav'}
 		];
 
-		//stimulate a youtube player
-		// let time = 0;
-		// let n = setInterval(function() {
-		// 	console.log(time);
-		// 	time += 0.1;
+		let arr = [
+			'http://www.ee.columbia.edu/~dpwe/sounds/music/mambo_no_5-lou_bega.wav',
+			'http://www.ee.columbia.edu/~dpwe/sounds/music/temple_of_love-sisters_of_mercy.wav',
+			'http://www.ee.columbia.edu/~dpwe/sounds/music/beautiful_life-ace_of_base.wav',
+			'http://www.kozco.com/tech/piano2.wav',
+			'http://www.brainybetty.com/FacebookFans/Feb112010/ChillingMusic.wav',
+			'http://www.ee.columbia.edu/~dpwe/sounds/music/dont_speak-no_doubt.wav',
+			'http://www.ee.columbia.edu/~dpwe/sounds/music/around_the_world-atc.wav'
+		];
 
-		// 	if (time > 30) {
-		// 		clearInterval(n);
-		// 	}
-		// }, 5);
+		let i = 0; 
 
-		//preload the data 
-		// function preLoad() {
-
-		// }
-
-		// function to play video with url input
-		function play() {
-			let arr = [
-				'http://www.ee.columbia.edu/~dpwe/sounds/music/mambo_no_5-lou_bega.wav',
-				'http://www.ee.columbia.edu/~dpwe/sounds/music/temple_of_love-sisters_of_mercy.wav',
-				'http://www.ee.columbia.edu/~dpwe/sounds/music/beautiful_life-ace_of_base.wav',
-				'http://www.kozco.com/tech/piano2.wav',
-				'http://www.brainybetty.com/FacebookFans/Feb112010/ChillingMusic.wav',
-				'http://www.ee.columbia.edu/~dpwe/sounds/music/dont_speak-no_doubt.wav',
-				'http://www.ee.columbia.edu/~dpwe/sounds/music/around_the_world-atc.wav'
-			];
-
+		arr.forEach( (url) => {
 			let sound = new Howl({
-				src: arr,
+				src: [url],
 				html5: true,
-				preload: true,
 				autoplay: false,
-				onload: musicLoaded
+				onload: letplay
 			});
+		});
 
-			function musicLoaded() {
-			// 	console.log('music is loaded');
-			// 	console.log('duration: ', sound.duration);
-			// }
-
-			// console.log(arr);
-			// console.log('PLAYING VIDEO XXXXXxxxXXXXXXXXXXXXXXXX');
-			// console.log('the audio is played at: ',time);
-
-				console.log('video is loaded');
+		function letplay() {
+			if (i < arr.length - 1) {
+				i+=1;
+				console.log('how many video loaded ', i);
+			} else {
+				console.log('every video is loaded')
 
 				let player = new YT.Player('player', {
 					height: '390',
@@ -116,8 +98,6 @@ class VideoPlayer extends Component {
 			console.log('PLAYING VIDEO XXXXXxxxXXXXXXXXXXXXXXXX');
 			console.log('the audio is played at: ',time);
 		}
-
-		play();
 	}
 
 	render() {
