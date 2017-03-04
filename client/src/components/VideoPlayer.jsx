@@ -9,13 +9,24 @@ class VideoPlayer extends Component {
 	}
 
 	componentDidMount() {
-		//data need to reverse sorted by time so that time will go from
-		//bigger to smaller, which mean the first videos are at the end 
-		//of the array
-
+		//data need to reverse sorted by time 
 		let testData = [
-			{time: 10, url: 'http://www.kozco.com/tech/piano2.wav'},
-			{time: 20, url: 'http://www.ee.columbia.edu/~dpwe/sounds/music/temple_of_love-sisters_of_mercy.wav'}
+			{
+				time: 10, 
+				url: 'http://www.kozco.com/tech/piano2.wav',
+				type: 'extends'
+			},
+			{
+				time: 20, 
+				url: 'http://www.kozco.com/tech/piano2.wav',
+				type: 'inline'
+			},
+			{
+				time: 25, 
+				url: 'http://www.kozco.com/tech/piano2.wav',
+				type: 'extends'
+			},
+
 		];
 
 		let arr = [
@@ -60,9 +71,9 @@ class VideoPlayer extends Component {
 					let i = 0;
 					let n = setInterval(function(){
 						time = player.getCurrentTime();
-						// console.log(time);
-						let timedEvent;
+						console.log(time);
 
+						let timedEvent;
 						if (testData[i]) {
 							timedEvent = Number(testData[i].time);
 						} else {
@@ -70,31 +81,47 @@ class VideoPlayer extends Component {
 						}
 
 						if (time > timedEvent) {
-							playSound(testData[i].url, time);
+							if (testData[i].type === 'inline') {
+
+								console.log('this is an inline audio');
+								playSound(testData[i].url, time);
+							} else {
+
+								console.log('this is an extends audio');
+								//pause the youtube video
+								player.pauseVideo();
+								playSound(testData[i].url, time, function() {
+									//when the audio ended, let the player go back to playing
+									console.log('the audio ended');
+									player.playVideo();
+								});
+							}
 							i = i + 1;
 						}
-					
 
 						if (time > 30) {
 							player.stopVideo();
 							clearInterval(n);
 						}
+
 					}, 10);
 				}
 			}
 		}
 
-		function playSound(url, time) {
+		function playSound(url, time, callback = function(){}) {
 			let arr = [];
 			arr.push(url);
 			let audio = new Howl({
 				src: arr,
-				html5: true
+				html5: true,
+				onend: function(){
+					callback();
+				}
 			});
 
 			audio.play();
-			console.log(arr);
-			console.log('PLAYING VIDEO XXXXXxxxXXXXXXXXXXXXXXXX');
+			console.log('PLAYING VIDEO at: ', arr[0]);
 			console.log('the audio is played at: ',time);
 		}
 	}
