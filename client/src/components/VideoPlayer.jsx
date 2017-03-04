@@ -86,7 +86,7 @@ class VideoPlayer extends Component {
 
 						if (Math.abs(time - previousTime) > 0.15) {
 							i = nextNumber(time,timeArr);
-							console.log('next number is ', i);
+							console.log('clicking on timeline bar detected, next audio mark is ', timeArr[i]);
 						} 
 
 						previousTime = time;
@@ -117,10 +117,11 @@ class VideoPlayer extends Component {
 							i = i + 1;
 						}
 
-						if (time > 30) {
-							player.stopVideo();
-							clearInterval(n);
-						}
+						//Limit the video playing limit to 30s
+						// if (time > 30) {
+						// 	player.stopVideo();
+						// 	clearInterval(n);
+						// }
 
 					}, 10);
 				}
