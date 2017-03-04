@@ -29,6 +29,8 @@ class VideoPlayer extends Component {
 
 		];
 
+		let timeArr = [10,20,25];
+
 		let arr = [
 			'http://www.ee.columbia.edu/~dpwe/sounds/music/mambo_no_5-lou_bega.wav',
 			'http://www.ee.columbia.edu/~dpwe/sounds/music/temple_of_love-sisters_of_mercy.wav',
@@ -50,6 +52,14 @@ class VideoPlayer extends Component {
 			});
 		});
 
+		function nextNumber(time, arr) {
+			for (let i = 0; i < arr.length; i++) {
+				if (time < arr[i] ) return i;
+			}
+
+			return -1;
+		}
+
 		function letplay() {
 			if (i < arr.length - 1) {
 				i+=1;
@@ -67,11 +77,19 @@ class VideoPlayer extends Component {
 				});
 
 				function onPlayerReady() {
+					let previousTime = 0;
 					let time;
 					let i = 0;
 					let n = setInterval(function(){
 						time = player.getCurrentTime();
 						console.log(time);
+
+						if (Math.abs(time - previousTime) > 0.15) {
+							i = nextNumber(time,timeArr);
+							console.log('next number is ', i);
+						} 
+
+						previousTime = time;
 
 						let timedEvent;
 						if (testData[i]) {
