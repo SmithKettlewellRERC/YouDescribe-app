@@ -44,15 +44,31 @@ class Home extends Component {
             let title = seedData.items[i].snippet.title;
             const description = seedData.items[i].snippet.description;
             const author = seedData.items[i].snippet.channelTitle;
-            const views = seedData.items[i].statistics.viewCount;
-            const publishedAt = seedData.items[i].snippet.publishedAt.slice(0, 10);
+            let views = seedData.items[i].statistics.viewCount;
+            const publishedAt = new Date(seedData.items[i].snippet.publishedAt);
 
-            if (title.length > 30) title = `${title.slice(0, 30)}...`;
-            if (views >= 1000) views = `${views/1000}K`
+            const now = Date.now();
+            let time = now - publishedAt;
+            const year = 31536000000;
+            const month = 2629740000;
+            const day = 86400000;
+            const hour = 3600000;
+            const min = 60000;
+
+            if (time >= year) time = `${(time / year).toFixed(0)} Year`;
+            else if (time >= month) time = `${(time / month).toFixed(0)} Month`;
+            else if (time >= day) time = `${(time / day).toFixed(0)} Day`;
+            else if (time >= hour) time = `${(time / hour).toFixed(0)} Hour`;
+            else time = `${(time / min).toFixed(0)} Min`;
+
+            // if (title.length > 50) title = `${title.slice(0, 50)}...`;
+            if (views >= 1000000000) views = `${(views/1000000000).toFixed(1)}B`;
+            else if (views >= 1000000) views = `${(views/1000000).toFixed(1)}M`;
+            else if (views >= 1000) views = `${(views/1000).toFixed(0)}K`;
 
             videos.push(
-              <div className="w3-col m4 l2 w3-margin-top w3-cell">
-                <div className="w3-card-2 w3-cell">
+              <div className="w3-col m4 l2 w3-margin-top">
+                <div className="w3-card-2">
                   <img alt={description} src={thumbnailHigh.url} width="100%" />
                   {/*
                     <div style={{
@@ -66,11 +82,14 @@ class Home extends Component {
                     </div>
                   */}
                   <div className="w3-container vid-title">
-                    <h4>{title}</h4>
-                    <h6><div className="w3-left">{author}&nbsp;</div><div className="w3-left"> (described by: ctoppel)</div></h6>
+                    <h5><a href="#">{title}</a></h5>
+                    <h6>
+                      <a href="#">{author}</a><br />
+                      ctoppel (describer)
+                    </h6>
                   </div>
                   <div className="w3-container w3-padding-8">
-                    <h6><div className="w3-left">{views} views</div><div className="w3-right"> {publishedAt}</div></h6>
+                    <h6><div className="w3-left">{views} views</div><div className="w3-right"> {time}</div></h6>
                   </div>
                 </div>
               </div>,
