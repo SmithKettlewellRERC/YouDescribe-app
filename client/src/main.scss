@@ -1,0 +1,13 @@
+@import './containers/app/app';
+@import './containers/home/home';
+@import './containers/authoring-tool/authoringtool';
+@import './containers/video-page/videopage';
+@import './containers/not-found/notfound';
+
+@import './components/navbar/navbar';
+@import './components/search-bar/searchbar';
+@import './components/nav-link/navlink';
+@import './components/sign-in/signin';
+@import './components/video-player/videoplayer';
+@import './components/notes/notes';
+@import './components/footer/footer';
