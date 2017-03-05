@@ -1,0 +1,35 @@
+body,h1,h2,h3,h4,h5,h6 {font-family: "open sans"}
+body {
+    height: 100%;
+    line-height: 1.8;
+    padding-top: 58px;
+    margin: 0px;
+}
+
+#authoring-tool {
+  background-color: #393939;
+  color: #fff;
+}
+
+#video {
+  background-color: #000;
+  height: 315px;
+}
+
+#notes {
+  background-color: #262626;
+  height: 315px;
+}
+
+#editor {
+  background-color: #262626;
+  height: 400px;
+}
+
+.w3-bar .w3-button {
+  padding: 16px;
+}
+
+.w3-card-2 {
+  background-color: #fff;
+}
