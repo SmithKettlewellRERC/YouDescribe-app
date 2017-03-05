@@ -22,7 +22,7 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('css-loader!sass-loader'),
+        loaders: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],
   },
@@ -32,9 +32,14 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    new ExtractTextPlugin({
-      filename: './main.css',
-      allChunks: true,
-    }),
+    // new ExtractTextPlugin({
+    //   filename: './main.css',
+    //   allChunks: true,
+    // }),
   ],
+  // resolve: {
+  //   root: [
+  //     path.resolve('./client'),
+  //   ],
+  // },
 };

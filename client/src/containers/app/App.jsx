@@ -20,7 +20,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
+    // console.log('componentDidMount');
   }
 
   render() {

@@ -6,7 +6,7 @@ import styles from './main.scss';
 import App from './containers/app/App.jsx';
 import Home from './containers/home/Home.jsx';
 import AuthoringTool from './containers/authoring-tool/AuthoringTool.jsx';
-import VideoPlayer from './containers/video-player/VideoPlayer.jsx';
+import VideoPage from './containers/video-page/VideoPage.jsx';
 import NotFound from './containers/not-found/NotFound.jsx';
 
 ReactDOM.render((
@@ -14,7 +14,7 @@ ReactDOM.render((
     <Route path="/" component={App} >
       <IndexRoute component={Home} />
       <Route path="/authoring-tool" component={AuthoringTool} />
-      <Route path="/video-player" component={VideoPlayer} />
+      <Route path="/video-page" component={VideoPage} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>

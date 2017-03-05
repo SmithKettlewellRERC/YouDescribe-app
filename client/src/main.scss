@@ -1,46 +1,13 @@
-// @import './containers/video-player/_videoplayer';
+@import './containers/app/app';
+@import './containers/home/home';
+@import './containers/authoring-tool/authoringtool';
+@import './containers/video-page/videopage';
+@import './containers/not-found/notfound';
 
-body,h1,h2,h3,h4,h5,h6 {font-family: "open sans"}
-body {
-    height: 100%;
-    line-height: 1.8;
-    /*background-color: #fff;*/
-    padding-top: 58px;
-    margin: 0px;
-}
-.w3-bar .w3-button {
-    padding: 16px;
-}
-
-.w3-card-2 {
-  background-color: #fff;
-}
-
-#home {
-  background-color: #eee;
-}
-
-.authoring-tool {
-  background-color: #393939;
-  color: #fff;
-}
-
-#video-player {
-  background-color: #eee;
-  padding: 100px;
-}
-
-.video {
-  background-color: #262626;
-  height: 400px;
-}
-
-.notes {
-  background-color: #262626;
-  height: 400px;
-}
-
-.editor {
-  background-color: #262626;
-  height: 400px;
-}
+@import './components/navbar/navbar';
+@import './components/search-bar/searchbar';
+@import './components/nav-link/navlink';
+@import './components/sign-in/signin';
+@import './components/video-player/videoplayer';
+@import './components/notes/notes';
+@import './components/footer/footer';
