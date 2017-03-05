@@ -26,7 +26,6 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Link to="/video">Video</Link>
         <Navbar />
         {React.cloneElement(this.props.children, {
           updateState: this.updateState,
