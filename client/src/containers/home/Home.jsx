@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
-import path from 'path';
 
 // import seedData from './seedData.js';
 
@@ -21,31 +19,44 @@ class Home extends Component {
 
     const serverVideoIds = [];
     let ids;
+    let dbResponse;
 
     fetch('http://webng.io:8080/videos')
       .then(response => response.json())
       .then((response) => {
+        dbResponse = response.result;
         for (let i = 0; i < response.result.length; i += 1) {
           serverVideoIds.push(response.result[i]._id);
         }
         ids = serverVideoIds.join(',');
       })
       .then(() => {
+        // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
         const url = `https://www.googleapis.com/youtube/v3/videos?id=${ids}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
         fetch(url)
         .then(response => response.json())
-        .then((seedData) => {
+        .then((data) => {
           const videos = this.state.videos.slice();
 
-          for (let i = 0; i < seedData.items.length; i += 1) {
-            const thumbnailDefault = seedData.items[i].snippet.thumbnails.default;
-            const thumbnailMedium = seedData.items[i].snippet.thumbnails.medium;
-            const thumbnailHigh = seedData.items[i].snippet.thumbnails.high;
-            let title = seedData.items[i].snippet.title;
-            const description = seedData.items[i].snippet.description;
-            const author = seedData.items[i].snippet.channelTitle;
-            let views = seedData.items[i].statistics.viewCount;
-            const publishedAt = new Date(seedData.items[i].snippet.publishedAt);
+          console.log(dbResponse);
+          console.log(data.items);
+          for (let i = 0; i < data.items.length; i += 1) {
+
+
+            const id = data.items[i].id;
+            const thumbnailDefault = data.items[i].snippet.thumbnails.default;
+            const thumbnailMedium = data.items[i].snippet.thumbnails.medium;
+            const thumbnailHigh = data.items[i].snippet.thumbnails.high;
+            let title = data.items[i].snippet.title;
+            const description = data.items[i].snippet.description;
+            const author = data.items[i].snippet.channelTitle;
+            let describer;
+            let views = data.items[i].statistics.viewCount;
+            const publishedAt = new Date(data.items[i].snippet.publishedAt);
+
+            dbResponse.forEach((elem) => {
+              if (elem._id === id) describer = elem.audio_descriptions[0].legacy_author_name;
+            })
 
             const now = Date.now();
             let time = now - publishedAt;
@@ -55,16 +66,29 @@ class Home extends Component {
             const hour = 3600000;
             const min = 60000;
 
-            if (time >= year) time = `${(time / year).toFixed(0)} Year`;
-            else if (time >= month) time = `${(time / month).toFixed(0)} Month`;
-            else if (time >= day) time = `${(time / day).toFixed(0)} Day`;
-            else if (time >= hour) time = `${(time / hour).toFixed(0)} Hour`;
-            else time = `${(time / min).toFixed(0)} Min`;
+            if (time >= year) {
+              const years = (time / year).toFixed(0);
+              years === 1 ? time = `${years} year ago` : time = `${years} years ago`;
+            } else if (time >= month) {
+              const months = (time / month).toFixed(0);
+              months === 1 ? time = `${months} month ago` : time = `${months} months ago`;
+            } else if (time >= day) {
+              const days = (time / day).toFixed(0);
+              days === 1 ? time = `${days} day ago` : time = `${days} days ago`;
+            } else if (time >= hour) {
+              const hours = (time / hour).toFixed(0);
+              hours === 1 ? time = `${hours} hour ago` : time = `${hours} hours ago`;
+            } else {
+              const minutes = (time / min).toFixed(0);
+              minutes === 1 ? time = `${minutes} minutes ago` : time = `${minutes} minutes ago`;
+            }
 
             // if (title.length > 50) title = `${title.slice(0, 50)}...`;
-            if (views >= 1000000000) views = `${(views/1000000000).toFixed(1)}B`;
-            else if (views >= 1000000) views = `${(views/1000000).toFixed(1)}M`;
-            else if (views >= 1000) views = `${(views/1000).toFixed(0)}K`;
+            if (views >= 1000000000) views = `${(views/1000000000).toFixed(1)}B views`;
+            else if (views >= 1000000) views = `${(views/1000000).toFixed(1)}M views`;
+            else if (views >= 1000) views = `${(views/1000).toFixed(0)}K views`;
+            else if (views === 1) views = `${views} view`;
+            else views = `${views} views`;
 
             videos.push(
               <div className="w3-col m4 l2 w3-margin-top">
@@ -85,11 +109,11 @@ class Home extends Component {
                     <h5><a href="#">{title}</a></h5>
                     <h6>
                       <a href="#">{author}</a><br />
-                      ctoppel (describer)
+                      <a href="#">{describer}</a> (describer)
                     </h6>
                   </div>
                   <div className="w3-container w3-padding-8">
-                    <h6><div className="w3-left">{views} views</div><div className="w3-right"> {time}</div></h6>
+                    <h6><div className="w3-left">{views}</div><div className="w3-right"> {time}</div></h6>
                   </div>
                 </div>
               </div>,
@@ -119,8 +143,8 @@ class Home extends Component {
           {this.state.videos}
         </div>
 
-        <div className="w3-margin-top">
-          <center><button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button></center>
+        <div className="w3-margin-top w3-center">
+          <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
         </div>
 
       </div>

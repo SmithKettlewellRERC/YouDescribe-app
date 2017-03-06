@@ -5,7 +5,7 @@ import path from 'path';
 // import SearchBar from '../search-bar/SearchBar.jsx';
 import NavLink from '../nav-link/NavLink.jsx';
 import SignIn from '../sign-in/SignIn.jsx';
-import SearchBar from '../search-bar/SearchBar.jsx'
+// import SearchBar from '../search-bar/SearchBar.jsx'
 
 class Navbar extends Component {
   constructor(props) {
@@ -44,9 +44,21 @@ class Navbar extends Component {
       <div>
         {/* Navbar (sit on top) */}
         <div className="w3-top">
-          <div className="w3-bar w3-white w3-card-2" id="myNavbar">
-            <Link to="/" className="w3-bar-item w3-button w3-wide"><img width="117
-              px" height="29px" src={path.join(__dirname, 'assets', 'img', 'logo_youdescribe.png')} /></Link>
+
+          <div className="w3-bar w3-white w3-card-2" id="navbar">
+
+            <Link to="/" className="w3-bar-item w3-button w3-wide">
+              <img
+                alt="YouDescribe logo"
+                height="24px"
+                src={path.join(__dirname, 'assets', 'img', 'logo_youdescribe.png')}
+              />
+            </Link>
+
+            <div className="w3-half">
+              {/*<input type="text" className="w3-amber w3-border-0 w3-padding" style={{ width: '100%' }} />*/}
+            </div>
+
             {/* Right-sided navbar links */}
             <div className="w3-right w3-hide-small">
               {/*<span className="w3-bar-item"><SearchBar /></span>*/}
