@@ -1,16 +1,33 @@
-body,h1,h2,h3,h4,h5,h6 {font-family: "open sans"}
-body {
-    height: 100%;
-    line-height: 1.8;
-    /*background-color: #fff;*/
-    padding-top: 58px;
-    margin: 0px;
-}
+// body,h1,h2,h3,h4,h5,h6 {font-family: "open sans"}
 
 #home {
+  button {
+    margin-top: 10px;
+    margin-bottom: 30px!important;
+  }
   background-color: #fff;
+  line-height: 1.1;
+  h1 {
+    padding-top: 50px;
+    font-size: 20px;
+  }
+  h5 {
+    font-size: 14px;
+    margin-bottom: 3px;
+  }
+  h6 {
+    margin: 0px;
+    font-size: 11px;
+    color: #555;
+    a {
+      color: #555;
+    }
+    a:hover {
+      color: #337ab7;
+    }
+  }
   .w3-bar .w3-button {
-      padding: 16px;
+    padding: 16px;
   }
   .w3-row-padding {
     .w3-card-2 {

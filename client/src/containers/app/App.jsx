@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Navbar from '../../components/navbar/Navbar.jsx';
+import NavbarMaterial from '../../components/navbar/Navbar(material).jsx';
 import Footer from '../../components/footer/Footer.jsx';
 
 class App extends Component {
