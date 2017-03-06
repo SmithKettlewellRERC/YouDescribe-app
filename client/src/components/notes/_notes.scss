@@ -1,3 +1,25 @@
-header {
-  background-color: #000;
+#notes {
+  background-color: #262626;
+  height: 315px;
+  .w3-card-4 {
+    background-color: #000;
+    border: none;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    margin-top: 0px;
+    padding-top: 0px;
+  }
+  .notes-area {
+    height: 250px;
+    overflow: scroll;
+    color: #ccc;
+    font-size: 14px;
+    line-height: 1.4;
+  }
 }
+
+// header {
+//   background-color: #000;
+//   height: 50px;
+// }
