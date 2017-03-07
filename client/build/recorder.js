@@ -92,7 +92,6 @@
     // var link = document.getElementById('save');
     // link.href = url;
     // link.download = filename || 'output.wav';
-    console.log('setupDownload');
     console.log(blob);
     console.log(filename);
     
@@ -115,9 +114,8 @@
     xhr.addEventListener('load', transferComplete);
     xhr.addEventListener('error', transferFailed);
     xhr.addEventListener('abort', transferCanceled);
-    // xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=" + data.uniqid + "; charset=UTF-8');
-
-
+    // xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=-- formdata --; charset=UTF-8');
+    // xhr.setRequestHeader('Content-Type', 'multipart/form-data;');
     xhr.send(formData);
   }
 
