@@ -16,6 +16,28 @@
     color: #ccc;
     font-size: 14px;
     line-height: 1.4;
+    // text-align: justify;
+    padding-top: 8px;
+  }
+  input[type="text"] {
+    background: transparent;
+    border: none;
+  }
+  textarea {
+    width: 100%;
+    resize: none;
+    background: transparent;
+    border: none;
+    outline: none;
+  }
+  textarea:focus::-webkit-input-placeholder{
+    color: transparent!important;
+  }
+  textarea:focus::-moz-placeholder{
+      color: transparent!important;
+  }
+  textarea:focus:-moz-placeholder{
+      color: transparent!important;
   }
 }
 
