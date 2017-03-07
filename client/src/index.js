@@ -1,19 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, IndexRoute, Route, browserHistory } from 'react-router';
+import styles from './main.scss';
 
-import App from './components/App.jsx';
-import Home from './components/Home.jsx';
-import VideoPlayer from './components/VideoPlayer.jsx';
-import NotFound from './components/NotFound.jsx';
+import App from './containers/app/App.jsx';
+import Home from './containers/home/Home.jsx';
+import AuthoringTool from './containers/authoring-tool/AuthoringTool.jsx';
+import VideoPage from './containers/video-page/VideoPage.jsx';
+import NotFound from './containers/not-found/NotFound.jsx';
 
 ReactDOM.render((
   <Router history={browserHistory}>
-    <Route path='/' component={App} >
+    <Route path="/" component={App} >
       <IndexRoute component={Home} />
-      <Route path="video" component={VideoPlayer} />
-      <Route path='*' component={NotFound} />
+      <Route path="/authoring-tool" component={AuthoringTool} />
+      <Route path="/video-page" component={VideoPage} />
+      <Route path="*" component={NotFound} />
     </Route>
   </Router>
-), document.getElementById('main-container'));
-
+), document.getElementById('app'));
