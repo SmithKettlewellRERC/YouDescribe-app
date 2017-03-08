@@ -12,9 +12,11 @@ class SearchPage extends Component {
       searchQuery: this.props.state.search,
       videos: [],
     };
+
+    this.letFetch = this.letFetch.bind(this);
   }
-  
-  componentDidMount() {
+
+  letFetch() {
     console.log('componentDidMount and fetching...');
 
     console.log('current search string is ', this.state.searchQuery)
@@ -133,13 +135,24 @@ class SearchPage extends Component {
     this.setState({ searchQuery: event.target.value });
   }
 
+
+
   // displayed on page
+    //whenever the search button is clicked, there will be a fetch run, other wise there will be no fetching
+  searchButonClicked() {
+    this.letFetch();
+  }
+
+  componentDidMount() {
+    this.letFetch();
+  }
+
   render() {
     return (
       <div id="home">
 
         <div className="w3-container w3-indigo">
-          <h1>Most popular</h1>
+          <h1>{this.props.state.search}</h1>
         </div>
 
         <div className="w3-row-padding">
