@@ -30,7 +30,33 @@ class App extends Component {
     this.setState({
       search: searchValue,
     })
+  }
 
+  letFetch(searchValue){
+
+      let q = encodeURIComponent(searchValue);
+      const serverVideoIds = [];
+      let ids;
+      let dbResponse;
+
+      fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${q}&maxResults=50&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`)
+      .then(response => response.json())
+      .then((response) => {
+        dbResponse = response.items;
+        for (let i = 0; i < dbResponse.length; i += 1) {
+          serverVideoIds.push(dbResponse[i].id.videoId);
+        }
+        ids = serverVideoIds.join(',');
+      })
+      .then(() => {
+        // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
+        const url = `https://www.googleapis.com/youtube/v3/videos?id=${ids}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+        fetch(url)
+        .then(response => response.json())
+        .then((data) => {
+          console.log(data);
+        })
+      });
   }
 
   render() {

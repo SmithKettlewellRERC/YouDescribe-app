@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-// import seedData from './seedData.js';
+import seedData from './seedData.js';
+import seedDb from './seedDb.js';
 
 class SearchPage extends Component {
   constructor(props) {
@@ -12,39 +13,14 @@ class SearchPage extends Component {
       searchQuery: this.props.state.search,
       videos: [],
     };
-
-    this.letFetch = this.letFetch.bind(this);
   }
 
-  letFetch() {
-    console.log('componentDidMount and fetching...');
 
-    console.log('current search string is ', this.state.searchQuery)
-
-    let q = encodeURIComponent(this.state.searchQuery);
-    const serverVideoIds = [];
-    let ids;
-    let dbResponse;
-
-  fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${q}&maxResults=50&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`)
-      .then(response => response.json())
-      .then((response) => {
-        dbResponse = response.items;
-        for (let i = 0; i < dbResponse.length; i += 1) {
-          serverVideoIds.push(dbResponse[i].id.videoId);
-        }
-        ids = serverVideoIds.join(',');
-      })
-      .then(() => {
-        // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
-        const url = `https://www.googleapis.com/youtube/v3/videos?id=${ids}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
-        fetch(url)
-        .then(response => response.json())
-        .then((data) => {
+  dataToRender(dbResponse, data) {
+      console.log('componentDidMount and fetching...');
+      console.log('current search string is ', this.state.searchQuery)
           const videos = this.state.videos.slice();
 
-          console.log(dbResponse);
-          console.log(data.items);
           for (let i = 0; i < data.items.length; i += 1) {
 
 
@@ -126,8 +102,7 @@ class SearchPage extends Component {
 
             this.setState({ videos });
           }
-        });
-      });
+
   }
 
   // functions
@@ -137,13 +112,9 @@ class SearchPage extends Component {
 
   // displayed on page
   //whenever the search button is clicked, there will be a fetch run, other wise there will be no fetching
-  
-  searchButonClicked() {
-    this.letFetch();
-  }
 
   componentDidMount() {
-    this.letFetch();
+    this.dataToRender(seedDb, seedData);
   }
 
   render() {

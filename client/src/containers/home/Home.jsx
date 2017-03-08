@@ -29,6 +29,7 @@ class Home extends Component {
           serverVideoIds.push(response.result[i]._id);
         }
         ids = serverVideoIds.join(',');
+        console.log
       })
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
