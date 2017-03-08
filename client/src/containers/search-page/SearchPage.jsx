@@ -10,7 +10,7 @@ class SearchPage extends Component {
     // function bindings
 
     this.state = {
-      searchQuery: this.props.state.search,
+      searchQuery: this.props.search,
       videos: [],
     };
   }
@@ -122,11 +122,13 @@ class SearchPage extends Component {
   }
 
   render() {
+
+
     return (
       <div id="home">
 
         <div className="w3-container w3-indigo">
-          <h1>{this.props.state.search}</h1>
+          <h1>{this.props.search}</h1>
         </div>
 
         <div className="w3-row-padding">

@@ -8,7 +8,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: '',
+      // search: '',
       data: [],
     };
 
@@ -29,9 +29,10 @@ class App extends Component {
   }
 
   updateSearch(searchValue) {
-    this.setState({
-      search: searchValue,
-    })
+    // this.setState({
+    //   search: searchValue,
+    // })
+    this.search = searchValue;
   }
 
   letFetch(){
@@ -77,6 +78,7 @@ class App extends Component {
                 clickHandler={() => this.letFetch()}
         />
         {React.cloneElement(this.props.children, {
+          search: this.search,
           state: this.state,
           updateState: this.updateState,
           getState: this.getState,
