@@ -30,12 +30,13 @@ class App extends Component {
     this.setState({
       search: searchValue,
     })
+
   }
 
   render() {
     return (
       <div>
-        <Navbar updateSearch={(searchValue) => this.updateSearch(searchValue)}/>
+        <Navbar updateSearch={(searchValue) => this.updateSearch(searchValue)} />
         {React.cloneElement(this.props.children, {
           state: this.state,
           updateState: this.updateState,

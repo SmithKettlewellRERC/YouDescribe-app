@@ -135,10 +135,9 @@ class SearchPage extends Component {
     this.setState({ searchQuery: event.target.value });
   }
 
-
-
   // displayed on page
-    //whenever the search button is clicked, there will be a fetch run, other wise there will be no fetching
+  //whenever the search button is clicked, there will be a fetch run, other wise there will be no fetching
+  
   searchButonClicked() {
     this.letFetch();
   }
