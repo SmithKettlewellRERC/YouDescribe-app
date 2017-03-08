@@ -1,0 +1,74 @@
+#editor {
+  background-color: #272727;
+  font-size: 12px;
+  color: #eee;
+  input::-webkit-input-placeholder{
+    color: #666;
+  }
+  input::-moz-placeholder{
+      color: #666;
+  }
+  input:-moz-placeholder{
+      color: #666;
+  }
+
+  #video-time, #timeline, #video-audio-track, #video-audio-sinewave, #track-info, #track-sinewave, #add-track, #add-track-space {
+    padding: 4px 12px;
+  }
+
+  #timeline, #video-audio-sinewave, #track-sinewave, #add-track-space {
+    border-left: 1px solid #151515;
+  }
+
+  #video-time {
+    text-align: center;
+  }
+
+  #video-audio-track-row {
+    border-top: 1px solid #151515;
+  }
+
+  #tracks {
+    max-height: 150px;
+    overflow: scroll;
+    #track {
+      img {
+        position: relative;
+      }
+      border-bottom: 1px solid #151515;
+      input {
+        width: 100%;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #888;
+        padding: 0px 8px;
+      }
+      input:focus::-webkit-input-placeholder{
+        color: transparent!important;
+      }
+      input:focus::-moz-placeholder{
+        color: transparent!important;
+      }
+      input:focus:-moz-placeholder{
+        color: transparent!important;
+      }
+    }
+    .fa-circle {
+      color: red;
+    }
+  }
+
+  #add-track-row {
+    height: 46px;
+    button {
+      position: relative;
+      top: 9px;
+    }
+  }
+
+  #add-track-space {
+    background-color: #111;
+    height: 46px;
+  }
+}

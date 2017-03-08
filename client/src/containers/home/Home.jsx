@@ -92,7 +92,7 @@ class Home extends Component {
 
             videos.push(
               <div className="w3-col m4 l2 w3-margin-top">
-                <div className="w3-card-2">
+                <div className="w3-card-2 w3-hover-shadow">
                   <img alt={description} src={thumbnailHigh.url} width="100%" />
                   {/*
                     <div style={{
