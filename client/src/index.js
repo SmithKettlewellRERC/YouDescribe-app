@@ -5,6 +5,7 @@ import styles from './main.scss';
 
 import App from './containers/app/App.jsx';
 import Home from './containers/home/Home.jsx';
+import SearchPage from './containers/search-page/SearchPage.jsx';
 import AuthoringTool from './containers/authoring-tool/AuthoringTool.jsx';
 import VideoPage from './containers/video-page/VideoPage.jsx';
 import NotFound from './containers/not-found/NotFound.jsx';
@@ -15,6 +16,7 @@ ReactDOM.render((
       <IndexRoute component={Home} />
       <Route path="/authoring-tool" component={AuthoringTool} />
       <Route path="/video-page" component={VideoPage} />
+      <Route path="/search" component={SearchPage} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>

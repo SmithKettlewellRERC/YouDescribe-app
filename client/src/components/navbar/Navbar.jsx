@@ -5,7 +5,7 @@ import path from 'path';
 // import SearchBar from '../search-bar/SearchBar.jsx';
 import NavLink from '../nav-link/NavLink.jsx';
 import SignIn from '../sign-in/SignIn.jsx';
-// import SearchBar from '../search-bar/SearchBar.jsx'
+import SearchBar from '../search-bar/SearchBar.jsx'
 
 class Navbar extends Component {
   constructor(props) {
@@ -15,12 +15,10 @@ class Navbar extends Component {
     this.menuOpen = this.menuOpen.bind(this);
     this.menuClose = this.menuClose.bind(this);
 
-
   }
 
   // functions
   // Toggle between showing and hiding the sidenav when clicking the menu icon
-
 
   menuOpen() {
     const mySidenav = document.getElementById('mySidenav');
@@ -38,6 +36,13 @@ class Navbar extends Component {
 
     mySidenav.style.display = 'none';
   }
+
+
+  // pass the search value to app
+  passSearchToApp(searchValue) {
+    this.props.updateSearch(searchValue)
+  }
+
 
   render() {
     return (
@@ -57,6 +62,7 @@ class Navbar extends Component {
 
             <div className="w3-half">
               {/*<input type="text" className="w3-amber w3-border-0 w3-padding" style={{ width: '100%' }} />*/}
+              <SearchBar onChange={(searchValue) => this.passSearchToApp(searchValue)}/>
             </div>
 
             {/* Right-sided navbar links */}

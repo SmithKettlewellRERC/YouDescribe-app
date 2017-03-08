@@ -7,7 +7,9 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      search: ''
     };
+
     this.updateState = this.updateState.bind(this);
     this.getState = this.getState.bind(this);
   }
@@ -24,11 +26,18 @@ class App extends Component {
     // console.log('componentDidMount');
   }
 
+  updateSearch(searchValue) {
+    this.setState({
+      search: searchValue,
+    })
+  }
+
   render() {
     return (
       <div>
-        <Navbar />
+        <Navbar updateSearch={(searchValue) => this.updateSearch(searchValue)}/>
         {React.cloneElement(this.props.children, {
+          state: this.state,
           updateState: this.updateState,
           getState: this.getState,
         })}
