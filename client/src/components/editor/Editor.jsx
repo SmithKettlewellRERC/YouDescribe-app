@@ -1,5 +1,11 @@
 import React from 'react';
 
+import Button from '../button/Button.jsx';
+
+const onButtonPress = () => {
+  alert('Button has been pressed!');
+};
+
 const Notes = () => (
   <div id="editor" className="w3-card-2">
     <div className="w3-card-4">
@@ -21,7 +27,6 @@ const Notes = () => (
       </div>
     </div>
     <div id="tracks">
-
       <div id="track" className="w3-row w3-display-container">
         <div className="w3-col l3 m3 s3">
           <div id="track-info">
@@ -40,7 +45,6 @@ const Notes = () => (
           <div id="track-sinewave">SINEWAVE</div>
         </div>
       </div>
-
       <div id="track" className="w3-row w3-display-container">
         <div className="w3-col l3 m3 s3">
           <div id="track-info">
@@ -59,21 +63,22 @@ const Notes = () => (
           <div id="track-sinewave">SINEWAVE</div>
         </div>
       </div>
-
       <div id="add-track-row" className="w3-row w3-display-container">
         <div className="w3-col l3 m3 s3">
-          <center>
-            <button id="add-track" className="w3-btn w3-indigo">Add track</button>
-          </center>
+          <div className="w3-padding-right w3-left">
+            <Button title="Add inline" color="w3-purple" />
+          </div>
+          <div className="w3-left">
+            <Button title="Add extended" color="w3-yellow" />
+          </div>
         </div>
         <div className="w3-col l9 m9 s9">
           <div id="add-track-space"></div>
         </div>
       </div>
     </div>
-
-    <div className="w3-right-align w3-border-top w3-border-black">
-      <button className="w3-btn w3-indigo w3-margin">Publish</button>
+    <div className="w3-right-align w3-border-top w3-border-black w3-padding">
+      <Button title="Publish" color="w3-indigo" />
     </div>
   </div>
 );
