@@ -11,8 +11,9 @@ const SearchBar = (props) => {
 
   const changeHistory = () => {
     console.log('let go to /seach');
-    browserHistory.push('/');
-    browserHistory.push('/search');
+    // browserHistory.push('/');
+    // browserHistory.push('/search');
+    props.clickHandler();
   };
 
   return  (

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import seedData from './seedData.js';
-import seedDb from './seedDb.js';
+// import seedData from './seedData.js';
+// import seedDb from './seedDb.js';
 
 class SearchPage extends Component {
   constructor(props) {
@@ -114,6 +114,10 @@ class SearchPage extends Component {
   //whenever the search button is clicked, there will be a fetch run, other wise there will be no fetching
 
   componentDidMount() {
+    let seedDb = this.props.state.data[0];
+    let seedData = this.props.state.data[1];
+
+    console.log('getting data from prop: ', this.props.state.data);
     this.dataToRender(seedDb, seedData);
   }
 

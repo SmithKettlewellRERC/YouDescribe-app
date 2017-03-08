@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import Navbar from '../../components/navbar/Navbar.jsx';
 import NavbarMaterial from '../../components/navbar/Navbar(material).jsx';
 import Footer from '../../components/footer/Footer.jsx';
+import { browserHistory } from 'react-router';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: ''
+      search: '',
+      data: [],
     };
 
     this.updateState = this.updateState.bind(this);
@@ -32,9 +34,9 @@ class App extends Component {
     })
   }
 
-  letFetch(searchValue){
-
-      let q = encodeURIComponent(searchValue);
+  letFetch(){
+      console.log('fetching the data to the state')
+      let q = encodeURIComponent('bruce lee');
       const serverVideoIds = [];
       let ids;
       let dbResponse;
@@ -54,15 +56,26 @@ class App extends Component {
         fetch(url)
         .then(response => response.json())
         .then((data) => {
-          console.log(data);
-        })
+          this.setState({
+            data: [dbResponse, data],
+          }, () => {
+            browserHistory.push('/search');
+          });
+            
+
+          // console.log('going to search now')
+          // console.log(this.state.data)
+        });
       });
   }
 
   render() {
+    
     return (
       <div>
-        <Navbar updateSearch={(searchValue) => this.updateSearch(searchValue)} />
+        <Navbar updateSearch={(searchValue) => this.updateSearch(searchValue)}
+                clickHandler={() => this.letFetch()}
+        />
         {React.cloneElement(this.props.children, {
           state: this.state,
           updateState: this.updateState,
