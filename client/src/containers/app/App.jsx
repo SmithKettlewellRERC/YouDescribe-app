@@ -62,10 +62,6 @@ class App extends Component {
           }, () => {
             browserHistory.push('/search');
           });
-            
-
-          // console.log('going to search now')
-          // console.log(this.state.data)
         });
       });
   }

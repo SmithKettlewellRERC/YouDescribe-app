@@ -14,6 +14,9 @@ class SearchPage extends Component {
     };
   }
 
+  requestHandler(obj) {
+    console.log('add this to wish list: ', obj.id)
+  }
 
   dataToRender(dbResponse, data) {
       console.log('component fetching...');
@@ -93,7 +96,8 @@ class SearchPage extends Component {
                     </h6>
                   </div>
                   <div className="w3-container w3-padding-8">
-                    <h6><div className="w3-left">{views}</div><button /><div className="w3-right"> {time}</div></h6>
+                    <h6><div className="w3-left">{views}</div><div className="w3-right"> {time}</div></h6>
+                    <button className="w3-btn w3-indigo" onClick={() => this.requestHandler({ id })} >Add to wish list</button>
                   </div>
                 </div>
               </div>,
