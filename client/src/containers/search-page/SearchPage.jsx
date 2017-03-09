@@ -14,9 +14,14 @@ class SearchPage extends Component {
     };
   }
 
-  requestHandler(obj) {
-    console.log('add this to wish list: ', obj.id)
+  requestUpVote(obj) {
+    console.log('up vote this video: ', obj.id)
   }
+
+  requestDescribe(obj) {
+    console.log('describe this video: ', obj.id)
+  }
+
 
   dataToRender(dbResponse, data) {
       console.log('component fetching...');
@@ -97,7 +102,8 @@ class SearchPage extends Component {
                   </div>
                   <div className="w3-container w3-padding-8">
                     <h6><div className="w3-left">{views}</div><div className="w3-right"> {time}</div></h6>
-                    <button className="w3-btn w3-indigo" onClick={() => this.requestHandler({ id })} >Add to wish list</button>
+                    <button className="w3-btn w3-indigo" onClick={() => this.requestUpVote({ id })} >Up vote</button>
+                    <button className="w3-btn w3-indigo" onClick={() => this.requestDescribe({ id })} >Describe</button>
                   </div>
                 </div>
               </div>,
