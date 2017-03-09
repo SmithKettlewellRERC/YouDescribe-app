@@ -29,7 +29,7 @@ class WishList extends Component {
     let dbResponse;
 
 	//replace this url with the wishlist database 
-    fetch('http://webng.io:8080/videos')
+    fetch('http://webng.io:8080/wishlist')
       .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
