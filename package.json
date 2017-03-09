@@ -4,7 +4,8 @@
   "description": "You Describe Application",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "NODE_ENV=development nodemon server",
+    "dev": "NODE_ENV=dev nodemon server",
+    "prd": "NODE_ENV=prd nodemon server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
