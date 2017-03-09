@@ -10,7 +10,6 @@ class SearchPage extends Component {
     // function bindings
 
     this.state = {
-      searchQuery: this.props.search,
       videos: [],
     };
   }
@@ -18,7 +17,7 @@ class SearchPage extends Component {
 
   dataToRender(dbResponse, data) {
       console.log('component fetching...');
-      console.log('current search string is ', this.state.searchQuery)
+
           const videos = this.state.videos.slice();
 
           for (let i = 0; i < data.items.length; i += 1) {
@@ -94,21 +93,21 @@ class SearchPage extends Component {
                     </h6>
                   </div>
                   <div className="w3-container w3-padding-8">
-                    <h6><div className="w3-left">{views}</div><div className="w3-right"> {time}</div></h6>
+                    <h6><div className="w3-left">{views}</div><button /><div className="w3-right"> {time}</div></h6>
                   </div>
                 </div>
               </div>,
             );
-
-            this.setState({ videos });
           }
+      this.setState({ videos });
 
+      console.log('my video state: ',this.state.videos)
   }
 
   // functions
-  handleChange(event) {
-    this.setState({ searchQuery: event.target.value });
-  }
+  // handleChange(event) {
+  //   this.setState({ searchQuery: event.target.value });
+  // }
 
   // displayed on page
   //whenever the search button is clicked, there will be a fetch run, other wise there will be no fetching
@@ -118,17 +117,19 @@ class SearchPage extends Component {
     let seedDb = this.props.state.data[0];
     let seedData = this.props.state.data[1];
 
-    console.log('getting data from prop: ', this.props.state.data);
+
     this.dataToRender(seedDb, seedData);
   }
 
+  //component gonna update everytime app run fetch and SearchPage get props
   componentWillReceiveProps() {
     console.log('component will receive props: ')
     let seedDb = this.props.state.data[0];
     let seedData = this.props.state.data[1];
 
-    console.log('getting data from prop: ', this.props.state.data);
-    this.dataToRender(seedDb, seedData);
+    this.setState({
+      videos: []
+    }, () => this.dataToRender(seedDb, seedData))
   }
 
   render() {
@@ -137,7 +138,7 @@ class SearchPage extends Component {
       <div id="home">
 
         <div className="w3-container w3-indigo">
-          <h1>{this.props.search}</h1>
+          <h1>Most popular</h1>
         </div>
 
         <div className="w3-row-padding">

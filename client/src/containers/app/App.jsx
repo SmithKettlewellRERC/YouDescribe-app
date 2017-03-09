@@ -21,19 +21,19 @@ class App extends Component {
   }
 
   updateState(stateObj) {
-    this.setState(stateObj);
+    // this.setState(stateObj);
   }
 
   componentDidMount() {
     // console.log('componentDidMount');
   }
 
-  updateSearch(searchValue) {
-    // this.setState({
-    //   search: searchValue,
-    // })
-    console.log('search value is: ', searchValue)
-  }
+  // updateSearch(searchValue) {
+  //   // this.setState({
+  //   //   search: searchValue,
+  //   // })
+  //   console.log('search value is: ', searchValue)
+  // }
 
   letFetch(searchValue){
       console.log('fetching the data to the state')
@@ -74,10 +74,10 @@ class App extends Component {
     
     return (
       <div>
-        <Navbar updateSearch={(searchValue) => this.updateSearch(searchValue)}
+        <Navbar updateSearch={(searchValue) => this.letFetch(searchValue)}
         />
         {React.cloneElement(this.props.children, {
-          search: this.search,
+
           state: this.state,
           updateState: this.updateState,
           getState: this.getState,
