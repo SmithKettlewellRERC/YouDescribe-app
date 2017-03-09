@@ -1,6 +1,13 @@
 // body,h1,h2,h3,h4,h5,h6 {font-family: "open sans"}
 
 #home {
+  min-height: 600px;
+  main {
+    // creates container for videos
+    // width: 90%;
+    // margin: 0 auto;
+    min-height: 500px;
+  }
   button {
     margin-top: 10px;
     margin-bottom: 30px!important;

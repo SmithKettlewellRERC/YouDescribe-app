@@ -89,7 +89,7 @@ class Home extends Component {
 
             videos.push(
               <div className="w3-col m4 l2 w3-margin-top">
-                <div className="w3-card-2">
+                <div className="w3-card-2 w3-hover-shadow">
                   <img alt={description} src={thumbnailHigh.url} width="100%" />
                   {/*
                     <div style={{
@@ -136,9 +136,9 @@ class Home extends Component {
           <h1>Most popular</h1>
         </div>
 
-        <div className="w3-row-padding">
+        <main className="w3-row-padding">
           {this.state.videos}
-        </div>
+        </main>
 
         <div className="w3-margin-top w3-center">
           <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
