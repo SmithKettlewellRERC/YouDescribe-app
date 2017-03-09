@@ -7,7 +7,7 @@ const VideoPage = (props) => {
     <div id="video-player">
       <div id="video" className="w3-card-2">
         <div className="w3-center">      
-          <VideoPlayer videoId={props.params.id} />
+          <VideoPlayer videoId={props.params.videoId} />
         </div>
       </div>
     </div>);
