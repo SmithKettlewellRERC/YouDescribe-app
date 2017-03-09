@@ -63,7 +63,6 @@ class Navbar extends Component {
             <div className="w3-half">
               {/*<input type="text" className="w3-amber w3-border-0 w3-padding" style={{ width: '100%' }} />*/}
               <SearchBar onChange={(searchValue) => this.passSearchToApp(searchValue)}
-                         clickHandler={() => this.props.clickHandler()}
               />
             </div>
 

@@ -17,7 +17,7 @@ class SearchPage extends Component {
 
 
   dataToRender(dbResponse, data) {
-      console.log('componentDidMount and fetching...');
+      console.log('component fetching...');
       console.log('current search string is ', this.state.searchQuery)
           const videos = this.state.videos.slice();
 
@@ -113,7 +113,17 @@ class SearchPage extends Component {
   // displayed on page
   //whenever the search button is clicked, there will be a fetch run, other wise there will be no fetching
 
-  componentDidMount() {
+  componentWillMount() {
+    console.log('component will mount: ')
+    let seedDb = this.props.state.data[0];
+    let seedData = this.props.state.data[1];
+
+    console.log('getting data from prop: ', this.props.state.data);
+    this.dataToRender(seedDb, seedData);
+  }
+
+  componentWillReceiveProps() {
+    console.log('component will receive props: ')
     let seedDb = this.props.state.data[0];
     let seedData = this.props.state.data[1];
 
@@ -122,7 +132,6 @@ class SearchPage extends Component {
   }
 
   render() {
-
 
     return (
       <div id="home">

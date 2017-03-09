@@ -32,12 +32,12 @@ class App extends Component {
     // this.setState({
     //   search: searchValue,
     // })
-    this.search = searchValue;
+    console.log('search value is: ', searchValue)
   }
 
-  letFetch(){
+  letFetch(searchValue){
       console.log('fetching the data to the state')
-      let q = encodeURIComponent('bruce lee');
+      let q = encodeURIComponent(searchValue);
       const serverVideoIds = [];
       let ids;
       let dbResponse;
@@ -75,7 +75,6 @@ class App extends Component {
     return (
       <div>
         <Navbar updateSearch={(searchValue) => this.updateSearch(searchValue)}
-                clickHandler={() => this.letFetch()}
         />
         {React.cloneElement(this.props.children, {
           search: this.search,

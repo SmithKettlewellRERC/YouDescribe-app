@@ -2,25 +2,22 @@ import React from 'react';
 import { Link, browserHistory } from 'react-router';
 
 const SearchBar = (props) => {
-  const changeHandler = (e) => {
+
+
+  const changeHistory = (e) => {
       e.preventDefault();
-      var value = e.target.value;
-      // console.log(value);
+      let value = e.target[0].value;
+      console.log('at click, the value is: ',value)
       props.onChange(value);
   };
-
-  const changeHistory = () => {
-    console.log('let go to /seach');
-    // browserHistory.push('/');
-    // browserHistory.push('/search');
-    props.clickHandler();
-  };
+  
 
   return  (
-    <div className="search-bar">
-      <input type="search" placeholder="Search" width="500" onChange={(e) => changeHandler(e)} />
-      {/*<Link to="/search" className="w3-bar-item w3-button">Search</Link>*/}
-      <button onClick={() => changeHistory()}>Search</button>
+    <div>
+    <form className="search-bar" onSubmit={(e) => changeHistory(e)}>
+      <input type="search" placeholder="Search" width="500" />
+      <button>Search</button>
+    </form>
     </div>
   );
 }
