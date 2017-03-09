@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+const conf = require('../../shared/config')();
 // import seedData from './seedData.js';
 
 class Home extends Component {
@@ -21,7 +22,7 @@ class Home extends Component {
     let ids;
     let dbResponse;
 
-    fetch('http://webng.io:8080/videos')
+    fetch(`${conf.apiUrl}/videos`)
       .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
@@ -33,7 +34,8 @@ class Home extends Component {
       })
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
-        const url = `https://www.googleapis.com/youtube/v3/videos?id=${ids}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+        console.log(ids);
+        const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
         fetch(url)
         .then(response => response.json())
         .then((data) => {
@@ -52,7 +54,7 @@ class Home extends Component {
             const publishedAt = new Date(item.snippet.publishedAt);
 
             dbResponse.forEach((elem) => {
-              if (elem._id === id) describer = elem.audio_descriptions[0].legacy_author_name;
+              if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
             })
 
             const now = Date.now();

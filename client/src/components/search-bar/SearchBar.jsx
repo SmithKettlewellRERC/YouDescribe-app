@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '../button/Button.jsx';
 
 const SearchBar = (props) => {
   const updateSearch = (e) => {
@@ -9,10 +10,14 @@ const SearchBar = (props) => {
   };
 
   return (
-    <div>
-      <form className="search-bar" onSubmit={e => updateSearch(e)}>
-        <input className="w3-left" type="search" placeholder="Search" width="500" />
-        <button className="w3-btn w3-left">Search</button>
+    <div id="search-bar">
+      <form className="w3-row" onSubmit={e => updateSearch(e)}>
+        <div className="w3-left">
+          <input className="w3-padding-small" type="search" placeholder="Search" />
+        </div>
+        <div className="w3-left">
+          <Button color="w3-indigo" title="Search" />
+        </div>
       </form>
     </div>
   );

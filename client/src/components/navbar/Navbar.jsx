@@ -38,6 +38,11 @@ class Navbar extends Component {
   }
 
   render() {
+    // <img
+    //   alt="YouDescribe logo"
+    //   height="24px"
+    //   src={path.join(__dirname, 'assets', 'img', 'logo_youdescribe.png')}
+    //   />
     return (
       <div>
         {/* Navbar (sit on top) */}
@@ -45,15 +50,11 @@ class Navbar extends Component {
 
           <div className="w3-bar w3-white w3-card-2" id="navbar">
 
-            <Link to="/" className="w3-bar-item w3-button w3-wide">
-              <img
-                alt="YouDescribe logo"
-                height="24px"
-                src={path.join(__dirname, 'assets', 'img', 'logo_youdescribe.png')}
-              />
+            <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide">
+              <span>You</span><span className="w3-indigo curve">Describe</span>
             </Link>
 
-            <div className="w3-col l2 m2 s2">
+            <div className="w3-left w3-padding">
               {/*<input type="text" className="w3-amber w3-border-0 w3-padding" style={{ width: '100%' }} />*/}
               <SearchBar updateSearch={(searchValue) => this.props.updateSearch(searchValue)} />
             </div>

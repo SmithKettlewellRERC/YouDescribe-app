@@ -5,11 +5,11 @@ const conf = require('./../../shared/config')();
 
 class VideoPlayer extends Component {
   constructor(props) {
+    console.log('##########################', props.videoId);
     super(props);
     this.watcher = null;
     this.videoPlayer = null;
-    this.videoId = props.id;
-    this.baseUrl = 'http://localhost:8080/uploads/';
+    this.videoId = props.videoId;
     this.audioClips = [];
     this.audioClipsLength = 0;
     this.nextAudioClip = null;
