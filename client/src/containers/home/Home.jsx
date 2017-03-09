@@ -38,22 +38,18 @@ class Home extends Component {
         .then(response => response.json())
         .then((data) => {
           const videos = this.state.videos.slice();
-
-          console.log(dbResponse);
-          console.log(data.items);
           for (let i = 0; i < data.items.length; i += 1) {
-
-
-            const id = data.items[i].id;
-            const thumbnailDefault = data.items[i].snippet.thumbnails.default;
-            const thumbnailMedium = data.items[i].snippet.thumbnails.medium;
-            const thumbnailHigh = data.items[i].snippet.thumbnails.high;
-            let title = data.items[i].snippet.title;
-            const description = data.items[i].snippet.description;
-            const author = data.items[i].snippet.channelTitle;
+            const item = data.items[i];
+            const id = item.id;
+            const thumbnailDefault = item.snippet.thumbnails.default;
+            const thumbnailMedium = item.snippet.thumbnails.medium;
+            const thumbnailHigh = item.snippet.thumbnails.high;
+            let title = item.snippet.title;
+            const description = item.snippet.description;
+            const author = item.snippet.channelTitle;
             let describer;
-            let views = data.items[i].statistics.viewCount;
-            const publishedAt = new Date(data.items[i].snippet.publishedAt);
+            let views = item.statistics.viewCount;
+            const publishedAt = new Date(item.snippet.publishedAt);
 
             dbResponse.forEach((elem) => {
               if (elem._id === id) describer = elem.audio_descriptions[0].legacy_author_name;
@@ -107,7 +103,7 @@ class Home extends Component {
                     </div>
                   */}
                   <div className="w3-container vid-title">
-                    <h5><a href="#">{title}</a></h5>
+                    <h5><a href={'/video/' + id}>{title}</a></h5>
                     <h6>
                       <a href="#">{author}</a><br />
                       <a href="#">{describer}</a> (describer)

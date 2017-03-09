@@ -4,7 +4,7 @@ const path = require('path');
 const port = process.env.PORT || 3000;
 const app = express();
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'dev') {
   console.log('DEVELOPMENT MODE');
   console.log('WILL HOT RELOAD CHANGES');
   const webpack = require('webpack');
@@ -15,6 +15,8 @@ if (process.env.NODE_ENV === 'development') {
     publicPath: webpackConfig.output.publicPath,
   }));
   app.use(require('webpack-hot-middleware')(compiler));
+} else {
+  console.log('PRODUCTION MODE');  
 }
 
 app.use(express.static(path.join(__dirname, '..', 'client', 'build')));

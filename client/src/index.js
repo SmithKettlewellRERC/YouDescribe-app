@@ -15,8 +15,8 @@ ReactDOM.render((
     <Route path="/" component={App} >
       <IndexRoute component={Home} />
       <Route path="/authoring-tool" component={AuthoringTool} />
-      <Route path="/video-page" component={VideoPage} />
       <Route path="/search" component={SearchPage} />
+      <Route path="/video/:id" component={VideoPage} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>
