@@ -38,11 +38,6 @@ class Navbar extends Component {
   }
 
   render() {
-    // <img
-    //   alt="YouDescribe logo"
-    //   height="24px"
-    //   src={path.join(__dirname, 'assets', 'img', 'logo_youdescribe.png')}
-    //   />
     return (
       <div>
         {/* Navbar (sit on top) */}
@@ -51,6 +46,11 @@ class Navbar extends Component {
           <div className="w3-bar w3-white w3-card-2" id="navbar">
 
             <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide">
+              {/*<img
+                alt="YouDescribe logo"
+                height="24px"
+                src={path.join(__dirname, 'assets', 'img', 'logo_youdescribe.png')}
+               />*/}
               <span>You</span><span className="w3-indigo curve">Describe</span>
             </Link>
 

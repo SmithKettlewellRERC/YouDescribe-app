@@ -1,13 +1,19 @@
 #logo {
-  font-family: 'helvetica';
-  height: 40px;
-  font-size: 16px;
-  font-stretch:extra-condensed;
+  font-family: "Arial Narrow", Arial, sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 500;
+	line-height: 22px;
+  // font-family: font73252;
+  // height: 40px;
+  // font-size: 16px;
+  // font: small-caps bold 20px arial-narrow, sans-serif;
+  // padding-bottom: 50px;
   .curve {
-    height: 50px;
+    height: 30px;
     padding: 5px 1px 5px 4px;
     // border: 1px solid black;
     border-radius: 10px;
-
   }
 }
