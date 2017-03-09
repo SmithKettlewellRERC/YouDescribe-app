@@ -1,55 +1,41 @@
 import React, { Component } from 'react';
 
 // import seedData from './seedData.js';
+// import seedDb from './seedDb.js';
 
-class Home extends Component {
+class SearchPage extends Component {
   constructor(props) {
     super(props);
 
     // function bindings
 
     this.state = {
-      searchQuery: '',
       videos: [],
     };
   }
 
-  componentDidMount() {
-    console.log('componentDidMount and fetching...');
+  requestHandler(obj) {
+    console.log('add this to wish list: ', obj.id)
+  }
 
-    const serverVideoIds = [];
-    let ids;
-    let dbResponse;
+  dataToRender(dbResponse, data) {
+      console.log('component fetching...');
 
-    fetch('http://webng.io:8080/videos')
-      .then(response => response.json())
-      .then((response) => {
-        dbResponse = response.result;
-        for (let i = 0; i < response.result.length; i += 1) {
-          serverVideoIds.push(response.result[i]._id);
-        }
-        ids = serverVideoIds.join(',');
-        console.log
-      })
-      .then(() => {
-        // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
-        const url = `https://www.googleapis.com/youtube/v3/videos?id=${ids}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
-        fetch(url)
-        .then(response => response.json())
-        .then((data) => {
           const videos = this.state.videos.slice();
+
           for (let i = 0; i < data.items.length; i += 1) {
-            const item = data.items[i];
-            const id = item.id;
-            const thumbnailDefault = item.snippet.thumbnails.default;
-            const thumbnailMedium = item.snippet.thumbnails.medium;
-            const thumbnailHigh = item.snippet.thumbnails.high;
-            let title = item.snippet.title;
-            const description = item.snippet.description;
-            const author = item.snippet.channelTitle;
+
+
+            const id = data.items[i].id;
+            const thumbnailDefault = data.items[i].snippet.thumbnails.default;
+            const thumbnailMedium = data.items[i].snippet.thumbnails.medium;
+            const thumbnailHigh = data.items[i].snippet.thumbnails.high;
+            let title = data.items[i].snippet.title;
+            const description = data.items[i].snippet.description;
+            const author = data.items[i].snippet.channelTitle;
             let describer;
-            let views = item.statistics.viewCount;
-            const publishedAt = new Date(item.snippet.publishedAt);
+            let views = data.items[i].statistics.viewCount;
+            const publishedAt = new Date(data.items[i].snippet.publishedAt);
 
             dbResponse.forEach((elem) => {
               if (elem._id === id) describer = elem.audio_descriptions[0].legacy_author_name;
@@ -89,7 +75,7 @@ class Home extends Component {
 
             videos.push(
               <div className="w3-col m4 l2 w3-margin-top">
-                <div className="w3-card-2 w3-hover-shadow">
+                <div className="w3-card-2">
                   <img alt={description} src={thumbnailHigh.url} width="100%" />
                   {/*
                     <div style={{
@@ -103,7 +89,7 @@ class Home extends Component {
                     </div>
                   */}
                   <div className="w3-container vid-title">
-                    <h5><a href={'/video/' + id}>{title}</a></h5>
+                    <h5><a href="#">{title}</a></h5>
                     <h6>
                       <a href="#">{author}</a><br />
                       <a href="#">{describer}</a> (describer)
@@ -111,24 +97,47 @@ class Home extends Component {
                   </div>
                   <div className="w3-container w3-padding-8">
                     <h6><div className="w3-left">{views}</div><div className="w3-right"> {time}</div></h6>
+                    <button className="w3-btn w3-indigo" onClick={() => this.requestHandler({ id })} >Add to wish list</button>
                   </div>
                 </div>
               </div>,
             );
-
-            this.setState({ videos });
           }
-        });
-      });
+      this.setState({ videos });
+
+      console.log('my video state: ',this.state.videos)
   }
 
   // functions
-  handleChange(event) {
-    this.setState({ searchQuery: event.target.value });
-  }
+  // handleChange(event) {
+  //   this.setState({ searchQuery: event.target.value });
+  // }
 
   // displayed on page
+  //whenever the search button is clicked, there will be a fetch run, other wise there will be no fetching
+
+  componentWillMount() {
+    console.log('component will mount: ')
+    let seedDb = this.props.state.data[0];
+    let seedData = this.props.state.data[1];
+
+
+    this.dataToRender(seedDb, seedData);
+  }
+
+  //component gonna update everytime app run fetch and SearchPage get props
+  componentWillReceiveProps() {
+    console.log('component will receive props: ')
+    let seedDb = this.props.state.data[0];
+    let seedData = this.props.state.data[1];
+
+    this.setState({
+      videos: []
+    }, () => this.dataToRender(seedDb, seedData))
+  }
+
   render() {
+
     return (
       <div id="home">
 
@@ -136,9 +145,9 @@ class Home extends Component {
           <h1>Most popular</h1>
         </div>
 
-        <main className="w3-row-padding">
+        <div className="w3-row-padding">
           {this.state.videos}
-        </main>
+        </div>
 
         <div className="w3-margin-top w3-center">
           <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
@@ -149,4 +158,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default SearchPage;
