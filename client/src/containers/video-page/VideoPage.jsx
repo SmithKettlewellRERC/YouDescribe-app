@@ -2,14 +2,15 @@ import React from 'react';
 
 import VideoPlayer from '../../components/video-player/VideoPlayer.jsx';
 
-// <iframe width="560px" height="315px" src="https://www.youtube.com/embed/O7j4_aP8dWA?modestbranding=1&autohide=1&showinfo=0" frameBorder="0px" />
-const VideoPage = () => (
-  <div id="video-player">
-    <center>
-      <h1>VIDEO PLAYER</h1>
-      <VideoPlayer />
-    </center>
-  </div>
-);
+const VideoPage = (props) => {
+  return (
+    <div id="video-player">
+      <div id="video" className="w3-card-2">
+        <div className="w3-center">      
+          <VideoPlayer id={props.params.id} />
+        </div>
+      </div>
+    </div>);
+};
 
 export default VideoPage;
