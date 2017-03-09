@@ -1,4 +1,8 @@
 #editor {
+  .cont {
+    width: 225px;
+    margin: 0px auto;
+  }
   background-color: #272727;
   font-size: 12px;
   color: #eee;
@@ -12,7 +16,7 @@
       color: #666;
   }
 
-  #video-time, #timeline, #video-audio-track, #video-audio-sinewave, #track-info, #track-sinewave, #add-track, #add-track-space {
+  #timer, #timeline, #video-audio-track, #video-audio-sinewave, #track-info, #track-sinewave, #add-track, #add-track-space {
     padding: 4px 12px;
   }
 
@@ -21,8 +25,14 @@
   }
 
   #video-time {
-    text-align: center;
+    height: 50px;
+    font-size: 28px;
+    #timer, #timeline {
+      height: 50px;
+      text-align: center;
+    }
   }
+
 
   #video-audio-track-row {
     border-top: 1px solid #151515;
@@ -32,9 +42,6 @@
     max-height: 150px;
     overflow: scroll;
     #track {
-      img {
-        position: relative;
-      }
       border-bottom: 1px solid #151515;
       input {
         width: 100%;
@@ -53,9 +60,16 @@
       input:focus:-moz-placeholder{
         color: transparent!important;
       }
-    }
-    .fa-circle {
-      color: red;
+      #type {
+        position: relative;
+        top: 1px;
+        width: 15px;
+        text-align: center;
+        font-size: 10px;
+      }
+      .fa-circle {
+        color: red;
+      }
     }
   }
 

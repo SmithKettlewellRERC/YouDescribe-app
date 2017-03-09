@@ -139,9 +139,9 @@ class Home extends Component {
           <h1>Most popular</h1>
         </div>
 
-        <div className="w3-row-padding">
+        <main className="w3-row-padding">
           {this.state.videos}
-        </div>
+        </main>
 
         <div className="w3-margin-top w3-center">
           <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>

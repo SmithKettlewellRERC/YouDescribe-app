@@ -1,0 +1,30 @@
+#track {
+  border-bottom: 1px solid #151515;
+  input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #888;
+    padding: 0px 8px;
+  }
+  input:focus::-webkit-input-placeholder{
+    color: transparent!important;
+  }
+  input:focus::-moz-placeholder{
+    color: transparent!important;
+  }
+  input:focus:-moz-placeholder{
+    color: transparent!important;
+  }
+  #type {
+    position: relative;
+    top: 1px;
+    width: 15px;
+    text-align: center;
+    font-size: 10px;
+  }
+  .fa-circle {
+    color: red;
+  }
+}

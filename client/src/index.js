@@ -11,7 +11,7 @@ import NotFound from './containers/not-found/NotFound.jsx';
 
 ReactDOM.render((
   <Router history={browserHistory}>
-    <Route path="/" component={App} >
+    <Route path="/" component={App}>
       <IndexRoute component={Home} />
       <Route path="/authoring-tool" component={AuthoringTool} />
       <Route path="/video-page" component={VideoPage} />

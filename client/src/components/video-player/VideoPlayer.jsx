@@ -58,7 +58,7 @@ class VideoPlayer extends Component {
         const player = new YT.Player('player', {
           height: '315px',
           width: '560px',
-          videoId: 'JW5meKfy3fY',
+          videoId: 'O7j4_aP8dWA',
           events: {
             onReady: onPlayerReady
           }
