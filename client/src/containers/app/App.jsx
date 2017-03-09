@@ -12,13 +12,11 @@ class App extends Component {
     this.state = {
       tracks: [],
       trackCount: 0,
-    };
 
       // search: '',
       data: [],
     };
 
-    this.updateState = this.updateState.bind(this);
     this.getState = this.getState.bind(this);
     this.publishClick = this.publishClick.bind(this);
     this.addInlineClick = this.addInlineClick.bind(this);
