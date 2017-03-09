@@ -142,7 +142,7 @@ class SearchPage extends Component {
       <div id="home">
 
         <div className="w3-container w3-indigo">
-          <h1>Most popular</h1>
+          <h1>Search results</h1>
         </div>
 
         <div className="w3-row-padding">

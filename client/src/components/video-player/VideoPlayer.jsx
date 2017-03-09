@@ -154,7 +154,7 @@ class VideoPlayer extends Component {
     });
     audio.play();
     // console.log('Playing audio clip at: ', arr[0]);
-    console.log('Teh audio clip was played at: ', currentVideoProgress);
+    console.log('The audio clip was played at: ', currentVideoProgress);
   }
 
   componentDidMount() {
@@ -165,7 +165,7 @@ class VideoPlayer extends Component {
   }
 
   render() {
-    return ( <div id="player"></div> );
+    return <div id="player"></div>;
   }
 }
 

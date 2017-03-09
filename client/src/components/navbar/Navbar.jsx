@@ -53,16 +53,15 @@ class Navbar extends Component {
               />
             </Link>
 
-            <div className="w3-half">
+            <div className="w3-col l2 m2 s2">
               {/*<input type="text" className="w3-amber w3-border-0 w3-padding" style={{ width: '100%' }} />*/}
-              <SearchBar updateSearch={(searchValue) => this.props.updateSearch(searchValue)}
-              />
+              <SearchBar updateSearch={(searchValue) => this.props.updateSearch(searchValue)} />
             </div>
 
             {/* Right-sided navbar links */}
             <div className="w3-right w3-hide-small">
               {/*<span className="w3-bar-item"><SearchBar /></span>*/}
-              <Link to="/authoring-tool" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
+              <Link to="/authoring-tool/hPLgfGX1I5Y" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
               <Link to="/video-page" className="w3-bar-item w3-button"><i className="fa fa-video-camera"></i> VIDEO PLAYER</Link>
               <Link to="/" className="w3-bar-item w3-button">SIGN IN</Link>
             </div>
@@ -77,11 +76,9 @@ class Navbar extends Component {
         {/* Sidenav on small screens when clicking the menu icon */}
         <nav className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-medium w3-hide-large" style={{ display: 'none' }} id="mySidenav">
           <a href="javascript:void(0)" onClick={this.menuClose} className="w3-large w3-padding-16">Close ×</a>
-          <a href="#about" onClick={this.menuClose}>ABOUT</a>
-          <a href="#team" onClick={this.menuClose}>TEAM</a>
-          <a href="#work" onClick={this.menuClose}>WORK</a>
-          <a href="#pricing" onClick={this.menuClose}>PRICING</a>
-          <a href="#contact" onClick={this.menuClose}>CONTACT</a>
+            <Link to="/authoring-tool/hPLgfGX1I5Y" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
+            <Link to="/video-page" className="w3-bar-item w3-button"><i className="fa fa-video-camera"></i> VIDEO PLAYER</Link>
+            <Link to="/" className="w3-bar-item w3-button">SIGN IN</Link>
         </nav>
       </div>
     );
