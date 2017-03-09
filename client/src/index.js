@@ -9,6 +9,7 @@ import SearchPage from './containers/search-page/SearchPage.jsx';
 import AuthoringTool from './containers/authoring-tool/AuthoringTool.jsx';
 import VideoPage from './containers/video-page/VideoPage.jsx';
 import NotFound from './containers/not-found/NotFound.jsx';
+import WishList from './containers/wish-list/WishList.jsx';
 
 ReactDOM.render((
   <Router history={browserHistory}>
@@ -17,6 +18,7 @@ ReactDOM.render((
       <Route path="/authoring-tool/:videoId" component={AuthoringTool} />
       <Route path="/search" component={SearchPage} />
       <Route path="/video/:videoId" component={VideoPage} />
+      <Route path="/wishlist" component={WishList} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>
