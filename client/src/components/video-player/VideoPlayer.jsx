@@ -23,6 +23,7 @@ class VideoPlayer extends Component {
         return response.json();
       })
       .then((json) => {
+        console.log(json);
         if (json && json.result && json.result.status === 'published') {
           this.parseVideoData(json.result);
         } else {
@@ -50,7 +51,7 @@ class VideoPlayer extends Component {
     let totalAudioClipsLoaded = 0;
     const audioClipLoaded = () => {
       totalAudioClipsLoaded += 1;
-      console.log('total', this.audioClipsLength, totalAudioClipsLoaded);
+      console.log('Loading', totalAudioClipsLoaded, 'of', this.audioClipsLength);
       if (this.audioClipsLength <= totalAudioClipsLoaded) {
         console.log('All audios loaded, let\'s start the video player');
         this.initVideoPlayer();
@@ -71,7 +72,7 @@ class VideoPlayer extends Component {
   }
 
   initVideoPlayer() {
-    console.log('initVideoPlayer');
+    // console.log('initVideoPlayer');
     const self = this;
     this.videoPlayer = new YT.Player('player', {
       height: '315px',
