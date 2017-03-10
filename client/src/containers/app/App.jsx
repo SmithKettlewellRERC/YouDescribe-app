@@ -53,13 +53,39 @@ class App extends Component {
     }
   }
 
-  // updateSearch(searchValue) {
-  //   // this.setState({
-  //   //   search: searchValue,
-  //   // })
-  //   console.log('search value is: ', searchValue)
+  //search video on youtube
+  // letFetch(searchValue){
+  //     console.log('fetching the data to the state')
+  //     let q = encodeURIComponent(searchValue);
+  //     const serverVideoIds = [];
+  //     let ids;
+  //     let dbResponse;
+
+  //     fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${q}&maxResults=50&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`)
+  //     .then(response => response.json())
+  //     .then((response) => {
+  //       dbResponse = response.items;
+  //       for (let i = 0; i < dbResponse.length; i += 1) {
+  //         serverVideoIds.push(dbResponse[i].id.videoId);
+  //       }
+  //       ids = serverVideoIds.join(',');
+  //     })
+  //     .then(() => {
+  //       // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
+  //       const url = `https://www.googleapis.com/youtube/v3/videos?id=${ids}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+  //       fetch(url)
+  //       .then(response => response.json())
+  //       .then((data) => {
+  //         this.setState({
+  //           data: [dbResponse, data],
+  //         }, () => {
+  //           browserHistory.push('/search');
+  //         });
+  //       });
+  //     });
   // }
 
+  //search video inside AD database
   letFetch(searchValue){
       console.log('fetching the data to the state')
       let q = encodeURIComponent(searchValue);
@@ -86,6 +112,7 @@ class App extends Component {
             data: [dbResponse, data],
           }, () => {
             browserHistory.push('/search');
+            console.log('fetching to children: ', this.state.data)
           });
         });
       });
