@@ -23,11 +23,9 @@ class Home extends Component {
     let ids;
     let dbResponse;
 
-<<<<<<< HEAD
-    fetch('http://webng.io:8080/v1/videos')
-=======
+    // fetch('http://webng.io:8080/v1/videos')
+
     fetch(`${conf.apiUrl}/videos`)
->>>>>>> 1a0dcc6fd0e0d2ab14943d49ae8ec1dcd36b7d2f
       .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
@@ -38,7 +36,6 @@ class Home extends Component {
       })
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
-        console.log(ids);
         const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
         fetch(url)
         .then(response => response.json())
@@ -59,12 +56,7 @@ class Home extends Component {
 
             dbResponse.forEach((elem) => {
               if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
-<<<<<<< HEAD
-            });
-=======
             })
->>>>>>> 1a0dcc6fd0e0d2ab14943d49ae8ec1dcd36b7d2f
-
             const now = Date.now();
             let time = now - publishedAt;
             const year = 31536000000;
