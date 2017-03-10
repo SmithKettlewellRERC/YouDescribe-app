@@ -17,7 +17,7 @@ class AuthoringTool extends Component {
       <main id="authoring-tool">
         <div className="w3-row">
           <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
-            <VideoPlayer videoId={this.params.videoId} />
+            <VideoPlayer videoId={this.props.params.videoId} />
           </div>
           <div id="notes-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
             <Notes />
