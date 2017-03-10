@@ -10,7 +10,7 @@ const AuthoringTool = (props) => {
       <div className="w3-row-padding">
         <div className="w3-col l8 m8 w3-margin-top">
           <div id="notes" className="w3-card-2 w3-black w3-hide-small w3-hide-medium">
-            <VideoPlayer id={props.params.videoId} />
+            <VideoPlayer videoId={props.params.videoId} />
           </div>
         </div>
         <div className="w3-col l4 m4 w3-margin-top w3-hide-small w3-hide-medium">
