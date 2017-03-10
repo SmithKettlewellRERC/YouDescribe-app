@@ -1,6 +1,6 @@
 #notes {
   background-color: #262626;
-  height: 315px;
+  height: 100%;
   .w3-card-4 {
     background-color: #000;
     border: none;
@@ -11,7 +11,7 @@
     padding-top: 0px;
   }
   .notes-area {
-    height: 250px;
+    height: 80%;
     overflow: scroll;
     color: #ccc;
     font-size: 14px;

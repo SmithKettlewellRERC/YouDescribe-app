@@ -1,10 +1,10 @@
 #video-player {
   background-color: #000;
-  min-height: 600px;
+  min-height: 100vh;
   #video {
-    width: 530px;
-    height: 315px;
+    width: 800px;
+    height: 450px;
     margin: 0 auto;
-    padding-top: 100px;
+    padding-top: 50px;
   }
 }
