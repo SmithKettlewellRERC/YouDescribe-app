@@ -150,7 +150,6 @@ class VideoPlayer extends Component {
       },
     });
     audio.play();
-    // console.log('Teh audio clip was played at: ', currentVideoProgress);
   }
 
   componentDidMount() {

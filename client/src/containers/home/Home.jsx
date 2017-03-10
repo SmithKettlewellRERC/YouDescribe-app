@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
-// import seedData from './seedData.js';
+import { Link } from 'react-router';
+
+const conf = require('../../shared/config')();
 
 class Home extends Component {
   constructor(props) {
@@ -21,7 +23,7 @@ class Home extends Component {
     let ids;
     let dbResponse;
 
-    fetch('http://webng.io:8080/videos')
+    fetch(`${conf.apiUrl}/videos`)
       .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
@@ -33,7 +35,8 @@ class Home extends Component {
       })
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
-        const url = `https://www.googleapis.com/youtube/v3/videos?id=${ids}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+        console.log(ids);
+        const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
         fetch(url)
         .then(response => response.json())
         .then((data) => {
@@ -52,7 +55,7 @@ class Home extends Component {
             const publishedAt = new Date(item.snippet.publishedAt);
 
             dbResponse.forEach((elem) => {
-              if (elem._id === id) describer = elem.audio_descriptions[0].legacy_author_name;
+              if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
             })
 
             const now = Date.now();
@@ -88,22 +91,11 @@ class Home extends Component {
             else views = `${views} views`;
 
             videos.push(
-              <div className="w3-col m4 l2 w3-margin-top">
+              <div className="vid-card w3-margin-top w3-left">
                 <div className="w3-card-2 w3-hover-shadow">
-                  <img alt={description} src={thumbnailHigh.url} width="100%" />
-                  {/*
-                    <div style={{
-                    backgroundImage: `url(${thumbnailHigh.url})`,
-                    backgroundSize: '100%',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    height: '150px',
-                    }}>
-                    test
-                    </div>
-                  */}
+                  <Link to={'/video/' + id}><img alt={description} src={thumbnailHigh.url} width="100%" /></Link>
                   <div className="w3-container vid-title">
-                    <h5><a href={'/video/' + id}>{title}</a></h5>
+                    <h5><Link to={'/video/' + id}>{title}</Link></h5>
                     <h6>
                       <a href="#">{author}</a><br />
                       <a href="#">{describer}</a> (describer)
@@ -136,8 +128,8 @@ class Home extends Component {
           <h1>Most popular</h1>
         </div>
 
-        <main className="w3-row-padding">
-          {this.state.videos}
+        <main className="w3-row">
+            {this.state.videos}
         </main>
 
         <div className="w3-margin-top w3-center">
