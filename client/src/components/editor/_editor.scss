@@ -39,10 +39,13 @@
   }
 
   #tracks {
-    max-height: 150px;
+    max-height: 25vh;
     overflow: scroll;
     #track {
       border-bottom: 1px solid #151515;
+      i:hover {
+        cursor: pointer;
+      }
       input {
         width: 100%;
         background: transparent;
@@ -71,18 +74,18 @@
         color: red;
       }
     }
-  }
+    #add-track-row {
+      height: 46px;
+      button {
+        position: relative;
+        top: 9px;
+      }
+    }
 
-  #add-track-row {
-    height: 46px;
-    button {
-      position: relative;
-      top: 9px;
+    #add-track-space {
+      background-color: #111;
+      height: 46px;
     }
   }
 
-  #add-track-space {
-    background-color: #111;
-    height: 46px;
-  }
 }

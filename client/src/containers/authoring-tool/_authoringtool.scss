@@ -16,21 +16,15 @@ main {
   background-color: #383838;
   color: #fff;
   min-height: 100vh;
-}
-
-#video {
-  background-color: #000;
-  height: 315px;
-}
-
-.w3-bar .w3-button {
-  padding: 16px;
-}
-
-.w3-card-2 {
-  background-color: #fff;
-}
-
-#mobile {
-  vertical-align: middle;
+  #video-section {
+    background-color: #000;
+    width: 640px;
+    height: 342px;
+  }
+  #notes-section {
+    background-color: #000;
+    margin-left: 16px;
+    width: 352px;
+    height: 342px;
+  }
 }
