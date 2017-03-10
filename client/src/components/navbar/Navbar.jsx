@@ -64,6 +64,7 @@ class Navbar extends Component {
               {/*<span className="w3-bar-item"><SearchBar /></span>*/}
               <Link to="/authoring-tool/hPLgfGX1I5Y" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
               <Link to="/video-page" className="w3-bar-item w3-button"><i className="fa fa-video-camera"></i> VIDEO PLAYER</Link>
+              <Link to="/wishlist" className="w3-bar-item w3-button">WISH LIST</Link>
               <Link to="/" className="w3-bar-item w3-button">SIGN IN</Link>
             </div>
             {/* Hide right-floated links on small screens and replace them with a menu icon */}
