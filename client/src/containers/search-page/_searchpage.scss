@@ -1,9 +1,9 @@
 // body,h1,h2,h3,h4,h5,h6 {font-family: "open sans"}
 
 #search-page {
-  min-height: 600px;
+  min-height: 100vh;
   .vid-card {
-    width: 200px;
+    width: 194px;
     padding: 0 8px;
     .w3-card-2 {
       .vid-title {
@@ -13,14 +13,14 @@
     }
   }
   main {
-    width: 1016px;
+    width: 416px;
     padding: 0px 8px;
     margin: 0 auto;
-    @media screen and (max-width: 1016px) {
-      width: 616px;
+    @media (min-width:601px){
+      width: 601px;
     }
-    @media screen and (max-width: 616px) {
-      width: 416px;
+    @media screen and (min-width: 993px) {
+      width: 993px;
     }
   }
   button {
