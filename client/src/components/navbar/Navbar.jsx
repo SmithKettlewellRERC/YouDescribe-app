@@ -45,7 +45,7 @@ class Navbar extends Component {
 
           <div className="w3-bar w3-white w3-card-2" id="navbar">
 
-            <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide w3-hide-small">
+            <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide w3-hide-small w3-hide-medium">
               {/*<img
                 alt="YouDescribe logo"
                 height="24px"
@@ -54,11 +54,11 @@ class Navbar extends Component {
               <span>You</span><span className="w3-indigo curve">Describe</span>
             </Link>
 
-            <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide w3-hide-large w3-hide-medium">
-              <span className="w3-indigo curve">YD</span>
+            <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide w3-hide-large">
+              <span>Y</span><span className="w3-indigo curve">D</span>
             </Link>
 
-            <div className="w3-left w3-padding">
+            <div className="w3-left">
               {/*<input type="text" className="w3-amber w3-border-0 w3-padding" style={{ width: '100%' }} />*/}
               <SearchBar updateSearch={(searchValue) => this.props.updateSearch(searchValue)} />
             </div>

@@ -1,9 +1,21 @@
 // body,h1,h2,h3,h4,h5,h6 {font-family: "open sans"}
 
+body {
+  background-color: #383838;
+}
+main {
+  width: 400px;
+  padding: 0px 8px;
+  margin: 100px auto;
+  @media screen and (min-width: 993px) {
+    margin: 0 auto;
+    width: 1024px;
+  }
+}
 #authoring-tool {
   background-color: #383838;
   color: #fff;
-  min-height: 600px;
+  min-height: 100vh;
 }
 
 #video {
@@ -17,4 +29,8 @@
 
 .w3-card-2 {
   background-color: #fff;
+}
+
+#mobile {
+  vertical-align: middle;
 }

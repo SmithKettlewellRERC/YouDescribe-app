@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import VideoCard from '../../components/video-card/VideoCard.jsx';
 
 // import seedData from './seedData.js';
 // import seedDb from './seedDb.js';
@@ -165,7 +166,7 @@ class SearchPage extends Component {
             // if (title.length > 50) title = `${title.slice(0, 50)}...`;
             if (views >= 1000000000) views = `${(views / 1000000000).toFixed(1)}B views`;
             else if (views >= 1000000) views = `${(views / 1000000).toFixed(1)}M views`;
-            else if (views >= 1000) views = `${(views /1000).toFixed(0)}K views`;
+            else if (views >= 1000) views = `${(views / 1000).toFixed(0)}K views`;
             else if (views === 1) views = `${views} view`;
             else views = `${views} views`;
 
@@ -192,6 +193,7 @@ class SearchPage extends Component {
     this.setState({
       videoNotOnYD: videoNotOnYD,
     });
+
   }
 
   componentDidMount() {
@@ -236,7 +238,7 @@ class SearchPage extends Component {
 
   render() {
     return (
-      <div id="home">
+      <div id="search-page">
 
         <div className="w3-container w3-indigo">
           <h1>Already on YD</h1>
