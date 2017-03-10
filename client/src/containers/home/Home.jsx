@@ -21,7 +21,7 @@ class Home extends Component {
     let ids;
     let dbResponse;
 
-    fetch('http://webng.io:8080/videos')
+    fetch('http://webng.io:8080/v1/videos')
       .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
@@ -29,7 +29,6 @@ class Home extends Component {
           serverVideoIds.push(response.result[i]._id);
         }
         ids = serverVideoIds.join(',');
-        console.log
       })
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
@@ -52,8 +51,8 @@ class Home extends Component {
             const publishedAt = new Date(item.snippet.publishedAt);
 
             dbResponse.forEach((elem) => {
-              if (elem._id === id) describer = elem.audio_descriptions[0].legacy_author_name;
-            })
+              if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
+            });
 
             const now = Date.now();
             let time = now - publishedAt;

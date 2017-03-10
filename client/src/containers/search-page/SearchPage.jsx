@@ -38,13 +38,13 @@ class SearchPage extends Component {
             let title = data.items[i].snippet.title;
             const description = data.items[i].snippet.description;
             const author = data.items[i].snippet.channelTitle;
-            let describer;
+            let describer = null;
             let views = data.items[i].statistics.viewCount;
             const publishedAt = new Date(data.items[i].snippet.publishedAt);
 
             dbResponse.forEach((elem) => {
               if (elem._id === id) describer = elem.audio_descriptions[0].legacy_author_name;
-            })
+            });
 
             const now = Date.now();
             let time = now - publishedAt;
@@ -78,6 +78,23 @@ class SearchPage extends Component {
             else if (views === 1) views = `${views} view`;
             else views = `${views} views`;
 
+            let authorSection;
+
+            if (describer) {
+              authorSection = (
+              <h6>
+                <a href="#">{author}</a><br />
+                <a href="#">{describer}</a> (describer)
+              </h6>
+              )
+            } else {
+               authorSection = (
+               <h6>
+                <a href="#">{author}</a><br />
+               </h6>
+               )
+            }
+
             videos.push(
               <div className="w3-col m4 l2 w3-margin-top">
                 <div className="w3-card-2">
@@ -95,10 +112,11 @@ class SearchPage extends Component {
                   */}
                   <div className="w3-container vid-title">
                     <h5><a href="#">{title}</a></h5>
-                    <h6>
+                    {/*<h6>
                       <a href="#">{author}</a><br />
                       <a href="#">{describer}</a> (describer)
-                    </h6>
+                    </h6>*/}
+                    {authorSection}
                   </div>
                   <div className="w3-container w3-padding-8">
                     <h6><div className="w3-left">{views}</div><div className="w3-right"> {time}</div></h6>
@@ -114,8 +132,8 @@ class SearchPage extends Component {
       console.log('my video state: ',this.state.videos)
   }
 
-  componentWillMount() {
-    console.log('component will mount: ')
+  componentDidMount() {
+    console.log('component did mount: ')
     let seedDb = this.props.state.data[0];
     let seedData = this.props.state.data[1];
 
