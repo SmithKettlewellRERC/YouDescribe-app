@@ -197,9 +197,9 @@ class SearchPage extends Component {
 
   componentDidMount() {
     console.log('component did mount: ');
-    const seedDb = this.props.state.fetchJSONtoSearchPage[0];
-    const seedData1 = this.props.state.fetchJSONtoSearchPage[1];
-    const seedData2 = this.props.state.fetchJSONtoSearchPage[2];
+    const seedDb = this.props.getState().fetchJSONtoSearchPage[0];
+    const seedData1 = this.props.getState().fetchJSONtoSearchPage[1];
+    const seedData2 = this.props.getState().fetchJSONtoSearchPage[2];
 
 
     this.renderVideoFromYD(seedDb, seedData1);
@@ -209,9 +209,9 @@ class SearchPage extends Component {
   // component gonna update everytime app run fetch and SearchPage get props
   componentWillReceiveProps() {
     console.log('component will receive props: ');
-    const seedDb = this.props.state.fetchJSONtoSearchPage[0];
-    const seedData1 = this.props.state.fetchJSONtoSearchPage[1];
-    const seedData2 = this.props.state.fetchJSONtoSearchPage[2];
+    const seedDb = this.props.getState().fetchJSONtoSearchPage[0];
+    const seedData1 = this.props.getState().fetchJSONtoSearchPage[1];
+    const seedData2 = this.props.getState().fetchJSONtoSearchPage[2];
 
     // this.dataToRender(seedDb, seedData1, seedData2)
     console.log(seedData2);
