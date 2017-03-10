@@ -87,57 +87,8 @@
     this.node.connect(this.context.destination);   // if the script node is not connected to an output the 'onaudioprocess' event is not triggered in chrome.
   };
 
-  Recorder.setupDownload = function(blob, filename){
-    // var url = (window.URL || window.webkitURL).createObjectURL(blob);
-    // var link = document.getElementById('save');
-    // link.href = url;
-    // link.download = filename || 'output.wav';
-    console.log(blob);
-    console.log(filename);
-    
-    const formData = new FormData();
-    formData.append('title', 'The title from debug');
-    formData.append('type', 'inline');
-    formData.append('start_time', '100.087');
-    formData.append('end_time', '134.098');
-    formData.append('duration', '10.000');
-    formData.append('wavfile', blob);
-    // formData.append('wavfile', file);
-    console.log('Sending the request');
-    const xhr = new XMLHttpRequest();
-
-    // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    // xhr.withCredentials = true;
-    // xhr.setRequestHeader('Content-Type', 'text/plain');
-    xhr.open('POST', 'http://localhost:8080/audioclips/qwe', true);
-    xhr.addEventListener('progress', updateProgress);
-    xhr.addEventListener('load', transferComplete);
-    xhr.addEventListener('error', transferFailed);
-    xhr.addEventListener('abort', transferCanceled);
-    // xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=-- formdata --; charset=UTF-8');
-    // xhr.setRequestHeader('Content-Type', 'multipart/form-data;');
-    xhr.send(formData);
-  }
-
-  function updateProgress (oEvent) {
-    if (oEvent.lengthComputable) {
-        var percentComplete = oEvent.loaded / oEvent.total;
-        console.log(percentComplete);
-    } else {
-        console.log('Unable to compute progress information since the total size is unknown');
-    }
-  }
-
-  function transferComplete(evt) {
-    console.log('The transfer is complete.');
-  }
-
-  function transferFailed(evt) {
-    console.log('An error occurred while transferring the file.');
-  }
-
-  function transferCanceled(evt) {
-    console.log('The transfer has been canceled by the user.');
+  Recorder.processFile = function(blob) {
+    saveAudioClip(blob);
   }
 
   window.Recorder = Recorder;
