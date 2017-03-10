@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-
-import { Link } from 'react-router';
+import VideoCard from '../../components/video-card/VideoCard.jsx';
 
 const conf = require('../../shared/config')();
 
@@ -17,8 +16,6 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount and fetching...');
-
     const serverVideoIds = [];
     let ids;
     let dbResponse;
@@ -31,11 +28,9 @@ class Home extends Component {
           serverVideoIds.push(response.result[i]._id);
         }
         ids = serverVideoIds.join(',');
-        console.log
       })
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
-        console.log(ids);
         const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
         fetch(url)
         .then(response => response.json())
@@ -44,8 +39,8 @@ class Home extends Component {
           for (let i = 0; i < data.items.length; i += 1) {
             const item = data.items[i];
             const id = item.id;
-            const thumbnailDefault = item.snippet.thumbnails.default;
-            const thumbnailMedium = item.snippet.thumbnails.medium;
+            // const thumbnailDefault = item.snippet.thumbnails.default;
+            // const thumbnailMedium = item.snippet.thumbnails.medium;
             const thumbnailHigh = item.snippet.thumbnails.high;
             let title = item.snippet.title;
             const description = item.snippet.description;
@@ -56,7 +51,7 @@ class Home extends Component {
 
             dbResponse.forEach((elem) => {
               if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
-            })
+            });
 
             const now = Date.now();
             let time = now - publishedAt;
@@ -83,30 +78,25 @@ class Home extends Component {
               minutes === 1 ? time = `${minutes} minutes ago` : time = `${minutes} minutes ago`;
             }
 
-            // if (title.length > 50) title = `${title.slice(0, 50)}...`;
-            if (views >= 1000000000) views = `${(views/1000000000).toFixed(1)}B views`;
-            else if (views >= 1000000) views = `${(views/1000000).toFixed(1)}M views`;
-            else if (views >= 1000) views = `${(views/1000).toFixed(0)}K views`;
+            if (title.length > 100) title = `${title.slice(0, 100)}...`;
+            if (views >= 1000000000) views = `${(views / 1000000000).toFixed(1)}B views`;
+            else if (views >= 1000000) views = `${(views / 1000000).toFixed(1)}M views`;
+            else if (views >= 1000) views = `${(views / 1000).toFixed(0)}K views`;
             else if (views === 1) views = `${views} view`;
             else views = `${views} views`;
 
             videos.push(
-              <div className="vid-card w3-margin-top w3-left">
-                <div className="w3-card-2 w3-hover-shadow">
-                  <Link to={'/video/' + id}><img alt={description} src={thumbnailHigh.url} width="100%" /></Link>
-                  <div className="w3-container vid-title">
-                    <h5><Link to={'/video/' + id}>{title}</Link></h5>
-                    <h6>
-                      <a href="#">{author}</a><br />
-                      <a href="#">{describer}</a> (describer)
-                    </h6>
-                  </div>
-                  <div className="w3-container w3-padding-8">
-                    <h6><div className="w3-left">{views}</div><div className="w3-right"> {time}</div></h6>
-                  </div>
-                </div>
-              </div>,
-            );
+              <VideoCard
+                key={i}
+                id={id}
+                description={description}
+                thumbnailHighUrl={thumbnailHigh.url}
+                title={title}
+                author={author}
+                describer={describer}
+                views={views}
+                time={time}
+              />);
 
             this.setState({ videos });
           }
@@ -129,7 +119,7 @@ class Home extends Component {
         </div>
 
         <main className="w3-row">
-            {this.state.videos}
+          {this.state.videos}
         </main>
 
         <div className="w3-margin-top w3-center">
@@ -137,7 +127,7 @@ class Home extends Component {
         </div>
 
       </div>
-    )
+    );
   }
 }
 

@@ -1,7 +1,14 @@
 #search-bar {
   position: relative;
-  top: 2px;
+  top: 10px;
+  padding-left: 50px;
+  @media screen and (max-width: 1016px) {
+    padding-left: 0px;
+  }
   input {
-    // width: 500px;
+    width: 400px;
+    @media screen and (max-width: 1016px) {
+      width: 208px;
+    }
   }
 }

@@ -55,10 +55,10 @@ class Navbar extends Component {
             </Link>
 
             <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide w3-hide-large w3-hide-medium">
-              <span className="w3-indigo curve">YD</span>
+              <span>Y</span><span className="w3-indigo curve">D</span>
             </Link>
 
-            <div className="w3-left w3-padding">
+            <div className="w3-left">
               {/*<input type="text" className="w3-amber w3-border-0 w3-padding" style={{ width: '100%' }} />*/}
               <SearchBar updateSearch={(searchValue) => this.props.updateSearch(searchValue)} />
             </div>
