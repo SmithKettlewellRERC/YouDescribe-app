@@ -5,7 +5,6 @@ import ActionIcon from '../action-icon/ActionIcon.jsx';
 import Track from '../track/Track.jsx';
 
 const Editor = (props) => {
-  console.log('editor', props.actionClick);
   return (
     <div id="editor" className="w3-card-2">
       <div className="w3-card-4">
@@ -34,10 +33,10 @@ const Editor = (props) => {
           <div className="w3-col l3 m3 s3">
             <div className="cont">
               <div className="w3-padding-right w3-left">
-                <Button title="Add inline" color="w3-yellow" onClick={props.addInlineClick} />
+                <Button title="Add inline" color="w3-yellow" onClick={() => props.addAudioClipTrack('I', 'yellow')} />
               </div>
               <div className="w3-left">
-                <Button title="Add extended" color="w3-purple" onClick={props.addExtendedClick} />
+                <Button title="Add extended" color="w3-purple" onClick={() => props.addAudioClipTrack('E', 'purple')}  />
               </div>
             </div>
           </div>
@@ -48,7 +47,7 @@ const Editor = (props) => {
       </div>
 
       <div className="w3-right-align w3-border-top w3-border-black w3-padding">
-        <Button title="Publish" color="w3-indigo" onClick={props.publishClick} />
+        <Button title="Publish" color="w3-indigo" onClick={props.publishVideo} />
       </div>
     </div>
   )

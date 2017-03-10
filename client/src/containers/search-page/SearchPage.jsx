@@ -193,7 +193,6 @@ class SearchPage extends Component {
     this.setState({
       videoNotOnYD: videoNotOnYD,
     });
-
   }
 
   componentDidMount() {

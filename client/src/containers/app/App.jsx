@@ -18,17 +18,16 @@ class App extends Component {
     };
 
     this.getState = this.getState.bind(this);
-    this.publishClick = this.publishClick.bind(this);
-    this.addInlineClick = this.addInlineClick.bind(this);
-    this.addExtendedClick = this.addExtendedClick.bind(this);
-    this.actionClick = this.actionClick.bind(this);
+    this.publishVideo = this.publishVideo.bind(this);
+    this.addAudioClipTrack = this.addAudioClipTrack.bind(this);
+    this.recordAudioClip = this.recordAudioClip.bind(this);
   }
 
   getState() {
     return this.state;
   }
 
-  publishClick() {
+  publishVideo() {
     alert('published');
   }
 
@@ -44,18 +43,25 @@ class App extends Component {
 
   addExtendedClick() {
     const tracks = this.state.tracks.slice();
-    tracks.push(<Track color="w3-purple" text="E" id={this.state.trackCount} actionClick={this.actionClick} />);
-    this.setState({ tracks, trackCount: this.state.trackCount + 1 });
+    tracks.push(<Track key={newTrackId} color={'w3-' + color} text={type} id={this.state.trackCount} recordAudioClip={this.recordAudioClip} />);
+    this.setState({ tracks, trackCount: newTrackId });
   }
 
-  actionClick(e) {
+  recordAudioClip(e) {
     const tracks = this.state.tracks.slice();
     if (e.target.className === 'fa fa-circle') {
+      console.log('Start recording');
+      startRecording();
       e.target.className = 'fa fa-stop';
     } else if (e.target.className === 'fa fa-stop') {
+      console.log('Stop recording');
+      stopRecording();
       e.target.className = 'fa fa-step-forward';
+    } else {
+      console.log('Just play');
     }
   }
+
 
   // use algorithm to seperate
   letFetch(searchValue) {
@@ -146,10 +152,9 @@ class App extends Component {
           state: this.state,
           updateState: this.updateState,
           getState: this.getState,
-          publishClick: this.publishClick,
-          addInlineClick: this.addInlineClick,
-          addExtendedClick: this.addExtendedClick,
-          actionClick: this.actionClick,
+          publishVideo: this.publishVideo,
+          addAudioClipTrack: this.addAudioClipTrack,
+          recordAudioClip: this.recordAudioClip,
         })}
         <Footer />
       </div>

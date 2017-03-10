@@ -1,6 +1,6 @@
 (function(window){
 
-  var WORKER_PATH = '/recorder/recorderWorker.js';
+  var WORKER_PATH = 'recorderWorker.js';
 
   var Recorder = function(source, cfg){
     var config = cfg || {};
@@ -28,7 +28,7 @@
         command: 'record',
         buffer: [
           e.inputBuffer.getChannelData(0),
-          e.inputBuffer.getChannelData(1),
+          e.inputBuffer.getChannelData(1)
         ]
       });
     }
@@ -64,7 +64,7 @@
       if (!currCallback) throw new Error('Callback not set');
       worker.postMessage({
         command: 'exportWAV',
-        type: type,
+        type: type
       });
     }
 
@@ -74,7 +74,7 @@
       if (!currCallback) throw new Error('Callback not set');
       worker.postMessage({
         command: 'exportMonoWAV',
-        type: type,
+        type: type
       });
     }
 
