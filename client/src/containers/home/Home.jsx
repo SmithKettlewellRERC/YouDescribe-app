@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 
+import { Link } from 'react-router';
+
 const conf = require('../../shared/config')();
-// import seedData from './seedData.js';
 
 class Home extends Component {
   constructor(props) {
@@ -90,22 +91,11 @@ class Home extends Component {
             else views = `${views} views`;
 
             videos.push(
-              <div className="w3-col m4 l2 w3-margin-top">
+              <div className="vid-card w3-margin-top w3-left">
                 <div className="w3-card-2 w3-hover-shadow">
-                  <img alt={description} src={thumbnailHigh.url} width="100%" />
-                  {/*
-                    <div style={{
-                    backgroundImage: `url(${thumbnailHigh.url})`,
-                    backgroundSize: '100%',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    height: '150px',
-                    }}>
-                    test
-                    </div>
-                  */}
+                  <Link to={'/video/' + id}><img alt={description} src={thumbnailHigh.url} width="100%" /></Link>
                   <div className="w3-container vid-title">
-                    <h5><a href={'/video/' + id}>{title}</a></h5>
+                    <h5><Link to={'/video/' + id}>{title}</Link></h5>
                     <h6>
                       <a href="#">{author}</a><br />
                       <a href="#">{describer}</a> (describer)
@@ -138,8 +128,8 @@ class Home extends Component {
           <h1>Most popular</h1>
         </div>
 
-        <main className="w3-row-padding">
-          {this.state.videos}
+        <main className="w3-row">
+            {this.state.videos}
         </main>
 
         <div className="w3-margin-top w3-center">
