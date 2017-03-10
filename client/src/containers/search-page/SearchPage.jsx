@@ -82,18 +82,20 @@ class SearchPage extends Component {
             let authorSection;
 
             if (describer) {
-              authorSection = (
-              <h6>
-                <a href="#">{author}</a><br />
-                <a href="#">{describer}</a> (describer)
-              </h6>
-              )
+              authorSection =
+              (
+                <h6>
+                  <a href="#">{author}</a><br />
+                  <a href="#">{describer}</a> (describer)
+                </h6>
+              );
             } else {
-               authorSection = (
-               <h6>
-                <a href="#">{author}</a><br />
-               </h6>
-               )
+              authorSection =
+              (
+                <h6>
+                  <a href="#">{author}</a><br />
+                </h6>
+              );
             }
 
             videoAlreadyOnYD.push(

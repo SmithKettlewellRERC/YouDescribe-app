@@ -85,7 +85,15 @@ class App extends Component {
   //     });
   // }
 
-  //search video inside AD database
+  //fetch to youtube querry to get the video
+
+
+
+  //fetch to YD database to get the video in that database
+
+
+
+  //use algorithm to seperate 
   letFetch(searchValue){
       console.log('fetching the data to the state')
       let q = encodeURIComponent(searchValue);
