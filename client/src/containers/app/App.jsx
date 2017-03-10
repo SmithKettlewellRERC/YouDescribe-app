@@ -31,17 +31,7 @@ class App extends Component {
     alert('published');
   }
 
-  addInlineClick() {
-    const tracks = this.state.tracks.slice();
-    tracks.push(
-      <Track
-        color="w3-yellow" text="I" id={this.state.trackCount}
-        actionClick={this.actionClick}
-      />);
-    this.setState({ tracks, trackCount: this.state.trackCount + 1 });
-  }
-
-  addExtendedClick() {
+  addAudioClipTrack() {
     const tracks = this.state.tracks.slice();
     tracks.push(<Track key={newTrackId} color={'w3-' + color} text={type} id={this.state.trackCount} recordAudioClip={this.recordAudioClip} />);
     this.setState({ tracks, trackCount: newTrackId });
@@ -149,8 +139,6 @@ class App extends Component {
           updateSearch={searchValue => this.letFetch(searchValue)}
         />
         {React.cloneElement(this.props.children, {
-          state: this.state,
-          updateState: this.updateState,
           getState: this.getState,
           publishVideo: this.publishVideo,
           addAudioClipTrack: this.addAudioClipTrack,
