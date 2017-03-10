@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 
-import seedData from './seedData.js';
-import seedDb from './seedDb.js';
+// import seedData from './seedData.js';
+// import seedDb from './seedDb.js';
 
 class SearchPage extends Component {
   constructor(props) {
@@ -25,27 +25,27 @@ class SearchPage extends Component {
   }
 
 
-  dataToRender(dbResponse, videoFromYDdatabase, videoFromYoutube) {
+  renderVideoFromYD(dbResponse, videoFromYDdatabase) {
       console.log('component fetching...');
 
           const videoAlreadyOnYD = this.state.videoAlreadyOnYD.slice();
 
-          for (let i = 0; i < videoFromYDdatabase.items.length; i += 1) {
+          for (let i = 0; i < videoFromYDdatabase.length; i += 1) {
 
 
-            const id = videoFromYDdatabase.items[i].id;
-            const thumbnailDefault = videoFromYDdatabase.items[i].snippet.thumbnails.default;
-            const thumbnailMedium = videoFromYDdatabase.items[i].snippet.thumbnails.medium;
-            const thumbnailHigh = videoFromYDdatabase.items[i].snippet.thumbnails.high;
-            let title = videoFromYDdatabase.items[i].snippet.title;
-            const description = videoFromYDdatabase.items[i].snippet.description;
-            const author = videoFromYDdatabase.items[i].snippet.channelTitle;
+            const id = videoFromYDdatabase[i].id;
+            const thumbnailDefault = videoFromYDdatabase[i].snippet.thumbnails.default;
+            const thumbnailMedium = videoFromYDdatabase[i].snippet.thumbnails.medium;
+            const thumbnailHigh = videoFromYDdatabase[i].snippet.thumbnails.high;
+            let title = videoFromYDdatabase[i].snippet.title;
+            const description = videoFromYDdatabase[i].snippet.description;
+            const author = videoFromYDdatabase[i].snippet.channelTitle;
             let describer = null;
-            let views = videoFromYDdatabase.items[i].statistics.viewCount;
-            const publishedAt = new Date(videoFromYDdatabase.items[i].snippet.publishedAt);
+            let views = videoFromYDdatabase[i].statistics.viewCount;
+            const publishedAt = new Date(videoFromYDdatabase[i].snippet.publishedAt);
 
             dbResponse.forEach((elem) => {
-              if (elem._id === id) describer = elem.audio_descriptions[0].legacy_author_name;
+              if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
             });
 
             const now = Date.now();
@@ -103,17 +103,6 @@ class SearchPage extends Component {
               <div className="w3-col m4 l2 w3-margin-top">
                 <div className="w3-card-2">
                   <img alt={description} src={thumbnailHigh.url} width="100%" />
-                  {/*
-                    <div style={{
-                    backgroundImage: `url(${thumbnailHigh.url})`,
-                    backgroundSize: '100%',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    height: '150px',
-                    }}>
-                    test
-                    </div>
-                  */}
                   <div className="w3-container vid-title">
                     <h5><a href="#">{title}</a></h5>
                     {/*<h6>
@@ -131,21 +120,23 @@ class SearchPage extends Component {
               </div>,
             );
           }
+    this.setState({
+      videoAlreadyOnYD: videoAlreadyOnYD,
+    });
+  }
 
+  renderVideoNotOnYD(videoFromYoutube) {
       const videoNotOnYD = this.state.videoNotOnYD.slice();
-
-          for (let i = 0; i < videoFromYoutube.items.length; i += 1) {
-
-
-            const id = videoFromYoutube.items[i].id;
-            const thumbnailDefault = videoFromYoutube.items[i].snippet.thumbnails.default;
-            const thumbnailMedium = videoFromYoutube.items[i].snippet.thumbnails.medium;
-            const thumbnailHigh = videoFromYoutube.items[i].snippet.thumbnails.high;
-            let title = videoFromYoutube.items[i].snippet.title;
-            const description = videoFromYoutube.items[i].snippet.description;
-            const author = videoFromYoutube.items[i].snippet.channelTitle;
-            let views = videoFromYoutube.items[i].statistics.viewCount;
-            const publishedAt = new Date(videoFromYoutube.items[i].snippet.publishedAt);
+          for (let i = 0; i < videoFromYoutube.length; i += 1) {
+            const id = videoFromYoutube[i].id;
+            const thumbnailDefault = videoFromYoutube[i].snippet.thumbnails.default;
+            const thumbnailMedium = videoFromYoutube[i].snippet.thumbnails.medium;
+            const thumbnailHigh = videoFromYoutube[i].snippet.thumbnails.high;
+            let title = videoFromYoutube[i].snippet.title;
+            const description = videoFromYoutube[i].snippet.description;
+            const author = videoFromYoutube[i].snippet.channelTitle;
+            let views = videoFromYoutube[i].statistics.viewCount;
+            const publishedAt = new Date(videoFromYoutube[i].snippet.publishedAt);
 
             const now = Date.now();
             let time = now - publishedAt;
@@ -199,33 +190,49 @@ class SearchPage extends Component {
             );
           }
 
-      this.setState({ videoAlreadyOnYD, videoNotOnYD });
-
-      console.log('video already on YD ',this.state.videoAlreadyOnYD)
-      console.log('video not on YD ',this.state.videoNotOnYD)
-
+    this.setState({
+      videoNotOnYD: videoNotOnYD,
+    });
   }
 
   componentDidMount() {
-    console.log('component did mount: ')
-    // let seedDb = this.props.state.data[0];
-    // let seedData = this.props.state.data[1];
+    console.log('component did mount: ');
+    const seedDb = this.props.state.fetchJSONtoSearchPage[0];
+    const seedData1 = this.props.state.fetchJSONtoSearchPage[1];
+    const seedData2 = this.props.state.fetchJSONtoSearchPage[2];
 
 
-    this.dataToRender(seedDb, seedData, seedData);
+    this.renderVideoFromYD(seedDb, seedData1);
+    this.renderVideoNotOnYD(seedData2);
   }
 
-  //component gonna update everytime app run fetch and SearchPage get props
+  // component gonna update everytime app run fetch and SearchPage get props
   componentWillReceiveProps() {
+    console.log('component will receive props: ');
+    const seedDb = this.props.state.fetchJSONtoSearchPage[0];
+    const seedData1 = this.props.state.fetchJSONtoSearchPage[1];
+    const seedData2 = this.props.state.fetchJSONtoSearchPage[2];
 
-    console.log('component will receive props: ')
-    // let seedDb = this.props.state.data[0];
-    // let seedData = this.props.state.data[1];
+    // this.dataToRender(seedDb, seedData1, seedData2)
+    console.log(seedData2);
+    console.log(this.state.videoNotOnYD);
 
-    this.setState({
-      videoAlreadyOnYD: [],
-      videoNotOnYD: [],
-    }, () => this.dataToRender(seedDb, seedData, seedData))
+    if (seedData2.length == 0) {
+      this.setState({
+        videoAlreadyOnYD: [],
+      }, () => {
+        this.renderVideoFromYD(seedDb, seedData1);
+        console.log('rendering top');
+      });
+    }
+    if (seedData2.length > 0) {
+      this.setState({
+        videoNotOnYD: [],
+      }, () => {
+        this.renderVideoNotOnYD(seedData2);
+        console.log('rendering bot');
+      });
+    }
   }
 
   render() {
@@ -254,7 +261,7 @@ class SearchPage extends Component {
 
         <div className="w3-margin-top w3-center">
           <button
-           className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
+            className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
         </div>
       </div>
     );

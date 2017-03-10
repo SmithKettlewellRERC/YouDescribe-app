@@ -5,7 +5,7 @@ const SearchBar = (props) => {
   const updateSearch = (e) => {
     e.preventDefault();
     const value = e.target[0].value;
-    console.log('at click, the value is: ', value);
+    // console.log('at click, the value is: ', value);
     props.updateSearch(value);
   };
 

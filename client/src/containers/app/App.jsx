@@ -12,7 +12,9 @@ class App extends Component {
     this.state = {
       tracks: [],
       trackCount: 0,
-      data: [],
+
+      // search: '',
+      fetchJSONtoSearchPage: [],
     };
 
     this.getState = this.getState.bind(this);
@@ -29,8 +31,17 @@ class App extends Component {
     alert('published');
   }
 
-  addAudioClipTrack(type, color) {
-    const newTrackId = this.state.trackCount + 1;
+  addInlineClick() {
+    const tracks = this.state.tracks.slice();
+    tracks.push(
+      <Track
+        color="w3-yellow" text="I" id={this.state.trackCount}
+        actionClick={this.actionClick}
+      />);
+    this.setState({ tracks, trackCount: this.state.trackCount + 1 });
+  }
+
+  addExtendedClick() {
     const tracks = this.state.tracks.slice();
     tracks.push(<Track key={newTrackId} color={'w3-' + color} text={type} id={this.state.trackCount} recordAudioClip={this.recordAudioClip} />);
     this.setState({ tracks, trackCount: newTrackId });
@@ -52,86 +63,90 @@ class App extends Component {
   }
 
 
-  
+  // use algorithm to seperate
+  letFetch(searchValue) {
+    console.log('fetching the data to the state')
+    const q = encodeURIComponent(searchValue);
+    const serverVideoIds = [];
+    let ids;
+    let dbResponse;
+    let videoFromYDdatabase = [];
+    const videoFoundOnYTIds = [];
+    let videoFromYoutube = [];
+    let idsYTvideo;
 
-  //search video on youtube
-  // letFetch(searchValue){
-  //     console.log('fetching the data to the state')
-  //     let q = encodeURIComponent(searchValue);
-  //     const serverVideoIds = [];
-  //     let ids;
-  //     let dbResponse;
-
-  //     fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${q}&maxResults=50&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`)
-  //     .then(response => response.json())
-  //     .then((response) => {
-  //       dbResponse = response.items;
-  //       for (let i = 0; i < dbResponse.length; i += 1) {
-  //         serverVideoIds.push(dbResponse[i].id.videoId);
-  //       }
-  //       ids = serverVideoIds.join(',');
-  //     })
-  //     .then(() => {
-  //       // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
-  //       const url = `https://www.googleapis.com/youtube/v3/videos?id=${ids}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
-  //       fetch(url)
-  //       .then(response => response.json())
-  //       .then((data) => {
-  //         this.setState({
-  //           data: [dbResponse, data],
-  //         }, () => {
-  //           browserHistory.push('/search');
-  //         });
-  //       });
-  //     });
-  // }
-
-  //fetch to youtube querry to get the video
-
-
-
-  //fetch to YD database to get the video in that database
-
-
-
-  //use algorithm to seperate 
-  letFetch(searchValue){
-      console.log('fetching the data to the state')
-      let q = encodeURIComponent(searchValue);
-      const serverVideoIds = [];
-      let ids;
-      let dbResponse;
-
-      fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${q}&maxResults=50&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`)
+      fetch(`http://webng.io:8080/v1/videos/search?q=${q}`)
       .then(response => response.json())
       .then((response) => {
-        dbResponse = response.items;
+        dbResponse = response.result;
         for (let i = 0; i < dbResponse.length; i += 1) {
-          serverVideoIds.push(dbResponse[i].id.videoId);
+          serverVideoIds.push(dbResponse[i]._id);
         }
         ids = serverVideoIds.join(',');
       })
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
-        const url = `https://www.googleapis.com/youtube/v3/videos?id=${ids}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
-        fetch(url)
+        const urlfForYT = `https://www.googleapis.com/youtube/v3/videos?id=${ids}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+        fetch(urlfForYT)
         .then(response => response.json())
-        .then((data) => {
+        .then((videoDataFromYDdatabase) => {
+          videoFromYDdatabase = videoDataFromYDdatabase.items;
+
+          // replace data in the state with new data,
+          // use ( and dont use) callback for next fetch
+          const fetchData = this.state.fetchJSONtoSearchPage.slice();
+          fetchData[0] = dbResponse;
+          fetchData[1] = videoFromYDdatabase;
+          fetchData[2] = [];
+
+          console.log(fetchData);
+
           this.setState({
-            data: [dbResponse, data],
+            fetchJSONtoSearchPage: fetchData,
           }, () => {
             browserHistory.push('/search');
-            console.log('fetching to children: ', this.state.data)
+            // console.log('video from YD: ', videoFromYDdatabase);
+            const urlForYD = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${q}&maxResults=50&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+            fetch(urlForYD)
+            .then(response => response.json())
+            .then((videos) => {
+              for (let i = 0; i < videos.items.length; i += 1) {
+                const temp = videos.items[i].id.videoId;
+                if (!(ids.indexOf(temp) > -1)) {
+                  videoFoundOnYTIds.push(videos.items[i].id.videoId);
+                }
+              }
+              idsYTvideo = videoFoundOnYTIds.join(',');
+            })
+            .then(() => {
+              const urlForYT = `https://www.googleapis.com/youtube/v3/videos?id=${idsYTvideo}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+              fetch(urlForYT)
+                .then(response => response.json())
+                .then((videoFromYoutubes) => {
+                  videoFromYoutube = videoFromYoutubes.items;
+                  let fetchData = this.state.fetchJSONtoSearchPage.slice();
+                  fetchData[2] = videoFromYoutube;
+
+                  console.log(fetchData);
+
+                  this.setState({
+                    fetchJSONtoSearchPage: fetchData,
+                  }, () => {
+                    browserHistory.push('/search');
+                    // console.log('video from YT: ', videoFromYoutube);
+                  });
+                });
+            });
           });
         });
       });
   }
 
   render() {
-    
     return (
       <div>
-        <Navbar updateSearch={(searchValue) => this.letFetch(searchValue)}
+        <Navbar
+          updateSearch={searchValue => this.letFetch(searchValue)}
         />
         {React.cloneElement(this.props.children, {
           state: this.state,

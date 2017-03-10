@@ -20,6 +20,7 @@ class Home extends Component {
     let ids;
     let dbResponse;
 
+    // fetch('http://webng.io:8080/v1/videos')
     fetch(`${conf.apiUrl}/videos`)
       .then(response => response.json())
       .then((response) => {
@@ -51,7 +52,7 @@ class Home extends Component {
 
             dbResponse.forEach((elem) => {
               if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
-            });
+            })
 
             const now = Date.now();
             let time = now - publishedAt;

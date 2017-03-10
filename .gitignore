@@ -5,7 +5,5 @@ node_modules
 bundles.js
 myYouTube.jsx
 settings.json
-Video_2.jsx
-Video_3.jsx
-Video_1.jsx
 .vscode
+npm-debug.log
