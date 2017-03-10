@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import VideoCard from '../../components/video-card/VideoCard.jsx';
 
 import seedData from './seedData.js';
 import seedDb from './seedDb.js';
@@ -172,9 +173,9 @@ class SearchPage extends Component {
             }
 
             // if (title.length > 50) title = `${title.slice(0, 50)}...`;
-            if (views >= 1000000000) views = `${(views/1000000000).toFixed(1)}B views`;
-            else if (views >= 1000000) views = `${(views/1000000).toFixed(1)}M views`;
-            else if (views >= 1000) views = `${(views/1000).toFixed(0)}K views`;
+            if (views >= 1000000000) views = `${(views / 1000000000).toFixed(1)}B views`;
+            else if (views >= 1000000) views = `${(views / 1000000).toFixed(1)}M views`;
+            else if (views >= 1000) views = `${(views / 1000).toFixed(0)}K views`;
             else if (views === 1) views = `${views} view`;
             else views = `${views} views`;
 
@@ -182,17 +183,6 @@ class SearchPage extends Component {
               <div className="w3-col m4 l2 w3-margin-top">
                 <div className="w3-card-2">
                   <img alt={description} src={thumbnailHigh.url} width="100%" />
-                  {/*
-                    <div style={{
-                    backgroundImage: `url(${thumbnailHigh.url})`,
-                    backgroundSize: '100%',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    height: '150px',
-                    }}>
-                    test
-                    </div>
-                  */}
                   <div className="w3-container vid-title">
                     <h5><a href="#">{title}</a></h5>
                     <h6>
@@ -211,8 +201,6 @@ class SearchPage extends Component {
 
       this.setState({ videoAlreadyOnYD, videoNotOnYD });
 
-
-
       console.log('video already on YD ',this.state.videoAlreadyOnYD)
       console.log('video not on YD ',this.state.videoNotOnYD)
 
@@ -229,6 +217,7 @@ class SearchPage extends Component {
 
   //component gonna update everytime app run fetch and SearchPage get props
   componentWillReceiveProps() {
+
     console.log('component will receive props: ')
     // let seedDb = this.props.state.data[0];
     // let seedData = this.props.state.data[1];
@@ -240,9 +229,8 @@ class SearchPage extends Component {
   }
 
   render() {
-
     return (
-      <div id="home">
+      <div id="search-page">
 
         <div className="w3-container w3-indigo">
           <h1>Already on YD</h1>
@@ -269,7 +257,7 @@ class SearchPage extends Component {
            className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
         </div>
       </div>
-    )
+    );
   }
 }
 
