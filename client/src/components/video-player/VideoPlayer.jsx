@@ -5,7 +5,6 @@ const conf = require('./../../shared/config')();
 
 class VideoPlayer extends Component {
   constructor(props) {
-    console.log('##########################', props.videoId);
     super(props);
     this.watcher = null;
     this.videoPlayer = null;
@@ -24,6 +23,7 @@ class VideoPlayer extends Component {
         return response.json();
       })
       .then((json) => {
+        console.log(json);
         if (json && json.result && json.result.status === 'published') {
           this.parseVideoData(json.result);
         } else {
@@ -51,7 +51,7 @@ class VideoPlayer extends Component {
     let totalAudioClipsLoaded = 0;
     const audioClipLoaded = () => {
       totalAudioClipsLoaded += 1;
-      console.log('total', this.audioClipsLength, totalAudioClipsLoaded);
+      console.log('Loading', totalAudioClipsLoaded, 'of', this.audioClipsLength);
       if (this.audioClipsLength <= totalAudioClipsLoaded) {
         console.log('All audios loaded, let\'s start the video player');
         this.initVideoPlayer();
@@ -72,7 +72,7 @@ class VideoPlayer extends Component {
   }
 
   initVideoPlayer() {
-    console.log('initVideoPlayer');
+    // console.log('initVideoPlayer');
     const self = this;
     this.videoPlayer = new YT.Player('player', {
       height: '315px',
@@ -110,7 +110,7 @@ class VideoPlayer extends Component {
       currentVideoProgress = this.videoPlayer.getCurrentTime();
       // console.log('currentVideoProgress', currentVideoProgress);
 
-      // Whe the user back the video.
+      // When the user back the video.
       if (Math.abs(currentVideoProgress - previousTime) > 0.015) {
         currentAudioClip = this.getNextAudioClip(currentVideoProgress);
       }
@@ -124,15 +124,12 @@ class VideoPlayer extends Component {
       }
 
       if (currentVideoProgress > timedEvent) {
-        console.log(this.nextAudioClip);
         const url = this.nextAudioClip.url
         if (this.nextAudioClip.type === 'inline') {
-          console.log('### PLAY INLINE ###');
-          // console.log('URL', url);
+          console.log('### INLINE ###', url);
           this.playAudioClip(url, currentVideoProgress);
         } else {
-          console.log('### PLAY EXTENDED ###');
-          // console.log('URL', url);
+          console.log('### EXTENDED', url);
           this.videoPlayer.pauseVideo();
           this.playAudioClip(url, currentVideoProgress, () => {
             this.videoPlayer.playVideo();
@@ -153,19 +150,14 @@ class VideoPlayer extends Component {
       },
     });
     audio.play();
-    // console.log('Playing audio clip at: ', arr[0]);
-    console.log('Teh audio clip was played at: ', currentVideoProgress);
   }
 
   componentDidMount() {
-    // this.preLoadAudioClips();
     this.fetchAudioClips();
-    // console.log(conf.apiUrl);
-
   }
 
   render() {
-    return ( <div id="player"></div> );
+    return (<div id="player" />);
   }
 }
 
