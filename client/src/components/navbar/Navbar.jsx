@@ -45,7 +45,7 @@ class Navbar extends Component {
 
           <div className="w3-bar w3-white w3-card-2" id="navbar">
 
-            <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide">
+            <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide w3-hide-small">
               {/*<img
                 alt="YouDescribe logo"
                 height="24px"
@@ -54,32 +54,33 @@ class Navbar extends Component {
               <span>You</span><span className="w3-indigo curve">Describe</span>
             </Link>
 
+            <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide w3-hide-large w3-hide-medium">
+              <span className="w3-indigo curve">YD</span>
+            </Link>
+
             <div className="w3-left w3-padding">
               {/*<input type="text" className="w3-amber w3-border-0 w3-padding" style={{ width: '100%' }} />*/}
               <SearchBar updateSearch={(searchValue) => this.props.updateSearch(searchValue)} />
             </div>
 
             {/* Right-sided navbar links */}
-            <div className="w3-right w3-hide-small">
+            <div className="w3-right w3-hide-small w3-hide-medium">
               {/*<span className="w3-bar-item"><SearchBar /></span>*/}
               <Link to="/authoring-tool/hPLgfGX1I5Y" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
-              <Link to="/video-page" className="w3-bar-item w3-button"><i className="fa fa-video-camera"></i> VIDEO PLAYER</Link>
-              <Link to="/wishlist" className="w3-bar-item w3-button">WISH LIST</Link>
               <Link to="/" className="w3-bar-item w3-button">SIGN IN</Link>
             </div>
             {/* Hide right-floated links on small screens and replace them with a menu icon */}
 
-            <a href="javascript:void(0)" className="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onClick={this.menuOpen}>
-              <i className="fa fa-bars w3-padding-right w3-padding-left"></i>
+            <a href="javascript:void(0)" className="w3-bar-item w3-button w3-right w3-hide-large" onClick={this.menuOpen}>
+              <i className="fa fa-bars"></i>
             </a>
           </div>
         </div>
 
         {/* Sidenav on small screens when clicking the menu icon */}
-        <nav className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-medium w3-hide-large" style={{ display: 'none' }} id="mySidenav">
+        <nav className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-large" style={{ display: 'none' }}>
           <a href="javascript:void(0)" onClick={this.menuClose} className="w3-large w3-padding-16">Close ×</a>
             <Link to="/authoring-tool/hPLgfGX1I5Y" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
-            <Link to="/video-page" className="w3-bar-item w3-button"><i className="fa fa-video-camera"></i> VIDEO PLAYER</Link>
             <Link to="/" className="w3-bar-item w3-button">SIGN IN</Link>
         </nav>
       </div>
