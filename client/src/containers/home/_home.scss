@@ -2,11 +2,26 @@
 
 #home {
   min-height: 600px;
+  .vid-card {
+    width: 200px;
+    padding: 0 8px;
+    .w3-card-2 {
+      .vid-title {
+        height: 110px;
+      }
+      background-color: #fff;
+    }
+  }
   main {
-    // creates container for videos
-    // width: 90%;
-    // margin: 0 auto;
-    min-height: 500px;
+    width: 1016px;
+    padding: 0px 8px;
+    margin: 0 auto;
+    @media screen and (max-width: 1016px) {
+      width: 616px;
+    }
+    @media screen and (max-width: 616px) {
+      width: 416px;
+    }
   }
   button {
     margin-top: 10px;
@@ -31,17 +46,6 @@
     }
     a:hover {
       color: #337ab7;
-    }
-  }
-  .w3-bar .w3-button {
-    padding: 16px;
-  }
-  .w3-row-padding {
-    .w3-card-2 {
-      .vid-title {
-        height: 110px;
-      }
-      background-color: #fff;
     }
   }
 }
