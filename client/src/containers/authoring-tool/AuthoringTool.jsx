@@ -12,7 +12,7 @@ const conf = require('../../shared/config')();
 
 class AuthoringTool extends Component {
   constructor(props) {
-    super(props);;
+    super(props);
     this.videoId = props.params.videoId;
     this.state = {
       // Authoring tool data.
