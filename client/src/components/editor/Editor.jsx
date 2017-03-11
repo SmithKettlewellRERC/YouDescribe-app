@@ -3,6 +3,7 @@ import React from 'react';
 import Button from '../button/Button.jsx';
 import ActionIcon from '../action-icon/ActionIcon.jsx';
 import Track from '../track/Track.jsx';
+import Playhead from '../playhead/Playhead.jsx';
 
 const Editor = (props) => {
   const timeInSeconds = props.getState().editorTimerValue;
@@ -25,7 +26,6 @@ const Editor = (props) => {
   }
 
   const convertedTime = convertSecondsToEditorFormat(timeInSeconds);
-
   return (
     <div id="editor" className="w3-card-2">
       <div className="w3-card-4">
@@ -40,6 +40,7 @@ const Editor = (props) => {
                 <span className="w3-right">{props.youTubeVideoDuration}</span>
               </div>
               <hr />
+              <Playhead playheadPosition={props.playheadPosition} />
             </div>
           </div>
         </div>
