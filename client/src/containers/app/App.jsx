@@ -12,6 +12,8 @@ class App extends Component {
     this.state = {
       tracks: [],
       trackCount: 0,
+      editorTimerValue: 0,
+      youTubeVideoDuration: 0,
 
       // search: '',
       fetchJSONtoSearchPage: [],
@@ -21,10 +23,17 @@ class App extends Component {
     this.publishVideo = this.publishVideo.bind(this);
     this.addAudioClipTrack = this.addAudioClipTrack.bind(this);
     this.recordAudioClip = this.recordAudioClip.bind(this);
+    this.getVideoProgress = this.getVideoProgress.bind(this);
   }
 
   getState() {
     return this.state;
+  }
+
+  getVideoProgress(currentVideoProgress) {
+    if (this.state.editorTimerValue !== currentVideoProgress) {
+      this.setState({ editorTimerValue: currentVideoProgress });
+    }
   }
 
   publishVideo() {
@@ -51,7 +60,6 @@ class App extends Component {
       console.log('Just play');
     }
   }
-
 
   // use algorithm to seperate
   letFetch(searchValue) {
@@ -143,6 +151,7 @@ class App extends Component {
           publishVideo: this.publishVideo,
           addAudioClipTrack: this.addAudioClipTrack,
           recordAudioClip: this.recordAudioClip,
+          getVideoProgress: this.getVideoProgress,
         })}
         <Footer />
       </div>

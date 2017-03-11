@@ -5,7 +5,7 @@ const Notes = () => (
     <div className="w3-card-4">
       NOTES
     </div>
-    <textarea placeholder="Enter notes here" className="w3-container notes-area" />
+    <textarea id="notes-textarea" placeholder="Enter notes here" className="w3-container notes-area" />
   </div>
 );
 

@@ -67,7 +67,7 @@ class Navbar extends Component {
             {/* Right-sided navbar links */}
             <nav role="navigation" className="w3-right w3-hide-small w3-hide-medium">
               {/*<span className="w3-bar-item"><SearchBar /></span>*/}
-              <Link to="/authoring-tool/hPLgfGX1I5Y" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
+              <Link to="/authoring-tool/pZ5576Pags4" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
               <Link to="/" className="w3-bar-item w3-button">SIGN IN</Link>
             </nav>
             {/* Hide right-floated links on small screens and replace them with a menu icon */}
@@ -81,7 +81,7 @@ class Navbar extends Component {
         {/* Sidenav on small screens when clicking the menu icon */}
         <nav className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-large" style={{ display: 'none' }}>
           <a href="javascript:void(0)" onClick={this.menuClose} className="w3-large w3-padding-16">Close ×</a>
-            <Link to="/authoring-tool/hPLgfGX1I5Y" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
+            <Link to="/authoring-tool/pZ5576Pags4" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
             <Link to="/" className="w3-bar-item w3-button">SIGN IN</Link>
         </nav>
       </div>
