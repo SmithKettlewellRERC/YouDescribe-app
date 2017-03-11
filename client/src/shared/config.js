@@ -1,5 +1,5 @@
 module.exports = () => {
-  const isProduction = false;
+  const isProduction = true;
   const apiVersion = 'v1';
   const protocol = 'http';
   const apiPort = isProduction ? '8080' : '8080';
