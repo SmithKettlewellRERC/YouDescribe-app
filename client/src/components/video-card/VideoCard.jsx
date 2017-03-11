@@ -8,7 +8,7 @@ const VideoCard = props => {
     vote_count = 
       (
         <div>
-          Requested: {props.vote_count} time
+          Requested: {props.vote_count} times
         </div>
       )
   }
@@ -38,8 +38,8 @@ const VideoCard = props => {
         <div className="w3-container w3-padding-8">
           <h6><div className="w3-left">{props.views}</div><div className="w3-right"> {props.time}</div></h6>
         </div>
-        {buttons}
         {vote_count}
+        {buttons}
       </div>
     </div>
     );

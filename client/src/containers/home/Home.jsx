@@ -20,8 +20,8 @@ class Home extends Component {
     let ids;
     let dbResponse;
 
-    // fetch('http://webng.io:8080/v1/videos')
-    fetch(`${conf.apiUrl}/videos`)
+    fetch('http://webng.io:8080/v1/videos')
+    // fetch(`${conf.apiUrl}/v1/videos`)
       .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;

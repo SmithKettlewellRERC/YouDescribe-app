@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 
 // import seedData from './seedData.js';
@@ -15,25 +16,39 @@ class WishList extends Component {
   }
 
   upVoteClick(id, title) {
-    console.log('up vote this video: ', id)
-    fetch('http://webng.io:8080/v1/wishlist', {
-      method: 'post',
-      body: JSON.stringify({
+    let body = JSON.stringify({
         title: title,
         id: id,
-      })
     })
-    .then(() => {
+    console.log('up vote this video: ', body)
+
+    fetch('http://webng.io:8080/v1/wishlist', {
+      headers: {
+      'Content-Type': 'application/json'
+      },
+      method: 'post',
+      body: body,
+    })
+    .then(res => res.json())
+    .then((res) => {
       console.log('posted id')
-      this.renderVideosInWishlist();
+      console.log('response is: ', res.message)
+      this.setState({
+        videos: [],
+      }, () => {
+        this.renderVideosInWishlist();
+      })
     })
   }
 
   describeClick(id) {
     console.log('describe this video: ', id)
+    // console.log('try to refresh the page ...')
+    // this.renderVideosInWishlist();
   }
 
   renderVideosInWishlist() {
+    console.log('rendering ... ')
     const serverVideoIds = [];
     let ids;
     let dbResponse;
@@ -109,7 +124,7 @@ class WishList extends Component {
 
             videos.push(
               <VideoCard
-                key={i}
+                key={i+1}
                 id={id}
                 description={description}
                 thumbnailHighUrl={thumbnailHigh.url}
@@ -124,7 +139,10 @@ class WishList extends Component {
               />
             );
           }
-          this.setState({ videos });
+          this.setState({ videos }, () => {
+            browserHistory.push('/wishlist');
+          });
+          
         });
       });
   }
