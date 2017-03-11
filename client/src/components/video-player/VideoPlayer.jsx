@@ -25,7 +25,8 @@ class VideoPlayer extends Component {
     .then(response => response.json())
     .then((data) => {
       this.props.updateState({
-        youTubeVideoDuration: convertSecondsToEditorFormat(convertISO8601ToSeconds(data.items[0].contentDetails.duration)),
+        videoDurationInSeconds: convertISO8601ToSeconds(data.items[0].contentDetails.duration),
+        videoDurationInEditorFormat: convertSecondsToEditorFormat(convertISO8601ToSeconds(data.items[0].contentDetails.duration)),
       });
     });
   }
