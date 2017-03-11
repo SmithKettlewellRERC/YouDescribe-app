@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import VideoCard from '../../components/video-card/VideoCard.jsx';
 
 // import seedData from './seedData.js';
 
@@ -13,23 +14,30 @@ class WishList extends Component {
     };
   }
 
-  requestUpVote(obj) {
-    console.log('up vote this video: ', obj.id)
+  upVoteClick(id) {
+    console.log('up vote this video: ', id)
+    fetch('http://webng.io:8080/v1/wishlist', {
+      method: 'post',
+      body: JSON.stringify({
+        title: 'The green mile'
+      })
+    })
+    .then(() => {
+      console.log('posted id')
+    })
   }
 
-  requestDescribe(obj) {
-    console.log('describe this video: ', obj.id)
+  describeClick(id) {
+    console.log('describe this video: ', id)
   }
 
-  componentDidMount() {
-    console.log('componentDidMount and fetching...');
-
+  renderVideosInWishlist() {
     const serverVideoIds = [];
     let ids;
     let dbResponse;
 
 	//replace this url with the wishlist database 
-    fetch('http://webng.io:8080/wishlist')
+    fetch('http://webng.io:8080/v1/videos')
       .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
@@ -60,7 +68,7 @@ class WishList extends Component {
             const publishedAt = new Date(item.snippet.publishedAt);
 
             dbResponse.forEach((elem) => {
-              if (elem._id === id) describer = elem.audio_descriptions[0].legacy_author_name;
+              if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
             })
 
             const now = Date.now();
@@ -96,40 +104,28 @@ class WishList extends Component {
             else views = `${views} views`;
 
             videos.push(
-              <div className="w3-col m4 l2 w3-margin-top">
-                <div className="w3-card-2 w3-hover-shadow">
-                  <img alt={description} src={thumbnailHigh.url} width="100%" />
-                  {/*
-                    <div style={{
-                    backgroundImage: `url(${thumbnailHigh.url})`,
-                    backgroundSize: '100%',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    height: '150px',
-                    }}>
-                    test
-                    </div>
-                  */}
-                  <div className="w3-container vid-title">
-                    <h5><a href={'/video/' + id}>{title}</a></h5>
-                    <h6>
-                      <a href="#">{author}</a><br />
-                      <a href="#">{describer}</a> (describer)
-                    </h6>
-                  </div>
-                  <div className="w3-container w3-padding-8">
-                    <h6><div className="w3-left">{views}</div><div className="w3-right"> {time}</div></h6>
-                    <button className="w3-btn w3-indigo" onClick={() => this.requestUpVote({ id })} >Up vote</button>
-                    <button className="w3-btn w3-indigo" onClick={() => this.requestDescribe({ id })} >Describe</button>
-                  </div>
-                </div>
-              </div>,
+              <VideoCard
+                key={i}
+                id={id}
+                description={description}
+                thumbnailHighUrl={thumbnailHigh.url}
+                title={title}
+                author={author}
+                views={views}
+                time={time}
+                buttons='on'
+                upVoteClick={() => this.upVoteClick(id)}
+                describeClick={()=> this.describeClick(id)}
+              />
             );
-
-            this.setState({ videos });
           }
+          this.setState({ videos });
         });
       });
+  }
+
+  componentDidMount() {
+    this.renderVideosInWishlist();
   }
 
   // displayed on page
