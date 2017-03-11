@@ -15,7 +15,7 @@ class WishList extends Component {
     };
   }
 
-  upVoteClick(id, title) {
+  upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, vote_count) {
     let body = JSON.stringify({
         title: title,
         id: id,
@@ -33,11 +33,27 @@ class WishList extends Component {
     .then((res) => {
       console.log('posted id')
       console.log('response is: ', res.message)
+      let newState = this.state.videos.slice();
+      newState[i] = (
+          <VideoCard
+            key={i}
+            id={id}
+            description={description}
+            thumbnailHighUrl={thumbnailHigh.url}
+            title={title}
+            author={author}
+            views={views}
+            time={time}
+            buttons='on'
+            vote_count={vote_count + 1}
+            upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, vote_count)}
+            describeClick={()=> this.describeClick(id)}
+          />
+      )
+
       this.setState({
-        videos: [],
-      }, () => {
-        this.renderVideosInWishlist();
-      })
+        videos: newState,
+      }
     })
   }
 
@@ -124,7 +140,7 @@ class WishList extends Component {
 
             videos.push(
               <VideoCard
-                key={i+1}
+                key={i}
                 id={id}
                 description={description}
                 thumbnailHighUrl={thumbnailHigh.url}
@@ -134,7 +150,7 @@ class WishList extends Component {
                 time={time}
                 buttons='on'
                 vote_count={vote_count}
-                upVoteClick={() => this.upVoteClick(id, title)}
+                upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, vote_count)}
                 describeClick={()=> this.describeClick(id)}
               />
             );
