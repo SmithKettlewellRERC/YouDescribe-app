@@ -22,6 +22,11 @@ class WishList extends Component {
     })
     console.log('up vote this video: ', body)
 
+    // This need to be fix, the new vote_count value should 
+    // be from the response of the fetch request intead of 
+    // vote_count + 1;
+    vote_count = vote_count + 1;
+
     fetch('http://webng.io:8080/v1/wishlist', {
       headers: {
       'Content-Type': 'application/json'
@@ -45,22 +50,20 @@ class WishList extends Component {
             views={views}
             time={time}
             buttons='on'
-            vote_count={vote_count + 1}
+            vote_count={vote_count}
             upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, vote_count)}
             describeClick={()=> this.describeClick(id)}
           />
       )
-
       this.setState({
         videos: newState,
-      }
+      })
     })
   }
 
   describeClick(id) {
     console.log('describe this video: ', id)
-    // console.log('try to refresh the page ...')
-    // this.renderVideosInWishlist();
+    browserHistory.push('/authoring-tool/' + id)
   }
 
   renderVideosInWishlist() {
