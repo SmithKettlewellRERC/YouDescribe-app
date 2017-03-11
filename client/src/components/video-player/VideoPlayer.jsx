@@ -128,8 +128,6 @@ class VideoPlayer extends Component {
     let currentAudioClip = null;
 
     this.watcher = setInterval(() => {
-      let x = 0;
-      console.log(++x);
       currentVideoProgress = this.videoPlayer.getCurrentTime();
       this.props.getCurrentVideoTime(currentVideoProgress);
 
@@ -180,7 +178,6 @@ class VideoPlayer extends Component {
   }
 
   componentWillUnmount() {
-    console.log(2);
     clearInterval(this.watcher);
   }
 
