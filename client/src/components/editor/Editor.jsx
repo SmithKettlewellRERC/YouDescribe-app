@@ -9,7 +9,7 @@ import {
 import Playhead from '../playhead/Playhead.jsx';
 
 const Editor = (props) => {
-  const timeInSeconds = props.getState().editorTimerValue;
+  const timeInSeconds = props.currentVideoTime;
   const currentVideoTime = convertSecondsToEditorFormat(timeInSeconds);
   return (
     <div id="editor" className="w3-card-2">
@@ -22,7 +22,7 @@ const Editor = (props) => {
             <div id="timeline">
               <div>
                 <span className="w3-left">00:00:00:00</span>
-                <span className="w3-right">{props.youTubeVideoDuration}</span>
+                <span className="w3-right">{props.videoDurationInEditorFormat}</span>
               </div>
               <hr />
               <Playhead
