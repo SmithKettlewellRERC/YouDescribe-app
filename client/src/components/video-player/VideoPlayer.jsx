@@ -112,6 +112,7 @@ class VideoPlayer extends Component {
     this.watcher = setInterval(() => {
       currentVideoProgress = this.videoPlayer.getCurrentTime();
       // console.log('currentVideoProgress', currentVideoProgress);
+      this.props.getVideoProgress(currentVideoProgress);
 
       // When the user back the video.
       if (Math.abs(currentVideoProgress - previousTime) > 0.015) {

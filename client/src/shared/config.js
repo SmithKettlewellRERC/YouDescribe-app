@@ -1,8 +1,9 @@
 module.exports = () => {
-  const isProduction = false;
+  const isProduction = true;
   const apiVersion = 'v1';
   const protocol = 'http';
   const apiPort = isProduction ? '8080' : '8080';
+  // const baseUrl = isProduction ? `${protocol}://192.168.0.54` : `${protocol}://localhost`;
   const baseUrl = isProduction ? `${protocol}://webng.io` : `${protocol}://localhost`;
   const apiUrl = `${baseUrl}:${apiPort}/${apiVersion}`;
   const audioClipsUploadsPath = `${baseUrl}:${apiPort}/uploads`;

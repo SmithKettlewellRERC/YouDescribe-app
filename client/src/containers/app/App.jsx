@@ -9,7 +9,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-
+      editorTimerValue: 0,
+      youTubeVideoDuration: 0,
       fetchJSONtoSearchPage: [],
 
       // Authoring tool data.
@@ -21,11 +22,18 @@ class App extends Component {
 
     // Global methods.
     this.getState = this.getState.bind(this);
+    this.getVideoProgress = this.getVideoProgress.bind(this);
     this.updateState = this.updateState.bind(this);
   }
 
   getState() {
     return this.state;
+  }
+
+  getVideoProgress(currentVideoProgress) {
+    if (this.state.editorTimerValue !== currentVideoProgress) {
+      this.setState({ editorTimerValue: currentVideoProgress });
+    }
   }
 
   updateState(updatedState) {
@@ -116,11 +124,10 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Navbar
-          updateSearch={searchValue => this.letFetch(searchValue)}
-        />
+        <Navbar updateSearch={searchValue => this.letFetch(searchValue)} />
         {React.cloneElement(this.props.children, {
           getState: this.getState,
+          getVideoProgress: this.getVideoProgress,
           updateState: this.updateState,
         })}
         <Footer />

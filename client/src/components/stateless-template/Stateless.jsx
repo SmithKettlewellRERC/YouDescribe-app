@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Stateless = () => (
-  <div id="stateless" className="">
+  <div id="stateless">
   </div>
 );
 
