@@ -1,3 +1,15 @@
 #playhead {
-
+  z-index: 1;
+  width: 3px;
+  position: relative;
+  left: 0px;
+  top: -15px;
+  #playhead-head {
+    width: 3px;
+    height: 20px;
+  }
+  #playhead-tail {
+    width: 3px;
+    height: 26px;
+  }
 }
