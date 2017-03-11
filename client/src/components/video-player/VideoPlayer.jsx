@@ -57,6 +57,7 @@ class VideoPlayer extends Component {
       }
     };
 
+    console.log(this.audioClips);
     // Caching all audio clips???
     this.audioClips.forEach((audioObj) => {
       console.log('CREATE', audioObj.url);
@@ -64,12 +65,12 @@ class VideoPlayer extends Component {
         src: [audioObj.url],
         buffer: false,
         loop: false,
-        preload: true,
+        // preload: false,
         volume: 1.0, // 0.0 -> 1.0
         onload: audioClipLoaded,
-        onloaderror: (id, errToLoad) => {
-          console.log(id, errToLoad);
-        },
+        // onloaderror: (id, errToLoad) => {
+        //   console.log('Error loading audio', id, errToLoad);
+        // },
       });
     });
   }
@@ -112,10 +113,10 @@ class VideoPlayer extends Component {
     this.watcher = setInterval(() => {
       currentVideoProgress = this.videoPlayer.getCurrentTime();
       // console.log('currentVideoProgress', currentVideoProgress);
-      this.props.getVideoProgress(currentVideoProgress);
+      // this.props.getVideoProgress(currentVideoProgress);
 
       // When the user back the video.
-      if (Math.abs(currentVideoProgress - previousTime) > 0.015) {
+      if (Math.abs(currentVideoProgress - previousTime) > 0.550) {
         currentAudioClip = this.getNextAudioClip(currentVideoProgress);
       }
       previousTime = currentVideoProgress;
@@ -141,7 +142,7 @@ class VideoPlayer extends Component {
         }
         this.getNextAudioClip(currentVideoProgress);
       }
-    }, 10);
+    }, 500);
   }
 
   playAudioClip(url, currentVideoProgress, callback = () => {}) {
