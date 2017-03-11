@@ -5,6 +5,7 @@ var audioInput = null,
     realAudioInput = null,
     inputPoint = null,
     audioRecorder = null;
+    callBackFileSavedLocal = null;
 var rafID = null;
 
 function saveAudio() {
@@ -18,7 +19,8 @@ function gotBuffers( buffers ) {
 }
 
 function doneEncoding(blob) {
-    Recorder.processFile(blob);
+    // Recorder.processFile(blob);
+    callBackFileSavedLocal(blob);
 }
 
 function startRecording() {
@@ -27,9 +29,10 @@ function startRecording() {
     audioRecorder.record();
 }
 
-function stopRecording() {
+function stopRecordingAndSave(callback) {
+    callBackFileSavedLocal = callback;
     audioRecorder.stop();
-    audioRecorder.getBuffers( gotBuffers );
+    audioRecorder.getBuffers(gotBuffers);
 }
 
 function convertToMono( input ) {

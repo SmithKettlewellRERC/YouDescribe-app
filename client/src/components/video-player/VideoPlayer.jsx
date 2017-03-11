@@ -23,7 +23,6 @@ class VideoPlayer extends Component {
         return response.json();
       })
       .then((json) => {
-        console.log(json);
         if (json && json.result && json.result.status === 'published') {
           this.parseVideoData(json.result);
         } else {
@@ -40,7 +39,7 @@ class VideoPlayer extends Component {
     const clipsIds = Object.keys(clips);
     clipsIds.forEach((id) => {
       const obj = clips[id];
-      obj.url = `${conf.audioClipsUploadsPath}${obj.path}/${obj.filename}`;
+      obj.url = `${conf.audioClipsUploadsPath}${obj.file_path}/${obj.file_name}`;
       this.audioClips.push(obj);
     });
     this.audioClipsLength = this.audioClips.length;
@@ -65,8 +64,12 @@ class VideoPlayer extends Component {
         src: [audioObj.url],
         buffer: false,
         loop: false,
+        preload: true,
         volume: 1.0, // 0.0 -> 1.0
         onload: audioClipLoaded,
+        onloaderror: (id, errToLoad) => {
+          console.log(id, errToLoad);
+        },
       });
     });
   }

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Navbar from '../../components/navbar/Navbar.jsx';
 import NavbarMaterial from '../../components/navbar/Navbar(material).jsx';
 import Footer from '../../components/footer/Footer.jsx';
-import Track from '../../components/track/Track.jsx';
 import { browserHistory } from 'react-router';
 
 class App extends Component {
@@ -10,48 +9,32 @@ class App extends Component {
     super(props);
 
     this.state = {
-      tracks: [],
-      trackCount: 0,
 
-      // search: '',
       fetchJSONtoSearchPage: [],
+
+      // Authoring tool data.
+      authoringToolActiveVideoId: 'pZ5576Pags4',
+      authoringToolCurrentPlayBackType: null,
+      authoringTooltracksComponents: [],
+      authoringTooltrackComponentsCount: 0,
     };
 
+    // Global methods.
     this.getState = this.getState.bind(this);
-    this.publishVideo = this.publishVideo.bind(this);
-    this.addAudioClipTrack = this.addAudioClipTrack.bind(this);
-    this.recordAudioClip = this.recordAudioClip.bind(this);
+    this.updateState = this.updateState.bind(this);
   }
 
   getState() {
     return this.state;
   }
 
-  publishVideo() {
-    alert('published');
+  updateState(updatedState) {
+    return this.setState(updatedState);
   }
 
-  addAudioClipTrack() {
-    const tracks = this.state.tracks.slice();
-    tracks.push(<Track key={newTrackId} color={'w3-' + color} text={type} id={this.state.trackCount} recordAudioClip={this.recordAudioClip} />);
-    this.setState({ tracks, trackCount: newTrackId });
+  setActiveVideoIdAuthoringTool(videoId) {
+    this.setState({ activeVideoIdAuthoringTool: videoId });
   }
-
-  recordAudioClip(e) {
-    const tracks = this.state.tracks.slice();
-    if (e.target.className === 'fa fa-circle') {
-      console.log('Start recording');
-      startRecording();
-      e.target.className = 'fa fa-stop';
-    } else if (e.target.className === 'fa fa-stop') {
-      console.log('Stop recording');
-      stopRecording();
-      e.target.className = 'fa fa-step-forward';
-    } else {
-      console.log('Just play');
-    }
-  }
-
 
   // use algorithm to seperate
   letFetch(searchValue) {
@@ -140,9 +123,7 @@ class App extends Component {
         />
         {React.cloneElement(this.props.children, {
           getState: this.getState,
-          publishVideo: this.publishVideo,
-          addAudioClipTrack: this.addAudioClipTrack,
-          recordAudioClip: this.recordAudioClip,
+          updateState: this.updateState,
         })}
         <Footer />
       </div>
