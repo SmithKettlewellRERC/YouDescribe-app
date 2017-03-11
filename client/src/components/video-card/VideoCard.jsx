@@ -2,6 +2,17 @@ import React from 'react';
 import { Link } from 'react-router';
 
 const VideoCard = props => {
+
+  let vote_count;
+  if (props.vote_count > 0) {
+    vote_count = 
+      (
+        <div>
+          Requested: {props.vote_count} time
+        </div>
+      )
+  }
+
   let buttons;
   if (props.buttons === 'on') {
     buttons = 
@@ -28,6 +39,7 @@ const VideoCard = props => {
           <h6><div className="w3-left">{props.views}</div><div className="w3-right"> {props.time}</div></h6>
         </div>
         {buttons}
+        {vote_count}
       </div>
     </div>
     );

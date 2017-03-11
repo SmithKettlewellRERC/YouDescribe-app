@@ -14,16 +14,18 @@ class WishList extends Component {
     };
   }
 
-  upVoteClick(id) {
+  upVoteClick(id, title) {
     console.log('up vote this video: ', id)
     fetch('http://webng.io:8080/v1/wishlist', {
       method: 'post',
       body: JSON.stringify({
-        title: 'The green mile'
+        title: title,
+        id: id,
       })
     })
     .then(() => {
       console.log('posted id')
+      this.renderVideosInWishlist();
     })
   }
 
@@ -37,7 +39,7 @@ class WishList extends Component {
     let dbResponse;
 
 	//replace this url with the wishlist database 
-    fetch('http://webng.io:8080/v1/videos')
+    fetch('http://webng.io:8080/v1/wishlist')
       .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
@@ -62,13 +64,15 @@ class WishList extends Component {
             const thumbnailHigh = item.snippet.thumbnails.high;
             let title = item.snippet.title;
             const description = item.snippet.description;
-            const author = item.snippet.channelTitle;
-            let describer;
+            const author = item.snippet.channelTitle;;
+            let vote_count;
             let views = item.statistics.viewCount;
             const publishedAt = new Date(item.snippet.publishedAt);
 
             dbResponse.forEach((elem) => {
-              if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
+              if (elem._id === id) {
+                vote_count = elem.votes;
+              }
             })
 
             const now = Date.now();
@@ -114,7 +118,8 @@ class WishList extends Component {
                 views={views}
                 time={time}
                 buttons='on'
-                upVoteClick={() => this.upVoteClick(id)}
+                vote_count={vote_count}
+                upVoteClick={() => this.upVoteClick(id, title)}
                 describeClick={()=> this.describeClick(id)}
               />
             );
