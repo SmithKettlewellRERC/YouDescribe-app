@@ -1,8 +1,7 @@
 
-function saveAudioClip(blob, filename) {
+function saveAudioClip(videoId, blob) {
 
     console.log('blob', blob);
-    console.log('duration', blob.duration);
     
     const formData = new FormData();
     formData.append('label', 'The title from debug');

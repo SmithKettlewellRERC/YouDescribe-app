@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Navbar from '../../components/navbar/Navbar.jsx';
 import NavbarMaterial from '../../components/navbar/Navbar(material).jsx';
 import Footer from '../../components/footer/Footer.jsx';
-import Track from '../../components/track/Track.jsx';
 import { browserHistory } from 'react-router';
 
 class App extends Component {
@@ -10,48 +9,40 @@ class App extends Component {
     super(props);
 
     this.state = {
-      tracks: [],
-      trackCount: 0,
-
-      // search: '',
+      editorTimerValue: 0,
+      youTubeVideoDuration: 0,
       fetchJSONtoSearchPage: [],
+
+      // Authoring tool data.
+      authoringToolActiveVideoId: 'pZ5576Pags4',
+      authoringToolCurrentPlayBackType: null,
+      authoringTooltracksComponents: [],
+      authoringTooltrackComponentsCount: 0,
     };
 
+    // Global methods.
     this.getState = this.getState.bind(this);
-    this.publishVideo = this.publishVideo.bind(this);
-    this.addAudioClipTrack = this.addAudioClipTrack.bind(this);
-    this.recordAudioClip = this.recordAudioClip.bind(this);
+    this.getVideoProgress = this.getVideoProgress.bind(this);
+    this.updateState = this.updateState.bind(this);
   }
 
   getState() {
     return this.state;
   }
 
-  publishVideo() {
-    alert('published');
-  }
-
-  addAudioClipTrack() {
-    const tracks = this.state.tracks.slice();
-    tracks.push(<Track key={newTrackId} color={'w3-' + color} text={type} id={this.state.trackCount} recordAudioClip={this.recordAudioClip} />);
-    this.setState({ tracks, trackCount: newTrackId });
-  }
-
-  recordAudioClip(e) {
-    const tracks = this.state.tracks.slice();
-    if (e.target.className === 'fa fa-circle') {
-      console.log('Start recording');
-      startRecording();
-      e.target.className = 'fa fa-stop';
-    } else if (e.target.className === 'fa fa-stop') {
-      console.log('Stop recording');
-      stopRecording();
-      e.target.className = 'fa fa-step-forward';
-    } else {
-      console.log('Just play');
+  getVideoProgress(currentVideoProgress) {
+    if (this.state.editorTimerValue !== currentVideoProgress) {
+      this.setState({ editorTimerValue: currentVideoProgress });
     }
   }
 
+  updateState(updatedState) {
+    return this.setState(updatedState);
+  }
+
+  setActiveVideoIdAuthoringTool(videoId) {
+    this.setState({ activeVideoIdAuthoringTool: videoId });
+  }
 
   // use algorithm to seperate
   letFetch(searchValue) {
@@ -133,14 +124,11 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Navbar
-          updateSearch={searchValue => this.letFetch(searchValue)}
-        />
+        <Navbar updateSearch={searchValue => this.letFetch(searchValue)} />
         {React.cloneElement(this.props.children, {
           getState: this.getState,
-          publishVideo: this.publishVideo,
-          addAudioClipTrack: this.addAudioClipTrack,
-          recordAudioClip: this.recordAudioClip,
+          getVideoProgress: this.getVideoProgress,
+          updateState: this.updateState,
         })}
         <Footer />
       </div>
