@@ -2,15 +2,23 @@ import React, { Component } from 'react';
 import VideoPlayer from '../../components/video-player/VideoPlayer.jsx';
 import Notes from '../../components/notes/Notes.jsx';
 import Editor from '../../components/editor/Editor.jsx';
+import Track from '../../components/track/Track.jsx';
 
 const conf = require('../../shared/config')();
 
 class AuthoringTool extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       youTubeVideoDuration: 0,
     };
+
+    this.publishVideo = this.publishVideo.bind(this);
+    this.addAudioClipTrack = this.addAudioClipTrack.bind(this);
+    this.recordAudioClip = this.recordAudioClip.bind(this);
+    // this.callbackFileSaved = this.callbackFileSaved.bind(this);
+
   }
 
   componentDidMount() {
@@ -28,7 +36,7 @@ class AuthoringTool extends Component {
 
     initAudioRecorder();
 
-    const url = `${conf.youTubeApiUrl}/videos?id=${this.props.params.videoId}&part=contentDetails&key=${conf.youTubeApiKey}`;
+    const url = `${conf.youTubeApiUrl}/videos?id=${this.props.getState().authoringToolActiveVideoId}&part=contentDetails&key=${conf.youTubeApiKey}`;
     fetch(url)
     .then(response => response.json())
     .then((data) => {
@@ -70,12 +78,66 @@ class AuthoringTool extends Component {
     });
   }
 
+  addAudioClipTrack(playBackType) {
+    const tracks = this.props.getState().authoringTooltracksComponents.slice();
+    const newTrackId = tracks.length + 1;
+    tracks.push(<Track key={newTrackId} playBackType={playBackType} id={newTrackId} recordAudioClip={this.recordAudioClip} />);
+    this.props.updateState({
+      authoringTooltracksComponents: tracks,
+      authoringTooltrackComponentsCount: newTrackId,
+    });
+  }
+
+  recordAudioClip(e, playBackType) {
+    // const tracks = this.props.getState.authoringTooltracksComponents.slice();
+    // if (e.target.className === 'fa fa-circle') {
+    //   console.log('Start recording');
+    //   startRecording();
+    //   e.target.className = 'fa fa-stop';
+    // } else if (e.target.className === 'fa fa-stop') {
+    //   console.log('Stop recording');
+    //   // Is going to stop the recording and save the file.
+    //   this.setState({
+    //     authoringToolCurrentPlayBackType: playBackType,
+    //   });
+    //   stopRecordingAndSave(this.callbackFileSaved);
+    //   e.target.className = 'fa fa-step-forward';
+    // } else {
+    //   console.log('Just play');
+    // }
+  }
+
+  callbackFileSaved(blob) {
+    console.log('The blob is in memory');
+    const formData = new FormData();
+    formData.append('label', 'The title from debug');
+    formData.append('playbackType', this.props.getState().authoringToolCurrentPlayBackType);
+    formData.append('startTime', '100.087');
+    formData.append('endTime', '134.098');
+    formData.append('duration', '10.000');
+    formData.append('wavfile', blob);
+    fetch('http://localhost:8080/v1/audioclips/qwe', {
+      method: 'POST',
+      body: formData,
+    })
+    .then((response) => {
+      console.log('RESPONSE', response);
+    })
+    .catch((errPostingFile) => {
+      console.log(errPostingFile);
+    });
+  }
+
+  publishVideo() {
+    alert('published');
+  }
+
   render() {
     return (
       <main id="authoring-tool">
         <div className="w3-row">
           <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
-            <VideoPlayer videoId={this.props.params.videoId} getVideoProgress={this.props.getVideoProgress} />
+            <VideoPlayer videoId={this.props.getState().authoringToolActiveVideoId} getVideoProgress={this.props.getVideoProgress}/>
           </div>
           <div id="notes-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
             <Notes />
@@ -83,7 +145,13 @@ class AuthoringTool extends Component {
         </div>
         <div className="w3-row w3-margin-top w3-hide-small w3-hide-medium">
           <div className="w3-col w3-margin-bottom">
-            <Editor {...this.props} youTubeVideoDuration={this.state.youTubeVideoDuration} />
+            <Editor
+              getState={this.props.getState}
+              publishVideo={this.publishVideo}
+              addAudioClipTrack={this.addAudioClipTrack}
+              recordAudioClip={this.recordAudioClip}
+              youTubeVideoDuration={this.state.youTubeVideoDuration}
+            />
           </div>
         </div>
       </main>

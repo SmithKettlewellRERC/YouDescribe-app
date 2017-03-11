@@ -54,16 +54,15 @@ const Editor = (props) => {
       </div>
 
       <div id="tracks">
-        {props.getState().tracks}
-
+        {props.getState().authoringTooltracksComponents}
         <div id="add-track-row" className="w3-row w3-display-container">
           <div className="w3-col l3 m3 s3">
             <div className="cont">
               <div className="w3-padding-right w3-left">
-                <Button title="Add inline" color="w3-yellow" onClick={() => props.addAudioClipTrack('I', 'yellow')} />
+                <Button title="Add inline" color="w3-yellow" onClick={() => props.addAudioClipTrack('inline')} />
               </div>
               <div className="w3-left">
-                <Button title="Add extended" color="w3-purple" onClick={() => props.addAudioClipTrack('E', 'purple')}  />
+                <Button title="Add extended" color="w3-purple" onClick={() => props.addAudioClipTrack('extended')}  />
               </div>
             </div>
           </div>

@@ -87,9 +87,9 @@
     this.node.connect(this.context.destination);   // if the script node is not connected to an output the 'onaudioprocess' event is not triggered in chrome.
   };
 
-  Recorder.processFile = function(blob) {
-    saveAudioClip(blob);
-  }
+  // Recorder.processFile = function(blob) {
+  //   saveAudioClip(blob);
+  // }
 
   window.Recorder = Recorder;
 
