@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
+import {
+  convertISO8601ToSeconds,
+  convertSecondsToEditorFormat,
+} from '../../shared/helperFunctions';
 
 const conf = require('./../../shared/config')();
 
@@ -13,6 +17,17 @@ class VideoPlayer extends Component {
     this.audioClipsLength = 0;
     this.nextAudioClip = null;
     this.initVideoPlayer = this.initVideoPlayer.bind(this);
+  }
+
+  getVideoDuration() {
+    const url = `${conf.youTubeApiUrl}/videos?id=${this.videoId}&part=contentDetails&key=${conf.youTubeApiKey}`;
+    fetch(url)
+    .then(response => response.json())
+    .then((data) => {
+      this.props.updateState({
+        youTubeVideoDuration: convertSecondsToEditorFormat(convertISO8601ToSeconds(data.items[0].contentDetails.duration)),
+      });
+    });
   }
 
   fetchAudioClips() {
@@ -88,6 +103,7 @@ class VideoPlayer extends Component {
     });
     function onVideoPlayerReady() {
       console.log('YouTube video player ready. Lets call the watcher');
+      self.getVideoDuration();
       self.videoProgressWatcher();
     }
   }

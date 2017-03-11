@@ -2,28 +2,13 @@ import React from 'react';
 
 import Button from '../button/Button.jsx';
 import ActionIcon from '../action-icon/ActionIcon.jsx';
-import Track from '../track/Track.jsx';
+import Track from '../../components/track/Track.jsx';
+import {
+  convertSecondsToEditorFormat,
+} from '../../shared/helperFunctions';
 
 const Editor = (props) => {
   const timeInSeconds = props.getState().editorTimerValue;
-
-  function convertSecondsToEditorFormat(timeInSeconds) {
-    let hours = ~~(timeInSeconds / 3600);
-    let minutes = ~~(timeInSeconds / 60);
-    let seconds = ~~timeInSeconds;
-    let milliseconds = ~~((timeInSeconds - ~~timeInSeconds) * 100);
-
-    if (hours >= 24) hours = ~~(hours % 24);
-    if (hours < 10) hours = '0' + hours;
-    if (minutes >= 60) minutes = ~~(minutes % 60);
-    if (minutes < 10) minutes = '0' + minutes;
-    if (seconds >= 60) seconds = ~~(seconds % 60);
-    if (seconds < 10) seconds = '0' + seconds;
-    if (milliseconds < 10) milliseconds = '0' + milliseconds;
-
-    return `${hours}:${minutes}:${seconds}:${milliseconds}`;
-  }
-
   const convertedTime = convertSecondsToEditorFormat(timeInSeconds);
 
   return (
@@ -54,7 +39,7 @@ const Editor = (props) => {
       </div>
 
       <div id="tracks">
-        {props.getState().authoringTooltracksComponents}
+        {props.getState().tracksComponents}
         <div id="add-track-row" className="w3-row w3-display-container">
           <div className="w3-col l3 m3 s3">
             <div className="cont">

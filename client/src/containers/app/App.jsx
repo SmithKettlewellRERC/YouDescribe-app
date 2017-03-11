@@ -10,20 +10,12 @@ class App extends Component {
 
     this.state = {
       editorTimerValue: 0,
-      youTubeVideoDuration: 0,
       fetchJSONtoSearchPage: [],
-
-      // Authoring tool data.
-      authoringToolActiveVideoId: 'IShelXYoV0E',
-      authoringToolCurrentPlayBackType: null,
-      authoringTooltracksComponents: [],
-      authoringTooltrackComponentsCount: 0,
     };
 
     // Global methods.
     this.getState = this.getState.bind(this);
     this.getVideoProgress = this.getVideoProgress.bind(this);
-    this.updateState = this.updateState.bind(this);
   }
 
   getState() {
@@ -34,10 +26,6 @@ class App extends Component {
     // if (this.state.editorTimerValue !== currentVideoProgress) {
     //   this.setState({ editorTimerValue: currentVideoProgress });
     // }
-  }
-
-  updateState(updatedState) {
-    return this.setState(updatedState);
   }
 
   setActiveVideoIdAuthoringTool(videoId) {
@@ -128,7 +116,6 @@ class App extends Component {
         {React.cloneElement(this.props.children, {
           getState: this.getState,
           getVideoProgress: this.getVideoProgress,
-          updateState: this.updateState,
         })}
         <Footer />
       </div>

@@ -15,7 +15,7 @@ ReactDOM.render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Home} />
-      <Route path="/authoring-tool" component={AuthoringTool} />
+      <Route path="/authoring-tool/:videoId" component={AuthoringTool} />
       <Route path="/search" component={SearchPage} />
       <Route path="/video/:videoId" component={VideoPage} />
       <Route path="/wishlist" component={WishList} />
