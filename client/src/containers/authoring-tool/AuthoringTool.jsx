@@ -11,17 +11,21 @@ class AuthoringTool extends Component {
     super(props);
 
     this.state = {
-      youTubeVideoDuration: 0,
+      youTubeVideoDuration: -1,
+      playheadPosition: 0,
     };
 
     this.publishVideo = this.publishVideo.bind(this);
     this.addAudioClipTrack = this.addAudioClipTrack.bind(this);
     this.recordAudioClip = this.recordAudioClip.bind(this);
     // this.callbackFileSaved = this.callbackFileSaved.bind(this);
-
   }
 
   componentDidMount() {
+    // const timeInt = setInterval(() => {
+    //   if (this.state.playheadPosition === this.state.youTubeVideoDuration) clearInterval(timeInt);
+    //   this.setState({ playheadPosition: this.state.playheadPosition + 1 });
+    // }, 100);
     function mouseWheelHandler(e) {
       // const e0 = e.originalEvent;
       // const delta = e0.wheelDelta || -e0.detail;
@@ -42,38 +46,43 @@ class AuthoringTool extends Component {
     .then((data) => {
       function convertISO8601ToSeconds(input) {
         const reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
-        let hours = 0, minutes = 0, seconds = 0, totalseconds;
+        let hours = 0;
+        let minutes = 0;
+        let seconds = 0;
+        let totalseconds;
 
         if (reptms.test(input)) {
-            const matches = reptms.exec(input);
-            if (matches[1]) hours = Number(matches[1]);
-            if (matches[2]) minutes = Number(matches[2]);
-            if (matches[3]) seconds = Number(matches[3]);
-            totalseconds = hours * 3600  + minutes * 60 + seconds;
+          const matches = reptms.exec(input);
+          if (matches[1]) hours = Number(matches[1]);
+          if (matches[2]) minutes = Number(matches[2]);
+          if (matches[3]) seconds = Number(matches[3]);
+          totalseconds = (hours * 3600) + (minutes * 60) + seconds;
         }
 
         return (totalseconds);
       }
 
       function convertSecondsToEditorFormat(timeInSeconds) {
-        let hours = ~~(timeInSeconds / 3600);
-        let minutes = ~~(timeInSeconds / 60);
-        let seconds = ~~timeInSeconds;
-        let milliseconds = ~~((timeInSeconds - ~~timeInSeconds) * 100);
+        let hours = Math.floor(timeInSeconds / 3600);
+        let minutes = Math.floor(timeInSeconds / 60);
+        let seconds = Math.floor(timeInSeconds);
+        let milliseconds = Math.floor((timeInSeconds - Math.floor(timeInSeconds)) * 100);
 
-        if (hours >= 24) hours = ~~(hours % 24);
-        if (hours < 10) hours = '0' + hours;
-        if (minutes >= 60) minutes = ~~(minutes % 60);
-        if (minutes < 10) minutes = '0' + minutes;
-        if (seconds >= 60) seconds = ~~(seconds % 60);
-        if (seconds < 10) seconds = '0' + seconds;
-        if (milliseconds < 10) milliseconds = '0' + milliseconds;
+        if (hours >= 24) hours = Math.floor(hours % 24);
+        if (hours < 10) hours = String(0) + hours;
+        if (minutes >= 60) minutes = Math.floor(minutes % 60);
+        if (minutes < 10) minutes = String(0) + minutes;
+        if (seconds >= 60) seconds = Math.floor(seconds % 60);
+        if (seconds < 10) seconds = String(0) + seconds;
+        if (milliseconds < 10) milliseconds = String(0) + milliseconds;
 
         return `${hours}:${minutes}:${seconds}:${milliseconds}`;
       }
 
       this.setState({
-        youTubeVideoDuration: convertSecondsToEditorFormat(convertISO8601ToSeconds(data.items[0].contentDetails.duration)),
+        youTubeVideoDuration: convertSecondsToEditorFormat(
+          convertISO8601ToSeconds(data.items[0].contentDetails.duration),
+        ),
       });
     });
   }
@@ -81,7 +90,12 @@ class AuthoringTool extends Component {
   addAudioClipTrack(playBackType) {
     const tracks = this.props.getState().authoringTooltracksComponents.slice();
     const newTrackId = tracks.length + 1;
-    tracks.push(<Track key={newTrackId} playBackType={playBackType} id={newTrackId} recordAudioClip={this.recordAudioClip} />);
+    tracks.push(<Track
+      key={newTrackId}
+      playBackType={playBackType}
+      id={newTrackId}
+      recordAudioClip={this.recordAudioClip}
+    />);
     this.props.updateState({
       authoringTooltracksComponents: tracks,
       authoringTooltrackComponentsCount: newTrackId,
@@ -136,10 +150,19 @@ class AuthoringTool extends Component {
     return (
       <main id="authoring-tool">
         <div className="w3-row">
-          <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
-            <VideoPlayer videoId={this.props.getState().authoringToolActiveVideoId} getVideoProgress={this.props.getVideoProgress}/>
+          <div
+            id="video-section"
+            className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium"
+          >
+            <VideoPlayer
+              videoId={this.props.getState().authoringToolActiveVideoId}
+              getVideoProgress={this.props.getVideoProgress}
+            />
           </div>
-          <div id="notes-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
+          <div
+            id="notes-section"
+            className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium"
+          >
             <Notes />
           </div>
         </div>
@@ -150,7 +173,7 @@ class AuthoringTool extends Component {
               publishVideo={this.publishVideo}
               addAudioClipTrack={this.addAudioClipTrack}
               recordAudioClip={this.recordAudioClip}
-              youTubeVideoDuration={this.state.youTubeVideoDuration}
+              {...this.state}
             />
           </div>
         </div>
