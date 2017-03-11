@@ -14,7 +14,7 @@ class App extends Component {
       fetchJSONtoSearchPage: [],
 
       // Authoring tool data.
-      authoringToolActiveVideoId: 'pZ5576Pags4',
+      authoringToolActiveVideoId: 'IShelXYoV0E',
       authoringToolCurrentPlayBackType: null,
       authoringTooltracksComponents: [],
       authoringTooltrackComponentsCount: 0,
@@ -31,9 +31,9 @@ class App extends Component {
   }
 
   getVideoProgress(currentVideoProgress) {
-    if (this.state.editorTimerValue !== currentVideoProgress) {
-      this.setState({ editorTimerValue: currentVideoProgress });
-    }
+    // if (this.state.editorTimerValue !== currentVideoProgress) {
+    //   this.setState({ editorTimerValue: currentVideoProgress });
+    // }
   }
 
   updateState(updatedState) {
