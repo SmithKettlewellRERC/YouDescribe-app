@@ -15,11 +15,12 @@ class AuthoringTool extends Component {
     super(props);;
     this.videoId = props.params.videoId;
     this.state = {
-      youTubeVideoDuration: 0,
             // Authoring tool data.
         // activePlayBackType: null,
       tracksComponents: [],
       trackComponentsCount: 0,
+      youTubeVideoDuration: -1,
+      playheadPosition: 0,
     };
 
     this.getState = this.getState.bind(this);
@@ -59,7 +60,12 @@ class AuthoringTool extends Component {
   addAudioClipTrack(playBackType) {
     const tracks = this.state.tracksComponents.slice();
     const newTrackId = tracks.length + 1;
-    tracks.push(<Track key={newTrackId} id={newTrackId} playBackType={playBackType} recordAudioClip={this.recordAudioClip} />);
+    tracks.push(<Track
+      key={newTrackId}
+      id={newTrackId}
+      playBackType={playBackType}
+      recordAudioClip={this.recordAudioClip}
+    />);
     this.setState({
       tracksComponents: tracks,
     });
@@ -117,9 +123,16 @@ class AuthoringTool extends Component {
       <main id="authoring-tool">
         <div className="w3-row">
           <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
-            <VideoPlayer videoId={this.videoId} updateState={this.updateState} getVideoProgress={this.props.getVideoProgress}/>
+            <VideoPlayer
+              videoId={this.videoId}
+              updateState={this.updateState}
+              getVideoProgress={this.props.getVideoProgress}
+            />
           </div>
-          <div id="notes-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
+          <div
+            id="notes-section"
+            className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium"
+          >
             <Notes />
           </div>
         </div>
@@ -131,6 +144,7 @@ class AuthoringTool extends Component {
               publishVideo={this.publishVideo}
               addAudioClipTrack={this.addAudioClipTrack}
               recordAudioClip={this.recordAudioClip}
+              {...this.state}
             />
           </div>
         </div>

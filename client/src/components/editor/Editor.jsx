@@ -6,11 +6,11 @@ import Track from '../../components/track/Track.jsx';
 import {
   convertSecondsToEditorFormat,
 } from '../../shared/helperFunctions';
+import Playhead from '../playhead/Playhead.jsx';
 
 const Editor = (props) => {
   const timeInSeconds = props.getState().editorTimerValue;
   const convertedTime = convertSecondsToEditorFormat(timeInSeconds);
-
   return (
     <div id="editor" className="w3-card-2">
       <div className="w3-card-4">
@@ -25,6 +25,7 @@ const Editor = (props) => {
                 <span className="w3-right">{props.youTubeVideoDuration}</span>
               </div>
               <hr />
+              <Playhead playheadPosition={props.playheadPosition} />
             </div>
           </div>
         </div>
