@@ -9,23 +9,26 @@ import {
 import Playhead from '../playhead/Playhead.jsx';
 
 const Editor = (props) => {
-  const timeInSeconds = props.getState().editorTimerValue;
-  const convertedTime = convertSecondsToEditorFormat(timeInSeconds);
+  const timeInSeconds = props.currentVideoTime;
+  const currentVideoTime = convertSecondsToEditorFormat(timeInSeconds);
   return (
     <div id="editor" className="w3-card-2">
       <div className="w3-card-4">
         <div id="video-time" className="w3-row">
           <div className="w3-col l3 m3 s3">
-            <div id="timer" className="w3-center">{convertedTime}</div>
+            <div id="timer" className="w3-center">{currentVideoTime}</div>
           </div>
           <div className="w3-col l9 m9 s9">
             <div id="timeline">
               <div>
                 <span className="w3-left">00:00:00:00</span>
-                <span className="w3-right">{props.youTubeVideoDuration}</span>
+                <span className="w3-right">{props.videoDurationInEditorFormat}</span>
               </div>
               <hr />
-              <Playhead playheadPosition={props.playheadPosition} />
+              <Playhead
+                playheadPosition={props.playheadPosition}
+                playheadTailHeight={props.playheadTailHeight}
+              />
             </div>
           </div>
         </div>

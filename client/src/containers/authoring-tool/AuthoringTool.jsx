@@ -12,15 +12,17 @@ const conf = require('../../shared/config')();
 
 class AuthoringTool extends Component {
   constructor(props) {
-    super(props);;
+    super(props);
     this.videoId = props.params.videoId;
     this.state = {
-            // Authoring tool data.
-        // activePlayBackType: null,
+      // Authoring tool data.
+      // activePlayBackType: null,
+      // trackComponentsCount: 0,
       tracksComponents: [],
-      trackComponentsCount: 0,
-      youTubeVideoDuration: -1,
+      videoDurationInSeconds: -1,
+      currentVideoTime: 0,
       playheadPosition: 0,
+      playheadTailHeight: 0,
     };
 
     this.getState = this.getState.bind(this);
@@ -29,6 +31,7 @@ class AuthoringTool extends Component {
     this.addAudioClipTrack = this.addAudioClipTrack.bind(this);
     this.recordAudioClip = this.recordAudioClip.bind(this);
     this.callbackFileSaved = this.callbackFileSaved.bind(this);
+    this.getCurrentVideoTime = this.getCurrentVideoTime.bind(this);
   }
 
   getState() {
@@ -68,7 +71,14 @@ class AuthoringTool extends Component {
     />);
     this.setState({
       tracksComponents: tracks,
+      playheadTailHeight: this.state.playheadTailHeight < 189 ? this.state.playheadTailHeight + 27 : this.state.playheadTailHeight,
     });
+  }
+
+  getCurrentVideoTime(currentVideoTime) {
+    if (this.state.currentVideoTime !== currentVideoTime) {
+      this.setState({ currentVideoTime });
+    }
   }
 
   recordAudioClip(e, playBackType) {
@@ -126,7 +136,7 @@ class AuthoringTool extends Component {
             <VideoPlayer
               videoId={this.videoId}
               updateState={this.updateState}
-              getVideoProgress={this.props.getVideoProgress}
+              getCurrentVideoTime={this.getCurrentVideoTime}
             />
           </div>
           <div
