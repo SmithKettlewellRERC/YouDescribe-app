@@ -16,12 +16,12 @@ class SearchPage extends Component {
     };
   }
 
-  requestUpVote(obj) {
-    console.log('up vote this video: ', obj.id)
+  upVoteClick(id) {
+    console.log('up vote this video: ', id)
   }
 
-  requestDescribe(obj) {
-    console.log('describe this video: ', obj.id)
+  describeClick(id) {
+    console.log('describe this video: ', id)
   }
 
 
@@ -33,16 +33,17 @@ class SearchPage extends Component {
           for (let i = 0; i < videoFromYDdatabase.length; i += 1) {
 
 
-            const id = videoFromYDdatabase[i].id;
-            const thumbnailDefault = videoFromYDdatabase[i].snippet.thumbnails.default;
-            const thumbnailMedium = videoFromYDdatabase[i].snippet.thumbnails.medium;
-            const thumbnailHigh = videoFromYDdatabase[i].snippet.thumbnails.high;
-            let title = videoFromYDdatabase[i].snippet.title;
-            const description = videoFromYDdatabase[i].snippet.description;
-            const author = videoFromYDdatabase[i].snippet.channelTitle;
-            let describer = null;
-            let views = videoFromYDdatabase[i].statistics.viewCount;
-            const publishedAt = new Date(videoFromYDdatabase[i].snippet.publishedAt);
+            const item = videoFromYDdatabase[i];
+            const id = item.id;
+            // const thumbnailDefault = item.snippet.thumbnails.default;
+            // const thumbnailMedium = item.snippet.thumbnails.medium;
+            const thumbnailHigh = item.snippet.thumbnails.high;
+            let title = item.snippet.title;
+            const description = item.snippet.description;
+            const author = item.snippet.channelTitle;
+            let describer;
+            let views = item.statistics.viewCount;
+            const publishedAt = new Date(item.snippet.publishedAt);
 
             dbResponse.forEach((elem) => {
               if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
@@ -79,46 +80,19 @@ class SearchPage extends Component {
             else if (views >= 1000) views = `${(views/1000).toFixed(0)}K views`;
             else if (views === 1) views = `${views} view`;
             else views = `${views} views`;
-
-            let authorSection;
-
-            if (describer) {
-              authorSection =
-              (
-                <h6>
-                  <a href="#">{author}</a><br />
-                  <a href="#">{describer}</a> (describer)
-                </h6>
-              );
-            } else {
-              authorSection =
-              (
-                <h6>
-                  <a href="#">{author}</a><br />
-                </h6>
-              );
-            }
-
             videoAlreadyOnYD.push(
-              <div className="w3-col m4 l2 w3-margin-top">
-                <div className="w3-card-2">
-                  <img alt={description} src={thumbnailHigh.url} width="100%" />
-                  <div className="w3-container vid-title">
-                    <h5><a href="#">{title}</a></h5>
-                    {/*<h6>
-                      <a href="#">{author}</a><br />
-                      <a href="#">{describer}</a> (describer)
-                    </h6>*/}
-                    {authorSection}
-                  </div>
-                  <div className="w3-container w3-padding-8">
-                    <h6><div className="w3-left">{views}</div><div className="w3-right"> {time}</div></h6>
-                    <button className="w3-btn w3-indigo" onClick={() => this.requestUpVote({ id })} >Up vote</button>
-                    <button className="w3-btn w3-indigo" onClick={() => this.requestDescribe({ id })} >Describe</button>
-                  </div>
-                </div>
-              </div>,
-            );
+              <VideoCard
+                key={i}
+                id={id}
+                description={description}
+                thumbnailHighUrl={thumbnailHigh.url}
+                title={title}
+                author={author}
+                describer={describer}
+                views={views}
+                time={time}
+                buttons='off'
+              />);
           }
     this.setState({
       videoAlreadyOnYD: videoAlreadyOnYD,
@@ -128,15 +102,17 @@ class SearchPage extends Component {
   renderVideoNotOnYD(videoFromYoutube) {
       const videoNotOnYD = this.state.videoNotOnYD.slice();
           for (let i = 0; i < videoFromYoutube.length; i += 1) {
-            const id = videoFromYoutube[i].id;
-            const thumbnailDefault = videoFromYoutube[i].snippet.thumbnails.default;
-            const thumbnailMedium = videoFromYoutube[i].snippet.thumbnails.medium;
-            const thumbnailHigh = videoFromYoutube[i].snippet.thumbnails.high;
-            let title = videoFromYoutube[i].snippet.title;
-            const description = videoFromYoutube[i].snippet.description;
-            const author = videoFromYoutube[i].snippet.channelTitle;
-            let views = videoFromYoutube[i].statistics.viewCount;
-            const publishedAt = new Date(videoFromYoutube[i].snippet.publishedAt);
+            const item = videoFromYoutube[i];
+            const id = item.id;
+            // const thumbnailDefault = item.snippet.thumbnails.default;
+            // const thumbnailMedium = item.snippet.thumbnails.medium;
+            const thumbnailHigh = item.snippet.thumbnails.high;
+            let title = item.snippet.title;
+            const description = item.snippet.description;
+            const author = item.snippet.channelTitle;
+            let describer;
+            let views = item.statistics.viewCount;
+            const publishedAt = new Date(item.snippet.publishedAt);
 
             const now = Date.now();
             let time = now - publishedAt;
@@ -171,22 +147,19 @@ class SearchPage extends Component {
             else views = `${views} views`;
 
             videoNotOnYD.push(
-              <div className="w3-col m4 l2 w3-margin-top">
-                <div className="w3-card-2">
-                  <img alt={description} src={thumbnailHigh.url} width="100%" />
-                  <div className="w3-container vid-title">
-                    <h5><a href="#">{title}</a></h5>
-                    <h6>
-                      <a href="#">{author}</a><br />
-                    </h6>
-                  </div>
-                  <div className="w3-container w3-padding-8">
-                    <h6><div className="w3-left">{views}</div><div className="w3-right"> {time}</div></h6>
-                    <button className="w3-btn w3-indigo" onClick={() => this.requestUpVote({ id })} >Up vote</button>
-                    <button className="w3-btn w3-indigo" onClick={() => this.requestDescribe({ id })} >Describe</button>
-                  </div>
-                </div>
-              </div>,
+              <VideoCard
+                key={i}
+                id={id}
+                description={description}
+                thumbnailHighUrl={thumbnailHigh.url}
+                title={title}
+                author={author}
+                views={views}
+                time={time}
+                buttons='on'
+                upVoteClick={() => this.upVoteClick(id)}
+                describeClick={()=> this.describeClick(id)}
+              />
             );
           }
 
@@ -222,7 +195,7 @@ class SearchPage extends Component {
         videoAlreadyOnYD: [],
       }, () => {
         this.renderVideoFromYD(seedDb, seedData1);
-        console.log('rendering top');
+        console.log('rendering videos on YD section');
       });
     }
     if (seedData2.length > 0) {
@@ -230,7 +203,7 @@ class SearchPage extends Component {
         videoNotOnYD: [],
       }, () => {
         this.renderVideoNotOnYD(seedData2);
-        console.log('rendering bot');
+        console.log('rendering videos not on YD section');
       });
     }
   }
@@ -243,7 +216,7 @@ class SearchPage extends Component {
           <h1>Already on YD</h1>
         </div>
 
-        <div className="w3-row-padding">
+        <div className="w3-row">
           {this.state.videoAlreadyOnYD}
         </div>
 
@@ -255,7 +228,7 @@ class SearchPage extends Component {
           <h1>Not on YD</h1>
         </div>
 
-        <div className="w3-row-padding">
+        <div className="w3-row">
           {this.state.videoNotOnYD}
         </div>
 
