@@ -97,10 +97,10 @@ class Home extends Component {
                 describer={describer}
                 views={views}
                 time={time}
+                buttons='off'
               />);
-
-            this.setState({ videos });
           }
+          this.setState({ videos });
         });
       });
   }
