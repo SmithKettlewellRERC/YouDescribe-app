@@ -67,7 +67,7 @@ class App extends Component {
           fetchData[0] = dbResponse;
           fetchData[1] = videoFromYDdatabase;
           fetchData[2] = [];
-          console.log(fetchData);
+          // console.log(fetchData);
           this.setState({
             fetchJSONtoSearchPage: fetchData,
           }, () => {

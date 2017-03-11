@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 
 // import seedData from './seedData.js';
@@ -16,12 +17,29 @@ class SearchPage extends Component {
     };
   }
 
-  upVoteClick(id) {
-    console.log('up vote this video: ', id)
+  upVoteClick(i, id, description, thumbnailHigh, title, author, views, time) {
+    let body = JSON.stringify({
+      title: title,
+      id: id,
+    })
+
+    fetch('http://webng.io:8080/v1/wishlist', {
+      headers: {
+      'Content-Type': 'application/json'
+      },
+      method: 'post',
+      body: body,
+    })
+    .then(res => res.json())
+    .then((res) => {
+      console.log('posted id')
+      console.log('response is: ', res.message)
+    })
   }
 
   describeClick(id) {
     console.log('describe this video: ', id)
+    browserHistory.push('/authoring-tool/' + id)
   }
 
 
@@ -157,7 +175,7 @@ class SearchPage extends Component {
                 views={views}
                 time={time}
                 buttons='on'
-                upVoteClick={() => this.upVoteClick(id)}
+                upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time)}
                 describeClick={()=> this.describeClick(id)}
               />
             );
@@ -187,8 +205,6 @@ class SearchPage extends Component {
     const seedData2 = this.props.getState().fetchJSONtoSearchPage[2];
 
     // this.dataToRender(seedDb, seedData1, seedData2)
-    console.log(seedData2);
-    console.log(this.state.videoNotOnYD);
 
     if (seedData2.length == 0) {
       this.setState({

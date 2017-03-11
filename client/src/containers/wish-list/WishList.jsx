@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 
 // import seedData from './seedData.js';
@@ -14,30 +15,65 @@ class WishList extends Component {
     };
   }
 
-  upVoteClick(id) {
-    console.log('up vote this video: ', id)
-    fetch('http://webng.io:8080/v1/wishlist', {
-      method: 'post',
-      body: JSON.stringify({
-        title: 'The green mile'
-      })
+  upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, vote_count) {
+    let body = JSON.stringify({
+        title: title,
+        id: id,
     })
-    .then(() => {
+    console.log('up vote this video: ', body)
+
+    // This need to be fix, the new vote_count value should 
+    // be from the response of the fetch request intead of 
+    // vote_count + 1;
+    vote_count = vote_count + 1;
+
+    fetch('http://webng.io:8080/v1/wishlist', {
+      headers: {
+      'Content-Type': 'application/json'
+      },
+      method: 'post',
+      body: body,
+    })
+    .then(res => res.json())
+    .then((res) => {
       console.log('posted id')
+      console.log('response is: ', res.message)
+      let newState = this.state.videos.slice();
+      newState[i] = (
+          <VideoCard
+            key={i}
+            id={id}
+            description={description}
+            thumbnailHighUrl={thumbnailHigh.url}
+            title={title}
+            author={author}
+            views={views}
+            time={time}
+            buttons='on'
+            vote_count={vote_count}
+            upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, vote_count)}
+            describeClick={()=> this.describeClick(id)}
+          />
+      )
+      this.setState({
+        videos: newState,
+      })
     })
   }
 
   describeClick(id) {
     console.log('describe this video: ', id)
+    browserHistory.push('/authoring-tool/' + id)
   }
 
   renderVideosInWishlist() {
+    console.log('rendering ... ')
     const serverVideoIds = [];
     let ids;
     let dbResponse;
 
 	//replace this url with the wishlist database 
-    fetch('http://webng.io:8080/v1/videos')
+    fetch('http://webng.io:8080/v1/wishlist')
       .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
@@ -62,13 +98,15 @@ class WishList extends Component {
             const thumbnailHigh = item.snippet.thumbnails.high;
             let title = item.snippet.title;
             const description = item.snippet.description;
-            const author = item.snippet.channelTitle;
-            let describer;
+            const author = item.snippet.channelTitle;;
+            let vote_count;
             let views = item.statistics.viewCount;
             const publishedAt = new Date(item.snippet.publishedAt);
 
             dbResponse.forEach((elem) => {
-              if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
+              if (elem._id === id) {
+                vote_count = elem.votes;
+              }
             })
 
             const now = Date.now();
@@ -114,12 +152,16 @@ class WishList extends Component {
                 views={views}
                 time={time}
                 buttons='on'
-                upVoteClick={() => this.upVoteClick(id)}
+                vote_count={vote_count}
+                upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, vote_count)}
                 describeClick={()=> this.describeClick(id)}
               />
             );
           }
-          this.setState({ videos });
+          this.setState({ videos }, () => {
+            browserHistory.push('/wishlist');
+          });
+          
         });
       });
   }
