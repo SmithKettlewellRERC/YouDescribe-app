@@ -12,7 +12,8 @@ const Track = (props) => {
             <div id="type" className={styleButton}>{labelText}</div>
           </div>
           <div className="w3-left">
-            <input type="text" placeholder="Enter Description" onChange={props.descriptionChange} />
+            {/*<input type="text" placeholder="Enter Description" onChange={props.descriptionChange} />*/}
+            <input type="text" placeholder={props.id} onChange={props.descriptionChange} />
           </div>
           <div id="track-action" className="w3-right">
             <ActionIcon icon="fa-circle" {...props} />

@@ -13,18 +13,23 @@ const conf = require('../../shared/config')();
 class AuthoringTool extends Component {
   constructor(props) {
     super(props);
-    this.videoId = props.params.videoId;
     this.state = {
-      // Authoring tool data.
-      // activePlayBackType: null,
-      // trackComponentsCount: 0,
-      tracksComponents: [],
+      currentVideoId: props.params.videoId,
+
+      // Video controls.
       videoDurationInSeconds: -1,
       currentVideoTime: 0,
       playheadPosition: 0,
       playheadTailHeight: 0,
-    };
 
+      // Tracks controls.
+      tracksComponents: [],
+      currentWorkingTrack: {
+        trackId: null,
+        playBackType: null,
+        recordingStatus: 'stopped', // recording, stopped, playing
+      }
+    };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
     this.publishVideo = this.publishVideo.bind(this);
@@ -62,16 +67,27 @@ class AuthoringTool extends Component {
   }
 
   addAudioClipTrack(playBackType) {
+    if (this.state.currentWorkingTrack.recordingStatus === 'recording') {
+      alert('Unable to add a new track while in the middle of a recording session');
+      return;
+    }
     const tracks = this.state.tracksComponents.slice();
     const newTrackId = tracks.length + 1;
     tracks.push(<Track
       key={newTrackId}
       id={newTrackId}
+      audioFileUrl=''
       playBackType={playBackType}
       recordAudioClip={this.recordAudioClip}
     />);
+
     this.setState({
       tracksComponents: tracks,
+      currentWorkingTrack: {
+        trackId: newTrackId,
+        playBackType: playBackType,
+        recordingStatus: 'stopped',
+      },
       playheadTailHeight: this.state.playheadTailHeight < 189 ? this.state.playheadTailHeight + 27 : this.state.playheadTailHeight,
     });
   }
@@ -82,22 +98,43 @@ class AuthoringTool extends Component {
     }
   }
 
-  recordAudioClip(e, playBackType) {
+  recordAudioClip(e, trackId, playBackType) {
     const tracks = this.state.tracksComponents.slice();
     if (e.target.className === 'fa fa-circle') {
-      console.log('Start recording');
-      // startRecording();
-
+      if (this.state.currentWorkingTrack.recordingStatus === 'recording') {
+        alert('You cannot record two tracks at the same time');
+        return;
+      }
+      console.log('Start recording for track', trackId);
+      this.setState({
+        currentWorkingTrack: {
+          trackId: trackId,
+          playBackType: playBackType,
+          recordingStatus: 'recording',
+        }
+      });
+      startRecording();
       e.target.className = 'fa fa-stop';
     } else if (e.target.className === 'fa fa-stop') {
       console.log('Stop recording');
       // Is going to stop the recording and save the file.
-      // this.setState({
-      //   authoringToolCurrentPlayBackType: playBackType,
-      // });
-      // stopRecordingAndSave(this.callbackFileSaved);
+      this.setState({
+        currentWorkingTrack: {
+          trackId: trackId,
+          playBackType: playBackType,
+          recordingStatus: 'stopped',
+        }
+      });
+      stopRecordingAndSave(this.callbackFileSaved);
       e.target.className = 'fa fa-step-forward';
     } else {
+      this.setState({
+        currentWorkingTrack: {
+          trackId: trackId,
+          playBackType: playBackType,
+          recordingStatus: 'playing',
+        }
+      });
       console.log('Just play');
     }
   }
@@ -105,17 +142,25 @@ class AuthoringTool extends Component {
   callbackFileSaved(blob) {
     console.log('The blob is in memory');
     console.log(blob);
-    console.log(this.props);
+    console.log(this.state.currentVideoId);
+    console.log(this.state.currentWorkingTrack);
     const formData = new FormData();
     formData.append('label', 'The title from debug');
-    formData.append('playbackType', this.props.getState().authoringToolCurrentPlayBackType);
+    formData.append('playbackType', this.state.currentWorkingTrack.playBackType);
     formData.append('startTime', '100.087');
     formData.append('endTime', '134.098');
     formData.append('duration', '10.000');
     formData.append('wavfile', blob);
-    fetch('http://localhost:8080/v1/audioclips/qwe', {
+    const url = `${conf.apiUrl}/audioclips/${this.state.currentVideoId}`;
+    console.log('URL', url)
+    fetch(url, {
       method: 'POST',
       body: formData,
+      mode: 'cors', // no-cors, cors, same-origin
+      // headers: {
+      //   'Accept': 'application/json',
+      //   'Content-Type': 'multipart/form-data',
+      // }
     })
     .then((response) => {
       console.log('RESPONSE', response);
@@ -134,11 +179,11 @@ class AuthoringTool extends Component {
       <main id="authoring-tool">
         <div className="w3-row">
           <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
-            <VideoPlayer
-              videoId={this.videoId}
-              updateState={this.updateState}
-              getCurrentVideoTime={this.getCurrentVideoTime}
-            />
+            {/*<VideoPlayer*/}
+              {/*videoId={this.videoId}*/}
+              {/*updateState={this.updateState}*/}
+              {/*getCurrentVideoTime={this.getCurrentVideoTime}*/}
+            {/*/>*/}
           </div>
           <div
             id="notes-section"
