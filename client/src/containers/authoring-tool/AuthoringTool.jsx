@@ -43,6 +43,7 @@ class AuthoringTool extends Component {
   }
 
   componentDidMount() {
+    console.log(this.state.playheadPosition);
     initAudioRecorder();
     this.scrollingFix();
   }
