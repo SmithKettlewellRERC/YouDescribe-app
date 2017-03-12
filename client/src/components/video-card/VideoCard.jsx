@@ -3,19 +3,19 @@ import { Link } from 'react-router';
 
 const VideoCard = props => {
 
-  let vote_count;
-  if (props.vote_count > 0) {
-    vote_count = 
+  let voteCount;
+  if (props.voteCount > 0) {
+    voteCount =
       (
         <div>
-          Requested: {props.vote_count} times
+          Requested: {props.voteCount} times
         </div>
       )
   }
 
   let buttons;
   if (props.buttons === 'on') {
-    buttons = 
+    buttons =
       (
         <div>
           <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom" onClick={props.upVoteClick}>Up Vote</button>
@@ -38,7 +38,7 @@ const VideoCard = props => {
         <div className="w3-container w3-padding-8">
           <h6><div className="w3-left">{props.views}</div><div className="w3-right"> {props.time}</div></h6>
         </div>
-        {vote_count}
+        {voteCount}
         {buttons}
       </div>
     </div>
