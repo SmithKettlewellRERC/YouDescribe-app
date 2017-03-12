@@ -232,25 +232,28 @@ class SearchPage extends Component {
           <h1>Already on YD</h1>
         </div>
 
-        <div className="w3-row">
-          {this.state.videoAlreadyOnYD}
-        </div>
+        <main>
+          <div className="w3-row">
+            {this.state.videoAlreadyOnYD}
+          </div>
 
-        <div className="w3-margin-top w3-center">
-          <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
-        </div>
+          <div className="w3-margin-top w3-center">
+            <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
+          </div>
+        </main>
 
         <div className="w3-container w3-indigo">
           <h1>Not on YD</h1>
         </div>
 
-        <div className="w3-row">
-          {this.state.videoNotOnYD}
-        </div>
+        <main>
+          <div className="w3-row">
+            {this.state.videoNotOnYD}
+          </div>
+        </main>
 
         <div className="w3-margin-top w3-center">
-          <button
-            className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
+          <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
         </div>
       </div>
     );
