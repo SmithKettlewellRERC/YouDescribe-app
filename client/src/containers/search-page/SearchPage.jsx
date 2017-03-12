@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
+import Button from '../../components/button/Button.jsx';
+
 
 // import seedData from './seedData.js';
 // import seedDb from './seedDb.js';
@@ -157,7 +159,7 @@ class SearchPage extends Component {
               minutes === 1 ? time = `${minutes} minutes ago` : time = `${minutes} minutes ago`;
             }
 
-            // if (title.length > 50) title = `${title.slice(0, 50)}...`;
+            if (title.length > 100) title = `${title.slice(0, 100)}...`;
             if (views >= 1000000000) views = `${(views / 1000000000).toFixed(1)}B views`;
             else if (views >= 1000000) views = `${(views / 1000000).toFixed(1)}M views`;
             else if (views >= 1000) views = `${(views / 1000).toFixed(0)}K views`;
@@ -232,25 +234,28 @@ class SearchPage extends Component {
           <h1>Already on YD</h1>
         </div>
 
-        <div className="w3-row">
-          {this.state.videoAlreadyOnYD}
-        </div>
+        <main>
+          <div id="on-yd" className="w3-row">
+            {this.state.videoAlreadyOnYD}
+          </div>
 
-        <div className="w3-margin-top w3-center">
-          <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
-        </div>
+          <div className="w3-margin-top w3-center">
+            <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
+          </div>
+        </main>
 
         <div className="w3-container w3-indigo">
           <h1>Not on YD</h1>
         </div>
 
-        <div className="w3-row">
-          {this.state.videoNotOnYD}
-        </div>
+        <main>
+          <div className="w3-row">
+            {this.state.videoNotOnYD}
+          </div>
+        </main>
 
         <div className="w3-margin-top w3-center">
-          <button
-            className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
+          <Button title="Load more videos" color="w3-indigo" text="Load more" />
         </div>
       </div>
     );
