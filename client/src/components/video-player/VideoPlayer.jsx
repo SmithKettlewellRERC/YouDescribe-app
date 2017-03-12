@@ -137,7 +137,7 @@ class VideoPlayer extends Component {
       this.props.getCurrentVideoTime(currentVideoProgress);
 
       // When the user back the video.
-      if (Math.abs(currentVideoProgress - previousTime) > 0.2) {
+      if (Math.abs(currentVideoProgress - previousTime) > 0.055) {
         currentAudioClip = this.getNextAudioClip(currentVideoProgress);
       }
       previousTime = currentVideoProgress;
@@ -163,7 +163,7 @@ class VideoPlayer extends Component {
         }
         this.getNextAudioClip(currentVideoProgress);
       }
-    }, 190);
+    }, 50);
   }
 
   playAudioClip(url, currentVideoProgress, callback = () => {}) {
