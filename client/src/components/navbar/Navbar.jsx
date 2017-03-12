@@ -42,10 +42,9 @@ class Navbar extends Component {
       <div id="navbar">
         {/* Navbar (sit on top) */}
         <div className="w3-top">
-
           <div className="w3-bar w3-white w3-card-2">
             <div role="logo">
-              <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide w3-hide-small w3-hide-medium">
+              <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide w3-hide-small w3-hide-medium"> 
                 {/*<img
                   alt="YouDescribe logo"
                   height="24px"
