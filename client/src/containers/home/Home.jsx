@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
+import Button from '../../components/button/Button.jsx';
 
 const conf = require('../../shared/config')();
 
@@ -124,7 +125,7 @@ class Home extends Component {
         </main>
 
         <div className="w3-margin-top w3-center">
-          <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
+          <Button title="Load more videos" color="w3-indigo" text="Load more" />
         </div>
 
       </div>

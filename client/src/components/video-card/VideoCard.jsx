@@ -20,7 +20,7 @@ const VideoCard = props => {
       (
         <div>
           <div className="w3-left">
-            <Button title="Add video to audio description wishlist" text={<i className="fa fa-heart"></i>} color="w3-indigo" onClick={props.upVoteClick} />
+            <Button title="Add video to audio description wish list" text={<i className="fa fa-heart"></i>} color="w3-indigo" onClick={props.upVoteClick} />
           </div>
           <div className="w3-right">
             <Button title="Add an audio description to video" text="Describe" color="w3-indigo" onClick={props.describeClick} />
