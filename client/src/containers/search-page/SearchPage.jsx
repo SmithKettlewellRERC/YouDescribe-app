@@ -19,7 +19,15 @@ class SearchPage extends Component {
     };
   }
 
-  upVoteClick(i, id, description, thumbnailHigh, title, author, views, time) {
+  upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time) {
+    console.log('CLASS', e.target.className);
+    if (e.target.className === 'w3-btn w3-white w3-text-indigo w3-left' ||
+      e.target.className === 'fa fa-heart') {
+      if (e.target.className === 'fa fa-heart') e.target.parentElement.className = 'w3-btn w3-white w3-text-red w3-left';
+      else e.target.className = 'w3-btn w3-white w3-text-red w3-left';
+      console.log('heart activated and video request added to wishlist or incremented by 1');
+    }
+
     let body = JSON.stringify({
       title: title,
       id: id,
@@ -177,7 +185,7 @@ class SearchPage extends Component {
                 views={views}
                 time={time}
                 buttons='on'
-                upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time)}
+                upVoteClick={(e) => this.upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time)}
                 describeClick={()=> this.describeClick(id)}
               />
             );

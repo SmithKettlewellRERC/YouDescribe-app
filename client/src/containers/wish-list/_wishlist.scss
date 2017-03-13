@@ -2,17 +2,18 @@
 
 #wish-list {
   min-height: 100vh;
-  .vid-card {
-    width: 194px;
-    padding: 0 8px;
-    .w3-card-2 {
-      .vid-title {
-        overflow-x: hidden;
-        height: 110px;
-      }
-      background-color: #fff;
-    }
-  }
+
+  // .vid-card {
+  //   width: 194px;
+  //   padding: 0 8px;
+  //   .w3-card-2 {
+  //     .vid-title {
+  //       overflow-x: hidden;
+  //       height: 110px;
+  //     }
+  //     background-color: #fff;
+  //   }
+  // }
   main {
     width: 416px;
     padding: 0px 8px;
@@ -25,6 +26,8 @@
     }
   }
   button {
+    outline: 1px solid #475CAE;
+    outline-offset: -1px;
     margin-top: 10px;
     margin-bottom: 30px!important;
   }
