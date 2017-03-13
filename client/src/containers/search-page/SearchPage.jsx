@@ -19,9 +19,14 @@ class SearchPage extends Component {
 
   upVoteClick(i, id, description, thumbnailHigh, title, author, views, time) {
     let body = JSON.stringify({
-      title: title,
-      id: id,
+        title: title,
+        id: id,
     })
+    console.log('up vote this video: ', body)
+
+    // This need to be fix, the new vote_count value should 
+    // be from the response of the fetch request intead of 
+    // vote_count + 1;
 
     fetch('http://webng.io:8080/v1/wishlist', {
       headers: {
@@ -32,10 +37,52 @@ class SearchPage extends Component {
     })
     .then(res => res.json())
     .then((res) => {
+      let new_count = res.result.votes;
       console.log('posted id')
       console.log('response is: ', res.message)
+      let newState = this.state.videoNotOnYD.slice();
+      newState[i] = (
+          <VideoCard
+            key={i}
+            id={id}
+            description={description}
+            thumbnailHighUrl={thumbnailHigh.url}
+            title={title}
+            author={author}
+            views={views}
+            time={time}
+            buttons='on'
+            vote_count={new_count}
+            upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, new_count)}
+            describeClick={()=> this.describeClick(id)}
+          />
+      )
+      this.setState({
+        videoNotOnYD: newState,
+      })
     })
   }
+
+
+  // upVoteClick(i, id, description, thumbnailHigh, title, author, views, time) {
+  //   let body = JSON.stringify({
+  //     title: title,
+  //     id: id,
+  //   })
+
+  //   fetch('http://webng.io:8080/v1/wishlist', {
+  //     headers: {
+  //     'Content-Type': 'application/json'
+  //     },
+  //     method: 'post',
+  //     body: body,
+  //   })
+  //   .then(res => res.json())
+  //   .then((res) => {
+  //     console.log('posted id')
+  //     console.log('response is: ', res.message)
+  //   })
+  // }
 
   describeClick(id) {
     console.log('describe this video: ', id)
@@ -174,6 +221,7 @@ class SearchPage extends Component {
                 author={author}
                 views={views}
                 time={time}
+                vote_count={0}
                 buttons='on'
                 upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time)}
                 describeClick={()=> this.describeClick(id)}

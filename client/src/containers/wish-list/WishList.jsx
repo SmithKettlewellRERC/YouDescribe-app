@@ -25,7 +25,6 @@ class WishList extends Component {
     // This need to be fix, the new vote_count value should 
     // be from the response of the fetch request intead of 
     // vote_count + 1;
-    vote_count = vote_count + 1;
 
     fetch('http://webng.io:8080/v1/wishlist', {
       headers: {
@@ -36,6 +35,7 @@ class WishList extends Component {
     })
     .then(res => res.json())
     .then((res) => {
+      let new_count = res.result.votes;
       console.log('posted id')
       console.log('response is: ', res.message)
       let newState = this.state.videos.slice();
@@ -50,8 +50,8 @@ class WishList extends Component {
             views={views}
             time={time}
             buttons='on'
-            vote_count={vote_count}
-            upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, vote_count)}
+            vote_count={new_count}
+            upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, new_count)}
             describeClick={()=> this.describeClick(id)}
           />
       )
