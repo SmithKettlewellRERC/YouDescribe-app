@@ -35,7 +35,7 @@ class WishList extends Component {
     // This need to be fix, the new voteCount value should
     // be from the response of the fetch request intead of
     // voteCount + 1;
-    voteCount = voteCount + 1;
+    // voteCount = voteCount + 1;
 
     fetch('http://webng.io:8080/v1/wishlist', {
       headers: {
@@ -46,6 +46,7 @@ class WishList extends Component {
     })
     .then(res => res.json())
     .then((res) => {
+      let new_count = res.result.votes;
       console.log('posted id')
       console.log('response is: ', res.message)
       let newState = this.state.videos.slice();
@@ -198,7 +199,7 @@ class WishList extends Component {
         </div>
 
       </div>
-    )
+    );
   }
 }
 

@@ -24,7 +24,11 @@ const Editor = (props) => {
                 <span className="w3-left">00:00:00:00</span>
                 <span className="w3-right">{props.videoDurationInEditorFormat}</span>
               </div>
+
+              {/* This is the line that need to add time mark*/}
               <hr />
+
+              {/* This is moving line that show the time*/}
               <Playhead
                 playheadPosition={props.playheadPosition}
                 playheadTailHeight={props.playheadTailHeight}
@@ -59,9 +63,7 @@ const Editor = (props) => {
             <div id="add-track-space" />
           </div>
         </div>
-
       </div>
-
       <div className="w3-right-align w3-border-top w3-border-black w3-padding">
         <Button title="Publish the video along with all audio description tracks" text="Publish" color="w3-indigo" onClick={props.publishVideo} />
       </div>
