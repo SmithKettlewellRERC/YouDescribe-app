@@ -59,9 +59,7 @@ const Editor = (props) => {
             <div id="add-track-space" />
           </div>
         </div>
-
       </div>
-
       <div className="w3-right-align w3-border-top w3-border-black w3-padding">
         <Button title="Publish the video along with all audio description tracks" text="Publish" color="w3-indigo" onClick={props.publishVideo} />
       </div>

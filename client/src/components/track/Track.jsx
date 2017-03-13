@@ -4,6 +4,7 @@ import ActionIcon from '../action-icon/ActionIcon.jsx';
 const Track = (props) => {
   const labelText = props.playBackType === 'inline' ? 'I' : 'E';
   const styleButton = props.playBackType === 'inline' ? 'w3-yellow' : 'w3-purple';
+  const actionIconClass = props.audioClipUrl === '' ? 'fa-circle' : 'fa-step-forward';
   return (
     <div id="track" className="w3-row w3-display-container">
       <div className="w3-col l3 m3 s3">
@@ -12,11 +13,10 @@ const Track = (props) => {
             <div id="type" className={styleButton}>{labelText}</div>
           </div>
           <div className="w3-left">
-            {/*<input type="text" placeholder="Enter Description" onChange={props.descriptionChange} />*/}
-            <input type="text" placeholder={props.id} onChange={props.descriptionChange} />
+            <input type="text" placeholder={props.id + ' Enter Description'} onChange={props.updateTrackLabel} value={props.label} />
           </div>
           <div id="track-action" className="w3-right">
-            <ActionIcon icon="fa-circle" {...props} />
+            <ActionIcon icon={actionIconClass} {...props} />
           </div>
         </div>
       </div>
