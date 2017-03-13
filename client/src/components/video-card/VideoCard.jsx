@@ -9,7 +9,7 @@ const VideoCard = props => {
     voteCount =
       (
         <div>
-          Requested: {props.vote_count + 1} times
+          {props.voteCount + 1}
         </div>
       )
   }
@@ -19,8 +19,8 @@ const VideoCard = props => {
     buttons =
       (
         <div>
-          <Button title="Add video to audio description wish list" text={<i className="fa fa-heart"></i>} color="w3-white w3-text-indigo w3-left" upVoteClick={props.upVoteClick} />
-          <Button title="Request an audio description for this video" text="Describe" color="w3-indigo w3-right" onClick={props.describeClick} />
+          <div><Button title="Request an audio description for this video" text={<i className="fa fa-heart"></i>} color="w3-white w3-text-indigo w3-left" onClick={props.upVoteClick} /><span id="vote-count">{voteCount}</span></div>
+          <Button title="Create an audio description for this video" text="Describe" color="w3-indigo w3-right" onClick={props.describeClick} />
         </div>
       )
   }
@@ -38,7 +38,8 @@ const VideoCard = props => {
         </div>
         <div className="w3-container w3-padding-8">
           <h6><div className="w3-left">{props.views}</div><div className="w3-right"> {props.time}</div></h6>
-          {/*voteCount*/}
+        </div>
+        <div className="w3-container w3-padding-8">
           {buttons}
         </div>
       </div>

@@ -17,6 +17,7 @@ class VideoPlayerPlay extends Component {
     this.audioClipsLength = 0;
     this.nextAudioClip = null;
     this.initVideoPlayer = this.initVideoPlayer.bind(this);
+    this.currentClip = null;
   }
 
   fetchAudioClips() {
@@ -138,36 +139,50 @@ class VideoPlayerPlay extends Component {
         const url = this.nextAudioClip.url
         if (this.nextAudioClip.playback_type === 'inline') {
           console.log('### INLINE ###', url);
-          this.playAudioClip(url, currentVideoProgress);
+          this.currentClip = new Howl({
+            src: [url],
+            html5: true,
+            onend: () => {
+              callback();
+            },
+          });
+          this.currentClip.play();
         } else {
           console.log('### EXTENDED', url);
           this.videoPlayer.pauseVideo();
-          this.playAudioClip(url, currentVideoProgress, () => {
-            this.videoPlayer.playVideo();
+          this.currentClip = new Howl({
+            src: [url],
+            html5: true,
+            onend: () => {
+              this.videoPlayer.playVideo();
+            },
           });
+          this.currentClip.play();
         }
         this.getNextAudioClip(currentVideoProgress);
       }
     }, 50);
   }
 
-  playAudioClip(url, currentVideoProgress, callback = () => {}) {
-    // console.log('PLAY', [url]);
-    const audio = new Howl({
-      src: [url],
-      html5: true,
-      onend: () => {
-        callback();
-      },
-    });
-    audio.play();
-  }
+  // playAudioClip(url, currentVideoProgress, callback = () => {}) {
+  //   // console.log('PLAY', [url]);
+  //   const audio = new Howl({
+  //     src: [url],
+  //     html5: true,
+  //     onend: () => {
+  //       callback();
+  //     },
+  //   });
+  //   audio.play();
+  // }
 
   componentDidMount() {
     this.fetchAudioClips();
   }
 
   componentWillUnmount() {
+    console.log('leaving the page');
+    this.currentClip.stop();
     clearInterval(this.watcher);
   }
 

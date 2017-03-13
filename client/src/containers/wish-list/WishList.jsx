@@ -35,7 +35,7 @@ class WishList extends Component {
     // This need to be fix, the new voteCount value should
     // be from the response of the fetch request intead of
     // voteCount + 1;
-    // voteCount = voteCount + 1;
+    voteCount = voteCount + 1;
 
     fetch('http://webng.io:8080/v1/wishlist', {
       headers: {
@@ -172,7 +172,6 @@ class WishList extends Component {
           this.setState({ videos }, () => {
             browserHistory.push('/wishlist');
           });
-
         });
       });
   }
@@ -194,7 +193,7 @@ class WishList extends Component {
           {this.state.videos}
         </main>
 
-        <div className="w3-margin-top w3-center">
+        <div id="load-more" className="w3-margin-top w3-center">
           <Button title="Load more videos" color="w3-indigo" text="Load more" />
         </div>
 
