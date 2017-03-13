@@ -9,7 +9,7 @@ const VideoCard = props => {
     voteCount =
       (
         <div>
-          Requested: {props.voteCount} times
+          Requested: {props.vote_count + 1} times
         </div>
       )
   }

@@ -24,7 +24,11 @@ const Editor = (props) => {
                 <span className="w3-left">00:00:00:00</span>
                 <span className="w3-right">{props.videoDurationInEditorFormat}</span>
               </div>
+
+              {/* This is the line that need to add time mark*/}
               <hr />
+
+              {/* This is moving line that show the time*/}
               <Playhead
                 playheadPosition={props.playheadPosition}
                 playheadTailHeight={props.playheadTailHeight}
