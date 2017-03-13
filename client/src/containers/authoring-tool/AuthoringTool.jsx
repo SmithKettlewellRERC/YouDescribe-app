@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import VideoPlayer from '../../components/video-player/VideoPlayer.jsx';
+import VideoPlayer from '../../components/video-player/VideoPlayerAuthoringTool.jsx';
 import Notes from '../../components/notes/Notes.jsx';
 import Editor from '../../components/editor/Editor.jsx';
 import Track from '../../components/track/Track.jsx';

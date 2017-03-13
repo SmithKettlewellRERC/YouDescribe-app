@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import VideoPlayer from '../../components/video-player/VideoPlayer.jsx';
+import VideoPlayer from '../../components/video-player/VideoPlayerPlay.jsx';
 
 class VideoPage extends Component {
   constructor(props) {
