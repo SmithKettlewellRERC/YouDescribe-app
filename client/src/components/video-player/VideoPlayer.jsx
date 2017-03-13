@@ -100,14 +100,34 @@ class VideoPlayer extends Component {
   initVideoPlayer() {
     // console.log('initVideoPlayer');
     const self = this;
-    this.videoPlayer = new YT.Player('player', {
-      height: '100%',
-      // width: '100%',
-      videoId: this.videoId,
-      events: {
-        onReady: onVideoPlayerReady,
-      },
+    this.props.updateState({
+      videoPlayer: new YT.Player('player', {
+        height: '100%',
+        // width: '100%',
+        videoId: this.videoId,
+        events: {
+          onReady: onVideoPlayerReady,
+          onStateChange: onPlayerStateChange,
+        },
+      })
     });
+        // player.playVideo():Void
+        // player.pauseVideo():Void
+        // player.stopVideo():Void
+        // player.seekTo(seconds:Number, allowSeekAhead:Boolean):Void
+
+    function onPlayerStateChange(newState) {
+      const videoState = {
+        '-1': 'unstarted',
+        '0': 'ended',
+        '1': 'playing',
+        '2': 'paused',
+        '3': 'buffering',
+        '5': 'video cued',
+      }
+      console.log('Video player new state', videoState[newState.data.toString()])
+    }
+
     function onVideoPlayerReady() {
       console.log('YouTube video player ready. Lets call the watcher');
       self.getVideoDuration();
@@ -134,7 +154,7 @@ class VideoPlayer extends Component {
     let currentAudioClip = null;
 
     this.watcher = setInterval(() => {
-      currentVideoProgress = this.videoPlayer.getCurrentTime();
+      currentVideoProgress = this.props.getState().videoPlayer.getCurrentTime();
       this.props.updateState({
         playheadPosition: 731 * (currentVideoProgress / this.videoDurationInSeconds),
       })

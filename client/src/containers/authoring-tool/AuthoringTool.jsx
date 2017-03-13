@@ -21,16 +21,20 @@ class AuthoringTool extends Component {
       currentVideoTime: 0,
       playheadPosition: 0,
       playheadTailHeight: 0,
+      seekVideoPosition: 0,
+
+      videoPlayer: null,
 
       // Tracks controls.
       videoCompleteData: null,
       tracksComponents: [],
-      selectedComponentLabel: '',
+      // selectedComponentLabel: '',
+
       selectedComponentId: null,
       selectedComponentPlaybackType: null,
       selectedComponentStatus: null,
-      selectedComponentPlayer: null,
-      selectedComponentUrl: null,
+      // selectedComponentPlayer: null,
+      // selectedComponentUrl: null,
     };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
@@ -116,17 +120,17 @@ class AuthoringTool extends Component {
 
     const newTrackId = tracks.length + 1;
 
-    // If we are adding an existing track.
+    // If we are adding an existing track in the db.
     let audioClipLabel = '';
     let audioClipUrl = '';
     let actionIconClass = 'fa-circle';
+    let startTime = 0;
     if (Object.keys(audioClipObj).length > 0) {
       audioClipLabel = audioClipObj.file_name;
       audioClipUrl = `${conf.audioClipsUploadsPath}${audioClipObj.file_path}/${audioClipObj.file_name}`;
+      startTime = audioClipObj.start_time;
       actionIconClass = 'fa-step-forward';
     }
-
-    // console.log('audioClipObj', audioClipObj);
 
     tracks.push(<Track
       key={newTrackId}
@@ -134,6 +138,7 @@ class AuthoringTool extends Component {
       label={audioClipLabel}
       audioClipUrl={audioClipUrl}
       playBackType={playBackType}
+      startTime={startTime}
       recordAudioClip={this.recordAudioClip}
       updateTrackLabel={this.updateTrackLabel}
       actionIconClass={actionIconClass}
@@ -173,11 +178,11 @@ class AuthoringTool extends Component {
         return;
       }
 
-      if (this.state.selectedComponentStatus === 'playing') {
-        console.log('You have another track playing/paused');
-        this.stopAudioClipTrack();
-        return;
-      }
+      // if (this.state.selectedComponentStatus === 'playing') {
+      //   console.log('You have another track playing/paused');
+      //   this.stopAudioClipTrack();
+      //   return;
+      // }
     }
 
     const clickedTrackComponent = this.getTrackComponentByTrackId(trackId);
@@ -191,6 +196,11 @@ class AuthoringTool extends Component {
         selectedComponentStatus: 'recording',
       }, () => {
         this.updateTrackComponent('fa-stop');
+        if (this.state.selectedComponentPlaybackType == 'inline') {
+          this.state.videoPlayer.playVideo();
+        } else {
+          this.state.videoPlayer.stopVideo();
+        }
         startRecording();
       });
 
@@ -199,32 +209,38 @@ class AuthoringTool extends Component {
       // STOP RECORDING.
       this.setState({ selectedComponentStatus: 'stopped' }, () => {
         this.updateTrackComponent('fa-step-forward');
+        this.state.videoPlayer.stopVideo();
         stopRecordingAndSave(this.callbackFileSaved);
       });
 
     } else if (e.target.className === 'fa fa-step-forward') {
 
       // PLAY.
-      this.setState({
-        selectedComponentId: clickedTrackComponent.props.id,
-        selectedComponentUrl: clickedTrackComponent.props.audioClipUrl,
-        selectedComponentPlaybackType: clickedTrackComponent.props.playBackType,
-        selectedComponentStatus: 'playing'
-      }, () => {
-        this.playAudioClipTrack();
-      });
+      // this.setState({
+      //   selectedComponentId: clickedTrackComponent.props.id,
+      //   selectedComponentUrl: clickedTrackComponent.props.audioClipUrl,
+      //   selectedComponentPlaybackType: clickedTrackComponent.props.playBackType,
+      //   selectedComponentStatus: 'playing'
+      // }, () => {
+      //   this.playAudioClipTrack();
+      // });
+      // SeekTo
+      const seekToValue = clickedTrackComponent.props.startTime;
+      console.log('Seek video to', seekToValue);
+      this.state.videoPlayer.seekTo(parseFloat(seekToValue));
+      this.setState({ seekVideoPosition: seekToValue });
 
     } else if (e.target.className === 'fa fa-pause') {
 
       // PAUSE.
-      this.setState({
-        selectedComponentId: clickedTrackComponent.props.id,
-        selectedComponentUrl: clickedTrackComponent.props.audioClipUrl,
-        selectedComponentPlaybackType: clickedTrackComponent.props.playBackType,
-        selectedComponentStatus: 'paused'
-      }, () => {
-        this.pauseAudioClipTrack();
-      });
+      // this.setState({
+      //   selectedComponentId: clickedTrackComponent.props.id,
+      //   selectedComponentUrl: clickedTrackComponent.props.audioClipUrl,
+      //   selectedComponentPlaybackType: clickedTrackComponent.props.playBackType,
+      //   selectedComponentStatus: 'paused'
+      // }, () => {
+      //   this.pauseAudioClipTrack();
+      // });
 
     } else {
       console.log('????????????????????????????????????');
@@ -315,8 +331,6 @@ class AuthoringTool extends Component {
     formData.append('label', this.state.selectedComponentLabel);
     formData.append('playbackType', this.state.selectedComponentPlaybackType);
     formData.append('startTime', this.state.currentVideoTime);
-    // formData.append('endTime', '134.098');
-    // formData.append('duration', '10.000');
     formData.append('wavfile', blob);
     const url = `${conf.apiUrl}/audioclips/${this.state.currentVideoId}`;
     var xhr = new XMLHttpRequest();
@@ -338,8 +352,10 @@ class AuthoringTool extends Component {
           <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
             <VideoPlayer
               videoId={this.state.currentVideoId}
+              getState={this.getState}
               updateState={this.updateState}
               getCurrentVideoTime={this.getCurrentVideoTime}
+              seekVideoTo={this.seekVideoTo}
             />
           </div>
           <div
