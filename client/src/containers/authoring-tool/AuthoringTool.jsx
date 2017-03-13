@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import VideoPlayer from '../../components/video-player/VideoPlayerAuthoringTool.jsx';
+import VideoPlayerAT from '../../components/video-player/VideoPlayerAT.jsx';
 import Notes from '../../components/notes/Notes.jsx';
 import Editor from '../../components/editor/Editor.jsx';
 import Track from '../../components/track/Track.jsx';
@@ -17,24 +17,19 @@ class AuthoringTool extends Component {
       currentVideoId: props.params.videoId,
 
       // Video controls.
+      videoPlayer: null,
       videoDurationInSeconds: -1,
       currentVideoTime: 0,
       playheadPosition: 0,
       playheadTailHeight: 0,
       seekVideoPosition: 0,
 
-      videoPlayer: null,
-
       // Tracks controls.
-      videoCompleteData: null,
       tracksComponents: [],
-      // selectedComponentLabel: '',
-
       selectedComponentId: null,
       selectedComponentPlaybackType: null,
       selectedComponentStatus: null,
-      // selectedComponentPlayer: null,
-      // selectedComponentUrl: null,
+      selectedComponentStartTime: 0,
     };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
@@ -43,7 +38,7 @@ class AuthoringTool extends Component {
     this.addAudioClipTrack = this.addAudioClipTrack.bind(this);
     this.recordAudioClip = this.recordAudioClip.bind(this);
     this.callbackFileSaved = this.callbackFileSaved.bind(this);
-    this.getCurrentVideoTime = this.getCurrentVideoTime.bind(this);
+    this.setCurrentVideoTime = this.setCurrentVideoTime.bind(this);
   }
 
   getState() {
@@ -148,7 +143,7 @@ class AuthoringTool extends Component {
     });
   }
 
-  getCurrentVideoTime(currentVideoTime) {
+  setCurrentVideoTime(currentVideoTime) {
     if (this.state.currentVideoTime !== currentVideoTime) {
       this.setState({ currentVideoTime });
     }
@@ -165,7 +160,6 @@ class AuthoringTool extends Component {
   }
 
   recordAudioClip(e, trackId) {
-
 
     console.log('currentVideoTime', this.state.currentVideoTime);
     // If there is another component active, I need to stop it before accepting the action.
@@ -189,6 +183,7 @@ class AuthoringTool extends Component {
       
       // RECORD.
       this.setState({
+        selectedComponentStartTime: this.state.currentVideoTime,
         selectedComponentId: trackId,
         selectedComponentPlaybackType: clickedTrackComponent.props.playBackType,
         selectedComponentStatus: 'recording',
@@ -213,32 +208,11 @@ class AuthoringTool extends Component {
 
     } else if (e.target.className === 'fa fa-step-forward') {
 
-      // PLAY.
-      // this.setState({
-      //   selectedComponentId: clickedTrackComponent.props.id,
-      //   selectedComponentUrl: clickedTrackComponent.props.audioClipUrl,
-      //   selectedComponentPlaybackType: clickedTrackComponent.props.playBackType,
-      //   selectedComponentStatus: 'playing'
-      // }, () => {
-      //   this.playAudioClipTrack();
-      // });
-      // SeekTo
+      // SEEK TO.
       const seekToValue = clickedTrackComponent.props.startTime;
       console.log('Seek video to', seekToValue);
       this.state.videoPlayer.seekTo(parseFloat(seekToValue));
       this.setState({ seekVideoPosition: seekToValue });
-
-    } else if (e.target.className === 'fa fa-pause') {
-
-      // PAUSE.
-      // this.setState({
-      //   selectedComponentId: clickedTrackComponent.props.id,
-      //   selectedComponentUrl: clickedTrackComponent.props.audioClipUrl,
-      //   selectedComponentPlaybackType: clickedTrackComponent.props.playBackType,
-      //   selectedComponentStatus: 'paused'
-      // }, () => {
-      //   this.pauseAudioClipTrack();
-      // });
 
     } else {
       console.log('????????????????????????????????????');
@@ -328,8 +302,9 @@ class AuthoringTool extends Component {
     const formData = new FormData();
     formData.append('label', this.state.selectedComponentLabel);
     formData.append('playbackType', this.state.selectedComponentPlaybackType);
-    formData.append('startTime', this.state.currentVideoTime);
+    formData.append('startTime', this.state.selectedComponentStartTime);
     formData.append('wavfile', blob);
+    console.log('Going to save at', this.state.selectedComponentStartTime);
     const url = `${conf.apiUrl}/audioclips/${this.state.currentVideoId}`;
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
@@ -348,11 +323,11 @@ class AuthoringTool extends Component {
       <main id="authoring-tool">
         <div className="w3-row">
           <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
-            <VideoPlayer
+            <VideoPlayerAT
               videoId={this.state.currentVideoId}
               getState={this.getState}
               updateState={this.updateState}
-              getCurrentVideoTime={this.getCurrentVideoTime}
+              setCurrentVideoTime={this.setCurrentVideoTime}
               seekVideoTo={this.seekVideoTo}
             />
           </div>

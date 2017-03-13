@@ -7,7 +7,7 @@ import {
 
 const conf = require('./../../shared/config')();
 
-class VideoPlayer extends Component {
+class VideoPlayerAT extends Component {
   constructor(props) {
     super(props);
     this.watcher = null;
@@ -58,6 +58,7 @@ class VideoPlayer extends Component {
       const clipsIds = Object.keys(clips);
       clipsIds.forEach((id) => {
         const obj = clips[id];
+        console.log(obj)
         obj.url = `${conf.audioClipsUploadsPath}${obj.file_path}/${obj.file_name}`;
         this.audioClips.push(obj);
       });
@@ -101,7 +102,7 @@ class VideoPlayer extends Component {
     // console.log('initVideoPlayer');
     const self = this;
     this.props.updateState({
-      videoPlayer: new YT.Player('player', {
+      videoPlayer: new YT.Player('playerAT', {
         height: '100%',
         // width: '100%',
         videoId: this.videoId,
@@ -125,7 +126,7 @@ class VideoPlayer extends Component {
         '3': 'buffering',
         '5': 'video cued',
       }
-      console.log('Video player new state', videoState[newState.data.toString()])
+      // console.log('Video player new state', videoState[newState.data.toString()])
     }
 
     function onVideoPlayerReady() {
@@ -158,7 +159,8 @@ class VideoPlayer extends Component {
       this.props.updateState({
         playheadPosition: 731 * (currentVideoProgress / this.videoDurationInSeconds),
       })
-      this.props.getCurrentVideoTime(currentVideoProgress);
+
+      this.props.setCurrentVideoTime(currentVideoProgress);
 
       // When the user back the video.
       if (Math.abs(currentVideoProgress - previousTime) > 0.055) {
@@ -175,7 +177,7 @@ class VideoPlayer extends Component {
 
       if (currentVideoProgress > timedEvent) {
         const url = this.nextAudioClip.url
-        if (this.nextAudioClip.type === 'inline') {
+        if (this.nextAudioClip.playback_type === 'inline') {
           console.log('### INLINE ###', url);
           this.playAudioClip(url, currentVideoProgress);
         } else {
@@ -191,7 +193,6 @@ class VideoPlayer extends Component {
   }
 
   playAudioClip(url, currentVideoProgress, callback = () => {}) {
-    // console.log('PLAY', [url]);
     const audio = new Howl({
       src: [url],
       html5: true,
@@ -211,8 +212,8 @@ class VideoPlayer extends Component {
   }
 
   render() {
-    return (<div id="player" />);
+    return (<div id="playerAT" />);
   }
 }
 
-export default VideoPlayer;
+export default VideoPlayerAT;

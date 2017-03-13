@@ -7,7 +7,7 @@ import {
 
 const conf = require('./../../shared/config')();
 
-class VideoPlayer extends Component {
+class VideoPlayerPlay extends Component {
   constructor(props) {
     super(props);
     this.watcher = null;
@@ -84,7 +84,7 @@ class VideoPlayer extends Component {
     // console.log('initVideoPlayer');
     const self = this;
 
-    this.videoPlayer = new YT.Player('player', {
+    this.videoPlayer = new YT.Player('playerPlay', {
       height: '100%',
       // width: '100%',
       videoId: this.videoId,
@@ -136,7 +136,7 @@ class VideoPlayer extends Component {
 
       if (currentVideoProgress > timedEvent) {
         const url = this.nextAudioClip.url
-        if (this.nextAudioClip.type === 'inline') {
+        if (this.nextAudioClip.playback_type === 'inline') {
           console.log('### INLINE ###', url);
           this.playAudioClip(url, currentVideoProgress);
         } else {
@@ -172,8 +172,8 @@ class VideoPlayer extends Component {
   }
 
   render() {
-    return (<div id="player" />);
+    return (<div id="playerPlay" />);
   }
 }
 
-export default VideoPlayer;
+export default VideoPlayerPlay;
