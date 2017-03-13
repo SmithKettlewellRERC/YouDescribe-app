@@ -81,7 +81,7 @@ function initAudioRecorder() {
     // bt.addEventListener('click', function() {
     //     toggleRecording();
     // })
-    console.log('Init audio recorder');
+    // console.log('Init audio recorder');
 
     if (!navigator.getUserMedia) {
         navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;

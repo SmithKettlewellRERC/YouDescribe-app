@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Playhead = (props) => {
-  console.log(props.playheadPosition);
+  // console.log(props.playheadPosition);
   return (
     <div id="playhead" style={{ left: props.playheadPosition + 'px' }}>
       <div id="playhead-head" className="w3-red"></div>
