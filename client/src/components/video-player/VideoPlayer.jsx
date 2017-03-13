@@ -53,15 +53,19 @@ class VideoPlayer extends Component {
   }
 
   parseVideoData(videoData) {
-    const clips = videoData.audio_descriptions['1'].clips;
-    const clipsIds = Object.keys(clips);
-    clipsIds.forEach((id) => {
-      const obj = clips[id];
-      obj.url = `${conf.audioClipsUploadsPath}${obj.file_path}/${obj.file_name}`;
-      this.audioClips.push(obj);
-    });
-    this.audioClipsLength = this.audioClips.length;
-    this.preLoadAudioClips();
+    if (videoData.audio_descriptions) {
+      const clips = videoData.audio_descriptions['1'].clips;
+      const clipsIds = Object.keys(clips);
+      clipsIds.forEach((id) => {
+        const obj = clips[id];
+        obj.url = `${conf.audioClipsUploadsPath}${obj.file_path}/${obj.file_name}`;
+        this.audioClips.push(obj);
+      });
+      this.audioClipsLength = this.audioClips.length;
+      this.preLoadAudioClips();
+    } else {
+      this.initVideoPlayer();
+    }
   }
 
   preLoadAudioClips() {
@@ -75,7 +79,7 @@ class VideoPlayer extends Component {
       }
     };
 
-    console.log(this.audioClips);
+    // console.log(this.audioClips);
     // Caching all audio clips???
     this.audioClips.forEach((audioObj) => {
       console.log('CREATE', audioObj.url);
