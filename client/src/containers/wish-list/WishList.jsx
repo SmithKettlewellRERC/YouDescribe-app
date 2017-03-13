@@ -14,18 +14,28 @@ class WishList extends Component {
     this.state = {
       videos: [],
     };
+
+    // this.upVoteClick = this.upVoteClick.bind(this);
   }
 
-  upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, vote_count) {
+  upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time, voteCount) {
+    console.log('CLASS', e.target.className);
+    if (e.target.className === 'w3-btn w3-white w3-text-indigo w3-left' ||
+      e.target.className === 'fa fa-heart') {
+      if (e.target.className === 'fa fa-heart') e.target.parentElement.className = 'w3-btn w3-white w3-text-red w3-left';
+      else e.target.className = 'w3-btn w3-white w3-text-red w3-left';
+      console.log('heart activated and video request added to wishlist or incremented by 1');
+    }
     let body = JSON.stringify({
-        title: title,
-        id: id,
+        title,
+        id,
     })
     console.log('up vote this video: ', body)
 
-    // This need to be fix, the new vote_count value should
+    // This need to be fix, the new voteCount value should
     // be from the response of the fetch request intead of
-    // vote_count + 1;
+    // voteCount + 1;
+    // voteCount = voteCount + 1;
 
     fetch('http://webng.io:8080/v1/wishlist', {
       headers: {
@@ -51,8 +61,8 @@ class WishList extends Component {
             views={views}
             time={time}
             buttons='on'
-            vote_count={new_count}
-            upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, new_count)}
+            voteCount={voteCount}
+            upVoteClick={(e) => this.upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time, voteCount)}
             describeClick={()=> this.describeClick(id)}
           />
       )
@@ -100,13 +110,13 @@ class WishList extends Component {
             let title = item.snippet.title;
             const description = item.snippet.description;
             const author = item.snippet.channelTitle;;
-            let vote_count;
+            let voteCount;
             let views = item.statistics.viewCount;
             const publishedAt = new Date(item.snippet.publishedAt);
 
             dbResponse.forEach((elem) => {
               if (elem._id === id) {
-                vote_count = elem.votes;
+                voteCount = elem.votes;
               }
             })
 
@@ -153,8 +163,8 @@ class WishList extends Component {
                 views={views}
                 time={time}
                 buttons='on'
-                vote_count={vote_count}
-                upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, vote_count)}
+                voteCount={voteCount}
+                upVoteClick={(e) => this.upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time, voteCount)}
                 describeClick={()=> this.describeClick(id)}
               />
             );
@@ -189,7 +199,7 @@ class WishList extends Component {
         </div>
 
       </div>
-    )
+    );
   }
 }
 

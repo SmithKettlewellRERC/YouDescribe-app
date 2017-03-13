@@ -2,17 +2,17 @@
 
 #search-page {
   min-height: 100vh;
-  .vid-card {
-    width: 194px;
-    padding: 0 8px;
-    .w3-card-2 {
-      .vid-title {
-        overflow-x: hidden;
-        height: 110px;
-      }
-      background-color: #fff;
-    }
-  }
+  // .vid-card {
+  //   width: 194px;
+  //   padding: 0 8px;
+  //   .w3-card-2 {
+  //     .vid-title {
+  //       overflow-x: hidden;
+  //       height: 110px;
+  //     }
+  //     background-color: #fff;
+  //   }
+  // }
   main {
     width: 416px;
     padding: 0px 8px;
@@ -28,6 +28,14 @@
     }
   }
   button {
+    // -webkit-box-shadow:inset 0px 0px 0px 1px #475CAE;
+    // -moz-box-shadow:inset 0px 0px 0px 1px #475CAE;
+    // box-shadow:inset 0px 0px 0px 1px #475CAE;
+    // border: 10px solid blue;
+    // box-sizing: border-box;
+    outline: 1px solid #475CAE;
+    outline-offset: -1px;
+    height: 30px;
     margin-top: 10px;
     margin-bottom: 30px!important;
   }

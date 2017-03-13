@@ -110,8 +110,6 @@ class AuthoringTool extends Component {
 
   scrollingFix() {
     function mouseWheelHandler(e) {
-      // const e0 = e.originalEvent;
-      // const delta = e0.wheelDelta || -e0.detail;
       const delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
 
       this.scrollTop += (delta < 0 ? 1 : -1) * 30;

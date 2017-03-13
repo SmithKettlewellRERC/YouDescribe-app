@@ -1,17 +1,21 @@
-@import './containers/app/app';
-@import './containers/home/home';
-@import './containers/authoring-tool/authoringtool';
-@import './containers/video-page/videopage';
-@import './containers/search-page/searchpage';
-@import './containers/wish-list/wishlist';
-@import './containers/not-found/notfound';
-
-@import './components/navbar/navbar';
-@import './components/search-bar/searchbar';
-@import './components/nav-link/navlink';
-@import './components/sign-in/signin';
-@import './components/video-player/videoplayer';
-@import './components/notes/notes';
+@import './components/action-icon/actionicon';
+@import './components/button/button';
 @import './components/editor/editor';
 @import './components/footer/footer';
+@import './components/nav-link/navlink';
+@import './components/navbar/navbar';
+@import './components/notes/notes';
 @import './components/playhead/playhead';
+@import './components/search-bar/searchbar';
+@import './components/sign-in/signin';
+@import './components/track/track';
+@import './components/video-card/videocard';
+@import './components/video-player/videoplayer';
+
+@import './containers/app/app';
+@import './containers/authoring-tool/authoringtool';
+@import './containers/home/home';
+@import './containers/not-found/notfound';
+@import './containers/search-page/searchpage';
+@import './containers/video-page/videopage';
+@import './containers/wish-list/wishlist';
