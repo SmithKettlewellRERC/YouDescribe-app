@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import VideoPlayer from '../../components/video-player/VideoPlayer.jsx';
+import VideoPlayer from '../../components/video-player/VideoPlayerAuthoringTool.jsx';
 import Notes from '../../components/notes/Notes.jsx';
 import Editor from '../../components/editor/Editor.jsx';
 import Track from '../../components/track/Track.jsx';
@@ -21,16 +21,20 @@ class AuthoringTool extends Component {
       currentVideoTime: 0,
       playheadPosition: 0,
       playheadTailHeight: 0,
+      seekVideoPosition: 0,
+
+      videoPlayer: null,
 
       // Tracks controls.
       videoCompleteData: null,
       tracksComponents: [],
-      currentWorkingTrack: {
-        label: null,
-        trackId: null,
-        playBackType: null,
-        recordingStatus: 'stopped', // recording, stopped, playing
-      }
+      // selectedComponentLabel: '',
+
+      selectedComponentId: null,
+      selectedComponentPlaybackType: null,
+      selectedComponentStatus: null,
+      // selectedComponentPlayer: null,
+      // selectedComponentUrl: null,
     };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
@@ -51,7 +55,6 @@ class AuthoringTool extends Component {
   }
 
   componentDidMount() {
-    console.log(this.state.playheadPosition);
     initAudioRecorder();
     this.fetchVideoData();
     // this.scrollingFix();
@@ -77,35 +80,11 @@ class AuthoringTool extends Component {
     const self = this;
     const url = `${conf.apiUrl}/videos/${this.state.currentVideoId}`;
     var xhr = new XMLHttpRequest();
-    // xhr.setRequestHeader("Content-type", "application/json");
     xhr.open("GET", url, true);
     xhr.onload = function() {
       self.loadTracksComponentsFromData(JSON.parse(this.responseText).result);
     };
     xhr.send();
-    // CORS PROBLEM... :(
-    // const headers = new Headers();
-    // const headers = new Headers({
-    //   "Content-Type": "text/plain",
-    //   // "Content-Length": content.length.toString(),
-    //   "X-Custom-Header": "ProcessThisImmediately",
-    // });
-
-    // const options = { method: 'GET',
-    //               headers: headers,
-    //               mode: 'cors-with-forced-preflight',
-    //               credentials: 'omit',  
-    //               cache: 'default' };
-
-    // const request = new Request(url, options);
-
-    // fetch(request)
-    // .then((video) => {
-    //   console.log(video);
-    // })
-    // .catch((errFetchVideo) => {
-    //   console.log(errFetchVideo)
-    // })
   }
 
   scrollingFix() {
@@ -120,32 +99,36 @@ class AuthoringTool extends Component {
   }
 
   addAudioClipTrack(playBackType, audioClipObj = {}) {
-    // if (this.state.currentWorkingTrack.recordingStatus === 'recording') {
-    //   alert('Unable to add a new track while in the middle of a recording session');
-    //   return;
-    // }
-
-    // Current tracks.
+    // Current tracks components.
     const tracks = this.state.tracksComponents.slice();
 
-    // If the last track added doesn't have a url, I don't allow adding more tracks.
-    const lastTrackAdded = tracks[tracks.length - 1];
-    if ((lastTrackAdded) && (lastTrackAdded.props.audioClipUrl === '')) {
+    // I will just add tracks if all existing have urls.
+    for (let i = 0; i < tracks.length; i++) {
+      if (tracks[i].props.audioClipUrl === '') {
+        alert('Finish using your available record tracks.');
+        return;
+      }
+    }
+
+    // Don't allow adding more tracks while recording.
+    if (this.state.selectedComponentStatus === 'recording') {
       alert('You can just add more tracks when you finish recording the existing one.');
       return;
     }
 
     const newTrackId = tracks.length + 1;
 
-    // If we are adding an existing track.
+    // If we are adding an existing track in the db.
     let audioClipLabel = '';
     let audioClipUrl = '';
+    let actionIconClass = 'fa-circle';
+    let startTime = 0;
     if (Object.keys(audioClipObj).length > 0) {
       audioClipLabel = audioClipObj.file_name;
       audioClipUrl = `${conf.audioClipsUploadsPath}${audioClipObj.file_path}/${audioClipObj.file_name}`;
+      startTime = audioClipObj.start_time;
+      actionIconClass = 'fa-step-forward';
     }
-
-    console.log('audioClipObj', audioClipObj);
 
     tracks.push(<Track
       key={newTrackId}
@@ -153,8 +136,10 @@ class AuthoringTool extends Component {
       label={audioClipLabel}
       audioClipUrl={audioClipUrl}
       playBackType={playBackType}
+      startTime={startTime}
       recordAudioClip={this.recordAudioClip}
       updateTrackLabel={this.updateTrackLabel}
+      actionIconClass={actionIconClass}
     />);
 
     this.setState({
@@ -162,14 +147,6 @@ class AuthoringTool extends Component {
       playheadTailHeight: this.state.playheadTailHeight < 189 ? this.state.playheadTailHeight + 27 : this.state.playheadTailHeight,
     });
   }
-
-      // currentWorkingTrack: {
-      //   trackId: newTrackId,
-      //   playBackType: playBackType,
-      //   recordingStatus: 'stopped',
-      // },
-
-
 
   getCurrentVideoTime(currentVideoTime) {
     if (this.state.currentVideoTime !== currentVideoTime) {
@@ -188,98 +165,172 @@ class AuthoringTool extends Component {
   }
 
   recordAudioClip(e, trackId) {
-    const tracks = this.state.tracksComponents.slice();
-    const trackComponent = this.getTrackComponentByTrackId(trackId);
 
-    if (e.target.className === 'fa fa-circle') {
-      if (this.state.currentWorkingTrack.recordingStatus === 'recording') {
-        alert('You cannot record two tracks at the same time');
+
+    console.log('currentVideoTime', this.state.currentVideoTime);
+    // If there is another component active, I need to stop it before accepting the action.
+    if (this.state.selectedComponentId !== trackId) {
+
+      if (this.state.selectedComponentStatus === 'recording') {
+        alert('You need to stop recording in order to activate any other track');
         return;
       }
-      console.log('Start recording for track', trackId);
+
+      // if (this.state.selectedComponentStatus === 'playing') {
+      //   console.log('You have another track playing/paused');
+      //   this.stopAudioClipTrack();
+      //   return;
+      // }
+    }
+
+    const clickedTrackComponent = this.getTrackComponentByTrackId(trackId);
+
+    if (e.target.className === 'fa fa-circle') {
+      
+      // RECORD.
       this.setState({
-        currentWorkingTrack: {
-          trackId: trackId,
-          playBackType: trackComponent.props.playBackType,
-          recordingStatus: 'recording',
+        selectedComponentId: trackId,
+        selectedComponentPlaybackType: clickedTrackComponent.props.playBackType,
+        selectedComponentStatus: 'recording',
+      }, () => {
+        this.updateTrackComponent('fa-stop');
+        if (this.state.selectedComponentPlaybackType == 'inline') {
+          this.state.videoPlayer.playVideo();
+        } else {
+          this.state.videoPlayer.stopVideo();
         }
+        startRecording();
       });
-      startRecording();
-      e.target.className = 'fa fa-stop';
+
     } else if (e.target.className === 'fa fa-stop') {
-      console.log('Stop recording');
-      // Is going to stop the recording and save the file.
-      this.setState({
-        currentWorkingTrack: {
-          trackId: trackId,
-          playBackType: trackComponent.props.playBackType,
-          recordingStatus: 'stopped',
-        }
+
+      // STOP RECORDING.
+      this.setState({ selectedComponentStatus: 'stopped' }, () => {
+        this.updateTrackComponent('fa-step-forward');
+        this.state.videoPlayer.stopVideo();
+        stopRecordingAndSave(this.callbackFileSaved);
       });
-      // Call to recorder that is going to stop to record.
-      stopRecordingAndSave(this.callbackFileSaved);
-      e.target.className = 'fa fa-step-forward';
+
+    } else if (e.target.className === 'fa fa-step-forward') {
+
+      // PLAY.
+      // this.setState({
+      //   selectedComponentId: clickedTrackComponent.props.id,
+      //   selectedComponentUrl: clickedTrackComponent.props.audioClipUrl,
+      //   selectedComponentPlaybackType: clickedTrackComponent.props.playBackType,
+      //   selectedComponentStatus: 'playing'
+      // }, () => {
+      //   this.playAudioClipTrack();
+      // });
+      // SeekTo
+      const seekToValue = clickedTrackComponent.props.startTime;
+      console.log('Seek video to', seekToValue);
+      this.state.videoPlayer.seekTo(parseFloat(seekToValue));
+      this.setState({ seekVideoPosition: seekToValue });
+
+    } else if (e.target.className === 'fa fa-pause') {
+
+      // PAUSE.
+      // this.setState({
+      //   selectedComponentId: clickedTrackComponent.props.id,
+      //   selectedComponentUrl: clickedTrackComponent.props.audioClipUrl,
+      //   selectedComponentPlaybackType: clickedTrackComponent.props.playBackType,
+      //   selectedComponentStatus: 'paused'
+      // }, () => {
+      //   this.pauseAudioClipTrack();
+      // });
+
     } else {
-      this.setState({
-        currentWorkingTrack: {
-          trackId: trackId,
-          playBackType: trackComponent.props.playBackType,
-          recordingStatus: 'playing',
-        }
-      });
-      console.log('Just play');
-      this.playAudioClipTrack(trackComponent);
+      console.log('????????????????????????????????????');
     }
   }
 
-  playAudioClipTrack(trackComponent) {
-    // Spinner.
-    const audioClipUrl = trackComponent.props.audioClipUrl;
-    console.log(audioClipUrl);
+  updateTrackComponent(classIcon) {
+    // console.log('Updating track component');
+    let newTracks = [];
+    const tracks = this.state.tracksComponents.slice();
+    for (let i = 0; i < tracks.length; i++) {
+      // console.log(this.state.selectedComponentId, tracks[i].props.id);
+      if (this.state.selectedComponentId === tracks[i].props.id) {
+        tracks[i] = <Track
+          key={this.state.selectedComponentId}
+          id={this.state.selectedComponentId}
+          label={this.state.selectedComponentLabel}
+          audioClipUrl={this.state.selectedComponentUrl}
+          playBackType={this.state.selectedComponentPlaybackType}
+          actionIconClass={classIcon}
+          recordAudioClip={this.recordAudioClip}
+          updateTrackLabel={this.updateTrackLabel}
+        />
+      }
+    }
+    this.setState({ tracksComponents: tracks });
+  }
 
+  playAudioClipTrack() {
 
+    const audioClipUrl = this.state.selectedComponentUrl;
 
-    // When stop to play, update currentWorkingTrack.
-      // this.setState({
-      //   currentWorkingTrack: {
-      //     trackId: trackId,
-      //     playBackType: trackComponent.props.playBackType,
-      //     recordingStatus: 'playing',
-      //   }
-      // });
+    const audioClipLoaded = () => {
+      this.state.selectedComponentPlayer.play();
+    };
 
-    const audioClipLoaded = () => { console.log('audioClipLoaded') };
-    const audioClipOnPlay = () => { console.log('audioClipOnPlay') };
+    const audioClipPlay = () => {
+      console.log('play')
+      this.setState({ selectedComponentStatus: 'playing' }, () => {
+        this.updateTrackComponent('fa-pause');
+      });
+    };
 
-    const sound = new Howl({
-      src: [audioClipUrl],
-      autoplay: true,
-      buffer: false,
-      onload: audioClipLoaded,
-      // onloaderror
-      // onend
-      // onpause
-      onplay: audioClipOnPlay,
+    const audioClipEnded = () => {
+      console.log('onend')
+      this.setState({ selectedComponentStatus: 'stopped' }, () => {
+        this.updateTrackComponent('fa-step-forward');
+      });
+    };
+
+    const audioClipPaused = () => {
+      this.setState({ selectedComponentStatus: 'paused' }, () => {
+        this.updateTrackComponent('fa-step-forward');
+      });
+    };
+
+    const audioClipError = () => { console.log('error') };
+
+    this.setState({
+      selectedComponentPlayer: new Howl({
+        src: [audioClipUrl],
+        autoplay: false,
+        buffer: false,
+        onload: audioClipLoaded,
+        onloaderror: audioClipError,
+        onend: audioClipEnded,
+        onpause: audioClipPaused,
+        onplay: audioClipPlay,
+      })
     });
+  }
 
+  stopAudioClipTrack() {
+    this.setState({ selectedComponentStatus: 'stopped' }, () => {
+      this.updateTrackComponent('fa-step-forward');
+      this.state.selectedComponentPlayer.stop();
+    });
+  }
+
+  pauseAudioClipTrack(clickedTrackComponent) {
+    this.state.selectedComponentPlayer.pause();
   }
 
   // As we have the file, now we need to get the file info and store metadata.
   callbackFileSaved(blob) {
     const self = this;
-    console.log('The blob is in memory');
-    console.log(blob);
-    console.log(this.state.currentVideoId);
-    console.log(this.state.currentWorkingTrack);
     const formData = new FormData();
-    formData.append('label', 'The title from debug');
-    formData.append('playbackType', this.state.currentWorkingTrack.playBackType);
-    formData.append('startTime', '100.087');
-    formData.append('endTime', '134.098');
-    formData.append('duration', '10.000');
+    formData.append('label', this.state.selectedComponentLabel);
+    formData.append('playbackType', this.state.selectedComponentPlaybackType);
+    formData.append('startTime', this.state.currentVideoTime);
     formData.append('wavfile', blob);
     const url = `${conf.apiUrl}/audioclips/${this.state.currentVideoId}`;
-    console.log('URL', url)
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
     xhr.onload = function () {
@@ -297,11 +348,13 @@ class AuthoringTool extends Component {
       <main id="authoring-tool">
         <div className="w3-row">
           <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
-            {/*<VideoPlayer*/}
-              {/*videoId={this.videoId}*/}
-              {/*updateState={this.updateState}*/}
-              {/*getCurrentVideoTime={this.getCurrentVideoTime}*/}
-            {/*/>*/}
+            <VideoPlayer
+              videoId={this.state.currentVideoId}
+              getState={this.getState}
+              updateState={this.updateState}
+              getCurrentVideoTime={this.getCurrentVideoTime}
+              seekVideoTo={this.seekVideoTo}
+            />
           </div>
           <div
             id="notes-section"
