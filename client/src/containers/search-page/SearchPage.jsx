@@ -34,8 +34,8 @@ class SearchPage extends Component {
     })
     console.log('up vote this video: ', body)
 
-    // This need to be fix, the new vote_count value should 
-    // be from the response of the fetch request intead of 
+    // This need to be fix, the new vote_count value should
+    // be from the response of the fetch request intead of
     // vote_count + 1;
 
     fetch('http://webng.io:8080/v1/wishlist', {
@@ -290,7 +290,7 @@ class SearchPage extends Component {
           </div>
         </main>
 
-        <div className="w3-margin-top w3-center">
+        <div id="load-more" className="w3-margin-top w3-center">
           <Button title="Load more videos" color="w3-indigo" text="Load more" />
         </div>
       </div>
