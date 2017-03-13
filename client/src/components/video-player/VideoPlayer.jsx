@@ -17,6 +17,7 @@ class VideoPlayer extends Component {
     this.audioClipsLength = 0;
     this.nextAudioClip = null;
     this.initVideoPlayer = this.initVideoPlayer.bind(this);
+    this.videoDurationInSeconds = -1;
   }
 
   getVideoDuration() {
@@ -24,8 +25,9 @@ class VideoPlayer extends Component {
     fetch(url)
     .then(response => response.json())
     .then((data) => {
+      this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
       this.props.updateState({
-        videoDurationInSeconds: convertISO8601ToSeconds(data.items[0].contentDetails.duration),
+        videoDurationInSeconds: this.videoDurationInSeconds,
         videoDurationInEditorFormat: convertSecondsToEditorFormat(convertISO8601ToSeconds(data.items[0].contentDetails.duration)),
       });
     });
@@ -128,13 +130,14 @@ class VideoPlayer extends Component {
     let currentAudioClip = null;
 
     this.watcher = setInterval(() => {
-      let x = 0;
-      console.log(++x);
       currentVideoProgress = this.videoPlayer.getCurrentTime();
+      this.props.updateState({
+        playheadPosition: 731 * (currentVideoProgress / this.videoDurationInSeconds),
+      })
       this.props.getCurrentVideoTime(currentVideoProgress);
 
       // When the user back the video.
-      if (Math.abs(currentVideoProgress - previousTime) > 0.2) {
+      if (Math.abs(currentVideoProgress - previousTime) > 0.055) {
         currentAudioClip = this.getNextAudioClip(currentVideoProgress);
       }
       previousTime = currentVideoProgress;
@@ -160,7 +163,7 @@ class VideoPlayer extends Component {
         }
         this.getNextAudioClip(currentVideoProgress);
       }
-    }, 190);
+    }, 50);
   }
 
   playAudioClip(url, currentVideoProgress, callback = () => {}) {
@@ -180,7 +183,6 @@ class VideoPlayer extends Component {
   }
 
   componentWillUnmount() {
-    console.log(2);
     clearInterval(this.watcher);
   }
 

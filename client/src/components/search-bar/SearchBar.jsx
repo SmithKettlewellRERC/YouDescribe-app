@@ -16,7 +16,7 @@ const SearchBar = (props) => {
           <input className="w3-padding-small" type="search" placeholder="Search" />
         </div>
         <div className="w3-left">
-          <Button color="w3-indigo" title="Search" />
+          <Button title="Search for videos with audio descriptions" text="Search" color="w3-indigo" />
         </div>
       </form>
     </div>

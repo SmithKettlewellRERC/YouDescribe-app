@@ -42,10 +42,9 @@ class Navbar extends Component {
       <div id="navbar">
         {/* Navbar (sit on top) */}
         <div className="w3-top">
-
           <div className="w3-bar w3-white w3-card-2">
             <div role="logo">
-              <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide w3-hide-small w3-hide-medium">
+              <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide w3-hide-small w3-hide-medium"> 
                 {/*<img
                   alt="YouDescribe logo"
                   height="24px"
@@ -68,7 +67,7 @@ class Navbar extends Component {
             <nav role="navigation" className="w3-right w3-hide-small w3-hide-medium">
               {/*<span className="w3-bar-item"><SearchBar /></span>*/}
               <Link to="/authoring-tool/G_QWtUFFAFQ" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
-              <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-th"></i> WISH LIST</Link>
+              <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
               <Link to="/" className="w3-bar-item w3-button">SIGN IN</Link>
             </nav>
             {/* Hide right-floated links on small screens and replace them with a menu icon */}
@@ -83,7 +82,7 @@ class Navbar extends Component {
         <nav className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-large" style={{ display: 'none' }}>
           <a href="javascript:void(0)" onClick={this.menuClose} className="w3-large w3-padding-16">Close ×</a>
             <Link to="/authoring-tool/G_QWtUFFAFQ" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
-            <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-th"></i> WISH LIST</Link>
+            <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
             <Link to="/" className="w3-bar-item w3-button">SIGN IN</Link>
         </nav>
       </div>

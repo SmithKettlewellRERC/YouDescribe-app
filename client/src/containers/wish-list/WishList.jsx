@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
+import Button from '../../components/button/Button.jsx';
 
 // import seedData from './seedData.js';
 
@@ -22,8 +23,8 @@ class WishList extends Component {
     })
     console.log('up vote this video: ', body)
 
-    // This need to be fix, the new vote_count value should 
-    // be from the response of the fetch request intead of 
+    // This need to be fix, the new vote_count value should
+    // be from the response of the fetch request intead of
     // vote_count + 1;
 
     fetch('http://webng.io:8080/v1/wishlist', {
@@ -72,7 +73,7 @@ class WishList extends Component {
     let ids;
     let dbResponse;
 
-	//replace this url with the wishlist database 
+	//replace this url with the wishlist database
     fetch('http://webng.io:8080/v1/wishlist')
       .then(response => response.json())
       .then((response) => {
@@ -134,7 +135,7 @@ class WishList extends Component {
               minutes === 1 ? time = `${minutes} minutes ago` : time = `${minutes} minutes ago`;
             }
 
-            // if (title.length > 50) title = `${title.slice(0, 50)}...`;
+            if (title.length > 100) title = `${title.slice(0, 100)}...`;
             if (views >= 1000000000) views = `${(views/1000000000).toFixed(1)}B views`;
             else if (views >= 1000000) views = `${(views/1000000).toFixed(1)}M views`;
             else if (views >= 1000) views = `${(views/1000).toFixed(0)}K views`;
@@ -161,7 +162,7 @@ class WishList extends Component {
           this.setState({ videos }, () => {
             browserHistory.push('/wishlist');
           });
-          
+
         });
       });
   }
@@ -173,7 +174,7 @@ class WishList extends Component {
   // displayed on page
   render() {
     return (
-      <div id="home">
+      <div id="wish-list">
 
         <div className="w3-container w3-indigo">
           <h1>Most popular</h1>
@@ -184,7 +185,7 @@ class WishList extends Component {
         </main>
 
         <div className="w3-margin-top w3-center">
-          <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
+          <Button title="Load more videos" color="w3-indigo" text="Load more" />
         </div>
 
       </div>
