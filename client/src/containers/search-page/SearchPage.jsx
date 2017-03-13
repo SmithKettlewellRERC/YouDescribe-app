@@ -64,26 +64,6 @@ class SearchPage extends Component {
   }
 
 
-  // upVoteClick(i, id, description, thumbnailHigh, title, author, views, time) {
-  //   let body = JSON.stringify({
-  //     title: title,
-  //     id: id,
-  //   })
-
-  //   fetch('http://webng.io:8080/v1/wishlist', {
-  //     headers: {
-  //     'Content-Type': 'application/json'
-  //     },
-  //     method: 'post',
-  //     body: body,
-  //   })
-  //   .then(res => res.json())
-  //   .then((res) => {
-  //     console.log('posted id')
-  //     console.log('response is: ', res.message)
-  //   })
-  // }
-
   describeClick(id) {
     console.log('describe this video: ', id)
     browserHistory.push('/authoring-tool/' + id)
