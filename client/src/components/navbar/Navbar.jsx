@@ -44,7 +44,7 @@ class Navbar extends Component {
         <div className="w3-top">
           <div className="w3-bar w3-white w3-card-2">
             <div role="logo">
-              <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide w3-hide-small w3-hide-medium"> 
+              <Link to="/" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-small w3-hide-medium">
                 {/*<img
                   alt="YouDescribe logo"
                   height="24px"
@@ -53,7 +53,7 @@ class Navbar extends Component {
                   <span>You</span><span className="w3-indigo curve">Describe</span>
                 </Link>
 
-                <Link to="/" id="logo" className="w3-bar-item w3-button w3-wide w3-hide-large">
+                <Link to="/" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-large">
                   <span>Y</span><span className="w3-indigo curve">D</span>
                 </Link>
             </div>

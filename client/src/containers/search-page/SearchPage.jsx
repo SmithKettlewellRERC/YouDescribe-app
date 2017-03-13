@@ -19,11 +19,24 @@ class SearchPage extends Component {
     };
   }
 
-  upVoteClick(i, id, description, thumbnailHigh, title, author, views, time) {
+  upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time) {
+    console.log('CLASS', e.target.className);
+    if (e.target.className === 'w3-btn w3-white w3-text-indigo w3-left' ||
+      e.target.className === 'fa fa-heart') {
+      if (e.target.className === 'fa fa-heart') e.target.parentElement.className = 'w3-btn w3-white w3-text-red w3-left';
+      else e.target.className = 'w3-btn w3-white w3-text-red w3-left';
+      console.log('heart activated and video request added to wishlist or incremented by 1');
+    }
+
     let body = JSON.stringify({
-      title: title,
-      id: id,
+        title: title,
+        id: id,
     })
+    console.log('up vote this video: ', body)
+
+    // This need to be fix, the new vote_count value should 
+    // be from the response of the fetch request intead of 
+    // vote_count + 1;
 
     fetch('http://webng.io:8080/v1/wishlist', {
       headers: {
@@ -34,10 +47,32 @@ class SearchPage extends Component {
     })
     .then(res => res.json())
     .then((res) => {
+      let new_count = res.result.votes;
       console.log('posted id')
       console.log('response is: ', res.message)
+      let newState = this.state.videoNotOnYD.slice();
+      newState[i] = (
+          <VideoCard
+            key={i}
+            id={id}
+            description={description}
+            thumbnailHighUrl={thumbnailHigh.url}
+            title={title}
+            author={author}
+            views={views}
+            time={time}
+            buttons='on'
+            vote_count={new_count}
+            upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, new_count)}
+            describeClick={()=> this.describeClick(id)}
+          />
+      )
+      this.setState({
+        videoNotOnYD: newState,
+      })
     })
   }
+
 
   describeClick(id) {
     console.log('describe this video: ', id)
@@ -176,8 +211,9 @@ class SearchPage extends Component {
                 author={author}
                 views={views}
                 time={time}
+                vote_count={0}
                 buttons='on'
-                upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time)}
+                upVoteClick={(e) => this.upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time)}
                 describeClick={()=> this.describeClick(id)}
               />
             );
