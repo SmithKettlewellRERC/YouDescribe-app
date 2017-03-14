@@ -6,6 +6,8 @@ import {
 } from '../../shared/helperFunctions';
 
 const conf = require('./../../shared/config')();
+const seedAudioList = require('./seedAudioList')
+const seedData = seedAudioList.default;
 
 class VideoPlayerPlay extends Component {
   constructor(props) {
@@ -29,7 +31,10 @@ class VideoPlayerPlay extends Component {
       })
       .then((json) => {
         if (json && json.result && json.result.status === 'published') {
-          this.parseVideoData(json.result);
+          console.log('real data is: ', json.result)
+          console.log('fake data is: ', seedData)
+          //test with fake data, replace with json.result later
+          this.parseVideoData(seedData);
         } else {
           console.log('Invalid data');
         }
@@ -119,14 +124,27 @@ class VideoPlayerPlay extends Component {
     let previousTime = 0;
     let currentVideoProgress = 0;
     let currentAudioClip = null;
+    let currentTimedEvent = 0;
+    let extendedVideoPlaying = false;
 
     this.watcher = setInterval(() => {
       currentVideoProgress = this.videoPlayer.getCurrentTime();
+      console.log(currentVideoProgress)
+      // console.log(this.videoPlayer.)
 
       // When the user back the video.
       if (Math.abs(currentVideoProgress - previousTime) > 0.055) {
         currentAudioClip = this.getNextAudioClip(currentVideoProgress);
       }
+
+      // When the user pause the video and it isn't a extended Video auto Playing. The audio should also be stop
+      if (((currentVideoProgress - previousTime) < 0.01) && !extendedVideoPlaying) {
+        console.log('the audio played: ', currentVideoProgress - currentTimedEvent)
+        if (this.currentClip) {
+          this.currentClip.pause();
+        }
+      }
+
       previousTime = currentVideoProgress;
 
       let timedEvent;
@@ -137,24 +155,25 @@ class VideoPlayerPlay extends Component {
       }
 
       if (currentVideoProgress > timedEvent) {
+        currentTimedEvent = timedEvent
+        console.log('nextAudioClip: ',this.nextAudioClip.playback_type)
         const url = this.nextAudioClip.url
         if (this.nextAudioClip.playback_type === 'inline') {
           console.log('### INLINE ###', url);
           this.currentClip = new Howl({
             src: [url],
-            html5: true,
-            onend: () => {
-              callback();
-            },
+            html5: true
           });
           this.currentClip.play();
         } else {
-          console.log('### EXTENDED', url);
+          console.log('### EXTENDED ###', url);
           this.videoPlayer.pauseVideo();
+          extendedVideoPlaying = true;
           this.currentClip = new Howl({
             src: [url],
             html5: true,
             onend: () => {
+              extendedVideoPlaying = false
               this.videoPlayer.playVideo();
             },
           });
@@ -184,6 +203,7 @@ class VideoPlayerPlay extends Component {
   componentWillUnmount() {
     console.log('leaving the page');
     this.currentClip.stop();
+    this.currentClip = null;
     clearInterval(this.watcher);
   }
 
