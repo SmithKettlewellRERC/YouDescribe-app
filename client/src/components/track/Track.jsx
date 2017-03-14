@@ -9,10 +9,9 @@ class Track extends Component {
   }
 
   componentDidMount() {
-    var wavesurfer = WaveSurfer.create({
+    const wavesurfer = WaveSurfer.create({
       container: `#wave${this.props.id}`,
-      waveColor: 'white',
-      progressColor: 'purple'
+      waveColor: 'purple'
     });
     wavesurfer.load(this.props.audioClipUrl);
   }

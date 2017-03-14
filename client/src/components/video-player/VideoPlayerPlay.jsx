@@ -6,8 +6,6 @@ import {
 } from '../../shared/helperFunctions';
 
 const conf = require('./../../shared/config')();
-const seedAudioList = require('./seedAudioList')
-const seedData = seedAudioList.default;
 
 class VideoPlayerPlay extends Component {
   constructor(props) {
@@ -31,10 +29,8 @@ class VideoPlayerPlay extends Component {
       })
       .then((json) => {
         if (json && json.result && json.result.status === 'published') {
-          console.log('real data is: ', json.result)
-          console.log('fake data is: ', seedData)
           //test with fake data, replace with json.result later
-          this.parseVideoData(seedData);
+          this.parseVideoData(json.result);
         } else {
           console.log('Invalid data');
         }
@@ -138,7 +134,7 @@ class VideoPlayerPlay extends Component {
       }
 
       // When the user pause the video and it isn't a extended Video auto Playing. The audio should also be stop
-      if (((currentVideoProgress - previousTime) < 0.01) && !extendedVideoPlaying) {
+      if (((currentVideoProgress - previousTime) < conf.videoPlayerWatcherInterval) && !extendedVideoPlaying) {
         console.log('the audio played: ', currentVideoProgress - currentTimedEvent)
         if (this.currentClip) {
           this.currentClip.pause();
@@ -181,7 +177,7 @@ class VideoPlayerPlay extends Component {
         }
         this.getNextAudioClip(currentVideoProgress);
       }
-    }, 50);
+    }, conf.videoPlayerWatcherInterval);
   }
 
   // playAudioClip(url, currentVideoProgress, callback = () => {}) {
