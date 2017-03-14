@@ -75,7 +75,7 @@ class AuthoringTool extends Component {
   componentDidMount() {
     initAudioRecorder();
     this.fetchVideoData();
-    // this.scrollingFix();
+    this.scrollingFix();
   }
 
   updateTrackLabel(e) {
@@ -195,7 +195,7 @@ class AuthoringTool extends Component {
     const clickedTrackComponent = this.getTrackComponentByTrackId(trackId);
 
     if (e.target.className === 'fa fa-circle') {
-      
+
       // RECORD.
       this.setState({
         selectedTrackComponentStartTime: this.state.currentVideoTime,
