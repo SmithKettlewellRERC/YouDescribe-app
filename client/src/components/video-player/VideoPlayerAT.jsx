@@ -11,7 +11,6 @@ class VideoPlayerAT extends Component {
   constructor(props) {
     super(props);
     this.watcher = null;
-    this.videoPlayer = null;
     this.videoId = props.videoId;
     this.audioClips = [];
     this.audioClipsLength = 0;
@@ -58,14 +57,11 @@ class VideoPlayerAT extends Component {
       const clipsIds = Object.keys(clips);
       clipsIds.forEach((id) => {
         const obj = clips[id];
-        console.log(obj)
         obj.url = `${conf.audioClipsUploadsPath}${obj.file_path}/${obj.file_name}`;
         this.audioClips.push(obj);
       });
       this.audioClipsLength = this.audioClips.length;
       this.preLoadAudioClips();
-    } else {
-      this.initVideoPlayer();
     }
   }
 
@@ -104,8 +100,12 @@ class VideoPlayerAT extends Component {
     this.props.updateState({
       videoPlayer: new YT.Player('playerAT', {
         height: '100%',
-        // width: '100%',
         videoId: this.videoId,
+        enablejsapi: true,
+        fs: 0,
+        rel: 0,
+        controls: 2,
+        disablekb: 1,
         events: {
           onReady: onVideoPlayerReady,
           onStateChange: onPlayerStateChange,
@@ -182,9 +182,9 @@ class VideoPlayerAT extends Component {
           this.playAudioClip(url, currentVideoProgress);
         } else {
           console.log('### EXTENDED', url);
-          this.videoPlayer.pauseVideo();
-          this.playAudioClip(url, currentVideoProgress, () => {
-            this.videoPlayer.playVideo();
+          this.props.getState().videoPlayer.pauseVideo();
+          this.playAudioClip(url, () => {
+            this.props.getState().videoPlayer.playVideo();
           });
         }
         this.getNextAudioClip(currentVideoProgress);
@@ -192,7 +192,7 @@ class VideoPlayerAT extends Component {
     }, 50);
   }
 
-  playAudioClip(url, currentVideoProgress, callback = () => {}) {
+  playAudioClip(url, callback = () => {}) {
     const audio = new Howl({
       src: [url],
       html5: true,

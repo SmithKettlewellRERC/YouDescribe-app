@@ -88,6 +88,7 @@ class VideoPlayerPlay extends Component {
     this.videoPlayer = new YT.Player('playerPlay', {
       height: '100%',
       // width: '100%',
+      cc_load_policy: 1,
       videoId: this.videoId,
       events: {
         onReady: onVideoPlayerReady,

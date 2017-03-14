@@ -18,7 +18,7 @@ class AuthoringTool extends Component {
 
       // Video controls.
       videoPlayer: null,
-      videoDurationInSeconds: -1,
+      // videoDurationInSeconds: -1,
       currentVideoTime: 0,
       playheadPosition: 0,
       playheadTailHeight: 0,
@@ -26,10 +26,12 @@ class AuthoringTool extends Component {
 
       // Tracks controls.
       tracksComponents: [],
-      selectedComponentId: null,
-      selectedComponentPlaybackType: null,
-      selectedComponentStatus: null,
-      selectedComponentStartTime: 0,
+      selectedTrackComponentId: null,
+      selectedTrackComponentPlaybackType: null,
+      selectedTrackComponentStatus: null,
+      selectedTrackComponentStartTime: 0,
+      selectedTrackComponentLabel: null,
+      selectedTrackComponentUrl: null,
     };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
@@ -38,7 +40,28 @@ class AuthoringTool extends Component {
     this.addAudioClipTrack = this.addAudioClipTrack.bind(this);
     this.recordAudioClip = this.recordAudioClip.bind(this);
     this.callbackFileSaved = this.callbackFileSaved.bind(this);
-    this.setCurrentVideoTime = this.setCurrentVideoTime.bind(this);
+    this.setCurrentVideoTime = this.setCurrentVideoTime.bind
+    (this);
+    this.setSelectedTrack = this.setSelectedTrack.bind(this);
+  }
+
+  setSelectedTrack(e, trackId) {
+    console.log('Set selected track');
+    const tracks = this.state.tracksComponents;
+    for (let i = 0; i < tracks.length; i++) {
+      if (trackId === tracks[i].props.id) {
+        this.setState({
+          selectedTrackComponentId: tracks[i].props.id,
+          selectedTrackComponentPlaybackType: tracks[i].props.playBackType,
+          selectedTrackComponentStartTime: tracks[i].props.startTime,
+          selectedTrackComponentLabel: tracks[i].props.label,
+          selectedTrackComponentUrl: tracks[i].props.audioClipUrl,
+        });
+      }
+    }
+    if (e.charCode === 13) {
+      console.log('Enter pressed');
+    }
   }
 
   getState() {
@@ -56,12 +79,12 @@ class AuthoringTool extends Component {
   }
 
   updateTrackLabel(e) {
-    console.log(e.target.value);
+    this.setState({ selectedTrackComponentLabel: e.target.value });
   }
 
   loadTracksComponentsFromData(data) {
     this.setState({ tracksComponents: [] });
-    if (data.audio_descriptions && data.audio_descriptions['1'].clips) {
+    if (data && data.audio_descriptions && data.audio_descriptions['1'].clips) {
       const clips = data.audio_descriptions['1'].clips;
       const audioClipsKeys = Object.keys(clips);
       audioClipsKeys.forEach((key) => {
@@ -106,7 +129,7 @@ class AuthoringTool extends Component {
     }
 
     // Don't allow adding more tracks while recording.
-    if (this.state.selectedComponentStatus === 'recording') {
+    if (this.state.selectedTrackComponentStatus === 'recording') {
       alert('You can just add more tracks when you finish recording the existing one.');
       return;
     }
@@ -119,7 +142,7 @@ class AuthoringTool extends Component {
     let actionIconClass = 'fa-circle';
     let startTime = 0;
     if (Object.keys(audioClipObj).length > 0) {
-      audioClipLabel = audioClipObj.file_name;
+      audioClipLabel = audioClipObj.label;
       audioClipUrl = `${conf.audioClipsUploadsPath}${audioClipObj.file_path}/${audioClipObj.file_name}`;
       startTime = audioClipObj.start_time;
       actionIconClass = 'fa-step-forward';
@@ -135,6 +158,7 @@ class AuthoringTool extends Component {
       recordAudioClip={this.recordAudioClip}
       updateTrackLabel={this.updateTrackLabel}
       actionIconClass={actionIconClass}
+      setSelectedTrack={this.setSelectedTrack}
     />);
 
     this.setState({
@@ -161,20 +185,11 @@ class AuthoringTool extends Component {
 
   recordAudioClip(e, trackId) {
 
-    console.log('currentVideoTime', this.state.currentVideoTime);
-    // If there is another component active, I need to stop it before accepting the action.
-    if (this.state.selectedComponentId !== trackId) {
-
-      if (this.state.selectedComponentStatus === 'recording') {
+    if (this.state.selectedTrackComponentId !== trackId) {
+      if (this.state.selectedTrackComponentStatus === 'recording') {
         alert('You need to stop recording in order to activate any other track');
         return;
       }
-
-      // if (this.state.selectedComponentStatus === 'playing') {
-      //   console.log('You have another track playing/paused');
-      //   this.stopAudioClipTrack();
-      //   return;
-      // }
     }
 
     const clickedTrackComponent = this.getTrackComponentByTrackId(trackId);
@@ -183,16 +198,17 @@ class AuthoringTool extends Component {
       
       // RECORD.
       this.setState({
-        selectedComponentStartTime: this.state.currentVideoTime,
-        selectedComponentId: trackId,
-        selectedComponentPlaybackType: clickedTrackComponent.props.playBackType,
-        selectedComponentStatus: 'recording',
+        selectedTrackComponentStartTime: this.state.currentVideoTime,
+        selectedTrackComponentId: trackId,
+        selectedTrackComponentPlaybackType: clickedTrackComponent.props.playBackType,
+        selectedTrackComponentStatus: 'recording',
       }, () => {
         this.updateTrackComponent('fa-stop');
-        if (this.state.selectedComponentPlaybackType == 'inline') {
+        if (this.state.selectedTrackComponentPlaybackType == 'inline') {
+          this.state.videoPlayer.mute();
           this.state.videoPlayer.playVideo();
         } else {
-          this.state.videoPlayer.stopVideo();
+          this.state.videoPlayer.pauseVideo();
         }
         startRecording();
       });
@@ -200,9 +216,10 @@ class AuthoringTool extends Component {
     } else if (e.target.className === 'fa fa-stop') {
 
       // STOP RECORDING.
-      this.setState({ selectedComponentStatus: 'stopped' }, () => {
+      this.setState({ selectedTrackComponentStatus: 'stopped' }, () => {
         this.updateTrackComponent('fa-step-forward');
-        this.state.videoPlayer.stopVideo();
+        this.state.videoPlayer.unMute();
+        this.state.videoPlayer.pauseVideo();
         stopRecordingAndSave(this.callbackFileSaved);
       });
 
@@ -211,100 +228,46 @@ class AuthoringTool extends Component {
       // SEEK TO.
       const seekToValue = clickedTrackComponent.props.startTime;
       console.log('Seek video to', seekToValue);
-      this.state.videoPlayer.seekTo(parseFloat(seekToValue));
+      this.state.videoPlayer.seekTo(parseFloat(seekToValue), true);
+      this.state.videoPlayer.unMute();
+      this.state.videoPlayer.pauseVideo();
       this.setState({ seekVideoPosition: seekToValue });
 
     } else {
-      console.log('????????????????????????????????????');
+      console.log('?');
     }
   }
 
   updateTrackComponent(classIcon) {
-    // console.log('Updating track component');
     let newTracks = [];
     const tracks = this.state.tracksComponents.slice();
     for (let i = 0; i < tracks.length; i++) {
-      // console.log(this.state.selectedComponentId, tracks[i].props.id);
-      if (this.state.selectedComponentId === tracks[i].props.id) {
+      if (this.state.selectedTrackComponentId === tracks[i].props.id) {
         tracks[i] = <Track
-          key={this.state.selectedComponentId}
-          id={this.state.selectedComponentId}
-          label={this.state.selectedComponentLabel}
-          audioClipUrl={this.state.selectedComponentUrl}
-          playBackType={this.state.selectedComponentPlaybackType}
+          key={this.state.selectedTrackComponentId}
+          id={this.state.selectedTrackComponentId}
+          label={this.state.selectedTrackComponentLabel}
+          audioClipUrl={this.state.selectedTrackComponentUrl}
+          playBackType={this.state.selectedTrackComponentPlaybackType}
           actionIconClass={classIcon}
           recordAudioClip={this.recordAudioClip}
           updateTrackLabel={this.updateTrackLabel}
+          setSelectedTrack={this.setSelectedTrack}
         />
       }
     }
     this.setState({ tracksComponents: tracks });
   }
 
-  playAudioClipTrack() {
-
-    const audioClipUrl = this.state.selectedComponentUrl;
-
-    const audioClipLoaded = () => {
-      this.state.selectedComponentPlayer.play();
-    };
-
-    const audioClipPlay = () => {
-      console.log('play')
-      this.setState({ selectedComponentStatus: 'playing' }, () => {
-        this.updateTrackComponent('fa-pause');
-      });
-    };
-
-    const audioClipEnded = () => {
-      console.log('onend')
-      this.setState({ selectedComponentStatus: 'stopped' }, () => {
-        this.updateTrackComponent('fa-step-forward');
-      });
-    };
-
-    const audioClipPaused = () => {
-      this.setState({ selectedComponentStatus: 'paused' }, () => {
-        this.updateTrackComponent('fa-step-forward');
-      });
-    };
-
-    const audioClipError = () => { console.log('error') };
-
-    this.setState({
-      selectedComponentPlayer: new Howl({
-        src: [audioClipUrl],
-        autoplay: false,
-        buffer: false,
-        onload: audioClipLoaded,
-        onloaderror: audioClipError,
-        onend: audioClipEnded,
-        onpause: audioClipPaused,
-        onplay: audioClipPlay,
-      })
-    });
-  }
-
-  stopAudioClipTrack() {
-    this.setState({ selectedComponentStatus: 'stopped' }, () => {
-      this.updateTrackComponent('fa-step-forward');
-      this.state.selectedComponentPlayer.stop();
-    });
-  }
-
-  pauseAudioClipTrack(clickedTrackComponent) {
-    this.state.selectedComponentPlayer.pause();
-  }
-
   // As we have the file, now we need to get the file info and store metadata.
   callbackFileSaved(blob) {
     const self = this;
     const formData = new FormData();
-    formData.append('label', this.state.selectedComponentLabel);
-    formData.append('playbackType', this.state.selectedComponentPlaybackType);
-    formData.append('startTime', this.state.selectedComponentStartTime);
+    formData.append('label', this.state.selectedTrackComponentLabel);
+    formData.append('playbackType', this.state.selectedTrackComponentPlaybackType);
+    formData.append('startTime', this.state.selectedTrackComponentStartTime);
     formData.append('wavfile', blob);
-    console.log('Going to save at', this.state.selectedComponentStartTime);
+    console.log('Going to save start time st', this.state.selectedTrackComponentStartTime);
     const url = `${conf.apiUrl}/audioclips/${this.state.currentVideoId}`;
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
