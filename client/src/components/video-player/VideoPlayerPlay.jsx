@@ -97,7 +97,7 @@ class VideoPlayerPlay extends Component {
       videoId: this.videoId,
       events: {
         onReady: onVideoPlayerReady,
-        // onStateChange: onPlayerStateChange,
+        onStateChange: onPlayerStateChange,
       },
     })
 
@@ -106,8 +106,9 @@ class VideoPlayerPlay extends Component {
       self.videoProgressWatcher();
     }
 
-    function onPlayerStateChange() {
+    function onPlayerStateChange(event) {
       console.log('clicking detected')
+      if (event.data == 1) console.log('resume clicked')
     }
   }
 
@@ -150,7 +151,6 @@ class VideoPlayerPlay extends Component {
       }
 
       //detect change when user resume the video
-
       previousTime = currentVideoProgress;
 
       let timedEvent;
