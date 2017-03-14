@@ -48,7 +48,7 @@ class AuthoringTool extends Component {
   setSelectedTrack(e, trackId) {
     console.log('Set selected track');
     const tracks = this.state.tracksComponents;
-    for (let i = 0; i < tracks.length; i++) {
+    for (let i = 0; i < tracks.length; i += 1) {
       if (trackId === tracks[i].props.id) {
         this.setState({
           selectedTrackComponentId: tracks[i].props.id,
@@ -121,7 +121,7 @@ class AuthoringTool extends Component {
     const tracks = this.state.tracksComponents.slice();
 
     // I will just add tracks if all existing have urls.
-    for (let i = 0; i < tracks.length; i++) {
+    for (let i = 0; i < tracks.length; i += 1) {
       if (tracks[i].props.audioClipUrl === '') {
         alert('Finish using your available record tracks.');
         return;
@@ -141,10 +141,12 @@ class AuthoringTool extends Component {
     let audioClipUrl = '';
     let actionIconClass = 'fa-circle';
     let startTime = 0;
+    let duration = 20;
     if (Object.keys(audioClipObj).length > 0) {
       audioClipLabel = audioClipObj.label;
       audioClipUrl = `${conf.audioClipsUploadsPath}${audioClipObj.file_path}/${audioClipObj.file_name}`;
       startTime = audioClipObj.start_time;
+      // duration = audioClipObj.duration;
       actionIconClass = 'fa-step-forward';
     }
 
@@ -155,6 +157,7 @@ class AuthoringTool extends Component {
       audioClipUrl={audioClipUrl}
       playBackType={playBackType}
       startTime={startTime}
+      duration={duration}
       recordAudioClip={this.recordAudioClip}
       updateTrackLabel={this.updateTrackLabel}
       actionIconClass={actionIconClass}
@@ -175,7 +178,7 @@ class AuthoringTool extends Component {
 
   getTrackComponentByTrackId(trackId) {
     const tc = this.state.tracksComponents;
-    for (let i = 0; i < tc.length; i++) {
+    for (let i = 0; i < tc.length; i += 1) {
       if (tc[i].props.id === trackId) {
         return tc[i];
       }
@@ -212,9 +215,7 @@ class AuthoringTool extends Component {
         }
         startRecording();
       });
-
     } else if (e.target.className === 'fa fa-stop') {
-
       // STOP RECORDING.
       this.setState({ selectedTrackComponentStatus: 'stopped' }, () => {
         this.updateTrackComponent('fa-step-forward');
@@ -222,9 +223,7 @@ class AuthoringTool extends Component {
         this.state.videoPlayer.pauseVideo();
         stopRecordingAndSave(this.callbackFileSaved);
       });
-
     } else if (e.target.className === 'fa fa-step-forward') {
-
       // SEEK TO.
       const seekToValue = clickedTrackComponent.props.startTime;
       console.log('Seek video to', seekToValue);
@@ -232,28 +231,29 @@ class AuthoringTool extends Component {
       this.state.videoPlayer.unMute();
       this.state.videoPlayer.pauseVideo();
       this.setState({ seekVideoPosition: seekToValue });
-
     } else {
       console.log('?');
     }
   }
 
   updateTrackComponent(classIcon) {
-    let newTracks = [];
+    const newTracks = [];
     const tracks = this.state.tracksComponents.slice();
-    for (let i = 0; i < tracks.length; i++) {
+    for (let i = 0; i < tracks.length; i += 1) {
       if (this.state.selectedTrackComponentId === tracks[i].props.id) {
-        tracks[i] = <Track
-          key={this.state.selectedTrackComponentId}
-          id={this.state.selectedTrackComponentId}
-          label={this.state.selectedTrackComponentLabel}
-          audioClipUrl={this.state.selectedTrackComponentUrl}
-          playBackType={this.state.selectedTrackComponentPlaybackType}
-          actionIconClass={classIcon}
-          recordAudioClip={this.recordAudioClip}
-          updateTrackLabel={this.updateTrackLabel}
-          setSelectedTrack={this.setSelectedTrack}
-        />
+        tracks[i] = (
+          <Track
+            key={this.state.selectedTrackComponentId}
+            id={this.state.selectedTrackComponentId}
+            label={this.state.selectedTrackComponentLabel}
+            audioClipUrl={this.state.selectedTrackComponentUrl}
+            playBackType={this.state.selectedTrackComponentPlaybackType}
+            actionIconClass={classIcon}
+            recordAudioClip={this.recordAudioClip}
+            updateTrackLabel={this.updateTrackLabel}
+            setSelectedTrack={this.setSelectedTrack}
+          />
+        );
       }
     }
     this.setState({ tracksComponents: tracks });
@@ -270,7 +270,7 @@ class AuthoringTool extends Component {
     console.log('Going to save start time st', this.state.selectedTrackComponentStartTime);
     const url = `${conf.apiUrl}/audioclips/${this.state.currentVideoId}`;
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
+    xhr.open('POST', url, true);
     xhr.onload = function () {
       self.loadTracksComponentsFromData(JSON.parse(this.responseText).result);
     };

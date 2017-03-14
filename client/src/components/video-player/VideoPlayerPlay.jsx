@@ -6,8 +6,6 @@ import {
 } from '../../shared/helperFunctions';
 
 const conf = require('./../../shared/config')();
-const seedAudioList = require('./seedAudioList')
-const seedData = seedAudioList.default;
 
 class VideoPlayerPlay extends Component {
   constructor(props) {
@@ -31,10 +29,8 @@ class VideoPlayerPlay extends Component {
       })
       .then((json) => {
         if (json && json.result && json.result.status === 'published') {
-          console.log('real data is: ', json.result)
-          console.log('fake data is: ', seedData)
           //test with fake data, replace with json.result later
-          this.parseVideoData(seedData);
+          this.parseVideoData(json.result);
         } else {
           console.log('Invalid data');
         }

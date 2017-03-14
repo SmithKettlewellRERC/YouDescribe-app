@@ -70,7 +70,7 @@ class Navbar extends Component {
               <Link to="/authoring-tool/6hk6y8dhkeE" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
               <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
               {/*<div class="g-signin" data-onsuccess={this.props.onSignIn}></div>*/}
-                
+              <div className="g-signin2" data-onsuccess="onSignIn"></div>
             </nav>
             {/* Hide right-floated links on small screens and replace them with a menu icon */}
 

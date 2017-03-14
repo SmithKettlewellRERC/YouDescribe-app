@@ -36,7 +36,10 @@ class Track extends Component {
           </div>
         </div>
         <div className="w3-col l9 m9 s9">
-          <div id={`wave${this.props.id}`}></div>
+          <div id={`wave${this.props.id}`} style={{
+            left: this.props.startTime,
+            width: `${731 * this.props.duration / this.props.currentVideoTime}px`,
+          }}></div>
         </div>
       </div>
     );
