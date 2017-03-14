@@ -53,7 +53,7 @@ class Home extends Component {
 
             dbResponse.forEach((elem) => {
               if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
-            })
+            });
 
             const now = Date.now();
             let time = now - publishedAt;
@@ -98,7 +98,7 @@ class Home extends Component {
                 describer={describer}
                 views={views}
                 time={time}
-                buttons='off'
+                buttons="off"
               />);
           }
           this.setState({ videos });
@@ -116,9 +116,9 @@ class Home extends Component {
     return (
       <div id="home">
 
-        <div className="w3-container w3-indigo">
+        <header role="banner" title="" className="w3-container w3-indigo">
           <h1>Most popular</h1>
-        </div>
+        </header>
 
         <main className="w3-row">
           {this.state.videos}
