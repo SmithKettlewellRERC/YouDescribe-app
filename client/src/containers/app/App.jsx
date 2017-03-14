@@ -18,6 +18,18 @@ class App extends Component {
     this.getVideoProgress = this.getVideoProgress.bind(this);
   }
 
+  componentDidMount() {
+    gapi.load('auth2', function() {
+      gapi.auth2.init({
+        client_id: '858526011072-sakg4fjlvdiug24rsim2fm748pi1n4nc.apps.googleusercontent.com'
+      });
+    });
+  }
+
+  onSignIn(googleUser) {
+
+  }
+
   getState() {
     return this.state;
   }

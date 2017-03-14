@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
-
+const conf = require('../../shared/config')();
 // import seedData from './seedData.js';
 
 class WishList extends Component {
@@ -35,9 +35,9 @@ class WishList extends Component {
     // This need to be fix, the new voteCount value should
     // be from the response of the fetch request intead of
     // voteCount + 1;
-    // voteCount = voteCount + 1;
+    voteCount = voteCount + 1;
 
-    fetch('http://webng.io:8080/v1/wishlist', {
+    fetch(`${conf.apiUrl}/wishlist`, {
       headers: {
       'Content-Type': 'application/json'
       },
@@ -84,7 +84,7 @@ class WishList extends Component {
     let dbResponse;
 
 	//replace this url with the wishlist database
-    fetch('http://webng.io:8080/v1/wishlist')
+    fetch(`${conf.apiUrl}/wishlist`)
       .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
@@ -96,7 +96,7 @@ class WishList extends Component {
       })
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
-        const url = `https://www.googleapis.com/youtube/v3/videos?id=${ids}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+        const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
         fetch(url)
         .then(response => response.json())
         .then((data) => {
@@ -172,7 +172,6 @@ class WishList extends Component {
           this.setState({ videos }, () => {
             browserHistory.push('/wishlist');
           });
-
         });
       });
   }
@@ -194,7 +193,7 @@ class WishList extends Component {
           {this.state.videos}
         </main>
 
-        <div className="w3-margin-top w3-center">
+        <div id="load-more" className="w3-margin-top w3-center">
           <Button title="Load more videos" color="w3-indigo" text="Load more" />
         </div>
 

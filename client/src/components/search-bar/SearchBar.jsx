@@ -13,10 +13,17 @@ const SearchBar = (props) => {
     <div id="search-bar">
       <form className="w3-row" onSubmit={e => updateSearch(e)}>
         <div className="w3-left">
-          <input className="w3-padding-small" type="search" placeholder="Search" />
+          <input
+            title={`Search for a YouTube video. If a video with an audio
+            description matching the search criteria exists, it will be
+            available in the first section. If not, Youtube videos without
+            audio descriptions matching the search criteria will be listed in
+            the second section and requests for any of those videos can be made`}
+            className="w3-padding-small" type="search" placeholder="Search"
+          />
         </div>
         <div className="w3-left">
-          <Button title="Search for videos with audio descriptions" text="Search" color="w3-indigo" />
+          <Button title="Submit search input" text="Search" color="w3-indigo" />
         </div>
       </form>
     </div>

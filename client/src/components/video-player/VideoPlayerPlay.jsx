@@ -9,7 +9,7 @@ const conf = require('./../../shared/config')();
 const seedAudioList = require('./seedAudioList')
 const seedData = seedAudioList.default;
 
-class VideoPlayer extends Component {
+class VideoPlayerPlay extends Component {
   constructor(props) {
     super(props);
     this.watcher = null;
@@ -90,9 +90,10 @@ class VideoPlayer extends Component {
     // console.log('initVideoPlayer');
     const self = this;
 
-    this.videoPlayer = new YT.Player('player', {
+    this.videoPlayer = new YT.Player('playerPlay', {
       height: '100%',
       // width: '100%',
+      cc_load_policy: 1,
       videoId: this.videoId,
       events: {
         onReady: onVideoPlayerReady,
@@ -207,8 +208,8 @@ class VideoPlayer extends Component {
   }
 
   render() {
-    return (<div id="player" />);
+    return (<div id="playerPlay" />);
   }
 }
 
-export default VideoPlayer;
+export default VideoPlayerPlay;

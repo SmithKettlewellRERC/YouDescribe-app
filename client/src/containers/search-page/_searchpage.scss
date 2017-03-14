@@ -13,10 +13,14 @@
   //     background-color: #fff;
   //   }
   // }
+  #load-more {
+    padding-top: 10px;
+    padding-bottom: 30px;
+  }
   main {
     width: 416px;
     padding: 0px 8px;
-    margin: 0 auto;
+    margin: 0 auto 50px auto;
     @media (min-width:601px){
       width: 601px;
     }
@@ -37,7 +41,7 @@
     outline-offset: -1px;
     height: 30px;
     margin-top: 10px;
-    margin-bottom: 30px!important;
+    // margin-bottom: 30px!important;
   }
   background-color: #fff;
   line-height: 1.1;

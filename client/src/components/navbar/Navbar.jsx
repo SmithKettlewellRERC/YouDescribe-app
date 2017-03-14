@@ -6,6 +6,7 @@ import path from 'path';
 import NavLink from '../nav-link/NavLink.jsx';
 import SignIn from '../sign-in/SignIn.jsx';
 import SearchBar from '../search-bar/SearchBar.jsx'
+import Button from '../button/Button.jsx';
 
 class Navbar extends Component {
   constructor(props) {
@@ -39,24 +40,24 @@ class Navbar extends Component {
 
   render() {
     return (
-      <div id="navbar">
+      <header role="banner" id="navbar">
         {/* Navbar (sit on top) */}
         <div className="w3-top">
-          <div className="w3-bar w3-white w3-card-2">
-            <div role="logo">
-              <Link to="/" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-small w3-hide-medium">
+          <div className="w3-bar w3-white w3-card-2 w3-text-indigo">
+            <logo role="logo" title="YouDescribe logo">
+              <Link to="/" title="YouDescribe logo" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-small w3-hide-medium">
                 {/*<img
                   alt="YouDescribe logo"
                   height="24px"
                   src={path.join(__dirname, 'assets', 'img', 'logo_youdescribe.png')}
                   />*/}
-                  <span>You</span><span className="w3-indigo curve">Describe</span>
+                  <span className="w3-text-black">You</span><span className="w3-indigo curve">Describe</span>
                 </Link>
 
                 <Link to="/" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-large">
                   <span>Y</span><span className="w3-indigo curve">D</span>
                 </Link>
-            </div>
+            </logo>
 
             <div role="searchbar" className="w3-left">
               {/*<input type="text" className="w3-amber w3-border-0 w3-padding" style={{ width: '100%' }} />*/}
@@ -68,7 +69,8 @@ class Navbar extends Component {
               {/*<span className="w3-bar-item"><SearchBar /></span>*/}
               <Link to="/authoring-tool/6hk6y8dhkeE" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>
               <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
-              <Link to="/" className="w3-bar-item w3-button">SIGN IN</Link>
+              {/*<div class="g-signin" data-onsuccess={this.props.onSignIn}></div>*/}
+                
             </nav>
             {/* Hide right-floated links on small screens and replace them with a menu icon */}
 
@@ -85,7 +87,7 @@ class Navbar extends Component {
             <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
             <Link to="/" className="w3-bar-item w3-button">SIGN IN</Link>
         </nav>
-      </div>
+      </header>
     );
   }
 }
