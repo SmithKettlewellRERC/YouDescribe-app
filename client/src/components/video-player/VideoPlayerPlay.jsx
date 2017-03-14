@@ -105,6 +105,10 @@ class VideoPlayerPlay extends Component {
       console.log('YouTube video player ready. Lets call the watcher');
       self.videoProgressWatcher();
     }
+
+    function onPlayerStateChange() {
+      console.log('clicking detected')
+    }
   }
 
   getNextAudioClip(currentVideoProgress) {
@@ -144,6 +148,8 @@ class VideoPlayerPlay extends Component {
           this.currentClip.pause();
         }
       }
+
+      //detect change when user resume the video
 
       previousTime = currentVideoProgress;
 
@@ -202,9 +208,12 @@ class VideoPlayerPlay extends Component {
 
   componentWillUnmount() {
     console.log('leaving the page');
-    this.currentClip.stop();
-    this.currentClip = null;
     clearInterval(this.watcher);
+    if (this.currentClip) {
+      this.currentClip.stop();
+    }
+    this.currentClip = null;
+    // this.currentClip.pause();
   }
 
   render() {
