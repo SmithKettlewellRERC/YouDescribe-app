@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import VideoPlayerPlay from '../../components/video-player/VideoPlayerPlay.jsx';
+import VideoPlayer from '../../components/video-player/VideoPlayer.jsx';
 
 class VideoPage extends Component {
   constructor(props) {
@@ -28,7 +28,7 @@ class VideoPage extends Component {
     return (
       <div id="video-player">
         <div id="video" className="w3-center">
-          <VideoPlayerPlay
+          <VideoPlayer
             videoId={this.props.params.videoId}
             updateState={this.updateState}
             getCurrentVideoTime={this.getCurrentVideoTime}
