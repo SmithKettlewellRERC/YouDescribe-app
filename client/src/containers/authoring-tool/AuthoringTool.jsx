@@ -13,9 +13,12 @@ class AuthoringTool extends Component {
   constructor(props) {
     super(props);
     this.nextAudioClip = null;
+    this.watcher = null;
+    this.videoDurationInSeconds = -1;
     this.state = {
       videoId: props.params.videoId,
       videoUrl: `${conf.apiUrl}/videos/${props.params.videoId}`,
+      notes: '',
 
       // Video controls and data.
       videoData: {},
@@ -37,7 +40,7 @@ class AuthoringTool extends Component {
       selectedTrackComponentPlaybackType: null,
       selectedTrackComponentStatus: null,
       selectedTrackComponentStartTime: 0,
-      selectedTrackComponentLabel: null,
+      selectedTrackComponentLabel: '',
       selectedTrackComponentUrl: null,
     };
     this.getState = this.getState.bind(this);
@@ -149,29 +152,33 @@ class AuthoringTool extends Component {
     const self = this;
     console.log('6 -> initVideoPlayer', this.state.videoId);
     if (YT.loaded) {
+      console.log('YT.loaded')
       startVideo();
     } else {
+      console.log('YT. NOT loaded')
       window.onYouTubeIframeAPIReady = () => {
         startVideo();
       }
     }
 
     function startVideo() {
-      self.setState({
-        videoPlayer: new YT.Player('playerAT', {
-            height: '100%',
-            videoId: self.state.videoId,
-            enablejsapi: true,
-            fs: 0,
-            rel: 0,
-            controls: 2,
-            disablekb: 1,
-            events: {
-              onReady: onVideoPlayerReady,
-              onStateChange: onPlayerStateChange,
-            },
-          })
-      });
+      if (self.state.videoPlayer === null) {
+        self.setState({
+          videoPlayer: new YT.Player('playerAT', {
+              height: '100%',
+              videoId: self.state.videoId,
+              enablejsapi: true,
+              fs: 0,
+              rel: 0,
+              controls: 2,
+              disablekb: 1,
+              events: {
+                onReady: onVideoPlayerReady,
+                onStateChange: onPlayerStateChange,
+              },
+            })
+        });
+      }
     }
       
     function onVideoPlayerReady() {
@@ -198,7 +205,6 @@ class AuthoringTool extends Component {
     fetch(url)
     .then(response => response.json())
     .then((data) => {
-      console.log(data.items[0])
       this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
       this.setState({
         videoTitle: data.items[0].snippet.title,
@@ -224,9 +230,14 @@ class AuthoringTool extends Component {
     let currentVideoProgress = 0;
     let currentAudioClip = null;
 
+    if (this.watcher) {
+      clearInterval(this.watcher);
+      this.watcher = null;
+    }
+
     this.watcher = setInterval(() => {
       currentVideoProgress = this.state.videoPlayer.getCurrentTime();
-      // console.log(currentVideoProgress)
+      console.log(currentVideoProgress)
       this.setState({
         currentVideoProgress,
         currentVideoProgressToDisplay: convertSecondsToEditorFormat(currentVideoProgress),        
@@ -386,7 +397,7 @@ class AuthoringTool extends Component {
     } else if (e.target.className === 'fa fa-step-forward') {
 
       // SEEK TO.
-      const seekToValue = clickedTrackComponent.props.startTime;
+      const seekToValue = clickedTrackComponent.props.data.start_time;
       console.log('Seek video to', seekToValue);
       this.state.videoPlayer.seekTo(parseFloat(seekToValue) - conf.seekToPositionDelayFix, true);
       this.state.videoPlayer.unMute();
@@ -429,8 +440,9 @@ class AuthoringTool extends Component {
     console.log('blob', blob)
     const self = this;
     const formData = new FormData();
-    formData.append('videoTitle', this.state.videoTitle);
-    formData.append('videoDescription', this.state.videoDescription);
+    formData.append('title', this.state.videoTitle);
+    formData.append('description', this.state.videoDescription);
+    formData.append('notes', this.state.notes);
     formData.append('label', this.state.selectedTrackComponentLabel);
     formData.append('playbackType', this.state.selectedTrackComponentPlaybackType);
     formData.append('startTime', this.state.selectedTrackComponentStartTime);
@@ -441,13 +453,13 @@ class AuthoringTool extends Component {
     xhr.open("POST", url, true);
     xhr.onload = function () {
       // self.loadTracksComponentsFromData(JSON.parse(this.responseText).result);
-      console.log('RESULTTTTTT TEXT', JSON.parse(this.responseText))
-      console.log('RESULTTTTTT', JSON.parse(this.responseText).result)
-      // self.setState({
-      //   videoData: response.result,
-      // }, () => {
-      //   self.parseVideoData();
-      // });
+      // console.log('RESULTTTTTT TEXT', JSON.parse(this.responseText))
+      // console.log('RESULTTTTTT', )
+      self.setState({
+        videoData: JSON.parse(this.responseText).result,
+      }, () => {
+        self.parseVideoData();
+      });
     };
     xhr.send(formData);
   }

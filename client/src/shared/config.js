@@ -21,6 +21,7 @@ module.exports = () => {
     youTubeApiUrl,
     youTubeApiKey,
     videoPlayerWathcerInterval,
-    videoPlayerWathcerDelay
+    videoPlayerWathcerDelay,
+    seekToPositionDelayFix,
   };
 };
