@@ -139,8 +139,6 @@ class VideoPlayerPlay extends Component {
     let extendedVideoPlaying = false;
     let oldState = -1;
 
-    console.log(this.audioClipsDuration)
-
     this.watcher = setInterval(() => {
       currentVideoProgress = this.videoPlayer.getCurrentTime();
       console.log(currentVideoProgress,' state is: ', this.videoState)
@@ -152,11 +150,11 @@ class VideoPlayerPlay extends Component {
       }
 
       // When the user pause the video and it isn't a extended Video auto Playing. The audio should also be stop
-      if (((currentVideoProgress - previousTime) < 0.01) && !extendedVideoPlaying) {
-        if (this.currentClip) {
-          this.currentClip.pause();
-        }
-      }
+      // if (((currentVideoProgress - previousTime) < 0.01) && !extendedVideoPlaying) {
+      //   if (this.currentClip) {
+      //     this.currentClip.pause();
+      //   }
+      // }
 
       // Click detection 
       if (this.videoState !== oldState) {
@@ -167,9 +165,10 @@ class VideoPlayerPlay extends Component {
 
         // pause for only manual pause
         if (this.videoState == 2 && !extendedVideoPlaying) {
-          console.log('pause')
+          console.log('pause this: ', this.currentClip)
+
           if (this.currentClip) {
-            this.currentClip.pause();
+            this.currentClip.stop();
           }
         }
 
@@ -191,21 +190,27 @@ class VideoPlayerPlay extends Component {
 
       if (currentVideoProgress > timedEvent) {
         currentTimedEvent = timedEvent
-        console.log('nextAudioClip: ',this.nextAudioClip.playback_type)
         const url = this.nextAudioClip.url
         if (this.nextAudioClip.playback_type === 'inline') {
           console.log('### INLINE ###', url);
-          this.currentClip = null;
+          // pause the previous video, otherwise the playback gonna keep playing
+          if (this.currentClip) {
+            this.currentClip.pause();
+          }
           this.currentClip = new Howl({
             src: [url],
             html5: true
           });
           this.currentClip.play();
+          console.log(this.currentClip);
           // let playing = this.currentClip.play();
           // this.currentClip.seek(2, playing)
         } else {
           console.log('### EXTENDED ###', url);
-          this.currentClip = null;
+          // pause the previous video, otherwise the playback gonna keep playing
+          if (this.currentClip) {
+            this.currentClip.pause();
+          }
           this.videoPlayer.pauseVideo();
           extendedVideoPlaying = true;
           this.currentClip = new Howl({
@@ -217,6 +222,7 @@ class VideoPlayerPlay extends Component {
             },
           });
           this.currentClip.play();
+          console.log(this.currentClip);
         }
         this.getNextAudioClip(currentVideoProgress);
       }
