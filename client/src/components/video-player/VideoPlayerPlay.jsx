@@ -165,7 +165,7 @@ class VideoPlayerPlay extends Component {
         }
         // console.log('choice 1')
       }
-      
+
       //look for the timedEvent in the this.nextAudioClip
       // let timedEvent;
       if (this.nextAudioClip) {
@@ -193,6 +193,10 @@ class VideoPlayerPlay extends Component {
       if (this.videoState == 2) {
         // when people change back the video when it paused
         if (Math.abs(currentVideoProgress - previousTime) > 0.07) {
+          
+          if (this.currentClip) {
+            this.currentClip.stop();
+          }
           //load location
           console.log('load location')
           loaded = true;
@@ -203,8 +207,17 @@ class VideoPlayerPlay extends Component {
       if (this.videoState !== oldState) {
         // if it loaded = true
         if (loaded === true) {
-          console.log('run');
           loaded = false;
+          console.log('run');
+          // move the video position into middle of an inline video
+          if (((currentVideoProgress - passedTimedEvent) < duration - 0.05) && type === 'inline'){
+            this.currentClip = new Howl({
+              src: [this.passedAudioClip.url],
+              html5: true
+            });
+            let playing = this.currentClip.play();
+            this.currentClip.seek(currentVideoProgress - passedTimedEvent, playing)
+          }
         }
 
         // the condition remove the first unstart
@@ -219,6 +232,15 @@ class VideoPlayerPlay extends Component {
             }
             console.log('load location')
             console.log('run ')
+            // move the video position into middle of an inline video
+            if (((currentVideoProgress - passedTimedEvent) < duration - 0.05) && type === 'inline'){
+              this.currentClip = new Howl({
+                src: [this.passedAudioClip.url],
+                html5: true
+              });
+              let playing = this.currentClip.play();
+              this.currentClip.seek(currentVideoProgress - passedTimedEvent, playing)
+            }
           } 
         }
 
