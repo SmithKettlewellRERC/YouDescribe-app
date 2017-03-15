@@ -160,7 +160,23 @@ class VideoPlayerPlay extends Component {
 
       // Click detection 
       if (this.videoState !== oldState) {
-        console.log('clicked')
+        // resume for both manual resume and auto resume
+        if (this.videoState == 1) {
+          console.log('resume')
+        }
+
+        // pause for only manual pause
+        if (this.videoState == 2 && !extendedVideoPlaying) {
+          console.log('pause')
+          if (this.currentClip) {
+            this.currentClip.pause();
+          }
+        }
+
+        // buffering status
+        if (this.videoState == 3) {
+          console.log('buffering')
+        }
       }
 
 
