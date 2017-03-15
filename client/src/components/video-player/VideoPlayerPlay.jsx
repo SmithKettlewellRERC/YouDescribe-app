@@ -165,6 +165,29 @@ class VideoPlayerPlay extends Component {
         }
         // console.log('choice 1')
       }
+      
+      //look for the timedEvent in the this.nextAudioClip
+      // let timedEvent;
+      if (this.nextAudioClip) {
+        nextTimedEvent = Number(this.nextAudioClip.start_time);
+      } else {
+        nextTimedEvent = Infinity;
+      }
+
+      let type;
+      let duration;
+      if (this.passedAudioClip) {
+        passedTimedEvent = Number(this.passedAudioClip.start_time);
+        type = this.passedAudioClip.playback_type;
+        duration = this.passedAudioClip.duration;
+      } else {
+        passedTimedEvent = Infinity;
+        type = 'None';
+        duration = 0;
+      }
+
+    // load locations will take in: passedTimedEvent, duration, nextTimedEvent, 
+      console.log('passed event: ', passedTimedEvent,'type: ',type, 'duration: ', duration, 'and the next event: ',nextTimedEvent)
 
       // when the video is paused 
       if (this.videoState == 2) {
@@ -212,28 +235,6 @@ class VideoPlayerPlay extends Component {
       //tracking the current time and the previous time value of the last interval
       previousTime = currentVideoProgress;
 
-      //look for the timedEvent in the this.nextAudioClip
-      // let timedEvent;
-      if (this.nextAudioClip) {
-        nextTimedEvent = Number(this.nextAudioClip.start_time);
-      } else {
-        nextTimedEvent = Infinity;
-      }
-
-      let type;
-      let duration;
-      if (this.passedAudioClip) {
-        passedTimedEvent = Number(this.passedAudioClip.start_time);
-        type = this.passedAudioClip.playback_type;
-        duration = this.passedAudioClip.duration;
-      } else {
-        passedTimedEvent = Infinity;
-        type = 'None';
-        duration = 0;
-      }
-
-    // load locations will take in: passedTimedEvent, duration, nextTimedEvent, 
-      console.log('passed event: ', passedTimedEvent,'type: ',type, 'duration: ', duration, 'and the next event: ',nextTimedEvent)
 
       if (currentVideoProgress > nextTimedEvent) {
         const url = this.nextAudioClip.url
