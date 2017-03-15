@@ -141,11 +141,12 @@ class VideoPlayerPlay extends Component {
 
     this.watcher = setInterval(() => {
       currentVideoProgress = this.videoPlayer.getCurrentTime();
-      console.log(currentVideoProgress,' state is: ', this.videoState)
-      // console.log(this.videoPlayer.)
+
+      // time and videoState tracking log
+      // console.log(currentVideoProgress,' state is: ', this.videoState)
 
       // When the user back the video.
-      if (Math.abs(currentVideoProgress - previousTime) > 0.055) {
+      if (Math.abs(currentVideoProgress - previousTime) > 0.07) {
         currentAudioClip = this.getNextAudioClip(currentVideoProgress);
       }
 
@@ -156,16 +157,21 @@ class VideoPlayerPlay extends Component {
       //   }
       // }
 
-      // Click detection 
+      // Click detection occur when the videoState changed, which init by YouTube onStateChange
       if (this.videoState !== oldState) {
+        // the condition remove the first unstart
         // resume for both manual resume and auto resume
         if (this.videoState == 1) {
-          console.log('resume')
+
+          //careful here: the different usually are 0.1
+          if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
+            console.log('manual resume')
+          } 
         }
 
         // pause for only manual pause
         if (this.videoState == 2 && !extendedVideoPlaying) {
-          console.log('pause this: ', this.currentClip)
+          // console.log('pause this: ', this.currentClip)
 
           if (this.currentClip) {
             this.currentClip.stop();
@@ -175,12 +181,18 @@ class VideoPlayerPlay extends Component {
         // buffering status
         if (this.videoState == 3) {
           console.log('buffering')
+          //
+          //careful here: the different usually are 0.1
+          if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
+            console.log('manual resume')
+          } 
         }
       }
 
-
+      //tracking the current time and the previous time value of the last interval
       previousTime = currentVideoProgress;
 
+      //look for the timedEvent in the this.nextAudioClip
       let timedEvent;
       if (this.nextAudioClip) {
         timedEvent = Number(this.nextAudioClip.start_time);
@@ -202,7 +214,6 @@ class VideoPlayerPlay extends Component {
             html5: true
           });
           this.currentClip.play();
-          console.log(this.currentClip);
           // let playing = this.currentClip.play();
           // this.currentClip.seek(2, playing)
         } else {
@@ -222,7 +233,6 @@ class VideoPlayerPlay extends Component {
             },
           });
           this.currentClip.play();
-          console.log(this.currentClip);
         }
         this.getNextAudioClip(currentVideoProgress);
       }
