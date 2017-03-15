@@ -190,18 +190,15 @@ class VideoPlayerPlay extends Component {
       console.log('passed event: ', passedTimedEvent,'type: ',type, 'duration: ', duration, 'and the next event: ',nextTimedEvent)
 
       // when the video is paused 
-      if (this.videoState == 2) {
-        // when people change back the video when it paused
-        if (Math.abs(currentVideoProgress - previousTime) > 0.07) {
-          
-          if (this.currentClip) {
-            this.currentClip.stop();
-          }
-          //load location
-          console.log('load location')
-          loaded = true;
-        }
-      }
+      // if (this.videoState == 2) {
+      //   // when people change back the video when it paused
+      //   if (Math.abs(currentVideoProgress - previousTime) > 0.07) {
+        
+      //     //load location
+      //     console.log('load location')
+      //     loaded = true;
+      //   }
+      // }
 
       // Click detection occur when the videoState changed, which init by YouTube onStateChange
       if (this.videoState !== oldState) {
@@ -251,6 +248,7 @@ class VideoPlayerPlay extends Component {
           if (this.currentClip) {
             this.currentClip.stop();
           }
+          loaded = true;
         }
       }
 
