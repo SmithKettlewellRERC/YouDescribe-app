@@ -72,20 +72,21 @@ class VideoPlayerPlay extends Component {
 
     // Caching all audio clips???
     this.audioClips.forEach((audioObj) => {
-      console.log('CREATE', audioObj.url);
       const sound = new Howl({
         src: [audioObj.url],
         buffer: false,
         loop: false,
         // preload: false,
         volume: 1.0, // 0.0 -> 1.0
-        onload: audioClipLoaded,
+        onload: () => {
+          let duration = sound.duration();
+          console.log('create clip start at: ',audioObj.start_time, ' have duration: ', duration);
+          audioClipLoaded();
+        }
         // onloaderror: (id, errToLoad) => {
         //   console.log('Error loading audio', id, errToLoad);
         // },
       });
-
-      console.log('create clip start at: ',audioObj.start_time)
     });
   }
 
