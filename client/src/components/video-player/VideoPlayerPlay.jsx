@@ -31,8 +31,6 @@ class VideoPlayerPlay extends Component {
       })
       .then((json) => {
         if (json && json.result && json.result.status === 'published') {
-          console.log('real data is: ', json.result)
-          console.log('fake data is: ', seedData)
           //test with fake data, replace with json.result later
           this.parseVideoData(seedData);
         } else {
@@ -69,6 +67,9 @@ class VideoPlayerPlay extends Component {
       }
     };
 
+    this.audioClips = this.audioClips.sort((a, b) => a.start_time - b.start_time);;
+
+
     // Caching all audio clips???
     this.audioClips.forEach((audioObj) => {
       console.log('CREATE', audioObj.url);
@@ -83,6 +84,8 @@ class VideoPlayerPlay extends Component {
         //   console.log('Error loading audio', id, errToLoad);
         // },
       });
+
+      console.log('create clip start at: ',audioObj.start_time)
     });
   }
 
@@ -97,7 +100,7 @@ class VideoPlayerPlay extends Component {
       videoId: this.videoId,
       events: {
         onReady: onVideoPlayerReady,
-        onStateChange: onPlayerStateChange,
+        // onStateChange: onPlayerStateChange,
       },
     })
 
@@ -105,16 +108,11 @@ class VideoPlayerPlay extends Component {
       console.log('YouTube video player ready. Lets call the watcher');
       self.videoProgressWatcher();
     }
-
-    function onPlayerStateChange(event) {
-      console.log('clicking detected')
-      if (event.data == 1) console.log('resume clicked')
-    }
   }
 
   getNextAudioClip(currentVideoProgress) {
-    const audioClipsCuePoints = this.audioClips.map((clip) => clip.start_time).sort((a, b) => a - b);
-    for (let i = 0; i < audioClipsCuePoints.length; i += 1) {
+    // const audioClipsCuePoints = this.audioClips.map((clip) => clip.start_time).sort((a, b) => a - b);
+    for (let i = 0; i < this.audioClips.length; i += 1) {
       if (currentVideoProgress < this.audioClips[i].start_time) {
         this.nextAudioClip = this.audioClips[i];
         return this.nextAudioClip;
@@ -144,13 +142,11 @@ class VideoPlayerPlay extends Component {
 
       // When the user pause the video and it isn't a extended Video auto Playing. The audio should also be stop
       if (((currentVideoProgress - previousTime) < 0.01) && !extendedVideoPlaying) {
-        console.log('the audio played: ', currentVideoProgress - currentTimedEvent)
         if (this.currentClip) {
           this.currentClip.pause();
         }
       }
 
-      //detect change when user resume the video
       previousTime = currentVideoProgress;
 
       let timedEvent;
@@ -171,6 +167,8 @@ class VideoPlayerPlay extends Component {
             html5: true
           });
           this.currentClip.play();
+          // let playing = this.currentClip.play();
+          // this.currentClip.seek(2, playing)
         } else {
           console.log('### EXTENDED ###', url);
           this.videoPlayer.pauseVideo();
@@ -213,7 +211,6 @@ class VideoPlayerPlay extends Component {
       this.currentClip.stop();
     }
     this.currentClip = null;
-    // this.currentClip.pause();
   }
 
   render() {
