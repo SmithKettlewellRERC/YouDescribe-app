@@ -84,7 +84,8 @@ class VideoPlayerPlay extends Component {
         onload: () => {
           let duration = sound.duration();
           console.log('create clip start at: ',audioObj.start_time, ' have duration: ', duration);
-          this.audioClipsDuration.push(duration)
+          // this.audioClipsDuration.push(duration)
+          audioObj.duration = duration;
           audioClipLoaded();
         }
         // onloaderror: (id, errToLoad) => {
@@ -121,7 +122,8 @@ class VideoPlayerPlay extends Component {
 
   getNextAudioClip(currentVideoProgress) {
     // const audioClipsCuePoints = this.audioClips.map((clip) => clip.start_time).sort((a, b) => a - b);
-    for (let i = 0; i < this.audioClips.length; i += 1) {
+    const length = this.audioClips.length
+    for (let i = 0; i < length; i += 1) {
       if (currentVideoProgress < this.audioClips[i].start_time) {
         this.nextAudioClip = this.audioClips[i];
         if (this.audioClips[i - 1]) {
@@ -129,10 +131,11 @@ class VideoPlayerPlay extends Component {
         } else {
           this.passedAudioClip = this.audioClips[i];
         }
-        return null;
+        return i;
       }
     }
     this.nextAudioClip = null;
+    this.passedAudioClip = this.audioClips[length - 1];
     return null;
   }
 
@@ -141,7 +144,7 @@ class VideoPlayerPlay extends Component {
     let previousTime = 0;
     let currentVideoProgress = 0;
     let nextTimedEvent;
-    let passedTimedEvent;;
+    let passedTimedEvent;
     let extendedVideoPlaying = false;
     let oldState = -1;
     let loaded = false;
@@ -218,16 +221,19 @@ class VideoPlayerPlay extends Component {
       }
 
       let type;
+      let duration;
       if (this.passedAudioClip) {
         passedTimedEvent = Number(this.passedAudioClip.start_time);
         type = this.passedAudioClip.playback_type;
+        duration = this.passedAudioClip.duration;
       } else {
         passedTimedEvent = Infinity;
         type = 'None';
+        duration = 0;
       }
 
     // load locations will take in: passedTimedEvent, duration, nextTimedEvent, 
-      console.log('passed event: ', passedTimedEvent,'type: ',type, ' and the next event: ',nextTimedEvent)
+      console.log('passed event: ', passedTimedEvent,'type: ',type, 'duration: ', duration, 'and the next event: ',nextTimedEvent)
 
       if (currentVideoProgress > nextTimedEvent) {
         const url = this.nextAudioClip.url
