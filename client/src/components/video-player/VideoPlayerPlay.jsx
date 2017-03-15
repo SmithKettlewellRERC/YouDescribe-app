@@ -6,8 +6,8 @@ import {
 } from '../../shared/helperFunctions';
 
 const conf = require('./../../shared/config')();
-const seedAudioList = require('./seedAudioList')
-const seedData = seedAudioList.default;
+// const seedAudioList = require('./seedAudioList')
+// const seedData = seedAudioList.default;
 
 class VideoPlayerPlay extends Component {
   constructor(props) {
@@ -19,7 +19,7 @@ class VideoPlayerPlay extends Component {
     this.audioClipsLength = 0;
     this.audioClipsDuration = [];
     this.nextAudioClip = null;
-    this.passedAudioClip = null;
+    this.previousAudioClip = null;
     this.initVideoPlayer = this.initVideoPlayer.bind(this);
     this.currentClip = null;
     this.videoState = -1;
@@ -35,7 +35,7 @@ class VideoPlayerPlay extends Component {
       .then((json) => {
         if (json && json.result && json.result.status === 'published') {
           //test with fake data, replace with json.result later
-          this.parseVideoData(seedData);
+          this.parseVideoData(json.result);
         } else {
           console.log('Invalid data');
         }
@@ -127,15 +127,15 @@ class VideoPlayerPlay extends Component {
       if (currentVideoProgress < this.audioClips[i].start_time) {
         this.nextAudioClip = this.audioClips[i];
         if (this.audioClips[i - 1]) {
-          this.passedAudioClip = this.audioClips[i - 1];
+          this.previousAudioClip = this.audioClips[i - 1];
         } else {
-          this.passedAudioClip = this.audioClips[i];
+          this.previousAudioClip = this.audioClips[i];
         }
         return i;
       }
     }
     this.nextAudioClip = null;
-    this.passedAudioClip = this.audioClips[length - 1];
+    this.previousAudioClip = this.audioClips[length - 1];
     return null;
   }
 
@@ -143,9 +143,9 @@ class VideoPlayerPlay extends Component {
     console.log('Video progress watcher running...');
     let previousTime = 0;
     let currentVideoProgress = 0;
-    let nextTimedEvent;
-    let passedTimedEvent;
-    let extendedVideoPlaying = false;
+    let nextAudioClipStartTime;
+    let previousAudioClipStartTime;
+    let extendedAudioClipPlaying = false;
     let oldState = -1;
     let loaded = false;
 
@@ -169,36 +169,25 @@ class VideoPlayerPlay extends Component {
       //look for the timedEvent in the this.nextAudioClip
       // let timedEvent;
       if (this.nextAudioClip) {
-        nextTimedEvent = Number(this.nextAudioClip.start_time);
+        nextAudioClipStartTime = Number(this.nextAudioClip.start_time);
       } else {
-        nextTimedEvent = Infinity;
+        nextAudioClipStartTime = Infinity;
       }
 
       let type;
       let duration;
-      if (this.passedAudioClip) {
-        passedTimedEvent = Number(this.passedAudioClip.start_time);
-        type = this.passedAudioClip.playback_type;
-        duration = this.passedAudioClip.duration;
+      if (this.previousAudioClip) {
+        previousAudioClipStartTime = Number(this.previousAudioClip.start_time);
+        type = this.previousAudioClip.playback_type;
+        duration = this.previousAudioClip.duration;
       } else {
-        passedTimedEvent = Infinity;
+        previousAudioClipStartTime = Infinity;
         type = 'None';
         duration = 0;
       }
 
-    // load locations will take in: passedTimedEvent, duration, nextTimedEvent, 
-      // console.log('passed event: ', passedTimedEvent,'type: ',type, 'duration: ', duration, 'and the next event: ',nextTimedEvent)
-
-      // when the video is paused 
-      // if (this.videoState == 2) {
-      //   // when people change back the video when it paused
-      //   if (Math.abs(currentVideoProgress - previousTime) > 0.07) {
-        
-      //     //load location
-      //     console.log('load location')
-      //     loaded = true;
-      //   }
-      // }
+    // load locations will take in: previousAudioClipStartTime, duration, nextAudioClipStartTime, 
+      // console.log('previous event: ', previousAudioClipStartTime,'type: ',type, 'duration: ', duration, 'and the next event: ',nextAudioClipStartTime)
 
       // Click detection occur when the videoState changed, which init by YouTube onStateChange
       if (this.videoState !== oldState) {
@@ -207,13 +196,13 @@ class VideoPlayerPlay extends Component {
           loaded = false;
           console.log('run');
           // move the video position into middle of an inline video
-          if (((currentVideoProgress - passedTimedEvent) < duration - 0.05) && type === 'inline'){
+          if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline'){
             this.currentClip = new Howl({
-              src: [this.passedAudioClip.url],
+              src: [this.previousAudioClip.url],
               html5: true
             });
             let playing = this.currentClip.play();
-            this.currentClip.seek(currentVideoProgress - passedTimedEvent, playing)
+            this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing)
           }
         }
 
@@ -221,7 +210,7 @@ class VideoPlayerPlay extends Component {
         // resume for both manual resume and auto resume
         // playing or buffering state
         if (this.videoState == 1 || this.videoState == 3) {
-
+          extendedAudioClipPlaying = false;
           //careful here: the different usually are 0.1
           if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
             if (this.currentClip) {
@@ -232,19 +221,19 @@ class VideoPlayerPlay extends Component {
               console.log('load location')
               console.log('run ')
               // move the video position into middle of an inline video
-              if (((currentVideoProgress - passedTimedEvent) < duration - 0.05) && type === 'inline'){
+              if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline'){
                 this.currentClip = new Howl({
-                  src: [this.passedAudioClip.url],
+                  src: [this.previousAudioClip.url],
                   html5: true
                 });
                 let playing = this.currentClip.play();
-                this.currentClip.seek(currentVideoProgress - passedTimedEvent, playing)
+                this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing)
               }
             }
         }
 
         // pause for only manual pause
-        if (this.videoState == 2 && !extendedVideoPlaying) {
+        if (this.videoState == 2 && !extendedAudioClipPlaying) {
           // console.log('pause this: ', this.currentClip)
 
           if (this.currentClip) {
@@ -254,13 +243,13 @@ class VideoPlayerPlay extends Component {
         }
       }
 
-      console.log('video is extended: ',extendedVideoPlaying)
+      console.log('video is extended: ',extendedAudioClipPlaying)
 
       //tracking the current time and the previous time value of the last interval
       previousTime = currentVideoProgress;
 
 
-      if (currentVideoProgress > nextTimedEvent) {
+      if (currentVideoProgress > nextAudioClipStartTime) {
         const url = this.nextAudioClip.url
         if (this.nextAudioClip.playback_type === 'inline') {
           console.log('### INLINE ###', url);
@@ -282,12 +271,12 @@ class VideoPlayerPlay extends Component {
             this.currentClip.pause();
           }
           this.videoPlayer.pauseVideo();
-          extendedVideoPlaying = true;
+          extendedAudioClipPlaying = true;
           this.currentClip = new Howl({
             src: [url],
             html5: true,
             onend: () => {
-              extendedVideoPlaying = false
+              extendedAudioClipPlaying = false
               this.videoPlayer.playVideo();
             },
           });
@@ -299,18 +288,6 @@ class VideoPlayerPlay extends Component {
       oldState = this.videoState;
     }, 50);
   }
-
-  // playAudioClip(url, currentVideoProgress, callback = () => {}) {
-  //   // console.log('PLAY', [url]);
-  //   const audio = new Howl({
-  //     src: [url],
-  //     html5: true,
-  //     onend: () => {
-  //       callback();
-  //     },
-  //   });
-  //   audio.play();
-  // }
 
   componentDidMount() {
     this.fetchAudioClips();
