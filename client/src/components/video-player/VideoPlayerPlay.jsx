@@ -17,9 +17,11 @@ class VideoPlayerPlay extends Component {
     this.videoId = props.videoId;
     this.audioClips = [];
     this.audioClipsLength = 0;
+    this.audioClipsDuration = [];
     this.nextAudioClip = null;
     this.initVideoPlayer = this.initVideoPlayer.bind(this);
     this.currentClip = null;
+    this.videoState = -1;
   }
 
   fetchAudioClips() {
@@ -81,6 +83,7 @@ class VideoPlayerPlay extends Component {
         onload: () => {
           let duration = sound.duration();
           console.log('create clip start at: ',audioObj.start_time, ' have duration: ', duration);
+          this.audioClipsDuration.push(duration)
           audioClipLoaded();
         }
         // onloaderror: (id, errToLoad) => {
@@ -101,13 +104,18 @@ class VideoPlayerPlay extends Component {
       videoId: this.videoId,
       events: {
         onReady: onVideoPlayerReady,
-        // onStateChange: onPlayerStateChange,
+        onStateChange: onPlayerStateChange,
       },
     })
 
     function onVideoPlayerReady() {
       console.log('YouTube video player ready. Lets call the watcher');
       self.videoProgressWatcher();
+    }
+
+    function onPlayerStateChange(event) {
+      console.log('clicked')
+      self.videoState = event.data;
     }
   }
 
@@ -131,9 +139,11 @@ class VideoPlayerPlay extends Component {
     let currentTimedEvent = 0;
     let extendedVideoPlaying = false;
 
+    console.log(this.audioClipsDuration)
+
     this.watcher = setInterval(() => {
       currentVideoProgress = this.videoPlayer.getCurrentTime();
-      console.log(currentVideoProgress)
+      console.log(currentVideoProgress,' state is: ', this.videoState)
       // console.log(this.videoPlayer.)
 
       // When the user back the video.
@@ -163,6 +173,7 @@ class VideoPlayerPlay extends Component {
         const url = this.nextAudioClip.url
         if (this.nextAudioClip.playback_type === 'inline') {
           console.log('### INLINE ###', url);
+          this.currentClip = null;
           this.currentClip = new Howl({
             src: [url],
             html5: true
@@ -172,6 +183,7 @@ class VideoPlayerPlay extends Component {
           // this.currentClip.seek(2, playing)
         } else {
           console.log('### EXTENDED ###', url);
+          this.currentClip = null;
           this.videoPlayer.pauseVideo();
           extendedVideoPlaying = true;
           this.currentClip = new Howl({
