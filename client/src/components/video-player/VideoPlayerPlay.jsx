@@ -187,7 +187,7 @@ class VideoPlayerPlay extends Component {
       }
 
     // load locations will take in: passedTimedEvent, duration, nextTimedEvent, 
-      console.log('passed event: ', passedTimedEvent,'type: ',type, 'duration: ', duration, 'and the next event: ',nextTimedEvent)
+      // console.log('passed event: ', passedTimedEvent,'type: ',type, 'duration: ', duration, 'and the next event: ',nextTimedEvent)
 
       // when the video is paused 
       // if (this.videoState == 2) {
@@ -227,18 +227,20 @@ class VideoPlayerPlay extends Component {
             if (this.currentClip) {
               this.currentClip.stop();
             }
-            console.log('load location')
-            console.log('run ')
-            // move the video position into middle of an inline video
-            if (((currentVideoProgress - passedTimedEvent) < duration - 0.05) && type === 'inline'){
-              this.currentClip = new Howl({
-                src: [this.passedAudioClip.url],
-                html5: true
-              });
-              let playing = this.currentClip.play();
-              this.currentClip.seek(currentVideoProgress - passedTimedEvent, playing)
+          }
+            if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
+              console.log('load location')
+              console.log('run ')
+              // move the video position into middle of an inline video
+              if (((currentVideoProgress - passedTimedEvent) < duration - 0.05) && type === 'inline'){
+                this.currentClip = new Howl({
+                  src: [this.passedAudioClip.url],
+                  html5: true
+                });
+                let playing = this.currentClip.play();
+                this.currentClip.seek(currentVideoProgress - passedTimedEvent, playing)
+              }
             }
-          } 
         }
 
         // pause for only manual pause
@@ -251,6 +253,8 @@ class VideoPlayerPlay extends Component {
           loaded = true;
         }
       }
+
+      console.log('video is extended: ',extendedVideoPlaying)
 
       //tracking the current time and the previous time value of the last interval
       previousTime = currentVideoProgress;
