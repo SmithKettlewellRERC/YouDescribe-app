@@ -19,6 +19,7 @@ class VideoPlayerPlay extends Component {
     this.audioClipsLength = 0;
     this.audioClipsDuration = [];
     this.nextAudioClip = null;
+    this.passedAudioClip = null;
     this.initVideoPlayer = this.initVideoPlayer.bind(this);
     this.currentClip = null;
     this.videoState = -1;
@@ -123,7 +124,12 @@ class VideoPlayerPlay extends Component {
     for (let i = 0; i < this.audioClips.length; i += 1) {
       if (currentVideoProgress < this.audioClips[i].start_time) {
         this.nextAudioClip = this.audioClips[i];
-        return this.nextAudioClip;
+        if (this.audioClips[i - 1]) {
+          this.passedAudioClip = this.audioClips[i - 1];
+        } else {
+          this.passedAudioClip = this.audioClips[i];
+        }
+        return null;
       }
     }
     this.nextAudioClip = null;
@@ -134,12 +140,11 @@ class VideoPlayerPlay extends Component {
     console.log('Video progress watcher running...');
     let previousTime = 0;
     let currentVideoProgress = 0;
-    let currentAudioClip = null;
-    let passedTimedEvent = Infinity;
+    let nextTimedEvent;
+    let passedTimedEvent;;
     let extendedVideoPlaying = false;
     let oldState = -1;
     let loaded = false;
-    let nextTimedEvent;
 
     this.watcher = setInterval(() => {
       currentVideoProgress = this.videoPlayer.getCurrentTime();
@@ -150,7 +155,7 @@ class VideoPlayerPlay extends Component {
 
       // When the user back the video.
       if (Math.abs(currentVideoProgress - previousTime) > 0.07) {
-        currentAudioClip = this.getNextAudioClip(currentVideoProgress);
+        this.getNextAudioClip(currentVideoProgress);
         // stop the video if user back the video
         if (this.currentClip) {
           this.currentClip.stop();
@@ -212,11 +217,19 @@ class VideoPlayerPlay extends Component {
         nextTimedEvent = Infinity;
       }
 
+      let type;
+      if (this.passedAudioClip) {
+        passedTimedEvent = Number(this.passedAudioClip.start_time);
+        type = this.passedAudioClip.playback_type;
+      } else {
+        passedTimedEvent = Infinity;
+        type = 'None';
+      }
+
     // load locations will take in: passedTimedEvent, duration, nextTimedEvent, 
-      console.log('passed event: ', passedTimedEvent, ' and the next event: ',nextTimedEvent)
+      console.log('passed event: ', passedTimedEvent,'type: ',type, ' and the next event: ',nextTimedEvent)
 
       if (currentVideoProgress > nextTimedEvent) {
-        passedTimedEvent = nextTimedEvent
         const url = this.nextAudioClip.url
         if (this.nextAudioClip.playback_type === 'inline') {
           console.log('### INLINE ###', url);
