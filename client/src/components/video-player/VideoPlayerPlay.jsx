@@ -114,7 +114,6 @@ class VideoPlayerPlay extends Component {
     }
 
     function onPlayerStateChange(event) {
-      console.log('clicked')
       self.videoState = event.data;
     }
   }
@@ -138,6 +137,7 @@ class VideoPlayerPlay extends Component {
     let currentAudioClip = null;
     let currentTimedEvent = 0;
     let extendedVideoPlaying = false;
+    let oldState = -1;
 
     console.log(this.audioClipsDuration)
 
@@ -157,6 +157,12 @@ class VideoPlayerPlay extends Component {
           this.currentClip.pause();
         }
       }
+
+      // Click detection 
+      if (this.videoState !== oldState) {
+        console.log('clicked')
+      }
+
 
       previousTime = currentVideoProgress;
 
@@ -198,6 +204,8 @@ class VideoPlayerPlay extends Component {
         }
         this.getNextAudioClip(currentVideoProgress);
       }
+
+      oldState = this.videoState;
     }, 50);
   }
 
