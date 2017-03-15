@@ -135,16 +135,18 @@ class VideoPlayerPlay extends Component {
     let previousTime = 0;
     let currentVideoProgress = 0;
     let currentAudioClip = null;
-    let currentTimedEvent = 0;
+    let passedTimedEvent = Infinity;
     let extendedVideoPlaying = false;
     let oldState = -1;
     let loaded = false;
+    let nextTimedEvent;
 
     this.watcher = setInterval(() => {
       currentVideoProgress = this.videoPlayer.getCurrentTime();
 
       // time and videoState tracking log
       // console.log(currentVideoProgress,' state is: ', this.videoState)
+      
 
       // When the user back the video.
       if (Math.abs(currentVideoProgress - previousTime) > 0.07) {
@@ -156,14 +158,6 @@ class VideoPlayerPlay extends Component {
         // console.log('choice 1')
       }
 
-
-      // When the user pause the video and it isn't a extended Video auto Playing. The audio should also be stop
-      // if (((currentVideoProgress - previousTime) < 0.01) && !extendedVideoPlaying) {
-      //   if (this.currentClip) {
-      //     this.currentClip.pause();
-      //   }
-      // }
-
       // when the video is paused 
       if (this.videoState == 2) {
         // when people change back the video when it paused
@@ -172,9 +166,7 @@ class VideoPlayerPlay extends Component {
           console.log('load location')
           loaded = true;
         }
-
       }
-
 
       // Click detection occur when the videoState changed, which init by YouTube onStateChange
       if (this.videoState !== oldState) {
@@ -213,15 +205,18 @@ class VideoPlayerPlay extends Component {
       previousTime = currentVideoProgress;
 
       //look for the timedEvent in the this.nextAudioClip
-      let timedEvent;
+      // let timedEvent;
       if (this.nextAudioClip) {
-        timedEvent = Number(this.nextAudioClip.start_time);
+        nextTimedEvent = Number(this.nextAudioClip.start_time);
       } else {
-        timedEvent = Infinity;
+        nextTimedEvent = Infinity;
       }
 
-      if (currentVideoProgress > timedEvent) {
-        currentTimedEvent = timedEvent
+    // load locations will take in: passedTimedEvent, duration, nextTimedEvent, 
+      console.log('passed event: ', passedTimedEvent, ' and the next event: ',nextTimedEvent)
+
+      if (currentVideoProgress > nextTimedEvent) {
+        passedTimedEvent = nextTimedEvent
         const url = this.nextAudioClip.url
         if (this.nextAudioClip.playback_type === 'inline') {
           console.log('### INLINE ###', url);
