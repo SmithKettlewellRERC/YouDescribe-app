@@ -15,9 +15,12 @@ class VideoPlayerPlay extends Component {
     this.videoId = props.videoId;
     this.audioClips = [];
     this.audioClipsLength = 0;
+    this.audioClipsDuration = [];
     this.nextAudioClip = null;
+    this.previousAudioClip = null;
     this.initVideoPlayer = this.initVideoPlayer.bind(this);
     this.currentClip = null;
+    this.videoState = -1;
   }
 
   fetchAudioClips() {
@@ -65,16 +68,24 @@ class VideoPlayerPlay extends Component {
       }
     };
 
+    this.audioClips = this.audioClips.sort((a, b) => a.start_time - b.start_time);;
+
+
     // Caching all audio clips???
     this.audioClips.forEach((audioObj) => {
-      console.log('CREATE', audioObj.url);
       const sound = new Howl({
         src: [audioObj.url],
         buffer: false,
         loop: false,
         // preload: false,
         volume: 1.0, // 0.0 -> 1.0
-        onload: audioClipLoaded,
+        onload: () => {
+          let duration = sound.duration();
+          console.log('create clip start at: ',audioObj.start_time, ' have duration: ', duration);
+          // this.audioClipsDuration.push(duration)
+          audioObj.duration = duration;
+          audioClipLoaded();
+        }
         // onloaderror: (id, errToLoad) => {
         //   console.log('Error loading audio', id, errToLoad);
         // },
@@ -93,7 +104,7 @@ class VideoPlayerPlay extends Component {
       videoId: this.videoId,
       events: {
         onReady: onVideoPlayerReady,
-        // onStateChange: onPlayerStateChange,
+        onStateChange: onPlayerStateChange,
       },
     })
 
@@ -101,17 +112,28 @@ class VideoPlayerPlay extends Component {
       console.log('YouTube video player ready. Lets call the watcher');
       self.videoProgressWatcher();
     }
+
+    function onPlayerStateChange(event) {
+      self.videoState = event.data;
+    }
   }
 
   getNextAudioClip(currentVideoProgress) {
-    const audioClipsCuePoints = this.audioClips.map((clip) => clip.start_time).sort((a, b) => a - b);
-    for (let i = 0; i < audioClipsCuePoints.length; i += 1) {
+    // const audioClipsCuePoints = this.audioClips.map((clip) => clip.start_time).sort((a, b) => a - b);
+    const length = this.audioClips.length
+    for (let i = 0; i < length; i += 1) {
       if (currentVideoProgress < this.audioClips[i].start_time) {
         this.nextAudioClip = this.audioClips[i];
-        return this.nextAudioClip;
+        if (this.audioClips[i - 1]) {
+          this.previousAudioClip = this.audioClips[i - 1];
+        } else {
+          this.previousAudioClip = this.audioClips[i];
+        }
+        return i;
       }
     }
     this.nextAudioClip = null;
+    this.previousAudioClip = this.audioClips[length - 1];
     return null;
   }
 
@@ -119,57 +141,141 @@ class VideoPlayerPlay extends Component {
     console.log('Video progress watcher running...');
     let previousTime = 0;
     let currentVideoProgress = 0;
-    let currentAudioClip = null;
-    let currentTimedEvent = 0;
-    let extendedVideoPlaying = false;
+    let nextAudioClipStartTime;
+    let previousAudioClipStartTime;
+    let extendedAudioClipPlaying = false;
+    let oldState = -1;
+    let loaded = false;
 
     this.watcher = setInterval(() => {
       currentVideoProgress = this.videoPlayer.getCurrentTime();
-      console.log(currentVideoProgress)
-      // console.log(this.videoPlayer.)
+
+      // time and videoState tracking log
+      // console.log(currentVideoProgress,' state is: ', this.videoState)
+      
 
       // When the user back the video.
-      if (Math.abs(currentVideoProgress - previousTime) > 0.055) {
-        currentAudioClip = this.getNextAudioClip(currentVideoProgress);
+      if (Math.abs(currentVideoProgress - previousTime) > 0.07) {
+        this.getNextAudioClip(currentVideoProgress);
+        // stop the video if user back the video
+
+        if (this.currentClip) {
+          this.currentClip.stop();
+        }
+        // console.log('choice 1')
       }
 
-      // When the user pause the video and it isn't a extended Video auto Playing. The audio should also be stop
-      if (((currentVideoProgress - previousTime) < conf.videoPlayerWatcherInterval) && !extendedVideoPlaying) {
-        console.log('the audio played: ', currentVideoProgress - currentTimedEvent)
-        if (this.currentClip) {
-          this.currentClip.pause();
+      //look for the timedEvent in the this.nextAudioClip
+      // let timedEvent;
+      if (this.nextAudioClip) {
+        nextAudioClipStartTime = Number(this.nextAudioClip.start_time);
+      } else {
+        nextAudioClipStartTime = Infinity;
+      }
+
+      let type;
+      let duration;
+      if (this.previousAudioClip) {
+        previousAudioClipStartTime = Number(this.previousAudioClip.start_time);
+        type = this.previousAudioClip.playback_type;
+        duration = this.previousAudioClip.duration;
+      } else {
+        previousAudioClipStartTime = Infinity;
+        type = 'None';
+        duration = 0;
+      }
+
+    // load locations will take in: previousAudioClipStartTime, duration, nextAudioClipStartTime, 
+      // console.log('previous event: ', previousAudioClipStartTime,'type: ',type, 'duration: ', duration, 'and the next event: ',nextAudioClipStartTime)
+
+      // Click detection occur when the videoState changed, which init by YouTube onStateChange
+      if (this.videoState !== oldState) {
+        // if it loaded = true
+        if (loaded === true) {
+          loaded = false;
+          console.log('run');
+          // move the video position into middle of an inline video
+          if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline'){
+            this.currentClip = new Howl({
+              src: [this.previousAudioClip.url],
+              html5: true
+            });
+            let playing = this.currentClip.play();
+            this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing)
+          }
+        }
+
+        // the condition remove the first unstart
+        // resume for both manual resume and auto resume
+        // playing or buffering state
+        if (this.videoState == 1 || this.videoState == 3) {
+          extendedAudioClipPlaying = false;
+          //careful here: the different usually are 0.1
+          if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
+            if (this.currentClip) {
+              this.currentClip.stop();
+            }
+          }
+            if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
+              console.log('load location')
+              console.log('run ')
+              // move the video position into middle of an inline video
+              if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline'){
+                this.currentClip = new Howl({
+                  src: [this.previousAudioClip.url],
+                  html5: true
+                });
+                let playing = this.currentClip.play();
+                this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing)
+              }
+            }
+        }
+
+        // pause for only manual pause
+        if (this.videoState == 2 && !extendedAudioClipPlaying) {
+          // console.log('pause this: ', this.currentClip)
+
+          if (this.currentClip) {
+            this.currentClip.stop();
+          }
+          loaded = true;
         }
       }
 
+      console.log('video is extended: ',extendedAudioClipPlaying)
+
+      //tracking the current time and the previous time value of the last interval
       previousTime = currentVideoProgress;
 
-      let timedEvent;
-      if (this.nextAudioClip) {
-        timedEvent = Number(this.nextAudioClip.start_time);
-      } else {
-        timedEvent = Infinity;
-      }
 
-      if (currentVideoProgress > timedEvent) {
-        currentTimedEvent = timedEvent
-        console.log('nextAudioClip: ',this.nextAudioClip.playback_type)
+      if (currentVideoProgress > nextAudioClipStartTime) {
         const url = this.nextAudioClip.url
         if (this.nextAudioClip.playback_type === 'inline') {
           console.log('### INLINE ###', url);
+          // pause the previous video, otherwise the playback gonna keep playing
+          if (this.currentClip) {
+            this.currentClip.pause();
+          }
           this.currentClip = new Howl({
             src: [url],
             html5: true
           });
           this.currentClip.play();
+          // let playing = this.currentClip.play();
+          // this.currentClip.seek(2, playing)
         } else {
           console.log('### EXTENDED ###', url);
+          // pause the previous video, otherwise the playback gonna keep playing
+          if (this.currentClip) {
+            this.currentClip.pause();
+          }
           this.videoPlayer.pauseVideo();
-          extendedVideoPlaying = true;
+          extendedAudioClipPlaying = true;
           this.currentClip = new Howl({
             src: [url],
             html5: true,
             onend: () => {
-              extendedVideoPlaying = false
+              extendedAudioClipPlaying = false
               this.videoPlayer.playVideo();
             },
           });
@@ -177,20 +283,10 @@ class VideoPlayerPlay extends Component {
         }
         this.getNextAudioClip(currentVideoProgress);
       }
-    }, conf.videoPlayerWatcherInterval);
-  }
 
-  // playAudioClip(url, currentVideoProgress, callback = () => {}) {
-  //   // console.log('PLAY', [url]);
-  //   const audio = new Howl({
-  //     src: [url],
-  //     html5: true,
-  //     onend: () => {
-  //       callback();
-  //     },
-  //   });
-  //   audio.play();
-  // }
+      oldState = this.videoState;
+    }, 50);
+  }
 
   componentDidMount() {
     this.fetchAudioClips();
@@ -198,9 +294,11 @@ class VideoPlayerPlay extends Component {
 
   componentWillUnmount() {
     console.log('leaving the page');
-    this.currentClip.stop();
-    this.currentClip = null;
     clearInterval(this.watcher);
+    if (this.currentClip) {
+      this.currentClip.stop();
+    }
+    this.currentClip = null;
   }
 
   render() {
