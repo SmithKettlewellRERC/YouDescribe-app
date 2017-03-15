@@ -138,6 +138,7 @@ class VideoPlayerPlay extends Component {
     let currentTimedEvent = 0;
     let extendedVideoPlaying = false;
     let oldState = -1;
+    let loaded = false;
 
     this.watcher = setInterval(() => {
       currentVideoProgress = this.videoPlayer.getCurrentTime();
@@ -148,7 +149,13 @@ class VideoPlayerPlay extends Component {
       // When the user back the video.
       if (Math.abs(currentVideoProgress - previousTime) > 0.07) {
         currentAudioClip = this.getNextAudioClip(currentVideoProgress);
+        // stop the video if user back the video
+        if (this.currentClip) {
+          this.currentClip.stop();
+        }
+        // console.log('choice 1')
       }
+
 
       // When the user pause the video and it isn't a extended Video auto Playing. The audio should also be stop
       // if (((currentVideoProgress - previousTime) < 0.01) && !extendedVideoPlaying) {
@@ -157,15 +164,38 @@ class VideoPlayerPlay extends Component {
       //   }
       // }
 
+      // when the video is paused 
+      if (this.videoState == 2) {
+        // when people change back the video when it paused
+        if (Math.abs(currentVideoProgress - previousTime) > 0.07) {
+          //load location
+          console.log('load location')
+          loaded = true;
+        }
+
+      }
+
+
       // Click detection occur when the videoState changed, which init by YouTube onStateChange
       if (this.videoState !== oldState) {
+        // if it loaded = true
+        if (loaded === true) {
+          console.log('run');
+          loaded = false;
+        }
+
         // the condition remove the first unstart
         // resume for both manual resume and auto resume
-        if (this.videoState == 1) {
+        // playing or buffering state
+        if (this.videoState == 1 || this.videoState == 3) {
 
           //careful here: the different usually are 0.1
           if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
-            console.log('manual resume')
+            if (this.currentClip) {
+              this.currentClip.stop();
+            }
+            console.log('load location')
+            console.log('run ')
           } 
         }
 
@@ -176,16 +206,6 @@ class VideoPlayerPlay extends Component {
           if (this.currentClip) {
             this.currentClip.stop();
           }
-        }
-
-        // buffering status
-        if (this.videoState == 3) {
-          console.log('buffering')
-          //
-          //careful here: the different usually are 0.1
-          if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
-            console.log('manual resume')
-          } 
         }
       }
 
