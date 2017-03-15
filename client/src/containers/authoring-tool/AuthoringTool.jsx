@@ -228,7 +228,7 @@ class AuthoringTool extends Component {
       // SEEK TO.
       const seekToValue = clickedTrackComponent.props.startTime;
       console.log('Seek video to', seekToValue);
-      this.state.videoPlayer.seekTo(parseFloat(seekToValue), true);
+      this.state.videoPlayer.seekTo(parseFloat(seekToValue) - conf.seekToPositionDelayFix, true);
       this.state.videoPlayer.unMute();
       this.state.videoPlayer.pauseVideo();
       this.setState({ seekVideoPosition: seekToValue });

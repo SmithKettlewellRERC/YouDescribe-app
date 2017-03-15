@@ -6,8 +6,6 @@ import {
 } from '../../shared/helperFunctions';
 
 const conf = require('./../../shared/config')();
-// const seedAudioList = require('./seedAudioList')
-// const seedData = seedAudioList.default;
 
 class VideoPlayerPlay extends Component {
   constructor(props) {
@@ -160,6 +158,7 @@ class VideoPlayerPlay extends Component {
       if (Math.abs(currentVideoProgress - previousTime) > 0.07) {
         this.getNextAudioClip(currentVideoProgress);
         // stop the video if user back the video
+
         if (this.currentClip) {
           this.currentClip.stop();
         }

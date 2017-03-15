@@ -8,6 +8,13 @@ module.exports = () => {
   const audioClipsUploadsPath = `${baseUrl}:${apiPort}/uploads`;
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';
   const youTubeApiKey = 'AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls';
+
+  // Video Player Setup
+  const videoPlayerWathcerInterval = 50; // Miliseconds
+  const videoPlayerWathcerDelay = 0.01; // Seconds
+  const seekToPositionDelayFix = 0.100; // Seconds
+
+
   return {
     apiUrl,
     apiVersion,
