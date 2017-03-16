@@ -3,11 +3,12 @@ import Navbar from '../../components/navbar/Navbar.jsx';
 import NavbarMaterial from '../../components/navbar/Navbar(material).jsx';
 import Footer from '../../components/footer/Footer.jsx';
 import { browserHistory } from 'react-router';
+
 const conf = require('./../../shared/config')();
+
 class App extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       editorTimerValue: 0,
       fetchJSONtoSearchPage: [],

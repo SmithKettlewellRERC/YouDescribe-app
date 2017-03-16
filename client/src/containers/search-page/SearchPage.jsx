@@ -2,18 +2,16 @@ import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
-const conf = require('./../../shared/config')();
-
 
 // import seedData from './seedData.js';
 // import seedDb from './seedDb.js';
 
+const conf = require('../../shared/config')();
+
+
 class SearchPage extends Component {
   constructor(props) {
     super(props);
-
-    // function bindings
-
     this.state = {
       videoAlreadyOnYD: [],
       videoNotOnYD: [],
