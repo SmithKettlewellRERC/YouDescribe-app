@@ -539,8 +539,9 @@ class AuthoringTool extends Component {
   }
 
   // As we have the file, now we need to get the file info and store metadata.
-  callbackFileSaved(blob) {
-    console.log('blob', blob)
+  callbackFileSaved(args) {
+    console.log('blob', args.audioBlob)
+    console.log('duration', args.duration)
     const self = this;
     const formData = new FormData();
     formData.append('title', this.state.videoTitle);
@@ -549,14 +550,13 @@ class AuthoringTool extends Component {
     formData.append('label', this.state.selectedTrackComponentLabel);
     formData.append('playbackType', this.state.selectedTrackComponentPlaybackType);
     formData.append('startTime', this.state.selectedTrackComponentStartTime);
-    formData.append('wavfile', blob);
-    console.log('Going to save start time at', this.state.selectedTrackComponentStartTime);
+    formData.append('endTime', this.state.selectedTrackComponentStartTime + args.duration);
+    formData.append('duration', args.duration);
+    formData.append('wavfile', args.audioBlob);
     const url = `${conf.apiUrl}/audioclips/${this.state.videoId}`;
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
     xhr.onload = function () {
-      // self.loadTracksComponentsFromData(JSON.parse(this.responseText).result);
-      console.log('RESULTTTTTT TEXT', JSON.parse(this.responseText))
       self.setState({
         videoData: JSON.parse(this.responseText).result,
       }, () => {
