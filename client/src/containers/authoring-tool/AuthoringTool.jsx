@@ -40,7 +40,7 @@ class AuthoringTool extends Component {
       selectedTrackComponentId: null,
       selectedTrackComponentPlaybackType: null,
       selectedTrackComponentStatus: null,
-      selectedTrackComponentStartTime: 0,
+      selectedTrackComponentAudioClipStartTime: 0,
       selectedTrackComponentLabel: '',
       selectedTrackComponentUrl: null,
     };
@@ -54,6 +54,7 @@ class AuthoringTool extends Component {
     this.setSelectedTrack = this.setSelectedTrack.bind(this);
   }
 
+  // 1
   componentDidMount() {
     this.fetchVideoData();
     this.scrollingFix();
@@ -189,7 +190,7 @@ class AuthoringTool extends Component {
         videoTitle: data.items[0].snippet.title,
         videoDescription: data.items[0].snippet.description,
         videoDuration: this.videoDurationInSeconds,
-        videoDurationToDisplay: convertSecondsToEditorFormat(convertISO8601ToSeconds(data.items[0].contentDetails.duration)),
+        videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
       }, () => {
         // console.log('Video duration to display -> ', this.state.videoDurationToDisplay);
         // console.log('Initializing audio recorder...')
@@ -438,6 +439,7 @@ class AuthoringTool extends Component {
     );
 
     this.setState({
+      // selectedTrackComponentAudioClipStartTime: this.state.currentVideoProgress,
       tracksComponents: tracks,
       selectedTrackComponentPlaybackType: playbackType,
       playheadTailHeight: this.state.playheadTailHeight < 189
@@ -468,13 +470,14 @@ class AuthoringTool extends Component {
 
     if (e.target.className === 'fa fa-circle') {
       // RECORD.
+      console.log(this.state.currentVideoProgress);
       this.setState({
-        selectedTrackComponentStartTime: this.state.currentVideoProgress,
+        selectedTrackComponentAudioClipStartTime: this.state.currentVideoProgress,
         selectedTrackComponentId: trackId,
         selectedTrackComponentPlaybackType: clickedTrackComponent.props.data.playback_type,
         selectedTrackComponentStatus: 'recording',
       }, () => {
-        this.updateTrackComponent('fa-stop');
+        this.updateTrackComponent('fa-stop', this.state.currentVideoProgress);
         if (this.state.selectedTrackComponentPlaybackType === 'inline') {
           this.state.videoPlayer.mute();
           this.state.videoPlayer.playVideo();
@@ -507,14 +510,14 @@ class AuthoringTool extends Component {
     }
   }
 
-  updateTrackComponent(classIcon) {
+  updateTrackComponent(classIcon, startTime = 0) {
     const tracks = this.state.tracksComponents.slice();
     for (let i = 0; i < tracks.length; i += 1) {
       if (this.state.selectedTrackComponentId === tracks[i].props.id) {
         const audioClip = {
           label: this.state.selectedTrackComponentLabel,
           playback_type: this.state.selectedTrackComponentPlaybackType,
-          start_time: 0,
+          start_time: startTime,
           url: this.state.selectedTrackComponentUrl,
         };
 
@@ -545,9 +548,9 @@ class AuthoringTool extends Component {
     formData.append('notes', this.state.notes);
     formData.append('label', this.state.selectedTrackComponentLabel);
     formData.append('playbackType', this.state.selectedTrackComponentPlaybackType);
-    formData.append('startTime', this.state.selectedTrackComponentStartTime);
+    formData.append('startTime', this.state.selectedTrackComponentAudioClipStartTime);
     formData.append('wavfile', blob);
-    console.log('Going to save start time at', this.state.selectedTrackComponentStartTime);
+    console.log('Going to save start time at', this.state.selectedTrackComponentAudioClipStartTime);
     const url = `${conf.apiUrl}/audioclips/${this.state.videoId}`;
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
@@ -596,7 +599,7 @@ class AuthoringTool extends Component {
         this.setState({
           selectedTrackComponentId: tracks[i].props.id,
           selectedTrackComponentPlaybackType: tracks[i].props.playBackType,
-          selectedTrackComponentStartTime: tracks[i].props.startTime,
+          selectedTrackComponentAudioClipStartTime: tracks[i].props.startTime,
           selectedTrackComponentLabel: tracks[i].props.label,
           selectedTrackComponentUrl: tracks[i].props.audioClipUrl,
         });
