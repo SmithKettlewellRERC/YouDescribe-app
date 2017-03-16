@@ -1,5 +1,6 @@
 #track {
   border-bottom: 1px solid #151515;
+  height: 27px;
   input {
     width: 100%;
     background: transparent;
@@ -17,12 +18,24 @@
   input:focus:-moz-placeholder{
     color: transparent!important;
   }
+  #track-info {
+    height: 27px;
+  }
   #type {
     position: relative;
     top: 1px;
     width: 15px;
     text-align: center;
     font-size: 10px;
+  }
+  #sinewave-container {
+    border-left: 1px solid #151515;
+    height: 26px;
+  }
+  #sinewave {
+    position: relative;
+    background-color: #444;
+    border-bottom: 1px solid #151515;
   }
   .fa-circle {
     color: red;
