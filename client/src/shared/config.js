@@ -14,6 +14,9 @@ module.exports = () => {
   const videoPlayerWathcerDelay = 0.01; // Seconds
   const seekToPositionDelayFix = 0.100; // Seconds
 
+  // User Interface Setup
+  const trackSinewaveAreaWidth = 755;
+
   return {
     apiUrl,
     apiVersion,
@@ -23,5 +26,6 @@ module.exports = () => {
     videoPlayerWathcerInterval,
     videoPlayerWathcerDelay,
     seekToPositionDelayFix,
+    trackSinewaveAreaWidth,
   };
 };
