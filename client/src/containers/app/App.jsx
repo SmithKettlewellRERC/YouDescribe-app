@@ -19,11 +19,11 @@ class App extends Component {
   }
 
   componentDidMount() {
-    gapi.load('auth2', function() {
-      gapi.auth2.init({
-        client_id: '858526011072-sakg4fjlvdiug24rsim2fm748pi1n4nc.apps.googleusercontent.com'
-      });
-    });
+    // gapi.load('auth2', function() {
+    //   gapi.auth2.init({
+    //     client_id: '858526011072-sakg4fjlvdiug24rsim2fm748pi1n4nc.apps.googleusercontent.com'
+    //   });
+    // });
   }
 
   onSignIn(googleUser) {

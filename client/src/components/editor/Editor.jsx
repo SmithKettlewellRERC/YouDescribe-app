@@ -9,20 +9,18 @@ import {
 import Playhead from '../playhead/Playhead.jsx';
 
 const Editor = (props) => {
-  const timeInSeconds = props.currentVideoTime;
-  const currentVideoTime = convertSecondsToEditorFormat(timeInSeconds);
   return (
     <div id="editor" className="w3-card-2">
       <div className="w3-card-4">
         <div id="video-time" className="w3-row">
           <div className="w3-col l3 m3 s3">
-            <div id="timer" className="w3-center">{currentVideoTime}</div>
+            <div id="timer" className="w3-center">{props.currentVideoProgressToDisplay}</div>
           </div>
           <div className="w3-col l9 m9 s9">
             <div id="timeline">
               <div>
                 <span className="w3-left">00:00:00:00</span>
-                <span className="w3-right">{props.videoDurationInEditorFormat}</span>
+                <span className="w3-right">{props.videoDurationToDisplay}</span>
               </div>
 
               {/* This is the line that need to add time mark*/}
@@ -47,7 +45,7 @@ const Editor = (props) => {
       </div>
 
       <div id="tracks">
-        {props.getState().tracksComponents}
+        {props.tracksComponents}
         <div id="add-track-row" className="w3-row w3-display-container">
           <div className="w3-col l3 m3 s3">
             <div className="cont">

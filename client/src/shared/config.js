@@ -14,12 +14,14 @@ module.exports = () => {
   const videoPlayerWathcerDelay = 0.01; // Seconds
   const seekToPositionDelayFix = 0.100; // Seconds
 
-
   return {
     apiUrl,
     apiVersion,
     audioClipsUploadsPath,
     youTubeApiUrl,
     youTubeApiKey,
+    videoPlayerWathcerInterval,
+    videoPlayerWathcerDelay,
+    seekToPositionDelayFix,
   };
 };

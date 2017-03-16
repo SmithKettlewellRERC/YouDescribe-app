@@ -4,16 +4,19 @@ import ActionIcon from '../action-icon/ActionIcon.jsx';
 class Track extends Component {
   constructor(props) {
     super(props);
-    this.labelText = props.playBackType === 'inline' ? 'I' : 'E';
-    this.styleButton = props.playBackType === 'inline' ? 'w3-yellow' : 'w3-purple';
+    this.label = this.props.data.label;
+    this.url = this.props.data.url;
+    this.labelText = props.data.playback_type === 'inline' ? 'I' : 'E';
+    this.styleButton = props.data.playback_type === 'inline' ? 'w3-yellow' : 'w3-purple';
+    this.wavesurfer = null;
   }
 
   componentDidMount() {
-    const wavesurfer = WaveSurfer.create({
-      container: `#wave${this.props.id}`,
-      waveColor: 'purple'
-    });
-    wavesurfer.load(this.props.audioClipUrl);
+    // this.wavesurfer = WaveSurfer.create({
+    //   container: `#wave${this.props.id}`,
+    //   waveColor: 'white'
+    // });
+    // this.wavesurfer.load(this.url);
   }
 
   render() {
@@ -25,7 +28,7 @@ class Track extends Component {
               <div id="type" className={this.styleButton}>{this.labelText}</div>
             </div>
             <div className="w3-left">
-              <input type="text" value={this.props.label} placeholder={'Enter some label'} onChange={this.props.updateTrackLabel} onKeyPress={(evt) => {
+              <input type="text" value={this.label} placeholder={'Enter some label'} onChange={this.props.updateTrackLabel} onKeyPress={(evt) => {
                 this.props.setSelectedTrack(evt, this.props.id)
               }} />
             </div>
