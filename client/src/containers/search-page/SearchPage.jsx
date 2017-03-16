@@ -261,7 +261,7 @@ class SearchPage extends Component {
       <div id="search-page">
 
         <div className="w3-container w3-indigo">
-          <h1>Already on YD</h1>
+          <h2>Videos with audio descriptions</h2>
         </div>
 
         <main>
@@ -275,7 +275,7 @@ class SearchPage extends Component {
         </main>
 
         <div className="w3-container w3-indigo">
-          <h1>Not on YD</h1>
+          <h2>Videos without audio descriptions</h2>
         </div>
 
         <main>
