@@ -157,10 +157,8 @@ class AuthoringTool extends Component {
     const self = this;
     console.log('6 -> initVideoPlayer', this.state.videoId);
     if (YT.loaded) {
-      console.log('YT.loaded')
       startVideo();
     } else {
-      console.log('YT. NOT loaded')
       window.onYouTubeIframeAPIReady = () => {
         startVideo();
       }
@@ -218,8 +216,8 @@ class AuthoringTool extends Component {
         videoDuration: this.videoDurationInSeconds,
         videoDurationToDisplay: convertSecondsToEditorFormat(convertISO8601ToSeconds(data.items[0].contentDetails.duration)),
       }, () => {
-        console.log('Video duration to display -> ', this.state.videoDurationToDisplay);
-        console.log('Initializing audio recorder...')
+        // console.log('Video duration to display -> ', this.state.videoDurationToDisplay);
+        // console.log('Initializing audio recorder...')
         initAudioRecorder();
         this.videoProgressWatcher();
       });
@@ -227,6 +225,13 @@ class AuthoringTool extends Component {
     .catch(() => {
       alert('Unable to load the video you are trying to edit.');
     });
+  }
+
+  componentWillUnmount() {
+    if (this.watcher) {
+      clearInterval(this.watcher);
+      this.watcher = null;
+    }    
   }
 
   // 8
