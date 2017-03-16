@@ -3,7 +3,7 @@ import Navbar from '../../components/navbar/Navbar.jsx';
 import NavbarMaterial from '../../components/navbar/Navbar(material).jsx';
 import Footer from '../../components/footer/Footer.jsx';
 import { browserHistory } from 'react-router';
-
+const conf = require('./../../shared/config')();
 class App extends Component {
   constructor(props) {
     super(props);
@@ -56,7 +56,7 @@ class App extends Component {
     let videoFromYoutube = [];
     let idsYTvideo;
 
-      fetch(`http://webng.io:8080/v1/videos/search?q=${q}`)
+      fetch(`${conf.apiUrl}/videos/search?q=${q}`)
       .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
@@ -67,7 +67,7 @@ class App extends Component {
       })
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
-        const urlfForYT = `https://www.googleapis.com/youtube/v3/videos?id=${ids}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+        const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
         fetch(urlfForYT)
         .then(response => response.json())
         .then((videoDataFromYDdatabase) => {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
+const conf = require('./../../shared/config')();
 
 
 // import seedData from './seedData.js';
@@ -38,10 +39,7 @@ class SearchPage extends Component {
     // be from the response of the fetch request intead of
     // vote_count + 1;
 
-    fetch('http://webng.io:8080/v1/wishlist', {
-      headers: {
-      'Content-Type': 'application/json'
-      },
+    fetch(`${conf.apiUrl}/wishlist`, {
       method: 'post',
       body: body,
     })
