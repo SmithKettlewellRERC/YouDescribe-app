@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'dev') {
   }));
   app.use(require('webpack-hot-middleware')(compiler));
 } else {
-  console.log('PRODUCTION MODE D');
+  console.log('PRODUCTION MODE');
 }
 
 app.use(express.static(path.join(__dirname, '..', 'client', 'build')));

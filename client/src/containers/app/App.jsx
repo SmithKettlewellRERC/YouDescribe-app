@@ -15,33 +15,16 @@ class App extends Component {
 
     // Global methods.
     this.getState = this.getState.bind(this);
-    this.getVideoProgress = this.getVideoProgress.bind(this);
   }
 
   componentDidMount() {
     gapi.load('auth2', function() {
-      gapi.auth2.init({
-        // client_id: '1056671841574-e1r4soednlur8hl2sl0ooumpvftt1s2k.apps.googleusercontent.com',
-      });
+      gapi.auth2.init();
     });
-  }
-
-  onSignIn(googleUser) {
-
   }
 
   getState() {
     return this.state;
-  }
-
-  getVideoProgress(currentVideoProgress) {
-    // if (this.state.editorTimerValue !== currentVideoProgress) {
-    //   this.setState({ editorTimerValue: currentVideoProgress });
-    // }
-  }
-
-  setActiveVideoIdAuthoringTool(videoId) {
-    this.setState({ activeVideoIdAuthoringTool: videoId });
   }
 
   // use algorithm to seperate

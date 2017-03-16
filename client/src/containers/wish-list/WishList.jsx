@@ -186,7 +186,7 @@ class WishList extends Component {
       <div id="wish-list">
 
         <div className="w3-container w3-indigo">
-          <h1>Most popular</h1>
+          <h1>Most requested</h1>
         </div>
 
         <main className="w3-row-padding">

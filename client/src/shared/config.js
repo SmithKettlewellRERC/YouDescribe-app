@@ -1,5 +1,5 @@
 module.exports = () => {
-  const isProduction = true;
+  const isProduction = false;
   const apiVersion = 'v1';
   const protocol = 'http';
   const apiPort = isProduction ? '8080' : '8080';
@@ -8,11 +8,20 @@ module.exports = () => {
   const audioClipsUploadsPath = `${baseUrl}:${apiPort}/uploads`;
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';
   const youTubeApiKey = 'AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls';
+
+  // Video Player Setup
+  const videoPlayerWathcerInterval = 50; // Miliseconds
+  const videoPlayerWathcerDelay = 0.01; // Seconds
+  const seekToPositionDelayFix = 0.100; // Seconds
+
   return {
     apiUrl,
     apiVersion,
     audioClipsUploadsPath,
     youTubeApiUrl,
     youTubeApiKey,
+    videoPlayerWathcerInterval,
+    videoPlayerWathcerDelay,
+    seekToPositionDelayFix,
   };
 };

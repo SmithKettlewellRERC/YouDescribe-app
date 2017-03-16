@@ -76,17 +76,10 @@ function gotStream(stream) {
     zeroGain.connect( audioContext.destination );
 }
 
-function initAudioRecorder() {
-    // const bt = document.getElementById('record');
-    // bt.addEventListener('click', function() {
-    //     toggleRecording();
-    // })
-    // console.log('Init audio recorder');
-
+function initAudioRecorder(callback) {
     if (!navigator.getUserMedia) {
         navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-    }
-
+    };
     navigator.getUserMedia({
         "audio": {
             "mandatory": {
