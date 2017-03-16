@@ -3,11 +3,11 @@ import Navbar from '../../components/navbar/Navbar.jsx';
 import NavbarMaterial from '../../components/navbar/Navbar(material).jsx';
 import Footer from '../../components/footer/Footer.jsx';
 import { browserHistory } from 'react-router';
+const conf = require('../../shared/config')();
 
 class App extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       editorTimerValue: 0,
       fetchJSONtoSearchPage: [],
@@ -56,7 +56,7 @@ class App extends Component {
     let videoFromYoutube = [];
     let idsYTvideo;
 
-      fetch(`http://webng.io:8080/v1/videos/search?q=${q}`)
+      fetch(`${conf.apiUrl}/videos/search?q=${q}`)
       .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
@@ -67,7 +67,7 @@ class App extends Component {
       })
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
-        const urlfForYT = `https://www.googleapis.com/youtube/v3/videos?id=${ids}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+        const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
         fetch(urlfForYT)
         .then(response => response.json())
         .then((videoDataFromYDdatabase) => {
@@ -85,7 +85,7 @@ class App extends Component {
           }, () => {
             browserHistory.push('/search');
             // console.log('video from YD: ', videoFromYDdatabase);
-            const urlForYD = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${q}&maxResults=50&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+            const urlForYD = `${conf.youTubeApiUrl}/search?part=snippet&q=${q}&maxResults=50&key=${conf.youTubeApiKey}`;
             fetch(urlForYD)
             .then(response => response.json())
             .then((videos) => {
