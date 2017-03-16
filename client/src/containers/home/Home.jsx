@@ -116,7 +116,7 @@ class Home extends Component {
       <div id="home">
 
         <header role="banner" title="" className="w3-container w3-indigo">
-          <h1>Most popular</h1>
+          <h2>Most popular</h2>
         </header>
 
         <main className="w3-row">

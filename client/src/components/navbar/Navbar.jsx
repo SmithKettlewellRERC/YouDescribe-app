@@ -66,9 +66,9 @@ const Navbar = (props) => {
               </Link>
           </logo>
 
-          <div role="searchbar" className="w3-left">
-            {/*<input type="text" className="w3-amber w3-border-0 w3-padding" style={{ width: '100%' }} />*/}
-            <SearchBar updateSearch={(searchValue) => this.props.updateSearch(searchValue)} />
+          <div role="search" className="w3-left">
+            {/* <input type="text" className="w3-amber w3-border-0 w3-padding" style={{ width: '100%' }} /> */}
+            <SearchBar updateSearch={searchValue => props.updateSearch(searchValue)} />
           </div>
 
           {/* Right-sided navbar links */}

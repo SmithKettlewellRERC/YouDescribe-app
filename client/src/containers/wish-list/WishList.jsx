@@ -26,9 +26,9 @@ class WishList extends Component {
       else e.target.className = 'w3-btn w3-white w3-text-red w3-left';
       console.log('heart activated and video request added to wishlist or incremented by 1');
     }
-    let body = JSON.stringify({
-        title,
-        id,
+    const body = JSON.stringify({
+      title,
+      id,
     })
     console.log('up vote this video: ', body)
 
@@ -39,32 +39,32 @@ class WishList extends Component {
 
     fetch(`${conf.apiUrl}/wishlist`, {
       headers: {
-      'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
       },
       method: 'post',
-      body: body,
+      body,
     })
     .then(res => res.json())
     .then((res) => {
       let new_count = res.result.votes;
       console.log('posted id')
       console.log('response is: ', res.message)
-      let newState = this.state.videos.slice();
+      const newState = this.state.videos.slice();
       newState[i] = (
-          <VideoCard
-            key={i}
-            id={id}
-            description={description}
-            thumbnailHighUrl={thumbnailHigh.url}
-            title={title}
-            author={author}
-            views={views}
-            time={time}
-            buttons='on'
-            voteCount={voteCount}
-            upVoteClick={(e) => this.upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time, voteCount)}
-            describeClick={()=> this.describeClick(id)}
-          />
+        <VideoCard
+          key={i}
+          id={id}
+          description={description}
+          thumbnailHighUrl={thumbnailHigh.url}
+          title={title}
+          author={author}
+          views={views}
+          time={time}
+          buttons="on"
+          voteCount={voteCount}
+          upVoteClick={e => this.upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time, voteCount)}
+          describeClick={() => this.describeClick(id)}
+        />
       )
       this.setState({
         videos: newState,
@@ -72,9 +72,13 @@ class WishList extends Component {
     })
   }
 
+  componentDidMount() {
+    this.renderVideosInWishlist();
+  }
+
   describeClick(id) {
     console.log('describe this video: ', id)
-    browserHistory.push('/authoring-tool/' + id)
+    browserHistory.push(`/authoring-tool/${id}`);
   }
 
   renderVideosInWishlist() {
@@ -83,7 +87,7 @@ class WishList extends Component {
     let ids;
     let dbResponse;
 
-	//replace this url with the wishlist database
+    // replace this url with the wishlist database
     fetch(`${conf.apiUrl}/wishlist`)
       .then(response => response.json())
       .then((response) => {
@@ -104,12 +108,12 @@ class WishList extends Component {
           for (let i = 0; i < data.items.length; i += 1) {
             const item = data.items[i];
             const id = item.id;
-            const thumbnailDefault = item.snippet.thumbnails.default;
-            const thumbnailMedium = item.snippet.thumbnails.medium;
+            // const thumbnailDefault = item.snippet.thumbnails.default;
+            // const thumbnailMedium = item.snippet.thumbnails.medium;
             const thumbnailHigh = item.snippet.thumbnails.high;
             let title = item.snippet.title;
             const description = item.snippet.description;
-            const author = item.snippet.channelTitle;;
+            const author = item.snippet.channelTitle;
             let voteCount;
             let views = item.statistics.viewCount;
             const publishedAt = new Date(item.snippet.publishedAt);
@@ -118,7 +122,7 @@ class WishList extends Component {
               if (elem._id === id) {
                 voteCount = elem.votes;
               }
-            })
+            });
 
             const now = Date.now();
             let time = now - publishedAt;
@@ -146,9 +150,9 @@ class WishList extends Component {
             }
 
             if (title.length > 100) title = `${title.slice(0, 100)}...`;
-            if (views >= 1000000000) views = `${(views/1000000000).toFixed(1)}B views`;
-            else if (views >= 1000000) views = `${(views/1000000).toFixed(1)}M views`;
-            else if (views >= 1000) views = `${(views/1000).toFixed(0)}K views`;
+            if (views >= 1000000000) views = `${(views / 1000000000).toFixed(1)}B views`;
+            else if (views >= 1000000) views = `${(views / 1000000).toFixed(1)}M views`;
+            else if (views >= 1000) views = `${(views / 1000).toFixed(0)}K views`;
             else if (views === 1) views = `${views} view`;
             else views = `${views} views`;
 
@@ -162,11 +166,11 @@ class WishList extends Component {
                 author={author}
                 views={views}
                 time={time}
-                buttons='on'
+                buttons="on"
                 voteCount={voteCount}
-                upVoteClick={(e) => this.upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time, voteCount)}
-                describeClick={()=> this.describeClick(id)}
-              />
+                upVoteClick={e => this.upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time, voteCount)}
+                describeClick={() => this.describeClick(id)}
+              />,
             );
           }
           this.setState({ videos }, () => {
@@ -176,17 +180,13 @@ class WishList extends Component {
       });
   }
 
-  componentDidMount() {
-    this.renderVideosInWishlist();
-  }
-
   // displayed on page
   render() {
     return (
       <div id="wish-list">
 
         <div className="w3-container w3-indigo">
-          <h1>Most requested</h1>
+          <h2>Most requested</h2>
         </div>
 
         <main className="w3-row-padding">
