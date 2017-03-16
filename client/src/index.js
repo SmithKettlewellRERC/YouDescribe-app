@@ -10,6 +10,7 @@ import AuthoringTool from './containers/authoring-tool/AuthoringTool.jsx';
 import VideoPage from './containers/video-page/VideoPage.jsx';
 import NotFound from './containers/not-found/NotFound.jsx';
 import WishList from './containers/wish-list/WishList.jsx';
+import Disclaimer from './containers/disclaimer/Disclaimer.jsx';
 
 ReactDOM.render((
   <Router history={browserHistory}>
@@ -19,6 +20,7 @@ ReactDOM.render((
       <Route path="/search" component={SearchPage} />
       <Route path="/video/:videoId" component={VideoPage} />
       <Route path="/wishlist" component={WishList} />
+      <Route path="/disclaimer" component={Disclaimer} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>
