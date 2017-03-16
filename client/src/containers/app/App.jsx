@@ -85,7 +85,7 @@ class App extends Component {
           }, () => {
             browserHistory.push('/search');
             // console.log('video from YD: ', videoFromYDdatabase);
-            const urlForYD = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${q}&maxResults=50&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+            const urlForYD = `${conf.youTubeApiUrl}/search?part=snippet&q=${q}&maxResults=50&key=${conf.youTubeApiKey}`;
             fetch(urlForYD)
             .then(response => response.json())
             .then((videos) => {
@@ -98,7 +98,7 @@ class App extends Component {
               idsYTvideo = videoFoundOnYTIds.join(',');
             })
             .then(() => {
-              const urlForYT = `https://www.googleapis.com/youtube/v3/videos?id=${idsYTvideo}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+              const urlForYT = `${conf.youTubeApiUrl}/videos?id=${idsYTvideo}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
               fetch(urlForYT)
                 .then(response => response.json())
                 .then((videoFromYoutubes) => {
