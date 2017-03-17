@@ -113,7 +113,7 @@ class Home extends Component {
   // displayed on page
   render() {
     return (
-      <div id="home">
+      <div id="home" title="YouDescribe home page">
 
         <header role="banner" title="" className="w3-container w3-indigo">
           <h2>Most popular</h2>

@@ -258,7 +258,7 @@ class SearchPage extends Component {
 
   render() {
     return (
-      <div id="search-page">
+      <div id="search-page" title="YouDescribe search results page">
 
         <div className="w3-container w3-indigo">
           <h2>Videos with audio descriptions</h2>

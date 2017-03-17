@@ -41,6 +41,8 @@ class AuthoringTool extends Component {
       selectedTrackComponentPlaybackType: null,
       selectedTrackComponentStatus: null,
       selectedTrackComponentAudioClipStartTime: 0,
+      selectedTrackComponentAudioClipSEndTime: -1,
+      selectedTrackComponentAudioClipDuration: -1,
       selectedTrackComponentLabel: '',
       selectedTrackComponentUrl: null,
     };

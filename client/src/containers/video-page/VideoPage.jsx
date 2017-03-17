@@ -26,7 +26,7 @@ class VideoPage extends Component {
 
   render() {
     return (
-      <div id="video-player">
+      <div id="video-player" title="YouDescribe video player page">
         <div id="video" className="w3-center">
           <VideoPlayer
             videoId={this.props.params.videoId}

@@ -48,12 +48,13 @@ const Navbar = (props) => {
 
   return (
     <header role="banner" id="navbar">
+      <div className="skip"><a href="#main" title="Skip to main content">main</a></div>
       {/* Navbar (sit on top) */}
       <div className="w3-top">
         <div className="w3-bar w3-white w3-card-2 w3-text-indigo">
-          <logo role="logo" title="YouDescribe logo">
+          <logo role="img" title="YouDescribe logo">
             <Link to="/" title="YouDescribe logo" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-small w3-hide-medium">
-              {/*<img
+              {/* <img
                 alt="YouDescribe logo"
                 height="24px"
                 src={path.join(__dirname, 'assets', 'img', 'logo_youdescribe.png')}

@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
-import {
-  convertISO8601ToSeconds,
-  convertSecondsToEditorFormat,
-} from '../../shared/helperFunctions';
 
 const conf = require('./../../shared/config')();
 
@@ -152,10 +148,10 @@ class VideoPlayerPlay extends Component {
 
       // time and videoState tracking log
       // console.log(currentVideoProgress,' state is: ', this.videoState)
-      
+
 
       // When the user back the video.
-      if (Math.abs(currentVideoProgress - previousTime) > 0.07) {
+      if (Math.abs(currentVideoProgress - previousTime) > 0.055) {
         this.getNextAudioClip(currentVideoProgress);
         // stop the video if user back the video
 
@@ -185,7 +181,7 @@ class VideoPlayerPlay extends Component {
         duration = 0;
       }
 
-    // load locations will take in: previousAudioClipStartTime, duration, nextAudioClipStartTime, 
+    // load locations will take in: previousAudioClipStartTime, duration, nextAudioClipStartTime,
       // console.log('previous event: ', previousAudioClipStartTime,'type: ',type, 'duration: ', duration, 'and the next event: ',nextAudioClipStartTime)
 
       // Click detection occur when the videoState changed, which init by YouTube onStateChange
@@ -195,7 +191,7 @@ class VideoPlayerPlay extends Component {
           loaded = false;
           console.log('run');
           // move the video position into middle of an inline video
-          if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline'){
+          if (((currentVideoProgress - previousAudioClipStartTime) <= duration) && type === 'inline') {
             this.currentClip = new Howl({
               src: [this.previousAudioClip.url],
               html5: true
@@ -208,7 +204,7 @@ class VideoPlayerPlay extends Component {
         // the condition remove the first unstart
         // resume for both manual resume and auto resume
         // playing or buffering state
-        if (this.videoState == 1 || this.videoState == 3) {
+        if (this.videoState === 1 || this.videoState === 3) {
           extendedAudioClipPlaying = false;
           //careful here: the different usually are 0.1
           if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
@@ -216,19 +212,19 @@ class VideoPlayerPlay extends Component {
               this.currentClip.stop();
             }
           }
-            if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
-              console.log('load location')
-              console.log('run ')
-              // move the video position into middle of an inline video
-              if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline'){
-                this.currentClip = new Howl({
-                  src: [this.previousAudioClip.url],
-                  html5: true
-                });
-                let playing = this.currentClip.play();
-                this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing)
-              }
+          if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
+            console.log('load location')
+            console.log('run ')
+            // move the video position into middle of an inline video
+            if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.15) && type === 'inline') {
+              this.currentClip = new Howl({
+                src: [this.previousAudioClip.url],
+                html5: true
+              });
+              const playing = this.currentClip.play();
+              this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing)
             }
+          }
         }
 
         // pause for only manual pause
@@ -285,7 +281,7 @@ class VideoPlayerPlay extends Component {
       }
 
       oldState = this.videoState;
-    }, 50);
+    }, 45);
   }
 
   componentDidMount() {
