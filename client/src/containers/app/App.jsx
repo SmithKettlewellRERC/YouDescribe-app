@@ -3,7 +3,8 @@ import Navbar from '../../components/navbar/Navbar.jsx';
 import NavbarMaterial from '../../components/navbar/Navbar(material).jsx';
 import Footer from '../../components/footer/Footer.jsx';
 import { browserHistory } from 'react-router';
-const conf = require('../../shared/config')();
+
+const conf = require('./../../shared/config')();
 
 class App extends Component {
   constructor(props) {
@@ -81,7 +82,7 @@ class App extends Component {
               idsYTvideo = videoFoundOnYTIds.join(',');
             })
             .then(() => {
-              const urlForYT = `https://www.googleapis.com/youtube/v3/videos?id=${idsYTvideo}&part=snippet,statistics&key=AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls`;
+              const urlForYT = `${conf.youTubeApiUrl}/videos?id=${idsYTvideo}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
               fetch(urlForYT)
                 .then(response => response.json())
                 .then((videoFromYoutubes) => {
