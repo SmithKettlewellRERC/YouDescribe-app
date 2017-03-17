@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
@@ -9,7 +10,7 @@ import Button from '../../components/button/Button.jsx';
 const conf = require('../../shared/config')();
 
 
-class SearchPage extends Component {
+class SearchPageTest extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,6 +18,75 @@ class SearchPage extends Component {
       videoNotOnYD: [],
     };
   }
+
+  letFetch(searchValue) {
+    if (typeof(searchValue) !== 'string') {
+      searchValue = '';
+    }
+    console.log('searching for: ', searchValue);
+    console.log('fetching the data to the state');
+    const q = encodeURIComponent(searchValue);
+    const serverVideoIds = [];
+    let ids;
+    let dbResponse;
+    let videoFromYDdatabase = [];
+    const videoFoundOnYTIds = [];
+    let videoFromYoutube = [];
+    let idsYTvideo;
+
+      fetch(`${conf.apiUrl}/videos/search?q=${q}`)
+      .then(response => response.json())
+      .then((response) => {
+        dbResponse = response.result;
+        for (let i = 0; i < dbResponse.length; i += 1) {
+          serverVideoIds.push(dbResponse[i]._id);
+        }
+        ids = serverVideoIds.join(',');
+      })
+      .then(() => {
+        // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
+        const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+        fetch(urlfForYT)
+        .then(response => response.json())
+        .then((videoDataFromYDdatabase) => {
+          videoFromYDdatabase = videoDataFromYDdatabase.items;
+          this.setState({
+            videoAlreadyOnYD: [],
+          }, () => {
+            this.renderVideoFromYD(dbResponse, videoFromYDdatabase);
+          });
+        })
+        .then(() => {
+            const urlForYD = `${conf.youTubeApiUrl}/search?part=snippet&q=${q}&maxResults=50&key=${conf.youTubeApiKey}`;
+            fetch(urlForYD)
+            .then(response => response.json())
+            .then((videos) => {
+              for (let i = 0; i < videos.items.length; i += 1) {
+                const temp = videos.items[i].id.videoId;
+                if (!(ids.indexOf(temp) > -1)) {
+                  videoFoundOnYTIds.push(videos.items[i].id.videoId);
+                }
+              }
+              idsYTvideo = videoFoundOnYTIds.join(',');
+            })
+            .then(() => {
+              const urlForYT = `${conf.youTubeApiUrl}/videos?id=${idsYTvideo}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+              fetch(urlForYT)
+                .then(response => response.json())
+                .then((videoFromYoutubes) => {
+                  videoFromYoutube = videoFromYoutubes.items;
+                  this.setState({
+                    videoNotOnYD: [],
+                  }, () => {
+                    this.renderVideoNotOnYD(videoFromYoutube);
+                  });
+                });
+            });
+          });
+      });
+  }
+
+
 
   upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time) {
     console.log('CLASS', e.target.className);
@@ -221,41 +291,16 @@ class SearchPage extends Component {
   }
 
   componentDidMount() {
-    console.log('component did mount: ');
-    const seedDb = this.props.getState().fetchJSONtoSearchPage[0];
-    const seedData1 = this.props.getState().fetchJSONtoSearchPage[1];
-    const seedData2 = this.props.getState().fetchJSONtoSearchPage[2];
-
-
-    this.renderVideoFromYD(seedDb, seedData1);
-    this.renderVideoNotOnYD(seedData2);
+    let currentSearchValue = this.props.getState().searchValue;
+    if (currentSearchValue !== '') {
+      this.letFetch(currentSearchValue);
+    }
   }
 
-  // component gonna update everytime app run fetch and SearchPage get props
   componentWillReceiveProps() {
-    console.log('component will receive props: ');
-    const seedDb = this.props.getState().fetchJSONtoSearchPage[0];
-    const seedData1 = this.props.getState().fetchJSONtoSearchPage[1];
-    const seedData2 = this.props.getState().fetchJSONtoSearchPage[2];
-
-    // this.dataToRender(seedDb, seedData1, seedData2)
-
-    if (seedData2.length == 0) {
-      this.setState({
-        videoAlreadyOnYD: [],
-      }, () => {
-        this.renderVideoFromYD(seedDb, seedData1);
-        console.log('rendering videos on YD section');
-      });
-    }
-    if (seedData2.length > 0) {
-      this.setState({
-        videoNotOnYD: [],
-      }, () => {
-        this.renderVideoNotOnYD(seedData2);
-        console.log('rendering videos not on YD section');
-      });
-    }
+    setTimeout( () => {
+      this.letFetch(this.props.getState().searchValue);
+    }, 0);
   }
 
   render() {
@@ -263,7 +308,7 @@ class SearchPage extends Component {
       <div id="search-page">
 
         <div className="w3-container w3-indigo">
-          <h1>Already on YD</h1>
+          <h1>Search YouDescribe: {this.props.getState().searchValue}</h1>
         </div>
 
         <main>
@@ -277,7 +322,7 @@ class SearchPage extends Component {
         </main>
 
         <div className="w3-container w3-indigo">
-          <h1>Not on YD</h1>
+          <h1>Search Youtube: {this.props.getState().searchValue}</h1>
         </div>
 
         <main>
@@ -294,4 +339,5 @@ class SearchPage extends Component {
   }
 }
 
-export default SearchPage;
+export default SearchPageTest;
+
