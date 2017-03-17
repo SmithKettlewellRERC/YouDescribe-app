@@ -9,9 +9,9 @@ var audioInput = null,
 var rafID = null;
 
 function saveAudio() {
-    // audioRecorder.exportWAV( doneEncoding );
+    audioRecorder.exportWAV( doneEncoding );
     // could get mono instead by saying
-    audioRecorder.exportMonoWAV( doneEncoding );
+    // audioRecorder.exportMonoWAV( doneEncoding );
 }
 
 function gotBuffers( buffers ) {
@@ -77,6 +77,8 @@ function gotStream(stream) {
 }
 
 function initAudioRecorder(callback) {
+    // var promise = navigator.mediaDevices.getUserMedia(constraints);
+
     if (!navigator.getUserMedia) {
         navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
     };

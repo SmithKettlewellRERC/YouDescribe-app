@@ -40,10 +40,11 @@ function exportWAV(type){
   var bufferL = mergeBuffers(recBuffersL, recLength);
   var bufferR = mergeBuffers(recBuffersR, recLength);
   var interleaved = interleave(bufferL, bufferR);
-  var dataview = encodeWAV(interleaved);
+  var obj = encodeWAV(interleaved);
+  var dataview = obj.view;
+  var duration = obj.duration;
   var audioBlob = new Blob([dataview], { type: type });
-
-  this.postMessage(audioBlob);
+  this.postMessage({audioBlob: audioBlob, duration: duration});
 }
 
 function exportMonoWAV(type){
@@ -51,7 +52,7 @@ function exportMonoWAV(type){
   var dataview = encodeWAV(bufferL, true);
   var audioBlob = new Blob([dataview], { type: type });
 
-  this.postMessage(audioBlob);
+  this.postMessage({audioBlob: audioBlob, duration: duration});
 }
 
 function getBuffers() {
@@ -138,5 +139,9 @@ function encodeWAV(samples, mono){
 
   floatTo16BitPCM(view, 44, samples);
 
-  return view;
+  // console.log('############ SAMPLES TIME ', samples, sampleRate, samples.length)
+
+  var duration = (samples.length / 2) / sampleRate;
+
+  return {view: view, duration: duration};
 }
