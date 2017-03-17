@@ -4,6 +4,7 @@ import { browserHistory } from 'react-router';
 
 const SearchBar = (props) => {
   const updateSearch = (e) => {
+    console.log('updatesearch', props.updateSearch);
     e.preventDefault();
     const value = e.target[0].value;
     // console.log('at click, the value is: ', value);

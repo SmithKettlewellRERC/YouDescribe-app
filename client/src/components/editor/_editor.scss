@@ -16,8 +16,12 @@
       color: #666;
   }
 
-  #timer, #timeline, #video-audio-track, #video-audio-sinewave, #track-info, #track-sinewave, #add-track, #add-track-space {
+  #timer, #video-audio-track, #video-audio-sinewave, #track-info, #track-sinewave, #add-track, #add-track-space {
     padding: 4px 12px;
+  }
+
+  #timeline {
+    padding: 4px 0px;
   }
 
   #timeline, #video-audio-sinewave, #track-sinewave, #add-track-space {

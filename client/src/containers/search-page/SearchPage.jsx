@@ -304,11 +304,12 @@ class SearchPageTest extends Component {
   }
 
   render() {
+    const searchTerm = `"${this.props.getState().searchValue}"`;
     return (
       <div id="search-page">
 
         <div className="w3-container w3-indigo">
-          <h1>Search YouDescribe: {this.props.getState().searchValue}</h1>
+          <h2>Videos with audio descriptions matching {searchTerm}</h2>
         </div>
 
         <main>
@@ -322,7 +323,7 @@ class SearchPageTest extends Component {
         </main>
 
         <div className="w3-container w3-indigo">
-          <h1>Search Youtube: {this.props.getState().searchValue}</h1>
+          <h2>Videos without audio descriptions matching {searchTerm}</h2>
         </div>
 
         <main>
