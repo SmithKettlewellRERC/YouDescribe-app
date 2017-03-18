@@ -12,6 +12,7 @@ class VideoPage extends Component {
     this.previousAudioClip = null;
     this.videoDurationInSeconds = -1;
     this.videoState = -1;
+    this.clicked = false;
 
     this.state = {
       videoId: props.params.videoId,
@@ -129,6 +130,7 @@ class VideoPage extends Component {
 
     function onPlayerStateChange(event) {
       self.videoState = event.data;
+      self.clicked = true;
       // const videoState = {
       //   '-1': 'unstarted',
       //   '0': 'ended',
@@ -170,7 +172,6 @@ class VideoPage extends Component {
     let previousAudioClipStartTime;
     let extendedAudioClipPlaying = false;
     let oldState = -1;
-    let loaded = false;
     let type;
     let duration;
 
@@ -187,25 +188,15 @@ class VideoPage extends Component {
 
     this.watcher = setInterval(() => {
       currentVideoProgress = this.state.videoPlayer.getCurrentTime();
+      // console.log(this.videoState)
 
       this.setState({
         currentVideoProgress,
       });
 
       // get that next audio clip right at 0;
-      if (previousTime == 0) {
+      if (currentVideoProgress == 0) {
         this.getNextAudioClip(currentVideoProgress);
-      }
-
-
-      // When the user go back and forward the video, it will detect the changed
-      if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
-        this.getNextAudioClip(currentVideoProgress);
-        // if (this.currentClip) {
-        //   this.currentClip.stop();
-        // }
-
-        // console.log('user back or forward the video')
       }
 
       if (this.nextAudioClip) {
@@ -224,13 +215,13 @@ class VideoPage extends Component {
         duration = 0;
       }
 
-
       console.log('previous audio clip start time: ', previousAudioClipStartTime,'type: ',type, 'duration: ', duration, 'and the next audio clip start time: ',nextAudioClipStartTime)
 
+      //init wheneever the videoState change
       if (this.videoState !== oldState) {
-        // if it loaded = true
-        if (loaded === true) {
-          loaded = false;
+        // when user manually pause and move the time bar, the new location should be reload so it can do a seek
+        if (oldState === 2 && this.videoState === 1) {
+
           console.log('run');
           // move the video position into middle of an inline video
           if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline') {
@@ -246,17 +237,9 @@ class VideoPage extends Component {
         // the condition remove the first unstart
         // resume for both manual resume and auto resume
         // playing or buffering state
-        if (this.videoState == 1 || this.videoState == 3) {
+        if (this.videoState == 1) {
           extendedAudioClipPlaying = false;
-          // careful here: the different usually are 0.1
-          if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
-            if (this.currentClip) {
-              this.currentClip.stop();
-            }
-          }
-          if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
-            console.log('load location');
-            console.log('run ');
+          // careful here: the different usually are 0.1, maek sure the value if above 0.12 at least
             // move the video position into middle of an inline video
             if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline') {
               this.currentClip = new Howl({
@@ -266,26 +249,44 @@ class VideoPage extends Component {
               const playing = this.currentClip.play();
               this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing);
             }
-          }
         }
 
-        // pause for only manual pause
-        if (this.videoState == 2 && !extendedAudioClipPlaying) {
-          // console.log('pause this: ', this.currentClip)
+        // the condition remove the first unstart
+        // resume for both manual resume and auto resume
+        // playing or buffering state
+        if (this.videoState == 3) {
+          this.getNextAudioClip(currentVideoProgress);
 
+          //this should stop the clip when you move the time bar, use to stop the extended audio clip
+          extendedAudioClipPlaying = false;
           if (this.currentClip) {
             this.currentClip.stop();
           }
-          loaded = true;
+          this.currentClip = null;
+
+          console.log('user back or forward the video')
+        }
+
+        // manual pause, when user pause but doesnt move the time bar, the video state become 2 and check where it extended pause or not. When extended audio clip is true, this condition not running. 
+        //if this condition run, the clip stop, the loaded equal true so that when it is play against which will init a state change to 1, it look to loaded value === true and run the resume function
+        if (this.videoState == 2 && !extendedAudioClipPlaying) {
+          // console.log('pause this: ', this.currentClip)
+
+            if (this.currentClip) {
+              this.currentClip.stop();
+            }
+            this.currentClip = null;
         }
       }
 
-      console.log('video is extended: ',extendedAudioClipPlaying)
+      console.log('clicked: ', this.clicked)
+      this.clicked = false;
+      // console.log('video is extended: ',extendedAudioClipPlaying)
 
 
       previousTime = currentVideoProgress;
 
-      if (currentVideoProgress >= nextAudioClipStartTime) {
+      if (currentVideoProgress > nextAudioClipStartTime) {
         const url = this.nextAudioClip.url;
         if (this.nextAudioClip.playback_type === 'inline') {
           console.log('### INLINE ###', url);
