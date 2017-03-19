@@ -26,7 +26,7 @@ class Home extends Component {
       .then((response) => {
         dbResponse = response.result;
         for (let i = 0; i < response.result.length; i += 1) {
-          serverVideoIds.push(response.result[i]._id);
+          serverVideoIds.push(response.result[i].youtube_id);
         }
         ids = serverVideoIds.join(',');
       })
@@ -36,6 +36,7 @@ class Home extends Component {
         fetch(url)
         .then(response => response.json())
         .then((data) => {
+          console.log('ADASADASDASDAS', data)
           const videos = this.state.videos.slice();
           for (let i = 0; i < data.items.length; i += 1) {
             const item = data.items[i];
