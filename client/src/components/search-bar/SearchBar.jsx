@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '../button/Button.jsx';
+import { browserHistory } from 'react-router';
 
 const SearchBar = (props) => {
   const updateSearch = (e) => {
@@ -8,6 +9,9 @@ const SearchBar = (props) => {
     const value = e.target[0].value;
     // console.log('at click, the value is: ', value);
     props.updateSearch(value);
+    // const q = encodeURIComponent(value);
+    // browserHistory.push(`/search?search_query=${q}`);
+    // this.props.route.push(`/search?search_query=${q}`);
   };
 
   return (
@@ -20,7 +24,7 @@ const SearchBar = (props) => {
             available in the first section. If not, Youtube videos without
             audio descriptions matching the search criteria will be listed in
             the second section and requests for any of those videos can be made`}
-            className="w3-padding-small" type="search" placeholder="Search"
+            className="w3-padding-small" type="search" placeholder="Search" defaultValue=""
           />
         </div>
         <div className="w3-left">
