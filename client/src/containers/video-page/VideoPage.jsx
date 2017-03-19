@@ -8,7 +8,7 @@ class VideoPage extends Component {
     super(props);
     this.watcher = null;
     this.videoState = -1;
-    this.previousClip = {};
+    // this.previousClip = {};
     this.currentClip = {};
     this.timeAtPause = 0;
     this.audioClipsCopy = {};
@@ -200,61 +200,73 @@ class VideoPage extends Component {
         currentVideoProgress,
       });
 
-      // if (currentVideoProgress > 0) {
+      // if (this.previousClip && (currentVideoProgress > this.previousClip.end_time)) this.currentClip.stop();
         for (let i = 0; i < this.audioClipsCopy.length; i += 1) {
-          console.log(Math.abs(+this.audioClipsCopy[i].start_time - currentVideoProgress));
-          console.log(.25);
+          // console.log(Math.abs(+this.audioClipsCopy[i].start_time - currentVideoProgress));
+          // console.log(.25);
           // if (Math.abs(+this.audioClipsCopy[i].start_time - currentVideoProgress) <= .25) {
-          if (currentVideoProgress >= +this.audioClipsCopy[i].start_time && currentVideoProgress < +this.audioClipsCopy[i].end_time) {
+          // if (currentVideoProgress >= +this.audioClipsCopy[i].start_time && currentVideoProgress < +this.audioClipsCopy[i].end_time) {
             switch (this.audioClipsCopy[i].playback_type) {
               case 'inline':
-                console.log('## INLINE ##');
-                this.currentClip = new Howl({
-                  src: [this.audioClipsCopy[i].url],
-                  html5: true,
-                });
-                this.currentClip.playbackType = 'inline';
-                this.currentClip.seek(currentVideoProgress - +this.audioClipsCopy[i].start_time, this.currentClip.play());
-                this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
-                // this.currentClip.play();
-                this.previousClip = this.currentClip;
-                break;
-              case 'extended':
-                console.log('## EXTENDED ##');
-                this.currentClip = new Howl({
-                  src: [this.audioClipsCopy[i].url],
-                  html5: true,
-                  onend: () => {
-                    this.state.videoPlayer.playVideo();
-                    // setTimeout(() => this.previousClip = {}, interval + 100);
-                  },
-                });
-                // console.log(this.currentClip);
-                // console.log(this.previousClip._src);
-                // console.log(this.currentClip._src);
-                // console.log('EQUAL?', this.previousClip._src === this.currentClip._src);
-                if (this.previousClip._src !== this.currentClip._src) {
-                  this.currentClip.playbackType = 'extended';
-                  // if (this.currentClip === this.previousClip) console.log('THEY ARE EQUAL');
+                // console.log('INLINE TRY');
+                if (currentVideoProgress >= +this.audioClipsCopy[i].start_time && currentVideoProgress < +this.audioClipsCopy[i].end_time) {
+                  console.log('## INLINE ##');
+                  this.currentClip = new Howl({
+                    src: [this.audioClipsCopy[i].url],
+                    html5: true,
+                  });
+                  this.currentClip.playbackType = 'inline';
                   this.currentClip.seek(currentVideoProgress - +this.audioClipsCopy[i].start_time, this.currentClip.play());
                   this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
-                  this.state.videoPlayer.pauseVideo();
                   // this.currentClip.play();
-                  this.previousClip = this.currentClip;
+                  // this.previousClip = this.currentClip;
+                }
+                break;
+              case 'extended':
+                if (Math.abs(+this.audioClipsCopy[i].start_time - currentVideoProgress) <= interval / 1000 ||
+                (+this.audioClipsCopy[i].start_time < 0.5 && currentVideoProgress <= interval / 500)) {
+                  console.log('## EXTENDED ##');
+                  this.currentClip = new Howl({
+                    src: [this.audioClipsCopy[i].url],
+                    html5: true,
+                    onend: () => {
+                      this.state.videoPlayer.playVideo();
+                      this.previousClip = this.currentClip;
+                      // setTimeout(() => this.previousClip = {}, interval + 200);
+                    },
+                    onload: () => {
+                      // console.log('ON LOAD ####', this.previousClip._src, this.currentClip._src)
+                      this.currentClip.playbackType = 'extended';
+                      this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
+                      // if (this.previousClip._src !== this.currentClip._src) {
+                        console.log('GOT THERE');
+                        this.currentClip.play();
+                      // } else {
+                      //   console.log('ELSE')
+                      // }
+                    },
+                    onloaderror: (errToLoad) => {
+                      console.log('Impossible to load', errToLoad)
+                    },
+                    onplay: () => {
+                      console.log('PLAYING');
+                      this.state.videoPlayer.pauseVideo();
+                    }
+                  });
                 }
                 break;
               default:
                 console.log('Audio clip format not labelled or incorrect');
             }
-            break;
-          }
+            // break;
+          // }
         }
       // }
     }, interval);
   }
 
   componentWillUnmount() {
-    if (this.currentClip && this.currentClip.stop()) this.currentClip.stop();
+    if (this.currentClip.stop) this.currentClip.stop();
     if (this.watcher) {
       clearInterval(this.watcher);
       this.watcher = null;
