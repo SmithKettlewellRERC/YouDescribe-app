@@ -36,7 +36,6 @@ class Home extends Component {
         fetch(url)
         .then(response => response.json())
         .then((data) => {
-          console.log('ADASADASDASDAS', data)
           const videos = this.state.videos.slice();
           for (let i = 0; i < data.items.length; i += 1) {
             const item = data.items[i];

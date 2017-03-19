@@ -108,6 +108,7 @@ class AuthoringTool extends Component {
         }
       });
     }
+    console.log(audioDescriptionsIdsUsers)
     this.setState({
       videoData,
       audioDescriptionsIds,
