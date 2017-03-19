@@ -217,7 +217,7 @@ class VideoPage extends Component {
                 this.currentClip.seek(currentVideoProgress - +this.audioClipsCopy[i].start_time, this.currentClip.play());
                 this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
                 // this.currentClip.play();
-                this.previousClip = this.currentClip;
+                // this.previousClip = this.currentClip;
                 break;
               case 'extended':
                 console.log('## EXTENDED ##');
@@ -226,7 +226,7 @@ class VideoPage extends Component {
                   html5: true,
                   onend: () => {
                     this.state.videoPlayer.playVideo();
-                    // setTimeout(() => this.previousClip = {}, interval + 100);
+                    setTimeout(() => this.previousClip = {}, interval + 100);
                   },
                 });
                 // console.log(this.currentClip);
@@ -254,7 +254,7 @@ class VideoPage extends Component {
   }
 
   componentWillUnmount() {
-    if (this.currentClip && this.currentClip.stop()) this.currentClip.stop();
+    if (this.currentClip) this.currentClip.stop();
     if (this.watcher) {
       clearInterval(this.watcher);
       this.watcher = null;
