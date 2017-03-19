@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
+import Slider from '../../components/slider/Slider.jsx';
 
 const conf = require('../../shared/config')();
 
@@ -31,9 +32,11 @@ class VideoPage extends Component {
       playheadPosition: 0,
       playheadTailHeight: 0,
       currentTimeInVideo: 0,
+      volume: 0,
     };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
+    this.changeVolume = this.changeVolume.bind(this);
   }
 
   // 1
@@ -341,6 +344,12 @@ class VideoPage extends Component {
     this.setState(newState);
   }
 
+  changeVolume(newVolumeValue) {
+    //change youtube and all the audio volume
+    const video = document.getElementById('playerAT');
+    video.setVolume(0);
+  }
+
   // 1
   render() {
     // console.log('1 -> render authoring tool')
@@ -354,8 +363,8 @@ class VideoPage extends Component {
             <div id="playerAT" />
           </div>
         </div>
-        <div className="w3-row w3-margin-top w3-hide-small w3-hide-medium">
-        </div>
+        <Slider changeVolume={this.changeVolume} />
+        {/*<div>Hello</div>*/}
       </main>
     );
   }
