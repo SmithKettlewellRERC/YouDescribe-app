@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 
 class Slider extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+    this.changeVolume = this.changeVolume.bind(this);
   }
 
   componentDidMount() {
@@ -17,12 +18,15 @@ class Slider extends Component {
           min: 0,
           max: 100,
         },
+
       });
 
-      slider.noUiSlider.on('change', function(){
-	      let newVolumeValue = slider.noUiSlider.get();
-        console.log(newVolumeValue);
-      });
+      slider.noUiSlider.on('change', this.changeVolume);
+  }
+
+  changeVolume() {
+	  let newVolume = slider.noUiSlider.get();
+    this.props.changeVolume(newVolume);
   }
 
   render() {

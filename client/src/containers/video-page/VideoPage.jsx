@@ -194,8 +194,7 @@ class VideoPage extends Component {
   videoProgressWatcher() {
     console.log('7 -> videoProgressWatcher')
 
-    let interval = 50;
-    let previousTime = 0;
+    const interval = 50;
     let nextAudioClipStartTime;
     let previousAudioClipStartTime;
     let type;
@@ -211,7 +210,7 @@ class VideoPage extends Component {
     let temp = true;
     this.watcher = setInterval(() => {
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
-      console.log(currentVideoProgress);
+      // console.log(currentVideoProgress);
 
 
       if (once) {
@@ -224,8 +223,6 @@ class VideoPage extends Component {
       });
 
       // get that next audio clip right at 0;
-
-
       if (this.nextAudioClip) {
         nextAudioClipStartTime = Number(this.nextAudioClip.start_time);
       } else {
@@ -242,7 +239,7 @@ class VideoPage extends Component {
         duration = 0;
       }
 
-      console.log('previous audio clip start time: ', previousAudioClipStartTime,'type: ', type, 'duration: ', duration, 'and the next audio clip start time: ',nextAudioClipStartTime)
+      // console.log('previous audio clip start time: ', previousAudioClipStartTime,'type: ', type, 'duration: ', duration, 'and the next audio clip start time: ',nextAudioClipStartTime)
 
       // let the inline video is played once
       if ((currentVideoProgress - previousAudioClipStartTime) > duration) {
@@ -264,7 +261,6 @@ class VideoPage extends Component {
         temp = false;
       }
 
-      
       if (currentVideoProgress > nextAudioClipStartTime) {
         const url = this.nextAudioClip.url;
         if (this.currentClip) {
@@ -302,8 +298,7 @@ class VideoPage extends Component {
         }
         this.getNextAudioClip(currentVideoProgress);
       }
-      
-    }, 50);
+    }, interval);
   }
 
   // 7
@@ -346,8 +341,8 @@ class VideoPage extends Component {
 
   changeVolume(newVolumeValue) {
     //change youtube and all the audio volume
-    const video = document.getElementById('playerAT');
-    video.setVolume(0);
+    // this.state.videoPlayer.setVolume(0);
+    this.currentClip.volume([0]);
   }
 
   // 1
@@ -363,8 +358,7 @@ class VideoPage extends Component {
             <div id="playerAT" />
           </div>
         </div>
-        <Slider changeVolume={this.changeVolume} />
-        {/*<div>Hello</div>*/}
+        <Slider changeVolume={newVolume => this.changeVolume(newVolume)} />
       </main>
     );
   }
