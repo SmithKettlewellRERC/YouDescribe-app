@@ -7,16 +7,36 @@ import { browserHistory } from 'react-router';
 const conf = require('./../../shared/config')();
 
 class App extends Component {
-  constructor(props) {
+  constructor(props, context) {
     super(props);
+    context.router;
     this.state = {
       editorTimerValue: 0,
-      fetchJSONtoSearchPage: [],
+      searchValue: '',
     };
 
     // Global methods.
     this.getState = this.getState.bind(this);
   }
+
+
+  // letFetch(searchValue) {
+  //   console.log('searching for: ',searchValue);
+  // }
+
+  componentWillMount() {
+    // gapi.load('auth2', function() {
+    //   gapi.auth2.init({
+    //     client_id: '858526011072-sakg4fjlvdiug24rsim2fm748pi1n4nc.apps.googleusercontent.com'
+    //   });
+    // });
+
+    const searchValue = this.props.location.query.search_query;
+    this.setState({
+      searchValue: searchValue,
+    });
+  }
+
 
   componentDidMount() {
     gapi.load('auth2', function() {
@@ -24,91 +44,28 @@ class App extends Component {
     });
   }
 
+
+
   getState() {
     return this.state;
   }
 
   // use algorithm to seperate
-  letFetch(searchValue) {
-    console.log('fetching the data to the state')
+  clickHandler(searchValue) {
+    console.log('clicked');
+    this.setState({
+      searchValue: searchValue,
+    });
     const q = encodeURIComponent(searchValue);
-    const serverVideoIds = [];
-    let ids;
-    let dbResponse;
-    let videoFromYDdatabase = [];
-    const videoFoundOnYTIds = [];
-    let videoFromYoutube = [];
-    let idsYTvideo;
-
-      fetch(`${conf.apiUrl}/videos/search?q=${q}`)
-      .then(response => response.json())
-      .then((response) => {
-        dbResponse = response.result;
-        for (let i = 0; i < dbResponse.length; i += 1) {
-          serverVideoIds.push(dbResponse[i]._id);
-        }
-        ids = serverVideoIds.join(',');
-      })
-      .then(() => {
-        // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
-        const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
-        fetch(urlfForYT)
-        .then(response => response.json())
-        .then((videoDataFromYDdatabase) => {
-          videoFromYDdatabase = videoDataFromYDdatabase.items;
-
-          // replace data in the state with new data,
-          // use ( and dont use) callback for next fetch
-          const fetchData = this.state.fetchJSONtoSearchPage.slice();
-          fetchData[0] = dbResponse;
-          fetchData[1] = videoFromYDdatabase;
-          fetchData[2] = [];
-          // console.log(fetchData);
-          this.setState({
-            fetchJSONtoSearchPage: fetchData,
-          }, () => {
-            browserHistory.push('/search');
-            // console.log('video from YD: ', videoFromYDdatabase);
-            const urlForYD = `${conf.youTubeApiUrl}/search?part=snippet&q=${q}&maxResults=50&key=${conf.youTubeApiKey}`;
-            fetch(urlForYD)
-            .then(response => response.json())
-            .then((videos) => {
-              for (let i = 0; i < videos.items.length; i += 1) {
-                const temp = videos.items[i].id.videoId;
-                if (!(ids.indexOf(temp) > -1)) {
-                  videoFoundOnYTIds.push(videos.items[i].id.videoId);
-                }
-              }
-              idsYTvideo = videoFoundOnYTIds.join(',');
-            })
-            .then(() => {
-              const urlForYT = `${conf.youTubeApiUrl}/videos?id=${idsYTvideo}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
-              fetch(urlForYT)
-                .then(response => response.json())
-                .then((videoFromYoutubes) => {
-                  videoFromYoutube = videoFromYoutubes.items;
-                  let fetchData = this.state.fetchJSONtoSearchPage.slice();
-                  fetchData[2] = videoFromYoutube;
-
-                  console.log(fetchData);
-
-                  this.setState({
-                    fetchJSONtoSearchPage: fetchData,
-                  }, () => {
-                    browserHistory.push('/search');
-                    // console.log('video from YT: ', videoFromYoutube);
-                  });
-                });
-            });
-          });
-        });
-      });
+    // this.context.router.push(`/search?search_query=${q}`);
+    // console.log(this.props)
+    browserHistory.push(`/search?search_query=${q}`);
   }
 
   render() {
     return (
       <div>
-        <Navbar updateSearch={searchValue => this.letFetch(searchValue)} />
+        <Navbar updateSearch={searchValue => this.clickHandler(searchValue)} />
         {React.cloneElement(this.props.children, {
           getState: this.getState,
           getVideoProgress: this.getVideoProgress,
