@@ -127,7 +127,11 @@ class AuthoringTool extends Component {
     if (!this.state.selectedAudioDescriptionId) {
       selectedAudioDescriptionId = this.state.audioDescriptionsIds[0];
     }
-    const audioClipsLength = this.state.audioDescriptionsIdsAudioClips[selectedAudioDescriptionId].length;
+
+    let audioClipsLength = 0;
+    if (this.state.audioDescriptionsIdsAudioClips && selectedAudioDescriptionId) {
+      audioClipsLength = this.state.audioDescriptionsIdsAudioClips[selectedAudioDescriptionId].length;
+    }
     const playheadTailHeight = audioClipsLength === 7 ? audioClipsLength * 27 : 189;
 
     this.setState({
@@ -143,7 +147,10 @@ class AuthoringTool extends Component {
     console.log('5 -> preLoadAudioClips');
     const self = this;
     const selectedAudioDescriptionId = this.state.selectedAudioDescriptionId;
-    const audioClips = this.state.audioDescriptionsIdsAudioClips[selectedAudioDescriptionId];
+    let audioClips = [];
+    if (this.state.audioDescriptionsIdsAudioClips && selectedAudioDescriptionId) {
+      audioClips = this.state.audioDescriptionsIdsAudioClips[selectedAudioDescriptionId];
+    }
 
     if (audioClips.length > 0) {
       const promises = [];
