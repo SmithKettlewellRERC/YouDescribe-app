@@ -10,9 +10,10 @@ class VideoPage extends Component {
     super(props);
     this.watcher = null;
     this.videoState = -1;
-    this.currentClip = {};
+    this.currentClip = null;
     this.timeAtPause = 0;
     this.audioClipsCopy = {};
+    this.previousVideoVolume = 0;
 
     this.state = {
       videoId: props.params.videoId,
@@ -31,6 +32,7 @@ class VideoPage extends Component {
       audioClips: [],
       videoPlayer: null,
       videoState: -1,
+      videoVolume: 0,
     };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
@@ -121,7 +123,7 @@ class VideoPage extends Component {
       selectedAudioDescriptionId,
     }, () => {
       this.preLoadAudioClips();
-    });    
+    });
   }
 
   // 5
@@ -234,8 +236,10 @@ class VideoPage extends Component {
 
   // 7
   videoProgressWatcher() {
-    console.log('7 -> videoProgressWatcher')
+    console.log('6 -> videoProgressWatcher')
+
     const interval = 50;
+
 
     if (this.watcher) {
       clearInterval(this.watcher);
@@ -244,9 +248,14 @@ class VideoPage extends Component {
 
     this.watcher = setInterval(() => {
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
+      const videoVolume = this.state.videoPlayer.getVolume();
+      console.log(videoVolume);
+
+      // if (!this.currentClip) this.state.videoPlayer.setVolume(100);
 
       this.setState({
         currentVideoProgress,
+        videoVolume,
       });
 
         for (let i = 0; i < this.audioClipsCopy.length; i += 1) {
@@ -257,12 +266,24 @@ class VideoPage extends Component {
                   this.currentClip = new Howl({
                     src: [this.audioClipsCopy[i].url],
                     html5: true,
+                    onload: () => {
+                      this.currentClip.playbackType = 'inline',
+                      this.currentClip.seek(currentVideoProgress - +this.audioClipsCopy[i].start_time, this.currentClip.play());
+                      this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
+                    },
+                    onloaderror: (errToLoad) => {
+                      console.log('Impossible to load', errToLoad)
+                    },
+                    onplay: () => {
+                      console.log('INLINE PLAYING');
+                      this.previousVideoVolume = videoVolume;
+                      this.state.videoPlayer.setVolume(10);
+                    },
+                    onend: () => {
+                      this.currentClip = null;
+                      this.state.videoPlayer.setVolume(this.previousVideoVolume);
+                    },
                   });
-                  this.currentClip.playbackType = 'inline';
-                  this.currentClip.seek(currentVideoProgress - +this.audioClipsCopy[i].start_time, this.currentClip.play());
-                  this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
-                  // this.currentClip.play();
-                  // this.previousClip = this.currentClip;
                 }
                 break;
               case 'extended':
@@ -272,10 +293,6 @@ class VideoPage extends Component {
                   this.currentClip = new Howl({
                     src: [this.audioClipsCopy[i].url],
                     html5: true,
-                    onend: () => {
-                      this.state.videoPlayer.playVideo();
-                      this.previousClip = this.currentClip;
-                    },
                     onload: () => {
                       this.currentClip.playbackType = 'extended';
                       this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
@@ -285,9 +302,13 @@ class VideoPage extends Component {
                       console.log('Impossible to load', errToLoad)
                     },
                     onplay: () => {
-                      console.log('PLAYING');
+                      console.log('EXTENDED PLAYING');
                       this.state.videoPlayer.pauseVideo();
-                    }
+                    },
+                    onend: () => {
+                      this.currentClip = null;
+                      this.state.videoPlayer.playVideo();
+                    },
                   });
                 }
                 break;
@@ -370,13 +391,16 @@ class VideoPage extends Component {
   // 1
   render() {
     return (
-      <main id="authoring-tool">
+      <main id="video-player">
         <div className="w3-row">
-          <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
+          <div
+            id="video"
+            className="w3-card-2"
+          >
             <div id="playerVP" />
           </div>
         </div>
-        {/*<Slider changeVolume={this.changeVolume} />*/}
+        {/* <Slider changeVolume={this.changeVolume} /> */}
       </main>
     );
   }
