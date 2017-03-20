@@ -1,5 +1,5 @@
 footer {
-  h5,h6 {
+  h5,h6,a {
     color: #ccc;
   }
   h5 {
@@ -7,5 +7,11 @@ footer {
   }
   h6 {
     font-size: 11px;
+  }
+  a {
+    text-decoration: underline;
+  }
+  a:hover {
+    color: #eee;
   }
 }

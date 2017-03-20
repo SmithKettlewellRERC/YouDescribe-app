@@ -39,7 +39,7 @@ class SearchPageTest extends Component {
       .then((response) => {
         dbResponse = response.result;
         for (let i = 0; i < dbResponse.length; i += 1) {
-          serverVideoIds.push(dbResponse[i]._id);
+          serverVideoIds.push(dbResponse[i].youtube_id);
         }
         ids = serverVideoIds.join(',');
       })
@@ -303,10 +303,14 @@ class SearchPageTest extends Component {
     }, 0);
   }
 
+  loadMoreResults() {
+    alert('Working in progress...');
+  }
+
   render() {
     const searchTerm = `"${this.props.getState().searchValue}"`;
     return (
-      <div id="search-page">
+      <div id="search-page" title="YouDescribe search results page">
 
         <div className="w3-container w3-indigo">
           <h2>Videos with audio descriptions matching {searchTerm}</h2>
@@ -318,7 +322,7 @@ class SearchPageTest extends Component {
           </div>
 
           <div className="w3-margin-top w3-center">
-            <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom">Load More</button>
+            <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom" onClick={this.loadMoreResults}>Load More</button>
           </div>
         </main>
 
@@ -333,7 +337,7 @@ class SearchPageTest extends Component {
         </main>
 
         <div id="load-more" className="w3-margin-top w3-center">
-          <Button title="Load more videos" color="w3-indigo" text="Load more" />
+          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
         </div>
       </div>
     );

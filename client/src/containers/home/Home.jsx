@@ -26,7 +26,7 @@ class Home extends Component {
       .then((response) => {
         dbResponse = response.result;
         for (let i = 0; i < response.result.length; i += 1) {
-          serverVideoIds.push(response.result[i]._id);
+          serverVideoIds.push(response.result[i].youtube_id);
         }
         ids = serverVideoIds.join(',');
       })
@@ -110,10 +110,14 @@ class Home extends Component {
     this.setState({ searchQuery: event.target.value });
   }
 
+  loadMoreResults() {
+    alert('Working in progress...')
+  }
+
   // displayed on page
   render() {
     return (
-      <div id="home">
+      <div id="home" title="YouDescribe home page">
 
         <header role="banner" title="" className="w3-container w3-indigo">
           <h2>Most popular</h2>
@@ -124,7 +128,7 @@ class Home extends Component {
         </main>
 
         <div className="w3-margin-top w3-center">
-          <Button title="Load more videos" color="w3-indigo" text="Load more" />
+          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
         </div>
 
       </div>

@@ -19,7 +19,6 @@ class WishList extends Component {
   }
 
   upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time, voteCount) {
-    console.log('CLASS', e.target.className);
     if (e.target.className === 'w3-btn w3-white w3-text-indigo w3-left' ||
       e.target.className === 'fa fa-heart') {
       if (e.target.className === 'fa fa-heart') e.target.parentElement.className = 'w3-btn w3-white w3-text-red w3-left';
@@ -82,7 +81,6 @@ class WishList extends Component {
   }
 
   renderVideosInWishlist() {
-    console.log('rendering ... ')
     const serverVideoIds = [];
     let ids;
     let dbResponse;
@@ -93,10 +91,9 @@ class WishList extends Component {
       .then((response) => {
         dbResponse = response.result;
         for (let i = 0; i < response.result.length; i += 1) {
-          serverVideoIds.push(response.result[i]._id);
+          serverVideoIds.push(response.result[i].youtube_id);
         }
         ids = serverVideoIds.join(',');
-        console.log
       })
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
@@ -183,7 +180,7 @@ class WishList extends Component {
   // displayed on page
   render() {
     return (
-      <div id="wish-list">
+      <div id="wish-list" title="YouDescribe wish list page">
 
         <div className="w3-container w3-indigo">
           <h2>Most requested</h2>
