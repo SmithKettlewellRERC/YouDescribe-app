@@ -64,7 +64,7 @@ class VideoPlayerPlay extends Component {
       }
     };
 
-    this.audioClips = this.audioClips.sort((a, b) => a.start_time - b.start_time);;
+    this.audioClips = this.audioClips.sort((a, b) => a.start_time - b.start_time);
 
 
     // Caching all audio clips???
@@ -76,7 +76,7 @@ class VideoPlayerPlay extends Component {
         // preload: false,
         volume: 1.0, // 0.0 -> 1.0
         onload: () => {
-          let duration = sound.duration();
+          const duration = sound.duration();
           console.log('create clip start at: ',audioObj.start_time, ' have duration: ', duration);
           // this.audioClipsDuration.push(duration)
           audioObj.duration = duration;
@@ -145,19 +145,23 @@ class VideoPlayerPlay extends Component {
 
     this.watcher = setInterval(() => {
       currentVideoProgress = this.videoPlayer.getCurrentTime();
+      console.log(currentVideoProgress)
 
       // time and videoState tracking log
       // console.log(currentVideoProgress,' state is: ', this.videoState)
 
+      if (previousTime === 0) {
+        this.getNextAudioClip(currentVideoProgress);
+      }
 
-      // When the user back the video.
+      // When the user go back and forward the video, it will detect the changed
       if (Math.abs(currentVideoProgress - previousTime) > 0.055) {
         this.getNextAudioClip(currentVideoProgress);
         // stop the video if user back the video
 
-        if (this.currentClip) {
-          this.currentClip.stop();
-        }
+        // if (this.currentClip) {
+        //   this.currentClip.stop();
+        // }
         // console.log('choice 1')
       }
 
@@ -182,7 +186,7 @@ class VideoPlayerPlay extends Component {
       }
 
     // load locations will take in: previousAudioClipStartTime, duration, nextAudioClipStartTime,
-      // console.log('previous event: ', previousAudioClipStartTime,'type: ',type, 'duration: ', duration, 'and the next event: ',nextAudioClipStartTime)
+      console.log('previous audio clip start time: ', previousAudioClipStartTime,'type: ',type, 'duration: ', duration, 'and the next audio clip start time: ',nextAudioClipStartTime)
 
       // Click detection occur when the videoState changed, which init by YouTube onStateChange
       if (this.videoState !== oldState) {
@@ -211,23 +215,23 @@ class VideoPlayerPlay extends Component {
             if (this.currentClip) {
               this.currentClip.stop();
             }
-          }
-          if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
-            console.log('load location')
-            console.log('run ')
-            // move the video position into middle of an inline video
-            if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.15) && type === 'inline') {
-              this.currentClip = new Howl({
-                src: [this.previousAudioClip.url],
-                html5: true
-              });
-              const playing = this.currentClip.play();
-              this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing)
+
+              console.log('load location')
+              console.log('run ')
+              // move the video position into middle of an inline video
+              if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline'){
+                this.currentClip = new Howl({
+                  src: [this.previousAudioClip.url],
+                  html5: true
+                });
+                let playing = this.currentClip.play();
+                this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing)
+              }
             }
           }
         }
 
-        // pause for only manual pause
+        // when someone manually pause,
         if (this.videoState == 2 && !extendedAudioClipPlaying) {
           // console.log('pause this: ', this.currentClip)
 
@@ -236,7 +240,7 @@ class VideoPlayerPlay extends Component {
           }
           loaded = true;
         }
-      }
+
 
       console.log('video is extended: ',extendedAudioClipPlaying)
 
