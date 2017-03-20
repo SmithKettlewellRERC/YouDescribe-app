@@ -318,7 +318,6 @@ class VideoPage extends Component {
             className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium"
           >
             <div id="playerVP" />
-            <DescriberChooser handleOption={this.handleOption} />
           </div>
 
         </div>
