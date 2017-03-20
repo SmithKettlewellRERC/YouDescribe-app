@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
-import {
-  convertISO8601ToSeconds,
-  convertSecondsToEditorFormat,
-} from '../../shared/helperFunctions';
 
 const conf = require('./../../shared/config')();
 
@@ -80,7 +76,7 @@ class VideoPlayerPlay extends Component {
         // preload: false,
         volume: 1.0, // 0.0 -> 1.0
         onload: () => {
-          let duration = sound.duration();
+          const duration = sound.duration();
           console.log('create clip start at: ',audioObj.start_time, ' have duration: ', duration);
           // this.audioClipsDuration.push(duration)
           audioObj.duration = duration;
@@ -189,7 +185,7 @@ class VideoPlayerPlay extends Component {
         duration = 0;
       }
 
-    // load locations will take in: previousAudioClipStartTime, duration, nextAudioClipStartTime, 
+    // load locations will take in: previousAudioClipStartTime, duration, nextAudioClipStartTime,
       console.log('previous audio clip start time: ', previousAudioClipStartTime,'type: ',type, 'duration: ', duration, 'and the next audio clip start time: ',nextAudioClipStartTime)
 
       // Click detection occur when the videoState changed, which init by YouTube onStateChange
@@ -199,7 +195,7 @@ class VideoPlayerPlay extends Component {
           loaded = false;
           console.log('run');
           // move the video position into middle of an inline video
-          if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline'){
+          if (((currentVideoProgress - previousAudioClipStartTime) <= duration) && type === 'inline') {
             this.currentClip = new Howl({
               src: [this.previousAudioClip.url],
               html5: true
@@ -212,7 +208,7 @@ class VideoPlayerPlay extends Component {
         // the condition remove the first unstart
         // resume for both manual resume and auto resume
         // playing or buffering state
-        if (this.videoState == 1 || this.videoState == 3) {
+        if (this.videoState === 1 || this.videoState === 3) {
           extendedAudioClipPlaying = false;
           //careful here: the different usually are 0.1
           if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
@@ -232,6 +228,7 @@ class VideoPlayerPlay extends Component {
                 this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing)
               }
             }
+          }
         }
 
         // when someone manually pause,
@@ -243,7 +240,7 @@ class VideoPlayerPlay extends Component {
           }
           loaded = true;
         }
-      }
+
 
       console.log('video is extended: ',extendedAudioClipPlaying)
 
@@ -288,7 +285,7 @@ class VideoPlayerPlay extends Component {
       }
 
       oldState = this.videoState;
-    }, 50);
+    }, 45);
   }
 
   componentDidMount() {

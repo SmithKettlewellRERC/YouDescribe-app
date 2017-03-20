@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import { Howl } from 'howler';
 import Notes from '../../components/notes/Notes.jsx';
 import Editor from '../../components/editor/Editor.jsx';
 import Track from '../../components/track/Track.jsx';
 import { convertISO8601ToSeconds, convertSecondsToEditorFormat } from '../../shared/helperFunctions';
-import { Howl } from 'howler';
 
 const conf = require('../../shared/config')();
 
@@ -29,7 +29,6 @@ class AuthoringTool extends Component {
       videoDuration: 0,
       videoTitle: '',
       videoDescription: '',
-      activeAudioDescription: null,
       currentVideoProgress: 0,
       currentVideoProgressToDisplay: '00:00:00:00',
       videoDurationToDisplay: '',
@@ -49,6 +48,8 @@ class AuthoringTool extends Component {
       selectedTrackComponentPlaybackType: null,
       selectedTrackComponentStatus: null,
       selectedTrackComponentAudioClipStartTime: 0,
+      selectedTrackComponentAudioClipSEndTime: -1,
+      selectedTrackComponentAudioClipDuration: -1,
       selectedTrackComponentLabel: '',
       selectedTrackComponentUrl: null,
     };
@@ -229,14 +230,155 @@ class AuthoringTool extends Component {
         this.videoProgressWatcher();
       });
     }).catch((err) => {
-      console.log('###', err, '###')
-      // alert('Unable to load the video you are trying to edit.');
+      console.log('Unable to load the video you are trying to edit.', err);
     });
   }
 
   // 8
   videoProgressWatcher() {
     console.log('8 -> videoProgressWatcher')
+    let previousTime = 0;
+    let currentVideoProgress = 0;
+    let nextAudioClipStartTime;
+    let previousAudioClipStartTime;
+    let extendedAudioClipPlaying = false;
+    let oldState = -1;
+    let loaded = false;
+    let type;
+    let duration;
+
+    if (this.watcher) {
+      clearInterval(this.watcher);
+      this.watcher = null;
+    }
+
+    this.watcher = setInterval(() => {
+      currentVideoProgress = this.state.videoPlayer.getCurrentTime();
+
+      this.setState({
+        currentVideoProgress,
+        currentVideoProgressToDisplay: convertSecondsToEditorFormat(currentVideoProgress),
+        playheadPosition: 755 * (currentVideoProgress / this.state.videoDuration),
+      });
+
+      // When the user seeks in the video.
+      if (Math.abs(currentVideoProgress - previousTime) > 0.025) {
+        console.log('SEEK AREA');
+        this.getNextAudioClip(currentVideoProgress);
+        // if (this.currentClip) {
+        //   this.currentClip.stop();
+        // }
+      }
+
+      if (this.nextAudioClip) {
+        nextAudioClipStartTime = Number(this.nextAudioClip.start_time);
+      } else {
+        nextAudioClipStartTime = Infinity;
+      }
+
+      if (this.previousAudioClip) {
+        previousAudioClipStartTime = Number(this.previousAudioClip.start_time);
+        type = this.previousAudioClip.playback_type;
+        duration = this.previousAudioClip.duration;
+      } else {
+        previousAudioClipStartTime = Infinity;
+        type = 'None';
+        duration = 0;
+      }
+
+      console.log('previous audio clip start time: ', previousAudioClipStartTime,'type: ',type, 'duration: ', duration, 'and the next audio clip start time: ',nextAudioClipStartTime)
+
+      if (this.videoState !== oldState) {
+        // if it loaded = true
+        if (loaded === true) {
+          loaded = false;
+          console.log('run');
+          // move the video position into middle of an inline video
+          if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline') {
+            this.currentClip = new Howl({
+              src: [this.previousAudioClip.url],
+              html5: true,
+            });
+            const playing = this.currentClip.play();
+            this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing);
+          }
+        }
+
+        // the condition remove the first unstart
+        // resume for both manual resume and auto resume
+        // playing or buffering state
+        if (this.videoState === 1 || this.videoState === 3) {
+          extendedAudioClipPlaying = false;
+          // careful here: the different usually are 0.1
+          if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
+            if (this.currentClip) {
+              this.currentClip.stop();
+            }
+          }
+          if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
+            console.log('load location');
+            console.log('run ');
+            // move the video position into middle of an inline video
+            if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline') {
+              this.currentClip = new Howl({
+                src: [this.previousAudioClip.url],
+                html5: true,
+              });
+              const playing = this.currentClip.play();
+              this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing);
+            }
+          }
+        }
+
+        // pause for only manual pause
+        if (this.videoState === 2 && !extendedAudioClipPlaying) {
+          // console.log('pause this: ', this.currentClip)
+
+          if (this.currentClip) {
+            this.currentClip.stop();
+          }
+          loaded = true;
+        }
+      }
+
+      previousTime = currentVideoProgress;
+
+      if (currentVideoProgress > nextAudioClipStartTime) {
+        const url = this.nextAudioClip.url;
+        if (this.nextAudioClip.playback_type === 'inline') {
+          console.log('### INLINE ###', url);
+          // pause the previous video, otherwise the playback gonna keep playing
+          if (this.currentClip) {
+            this.currentClip.pause();
+          }
+          console.log('HOWLING');
+          this.currentClip = new Howl({ src: [url], html5: true });
+          this.currentClip.play();
+          // let playing = this.currentClip.play();
+          // this.currentClip.seek(2, playing)
+        } else {
+          console.log('### EXTENDED ###', url);
+          // pause the previous video, otherwise the playback gonna keep playing
+          if (this.currentClip) {
+            this.currentClip.pause();
+          }
+          this.state.videoPlayer.pauseVideo();
+          extendedAudioClipPlaying = true;
+          this.currentClip = new Howl({
+            src: [url],
+            html5: true,
+            onend: () => {
+              extendedAudioClipPlaying = false;
+              this.state.videoPlayer.playVideo();
+            },
+          });
+          this.currentClip.play();
+        }
+        this.getNextAudioClip(currentVideoProgress);
+      }
+
+      oldState = this.videoState;
+    }, 10);
     this.loadExistingTracks();
   }
 

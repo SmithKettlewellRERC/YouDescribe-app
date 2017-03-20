@@ -48,12 +48,13 @@ const Navbar = (props) => {
 
   return (
     <header role="banner" id="navbar">
+      <div className="skip"><a href="#main" title="Skip to main content">main</a></div>
       {/* Navbar (sit on top) */}
       <div className="w3-top">
         <div className="w3-bar w3-white w3-card-2 w3-text-indigo">
-          <logo role="logo" title="YouDescribe logo">
+          <logo role="img" title="YouDescribe logo">
             <Link to="/" title="YouDescribe logo" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-small w3-hide-medium">
-              {/*<img
+              {/* <img
                 alt="YouDescribe logo"
                 height="24px"
                 src={path.join(__dirname, 'assets', 'img', 'logo_youdescribe.png')}
@@ -75,10 +76,10 @@ const Navbar = (props) => {
           <nav role="navigation" className="w3-right w3-hide-small w3-hide-medium">
             {/*<span className="w3-bar-item"><SearchBar /></span>*/}
             {/*<Link to="/authoring-tool/6hk6y8dhkeE" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>*/}
-            <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
+            {/*<Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>*/}
             {/*<div class="g-signin" data-onsuccess={this.props.onSignIn}></div>*/}
             {/*<a className="w3-right w3-padding-top" href="#" onClick={signOut}>Sign out</a>*/}
-            <div className="g-signin2 w3-right w3-padding-top w3-padding-right" onClick={onSignIn}></div>
+            {/*<div className="g-signin2 w3-right w3-padding-top w3-padding-right" onClick={onSignIn}></div>*/}
           </nav>
           {/* Hide right-floated links on small screens and replace them with a menu icon */}
 
@@ -92,8 +93,8 @@ const Navbar = (props) => {
       <nav id="mySidenav" className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-large" style={{ display: 'none' }}>
         <a href="javascript:void(0)" onClick={menuClose} className="w3-large w3-padding-16">Close ×</a>
           {/*}<Link to="/authoring-tool/6hk6y8dhkeE" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>*/}
-          <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
-          <Link to="/" className="w3-bar-item w3-button">SIGN IN</Link>
+          {/*<Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>*/}
+          {/*<Link to="/" className="w3-bar-item w3-button">SIGN IN</Link>*/}
       </nav>
     </header>
   );
