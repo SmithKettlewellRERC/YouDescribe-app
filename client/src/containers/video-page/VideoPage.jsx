@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
 
+import DescriberChooser from '../../components/describer-chooser/DescriberChooser.jsx';
+
 const conf = require('../../shared/config')();
 
 class VideoPage extends Component {
@@ -19,6 +21,7 @@ class VideoPage extends Component {
     this.state = {
       videoId: props.params.videoId,
       videoUrl: `${conf.apiUrl}/videos/${props.params.videoId}`,
+      currentVideoDescriber: '',
 
       // Video controls and data.
       videoData: {},
@@ -299,6 +302,11 @@ class VideoPage extends Component {
     this.setState(newState);
   }
 
+  handleOption(event) {
+    console.log(event.target.value);
+    this.setState({ currentVideoDescriber: event.target.value });
+  }
+
   // 1
   render() {
     // console.log('1 -> render authoring tool')
@@ -310,6 +318,7 @@ class VideoPage extends Component {
             className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium"
           >
             <div id="playerVP" />
+            <DescriberChooser handleOption={this.handleOption} />
           </div>
 
         </div>
