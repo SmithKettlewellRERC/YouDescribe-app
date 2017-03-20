@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import { Howl } from 'howler';
 import Notes from '../../components/notes/Notes.jsx';
 import Editor from '../../components/editor/Editor.jsx';
 import Track from '../../components/track/Track.jsx';
 import { convertISO8601ToSeconds, convertSecondsToEditorFormat } from '../../shared/helperFunctions';
-import { Howl } from 'howler';
 
 const conf = require('../../shared/config')();
 
@@ -42,6 +42,8 @@ class AuthoringTool extends Component {
       selectedTrackComponentPlaybackType: null,
       selectedTrackComponentStatus: null,
       selectedTrackComponentAudioClipStartTime: 0,
+      selectedTrackComponentAudioClipSEndTime: -1,
+      selectedTrackComponentAudioClipDuration: -1,
       selectedTrackComponentLabel: '',
       selectedTrackComponentUrl: null,
     };
@@ -230,12 +232,13 @@ class AuthoringTool extends Component {
         playheadPosition: 755 * (currentVideoProgress / this.state.videoDuration),
       });
 
-      // When the user back the video.
-      if (Math.abs(currentVideoProgress - previousTime) > 0.07) {
+      // When the user seeks in the video.
+      if (Math.abs(currentVideoProgress - previousTime) > 0.025) {
+        console.log('SEEK AREA');
         this.getNextAudioClip(currentVideoProgress);
-        if (this.currentClip) {
-          this.currentClip.stop();
-        }
+        // if (this.currentClip) {
+        //   this.currentClip.stop();
+        // }
       }
 
       if (this.nextAudioClip) {
@@ -253,6 +256,8 @@ class AuthoringTool extends Component {
         type = 'None';
         duration = 0;
       }
+
+      console.log('previous audio clip start time: ', previousAudioClipStartTime,'type: ',type, 'duration: ', duration, 'and the next audio clip start time: ',nextAudioClipStartTime)
 
       if (this.videoState !== oldState) {
         // if it loaded = true
@@ -317,6 +322,7 @@ class AuthoringTool extends Component {
           if (this.currentClip) {
             this.currentClip.pause();
           }
+          console.log('HOWLING');
           this.currentClip = new Howl({ src: [url], html5: true });
           this.currentClip.play();
           // let playing = this.currentClip.play();
@@ -343,7 +349,7 @@ class AuthoringTool extends Component {
       }
 
       oldState = this.videoState;
-    }, 50);
+    }, 10);
 
     this.loadExistingTracks();
   }

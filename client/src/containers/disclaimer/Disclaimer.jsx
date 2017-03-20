@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Disclaimer = () => (
-  <div id="disclaimer">
+  <div id="disclaimer" title="YouDescribe disclaimer page">
 
     <header role="banner" title="Disclaimer heading" className="w3-container w3-indigo">
       <h2>Disclaimer</h2>

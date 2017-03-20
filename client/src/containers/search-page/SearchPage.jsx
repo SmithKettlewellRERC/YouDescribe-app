@@ -306,7 +306,7 @@ class SearchPageTest extends Component {
   render() {
     const searchTerm = `"${this.props.getState().searchValue}"`;
     return (
-      <div id="search-page">
+      <div id="search-page" title="YouDescribe search results page">
 
         <div className="w3-container w3-indigo">
           <h2>Videos with audio descriptions matching {searchTerm}</h2>

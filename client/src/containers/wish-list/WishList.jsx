@@ -183,7 +183,7 @@ class WishList extends Component {
   // displayed on page
   render() {
     return (
-      <div id="wish-list">
+      <div id="wish-list" title="YouDescribe wish list page">
 
         <div className="w3-container w3-indigo">
           <h2>Most requested</h2>
