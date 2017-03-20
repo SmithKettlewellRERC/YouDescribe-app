@@ -4,7 +4,6 @@ import Notes from '../../components/notes/Notes.jsx';
 import Editor from '../../components/editor/Editor.jsx';
 import Track from '../../components/track/Track.jsx';
 import { convertISO8601ToSeconds, convertSecondsToEditorFormat } from '../../shared/helperFunctions';
-import { Howl } from 'howler';
 
 const conf = require('../../shared/config')();
 

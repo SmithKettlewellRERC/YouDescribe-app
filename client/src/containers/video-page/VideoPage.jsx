@@ -120,17 +120,26 @@ class VideoPage extends Component {
     }
 
     function onPlayerStateChange(event) {
-      console.log('## STATE CHANGE ##');
+      console.log('## STATE CHANGE ##', event.data);
       self.videoState = event.data;
       self.setState({ videoState: event.data }, () => {
         switch (event.data) {
+          case 0:
+            // ended
+            if (self.watcher) {
+              clearInterval(self.watcher);
+              self.watcher = null;
+            }
+            break;
           case 1:
+            // playing
             if (self.currentClip && self.currentClip.playbackType === 'extended') {
               self.currentClip.stop();
             }
             self.videoProgressWatcher();
             break;
           case 2:
+            // paused
             self.audioClipsCopy = self.state.audioClips.slice();
             if (self.currentClip && self.currentClip.playbackType === 'inline') {
               self.currentClip.pause();
@@ -138,6 +147,13 @@ class VideoPage extends Component {
             if (self.watcher) {
               clearInterval(self.watcher);
               self.watcher = null;
+            }
+            break;
+          case 3:
+            // buffering
+            self.audioClipsCopy = self.state.audioClips.slice();
+            if (self.currentClip && self.currentClip.playbackType === 'inline') {
+              self.currentClip.pause();
             }
             break;
           default:
