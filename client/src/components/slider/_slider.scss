@@ -1,34 +1,51 @@
-#slider {
-  width: 180px;
-  height: 10px;
-  // margin: auto;
-  // padding-top: 15px;
-  margin-top: 20px;
-  margin-right: 20px;
-  margin-left: 440px;
-}
-
-.no-ui-slider {
-	width: 100%;
-}
-
-.noUi-base {
-  width: 100%;
-  height: 100%;
+.sliderRail {
+  width: 200px;
+  height: 16px;
+  border: 1px solid #999999;
   position: relative;
+  margin: 0px 3px 0px 3px;
+}
+.sliderThumb:focus{
+  border: 1px solid #000;
+  background-color: #00CCCC;
 }
 
-.noUi-base {
-  width: 100%;
-  height: 100%;
-  position: relative;
+
+
+.sliderThumb {
+  margin: 0px;
+  padding: 0px;
+  width: 16px;
+  height: 16px;
+  background: #EEEEEE;
+  border: 1px solid #999999;
+  position: absolute;
+  left: 92px;
 }
 
-.noUi-horizontal .noUi-handle {
-  width: 25px;
-  height: 25px;
-  left: -13px;
-  top: -7px;
-  border-radius: 50%;
+.floatLeft {
+  float:left;
 }
 
+
+/* clearfix */
+.clearfix:after {
+content: ".";
+display: block;
+clear: both;
+visibility: hidden;
+line-height: 0;
+height: 0;
+}
+
+.clearfix {
+display: inline-block;
+}
+
+html[xmlns] .clearfix {
+display: block;
+}
+
+* html .clearfix {
+height: 1%;
+}

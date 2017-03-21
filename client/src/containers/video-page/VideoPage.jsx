@@ -33,6 +33,7 @@ class VideoPage extends Component {
       videoPlayer: null,
       videoState: -1,
       videoVolume: 0,
+      sliderValue: 50,
     };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
@@ -181,6 +182,7 @@ class VideoPage extends Component {
             break;
           case 1:
             // playing
+            // self.state.videoPlayer.setVolume(self.state.sliderValue);
             if (self.currentClip && self.currentClip.playbackType === 'extended') {
               self.currentClip.stop();
             }
@@ -249,6 +251,7 @@ class VideoPage extends Component {
     this.watcher = setInterval(() => {
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
       const videoVolume = this.state.videoPlayer.getVolume();
+
       console.log(videoVolume);
 
       // if (!this.currentClip) this.state.videoPlayer.setVolume(100);
@@ -257,6 +260,10 @@ class VideoPage extends Component {
         currentVideoProgress,
         videoVolume,
       });
+
+      // this.state.videoPlayer.setVolume(100 - this.state.sliderValue);
+      this.state.videoPlayer.setVolume(this.state.sliderValue);
+      this.state.currentClip.volume(this.state.currentClipVolume)
 
         for (let i = 0; i < this.audioClipsCopy.length; i += 1) {
             switch (this.audioClipsCopy[i].playback_type) {
@@ -320,13 +327,13 @@ class VideoPage extends Component {
   }
 
   componentWillUnmount() {
-    if (this.currentClip.stop) this.currentClip.stop();
-    if (this.watcher) {
-      clearInterval(this.watcher);
-      this.watcher = null;
-    }
-    this.currentClip = null;
+    clearInterval(this.watcher);
     this.watcher = null;
+    if (this.currentClip && this.currentClip.stop) this.currentClip.stop();
+    this.currentClip = null;
+    // if (this.watcher) {
+    // }
+    // this.watcher = null;
   }
 
   getNextAudioClip(currentVideoProgress) {
@@ -390,6 +397,7 @@ class VideoPage extends Component {
 
   // 1
   render() {
+    console.log(this.state.sliderValue);
     return (
       <main id="video-player">
         <div className="w3-row">
@@ -400,7 +408,7 @@ class VideoPage extends Component {
             <div id="playerVP" />
           </div>
         </div>
-        {/* <Slider changeVolume={this.changeVolume} /> */}
+        <Slider updateState={this.updateState} />
       </main>
     );
   }
