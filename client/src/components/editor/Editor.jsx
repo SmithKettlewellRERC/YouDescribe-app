@@ -19,7 +19,7 @@ const Editor = (props) => {
           <div className="w3-col l9 m9 s9">
             <div id="timeline">
               <div>
-                <span className="w3-left">00:00:00:00</span>
+                <span className="w3-left">{props.currentVideoProgressToDisplay}</span>
                 <span className="w3-right">{props.videoDurationToDisplay}</span>
               </div>
 

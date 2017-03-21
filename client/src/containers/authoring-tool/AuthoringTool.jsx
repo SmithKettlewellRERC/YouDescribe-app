@@ -11,11 +11,10 @@ class AuthoringTool extends Component {
   constructor(props) {
     super(props);
     this.watcher = null;
-    this.nextAudioClip = null;
-    this.currentClip = null;
-    this.previousAudioClip = null;
-    this.videoDurationInSeconds = -1;
     this.videoState = -1;
+    this.currentClip = null;
+    this.audioClipsCopy = {};
+    this.videoDurationInSeconds = -1;
 
     this.state = {
       allSet: false,
@@ -26,9 +25,9 @@ class AuthoringTool extends Component {
       // Video controls and data.
       videoData: {},
       videoPlayer: null,
-      videoDuration: 0,
       videoTitle: '',
       videoDescription: '',
+      videoState: -1,
       currentVideoProgress: 0,
       currentVideoProgressToDisplay: '00:00:00:00',
       videoDurationToDisplay: '',
@@ -68,6 +67,14 @@ class AuthoringTool extends Component {
     this.scrollingFix();
   }
 
+  getAudioClips() {
+    if (this.state.audioDescriptionsIdsAudioClips && this.state.selectedAudioDescriptionId) {
+      return this.state.audioDescriptionsIdsAudioClips[this.state.selectedAudioDescriptionId];
+    } else {
+      return [];
+    }
+  }
+
   // 2. The main get request that gets the json from our api.
   fetchVideoData() {
     console.log('2 -> fetchingVideoData');
@@ -77,14 +84,15 @@ class AuthoringTool extends Component {
     xhr.onload = function () {
       if (xhr.readyState === 4) {
         const response = JSON.parse(xhr.response);
-        const result = response.result
-          ? response.result
-          : {};
-        self.setState({
-          videoData: result,
-        }, () => {
+        if (response.result) {
+          self.setState({
+            videoData: response.result,
+          }, () => {
+            self.parseVideoData();
+          });
+        } else {
           self.parseVideoData();
-        });
+        }
       }
     };
     xhr.send();
@@ -110,7 +118,6 @@ class AuthoringTool extends Component {
         }
       });
     }
-    console.log(audioDescriptionsIdsUsers)
     this.setState({
       videoData,
       audioDescriptionsIds,
@@ -131,7 +138,7 @@ class AuthoringTool extends Component {
 
     let audioClipsLength = 0;
     if (this.state.audioDescriptionsIdsAudioClips && selectedAudioDescriptionId) {
-      audioClipsLength = this.state.audioDescriptionsIdsAudioClips[selectedAudioDescriptionId].length;
+      audioClipsLength = this.getAudioClips().length;
     }
     const playheadTailHeight = audioClipsLength === 7 ? audioClipsLength * 27 : 189;
 
@@ -147,33 +154,72 @@ class AuthoringTool extends Component {
   preLoadAudioClips() {
     console.log('5 -> preLoadAudioClips');
     const self = this;
-    const selectedAudioDescriptionId = this.state.selectedAudioDescriptionId;
-    let audioClips = [];
-    if (this.state.audioDescriptionsIdsAudioClips && selectedAudioDescriptionId) {
-      audioClips = this.state.audioDescriptionsIdsAudioClips[selectedAudioDescriptionId];
-    }
+
+    const audioClips = this.getAudioClips();
 
     if (audioClips.length > 0) {
       const promises = [];
       audioClips.forEach((audioObj, idx) => {
-        console.log(idx + 1, 'audio description loaded', audioObj.url);
+        console.log(audioObj.url);
         promises.push(fetch(audioObj.url));
       });
       Promise.all(promises).then(function() {
         console.log('All audios loaded.');
-        self.initVideoPlayer();
+        self.getVideoDuration();
       })
       .catch(function(errorAllAudios) {
         console.log('ERROR LOADING AUDIOS -> ', errorAllAudios);
       });
     } else {
-      self.initVideoPlayer();
+      self.getVideoDuration();
     }
   }
 
   // 6
+  getVideoDuration() {
+    const self = this;
+    console.log('6 -> getVideoDuration');
+    const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet&key=${conf.youTubeApiKey}`;
+    fetch(url).then(response => response.json()).then((data) => {
+      this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
+      this.setState({
+        videoTitle: data.items[0].snippet.title,
+        videoDescription: data.items[0].snippet.description,
+        videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
+      }, () => {
+        self.loadExistingTracks();
+      });
+    }).catch((err) => {
+      console.log('Unable to load the video you are trying to edit.', err);
+    });
+  }
+
+  // 7
+  loadExistingTracks() {
+    console.log('7 -> loadTracksComponents');
+    const tracksComponents = [];
+    if (this.getAudioClips().length > 0) {
+      this.getAudioClips().forEach((audioClip, idx) => {
+        tracksComponents.push(<Track
+          key={idx}
+          id={idx}
+          data={audioClip}
+          actionIconClass={'fa-step-forward'}
+          getState={this.getState}
+          recordAudioClip={this.recordAudioClip}
+          updateTrackLabel={this.updateTrackLabel}
+          setSelectedTrack={this.setSelectedTrack}
+        />);
+      });
+    }
+    this.setState({ tracksComponents }, () => {
+      this.initVideoPlayer();
+    });
+  }
+
+  // 8
   initVideoPlayer() {
-    console.log('6 -> initVideoPlayer', this.state.videoId);
+    console.log('8 -> initVideoPlayer -> YouTube Id: ', this.state.videoId);
     const self = this;
     if (YT.loaded) {
       startVideo();
@@ -184,11 +230,53 @@ class AuthoringTool extends Component {
     }
 
     function onVideoPlayerReady() {
-      self.getVideoDuration();
+      self.audioClipsCopy = self.getAudioClips().slice();
+      initAudioRecorder();
     }
 
     function onPlayerStateChange(event) {
       self.videoState = event.data;
+      self.setState({ videoState: event.data }, () => {
+        switch (event.data) {
+          // ended
+          case 0:
+            if (self.watcher) {
+              clearInterval(self.watcher);
+              self.watcher = null;
+            }
+            break;
+          // playing
+          case 1:
+            if (self.currentClip && self.currentClip.playbackType === 'extended') {
+              self.currentClip.stop();
+            }
+            self.videoProgressWatcher();
+            break;
+          // paused
+          case 2:
+            self.audioClipsCopy = self.getAudioClips().slice();
+            if (self.currentClip && self.currentClip.playbackType === 'inline') {
+              self.currentClip.pause();
+            }
+            if (self.watcher) {
+              clearInterval(self.watcher);
+              self.watcher = null;
+            }
+            break;
+          // buffering
+          case 3:
+            self.audioClipsCopy = self.getAudioClips().slice();
+            if (self.currentClip && self.currentClip.playbackType === 'inline') {
+              self.currentClip.pause();
+            }
+            break;
+          default:
+            if (self.watcher) {
+              clearInterval(self.watcher);
+              self.watcher = null;
+            }
+        }
+      });
     }
 
     function startVideo() {
@@ -212,40 +300,11 @@ class AuthoringTool extends Component {
     }
   }
 
-  // 7
-  getVideoDuration() {
-    console.log('7 -> getVideoDuration');
-    const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet&key=${conf.youTubeApiKey}`;
-    fetch(url).then(response => response.json()).then((data) => {
-      this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
-      this.setState({
-        videoTitle: data.items[0].snippet.title,
-        videoDescription: data.items[0].snippet.description,
-        videoDuration: this.videoDurationInSeconds,
-        videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
-      }, () => {
-        // console.log('Video duration to display -> ', this.state.videoDurationToDisplay);
-        // console.log('Initializing audio recorder...')
-        initAudioRecorder();
-        this.videoProgressWatcher();
-      });
-    }).catch((err) => {
-      console.log('Unable to load the video you are trying to edit.', err);
-    });
-  }
-
-  // 8
+  // 9
   videoProgressWatcher() {
-    console.log('8 -> videoProgressWatcher')
-    let previousTime = 0;
-    let currentVideoProgress = 0;
-    let nextAudioClipStartTime;
-    let previousAudioClipStartTime;
-    let extendedAudioClipPlaying = false;
-    let oldState = -1;
-    let loaded = false;
-    let type;
-    let duration;
+    console.log('9 -> videoProgressWatcher')
+
+    const interval = 50;
 
     if (this.watcher) {
       clearInterval(this.watcher);
@@ -253,159 +312,77 @@ class AuthoringTool extends Component {
     }
 
     this.watcher = setInterval(() => {
-      currentVideoProgress = this.state.videoPlayer.getCurrentTime();
+      const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
+      const videoVolume = this.state.videoPlayer.getVolume();
+      const playheadPosition = 755 * (currentVideoProgress / this.videoDurationInSeconds);
 
       this.setState({
         currentVideoProgress,
         currentVideoProgressToDisplay: convertSecondsToEditorFormat(currentVideoProgress),
-        playheadPosition: 755 * (currentVideoProgress / this.state.videoDuration),
+        playheadPosition,
+        videoVolume,
       });
 
-      // When the user seeks in the video.
-      if (Math.abs(currentVideoProgress - previousTime) > 0.025) {
-        console.log('SEEK AREA');
-        this.getNextAudioClip(currentVideoProgress);
-        // if (this.currentClip) {
-        //   this.currentClip.stop();
-        // }
-      }
-
-      if (this.nextAudioClip) {
-        nextAudioClipStartTime = Number(this.nextAudioClip.start_time);
-      } else {
-        nextAudioClipStartTime = Infinity;
-      }
-
-      if (this.previousAudioClip) {
-        previousAudioClipStartTime = Number(this.previousAudioClip.start_time);
-        type = this.previousAudioClip.playback_type;
-        duration = this.previousAudioClip.duration;
-      } else {
-        previousAudioClipStartTime = Infinity;
-        type = 'None';
-        duration = 0;
-      }
-
-      console.log('previous audio clip start time: ', previousAudioClipStartTime,'type: ',type, 'duration: ', duration, 'and the next audio clip start time: ',nextAudioClipStartTime)
-
-      if (this.videoState !== oldState) {
-        // if it loaded = true
-        if (loaded === true) {
-          loaded = false;
-          console.log('run');
-          // move the video position into middle of an inline video
-          if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline') {
-            this.currentClip = new Howl({
-              src: [this.previousAudioClip.url],
-              html5: true,
-            });
-            const playing = this.currentClip.play();
-            this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing);
-          }
-        }
-
-        // the condition remove the first unstart
-        // resume for both manual resume and auto resume
-        // playing or buffering state
-        if (this.videoState === 1 || this.videoState === 3) {
-          extendedAudioClipPlaying = false;
-          // careful here: the different usually are 0.1
-          if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
-            if (this.currentClip) {
-              this.currentClip.stop();
-            }
-          }
-          if (Math.abs(currentVideoProgress - previousTime) > 0.15) {
-            console.log('load location');
-            console.log('run ');
-            // move the video position into middle of an inline video
-            if (((currentVideoProgress - previousAudioClipStartTime) < duration - 0.05) && type === 'inline') {
+      for (let i = 0; i < this.audioClipsCopy.length; i += 1) {
+        switch (this.audioClipsCopy[i].playback_type) {
+          case 'inline':
+            if (currentVideoProgress >= +this.audioClipsCopy[i].start_time && currentVideoProgress < +this.audioClipsCopy[i].end_time) {
+              console.log('## INLINE');
               this.currentClip = new Howl({
-                src: [this.previousAudioClip.url],
+                src: [this.audioClipsCopy[i].url],
                 html5: true,
+                onload: () => {
+                  this.currentClip.playbackType = 'inline',
+                  this.currentClip.seek(currentVideoProgress - +this.audioClipsCopy[i].start_time, this.currentClip.play());
+                  this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
+                },
+                onloaderror: (errToLoad) => {
+                  console.log('Impossible to load', errToLoad)
+                },
+                onplay: () => {
+                  console.log('Inline audio description clip');
+                  this.previousVideoVolume = videoVolume;
+                },
+                onend: () => {
+                  this.currentClip = null;
+                  this.state.videoPlayer.setVolume(this.previousVideoVolume);
+                },
               });
-              const playing = this.currentClip.play();
-              this.currentClip.seek(currentVideoProgress - previousAudioClipStartTime, playing);
             }
-          }
+            break;
+          case 'extended':
+            if (Math.abs(+this.audioClipsCopy[i].start_time - currentVideoProgress) <= interval / 1000 ||
+            (+this.audioClipsCopy[i].start_time < 0.5 && currentVideoProgress <= interval / 500)) {
+              console.log('Extended audio description clip');
+              this.currentClip = new Howl({
+                src: [this.audioClipsCopy[i].url],
+                html5: true,
+                onload: () => {
+                  this.currentClip.playbackType = 'extended';
+                  this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
+                  this.currentClip.play();
+                },
+                onloaderror: (errToLoad) => {
+                  console.log('Impossible to load current audio', errToLoad)
+                },
+                onplay: () => {
+                  console.log('Extended?');
+                  this.state.videoPlayer.pauseVideo();
+                },
+                onend: () => {
+                  this.currentClip = null;
+                  this.state.videoPlayer.playVideo();
+                },
+              });
+            }
+                break;
+              default:
+                console.log('Audio clip format not labelled or incorrect');
+            }
         }
-
-        // pause for only manual pause
-        if (this.videoState === 2 && !extendedAudioClipPlaying) {
-          // console.log('pause this: ', this.currentClip)
-
-          if (this.currentClip) {
-            this.currentClip.stop();
-          }
-          loaded = true;
-        }
-      }
-
-      previousTime = currentVideoProgress;
-
-      if (currentVideoProgress > nextAudioClipStartTime) {
-        const url = this.nextAudioClip.url;
-        if (this.nextAudioClip.playback_type === 'inline') {
-          console.log('### INLINE ###', url);
-          // pause the previous video, otherwise the playback gonna keep playing
-          if (this.currentClip) {
-            this.currentClip.pause();
-          }
-          console.log('HOWLING');
-          this.currentClip = new Howl({ src: [url], html5: true });
-          this.currentClip.play();
-          // let playing = this.currentClip.play();
-          // this.currentClip.seek(2, playing)
-        } else {
-          console.log('### EXTENDED ###', url);
-          // pause the previous video, otherwise the playback gonna keep playing
-          if (this.currentClip) {
-            this.currentClip.pause();
-          }
-          this.state.videoPlayer.pauseVideo();
-          extendedAudioClipPlaying = true;
-          this.currentClip = new Howl({
-            src: [url],
-            html5: true,
-            onend: () => {
-              extendedAudioClipPlaying = false;
-              this.state.videoPlayer.playVideo();
-            },
-          });
-          this.currentClip.play();
-        }
-        this.getNextAudioClip(currentVideoProgress);
-      }
-
-      oldState = this.videoState;
-    }, 10);
-    this.loadExistingTracks();
+    }, interval);
   }
 
-  // 9
-  loadExistingTracks() {
-    console.log('9 -> loadTracksComponents');
-    const selectedAudioDescriptionId = this.state.selectedAudioDescriptionId;
-    const audioClips = this.state.audioDescriptionsIdsAudioClips[selectedAudioDescriptionId];
-    const tracksComponents = [];
-    if (audioClips.length > 0) {
-      audioClips.forEach((audioClip, idx) => {
-        tracksComponents.push(<Track
-          key={idx}
-          id={idx}
-          data={audioClip}
-          actionIconClass={'fa-step-forward'}
-          getState={this.getState}
-          recordAudioClip={this.recordAudioClip}
-          updateTrackLabel={this.updateTrackLabel}
-          setSelectedTrack={this.setSelectedTrack}
-        />);
-      });
-    }
-    this.setState({ tracksComponents }, () => {
-      console.log('All set');
-    });
-  }
 
   componentWillUnmount() {
     if (this.watcher) {
@@ -414,12 +391,7 @@ class AuthoringTool extends Component {
     }
   }
 
-  getNextAudioClip(currentVideoProgress) {
-  }
-
   addAudioClipTrack(playbackType) {
-    console.log('addAudioClipTrack -> ', playbackType);
-
     // Current tracks components.
     const tracks = this.state.tracksComponents.slice();
 
@@ -459,13 +431,12 @@ class AuthoringTool extends Component {
       />,
     );
 
+    const playheadTailHeight = this.state.playheadTailHeight < 189 ? this.state.playheadTailHeight + 27 : this.state.playheadTailHeight;
+
     this.setState({
-      // selectedTrackComponentAudioClipStartTime: this.state.currentVideoProgress,
       tracksComponents: tracks,
       selectedTrackComponentPlaybackType: playbackType,
-      playheadTailHeight: this.state.playheadTailHeight < 189
-        ? this.state.playheadTailHeight + 27
-        : this.state.playheadTailHeight,
+      playheadTailHeight,
     });
   }
 
@@ -559,6 +530,7 @@ class AuthoringTool extends Component {
   }
 
   uploadAudioRecorded(args) {
+
     const self = this;
     const formData = new FormData();
     formData.append('title', this.state.videoTitle);
@@ -566,15 +538,12 @@ class AuthoringTool extends Component {
     formData.append('notes', this.state.notes);
     formData.append('label', this.state.selectedTrackComponentLabel);
     formData.append('playbackType', this.state.selectedTrackComponentPlaybackType);
-    // formData.append('startTime', this.state.selectedTrackComponentStartTime);
-    formData.append('startTime', 0);
+    formData.append('startTime', this.state.selectedTrackComponentAudioClipStartTime);
     formData.append('audioDescriptionId', this.state.selectedAudioDescriptionId);
     if (this.state.selectedTrackComponentPlaybackType === 'extended') {
-      // formData.append('endTime', this.state.selectedTrackComponentStartTime);
-      formData.append('endTime', 0);
+      formData.append('endTime', this.state.selectedTrackComponentAudioClipStartTime);
     } else {
-      // formData.append('endTime', this.state.selectedTrackComponentStartTime + args.duration);
-      formData.append('endTime', 0);
+      formData.append('endTime', this.state.selectedTrackComponentAudioClipStartTime + args.duration);
     }
     formData.append('duration', args.duration);
     formData.append('wavfile', args.audioBlob);
@@ -588,7 +557,6 @@ class AuthoringTool extends Component {
         self.parseVideoData();
       });
     };
-    // console.log(formData)
     xhr.send(formData);
   }
 
@@ -644,7 +612,7 @@ class AuthoringTool extends Component {
 
   // 1
   render() {
-    console.log('1 -> render authoring tool')
+    // console.log('1 -> render authoring tool')
     return (
       <main id="authoring-tool">
         <div className="w3-row">
