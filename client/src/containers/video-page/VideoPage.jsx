@@ -37,10 +37,16 @@ class VideoPage extends Component {
     };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
+    this.sliderIsReady = this.sliderIsReady.bind(this);
   }
 
   componentDidMount() {
     this.fetchVideoData();
+  }
+
+  sliderIsReady(input) {
+    console.log(input);
+    return input;
   }
 
   getAudioClips() {
@@ -162,6 +168,8 @@ class VideoPage extends Component {
 
     function onVideoPlayerReady() {
       self.audioClipsCopy = self.getAudioClips().slice();
+      console.log('slider ready', self.sliderIsReady());
+      self.sliderIsReady();
     }
 
     function onPlayerStateChange(event) {
@@ -363,7 +371,7 @@ class VideoPage extends Component {
             <div id="playerVP" />
           </div>
         </div>
-        <Slider updateState={this.updateState} />
+        <Slider updateState={this.updateState} sliderIsReady={this.sliderIsReady} />
       </main>
     );
   }
