@@ -26,11 +26,14 @@ class VideoPage extends Component {
       audioDescriptionsIdsAudioClips: {},
       selectedAudioDescriptionId: null,
 
+      currentClipVolume: 0.5,
+
       // Video controls and data.
       videoData: {},
       videoPlayer: null,
       videoState: -1,
       videoVolume: 0,
+      sliderValue: 50,
     };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
@@ -174,6 +177,7 @@ class VideoPage extends Component {
             break;
           case 1:
             // playing
+            // self.state.videoPlayer.setVolume(self.state.sliderValue);
             if (self.currentClip && self.currentClip.playbackType === 'extended') {
               self.currentClip.stop();
             }
@@ -248,6 +252,13 @@ class VideoPage extends Component {
         videoVolume,
       });
 
+      // this.state.videoPlayer.setVolume(100 - this.state.sliderValue);
+      this.state.videoPlayer.setVolume(100 - this.state.sliderValue);
+      if (this.currentClip) this.currentClip.volume(this.state.sliderValue / 100);
+
+      console.log('yt volume', videoVolume);
+      console.log('clip volume', this.state.currentClipVolume);
+
       for (let i = 0; i < this.audioClipsCopy.length; i += 1) {
         switch (this.audioClipsCopy[i].playback_type) {
           case 'inline':
@@ -256,6 +267,7 @@ class VideoPage extends Component {
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
                 html5: true,
+                volume: this.state.sliderValue / 100,
                 onload: () => {
                   this.currentClip.playbackType = 'inline',
                   this.currentClip.seek(currentVideoProgress - +this.audioClipsCopy[i].start_time, this.currentClip.play());
@@ -283,6 +295,7 @@ class VideoPage extends Component {
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
                 html5: true,
+                volume: this.state.sliderValue / 100,
                 onload: () => {
                   this.currentClip.playbackType = 'extended';
                   this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
@@ -310,13 +323,13 @@ class VideoPage extends Component {
   }
 
   componentWillUnmount() {
-    if (this.currentClip.stop) this.currentClip.stop();
-    if (this.watcher) {
-      clearInterval(this.watcher);
-      this.watcher = null;
-    }
-    this.currentClip = null;
+    clearInterval(this.watcher);
     this.watcher = null;
+    if (this.currentClip && this.currentClip.stop) this.currentClip.stop();
+    this.currentClip = null;
+    // if (this.watcher) {
+    // }
+    // this.watcher = null;
   }
 
   getState() {
@@ -350,7 +363,7 @@ class VideoPage extends Component {
             <div id="playerVP" />
           </div>
         </div>
-        {/* <Slider changeVolume={this.changeVolume} /> */}
+        <Slider updateState={this.updateState} />
       </main>
     );
   }
