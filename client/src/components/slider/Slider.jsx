@@ -167,10 +167,7 @@ const Slider = (props) => {
   	target.setAttribute('aria-valuenow', newValue);
   	target.setAttribute('aria-valuetext', newValue + "%");
   	updateValueIndicator(target.id.replace(/Thumb/, 'Value'), newValue + "%");
-    props.updateState({
-      sliderValue: 100 - newValue,
-      currentClipVolume: newValue,
-    });
+    props.updateState({ sliderValue: newValue });
   }
 
   function updateValueIndicator(id, value) {
@@ -212,7 +209,6 @@ const Slider = (props) => {
 
   return (
     <div>
-      <h1>Basic ARIA Slider</h1>
       <div className="clearfix">
       	<span id="sliderLabel" className="floatLeft">Volume:</span>
       	<div id="sliderRail1" className="sliderRail floatLeft">
@@ -222,13 +218,7 @@ const Slider = (props) => {
       		50%
       	</span>
       </div>
-      <h2>Keyboard controls</h2>
 
-      <ul>
-      	<li>Use left and right arrows to change the value by 1.</li>
-      	<li>Use page up and page down to change the value by 10.</li>
-      	<li>Use home and end to move to the first and last value.</li>
-      </ul>
     </div>
   );
 };
