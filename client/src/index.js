@@ -11,7 +11,6 @@ import VideoPage from './containers/video-page/VideoPage.jsx';
 import NotFound from './containers/not-found/NotFound.jsx';
 import WishList from './containers/wish-list/WishList.jsx';
 import Disclaimer from './containers/disclaimer/Disclaimer.jsx';
-// import VideoPage from './containers/video-page/VideoPage2.jsx';
 
 ReactDOM.render((
   <Router history={browserHistory}>
