@@ -241,13 +241,6 @@ class VideoPage extends Component {
     this.watcher = setInterval(() => {
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
       const videoVolume = this.state.videoPlayer.getVolume();
-<<<<<<< HEAD
-      console.log(videoVolume);
-
-
-=======
->>>>>>> 783cc54900a18361ca7db25ba68fce6dbee7452c
-      // if (!this.currentClip) this.state.videoPlayer.setVolume(100);
 
       this.setState({
         currentVideoProgress,
