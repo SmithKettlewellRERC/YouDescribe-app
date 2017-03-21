@@ -19,11 +19,6 @@ class App extends Component {
     this.getState = this.getState.bind(this);
   }
 
-
-  // letFetch(searchValue) {
-  //   console.log('searching for: ',searchValue);
-  // }
-
   componentWillMount() {
     // gapi.load('auth2', function() {
     //   gapi.auth2.init({
@@ -31,7 +26,7 @@ class App extends Component {
     //   });
     // });
 
-    const searchValue = this.props.location.query.search_query;
+    const searchValue = this.props.location.query.q;
     this.setState({
       searchValue: searchValue,
     });
@@ -44,22 +39,17 @@ class App extends Component {
     });
   }
 
-
-
   getState() {
     return this.state;
   }
 
   // use algorithm to seperate
   clickHandler(searchValue) {
-    console.log('clicked');
     this.setState({
       searchValue: searchValue,
     });
     const q = encodeURIComponent(searchValue);
-    // this.context.router.push(`/search?search_query=${q}`);
-    // console.log(this.props)
-    browserHistory.push(`/search?search_query=${q}`);
+    browserHistory.push(`/search?q=${q}`);
   }
 
   render() {

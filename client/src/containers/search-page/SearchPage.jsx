@@ -1,16 +1,11 @@
-
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
 
-// import seedData from './seedData.js';
-// import seedDb from './seedDb.js';
-
 const conf = require('../../shared/config')();
 
-
-class SearchPageTest extends Component {
+class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,12 +14,10 @@ class SearchPageTest extends Component {
     };
   }
 
-  letFetch(searchValue) {
+  getSearchResultsFromYdAndYt(searchValue) {
     if (typeof(searchValue) !== 'string') {
       searchValue = '';
     }
-    console.log('searching for: ', searchValue);
-    console.log('fetching the data to the state');
     const q = encodeURIComponent(searchValue);
     const serverVideoIds = [];
     let ids;
@@ -34,88 +27,78 @@ class SearchPageTest extends Component {
     let videoFromYoutube = [];
     let idsYTvideo;
 
-      fetch(`${conf.apiUrl}/videos/search?q=${q}`)
+    fetch(`${conf.apiUrl}/videos/search?q=${q}`)
+    .then(response => response.json())
+    .then((response) => {
+      dbResponse = response.result;
+      for (let i = 0; i < dbResponse.length; i += 1) {
+        serverVideoIds.push(dbResponse[i].youtube_id);
+      }
+      ids = serverVideoIds.join(',');
+    })
+    .then(() => {
+      const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+      fetch(urlfForYT)
       .then(response => response.json())
-      .then((response) => {
-        dbResponse = response.result;
-        for (let i = 0; i < dbResponse.length; i += 1) {
-          serverVideoIds.push(dbResponse[i].youtube_id);
-        }
-        ids = serverVideoIds.join(',');
+      .then((videoDataFromYDdatabase) => {
+        videoFromYDdatabase = videoDataFromYDdatabase.items;
+        this.setState({
+          videoAlreadyOnYD: [],
+        }, () => {
+          this.renderVideoFromYD(dbResponse, videoFromYDdatabase);
+        });
       })
       .then(() => {
-        // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
-        const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
-        fetch(urlfForYT)
-        .then(response => response.json())
-        .then((videoDataFromYDdatabase) => {
-          videoFromYDdatabase = videoDataFromYDdatabase.items;
-          this.setState({
-            videoAlreadyOnYD: [],
-          }, () => {
-            this.renderVideoFromYD(dbResponse, videoFromYDdatabase);
-          });
-        })
-        .then(() => {
-            const urlForYD = `${conf.youTubeApiUrl}/search?part=snippet&q=${q}&maxResults=50&key=${conf.youTubeApiKey}`;
-            fetch(urlForYD)
-            .then(response => response.json())
-            .then((videos) => {
-              for (let i = 0; i < videos.items.length; i += 1) {
-                const temp = videos.items[i].id.videoId;
-                if (!(ids.indexOf(temp) > -1)) {
-                  videoFoundOnYTIds.push(videos.items[i].id.videoId);
-                }
+          const urlForYD = `${conf.youTubeApiUrl}/search?part=snippet&q=${q}&maxResults=50&key=${conf.youTubeApiKey}`;
+          fetch(urlForYD)
+          .then(response => response.json())
+          .then((videos) => {
+            for (let i = 0; i < videos.items.length; i += 1) {
+              const temp = videos.items[i].id.videoId;
+              if (!(ids.indexOf(temp) > -1)) {
+                videoFoundOnYTIds.push(videos.items[i].id.videoId);
               }
-              idsYTvideo = videoFoundOnYTIds.join(',');
-            })
-            .then(() => {
-              const urlForYT = `${conf.youTubeApiUrl}/videos?id=${idsYTvideo}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
-              fetch(urlForYT)
-                .then(response => response.json())
-                .then((videoFromYoutubes) => {
-                  videoFromYoutube = videoFromYoutubes.items;
-                  this.setState({
-                    videoNotOnYD: [],
-                  }, () => {
-                    this.renderVideoNotOnYD(videoFromYoutube);
-                  });
+            }
+            idsYTvideo = videoFoundOnYTIds.join(',');
+          })
+          .then(() => {
+            const urlForYT = `${conf.youTubeApiUrl}/videos?id=${idsYTvideo}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+            fetch(urlForYT)
+              .then(response => response.json())
+              .then((videoFromYoutubes) => {
+                videoFromYoutube = videoFromYoutubes.items;
+                this.setState({
+                  videoNotOnYD: [],
+                }, () => {
+                  this.renderVideoNotOnYD(videoFromYoutube);
                 });
-            });
+              });
           });
-      });
+        });
+    });
   }
 
-
-
   upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time) {
-    console.log('CLASS', e.target.className);
     if (e.target.className === 'w3-btn w3-white w3-text-indigo w3-left' ||
       e.target.className === 'fa fa-heart') {
       if (e.target.className === 'fa fa-heart') e.target.parentElement.className = 'w3-btn w3-white w3-text-red w3-left';
       else e.target.className = 'w3-btn w3-white w3-text-red w3-left';
-      console.log('heart activated and video request added to wishlist or incremented by 1');
     }
-
-    let body = JSON.stringify({
+    const body = JSON.stringify({
         title: title,
         id: id,
-    })
-    console.log('up vote this video: ', body)
-
-    // This need to be fix, the new vote_count value should
-    // be from the response of the fetch request intead of
-    // vote_count + 1;
-
+    });
     fetch(`${conf.apiUrl}/wishlist`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
       method: 'post',
       body: body,
     })
     .then(res => res.json())
     .then((res) => {
       let new_count = res.result.votes;
-      console.log('posted id')
-      console.log('response is: ', res.message)
       let newState = this.state.videoNotOnYD.slice();
       newState[i] = (
           <VideoCard
@@ -139,151 +122,143 @@ class SearchPageTest extends Component {
     })
   }
 
-
   describeClick(id) {
-    console.log('describe this video: ', id)
     browserHistory.push('/authoring-tool/' + id)
   }
 
-
   renderVideoFromYD(dbResponse, videoFromYDdatabase) {
-      console.log('component fetching...');
+    const videoAlreadyOnYD = this.state.videoAlreadyOnYD.slice();
+    for (let i = 0; i < videoFromYDdatabase.length; i += 1) {
+      const item = videoFromYDdatabase[i];
+      const id = item.id;
+      // const thumbnailDefault = item.snippet.thumbnails.default;
+      // const thumbnailMedium = item.snippet.thumbnails.medium;
+      const thumbnailHigh = item.snippet.thumbnails.high;
+      let title = item.snippet.title;
+      const description = item.snippet.description;
+      const author = item.snippet.channelTitle;
+      let describer;
+      let views = item.statistics.viewCount;
+      const publishedAt = new Date(item.snippet.publishedAt);
 
-          const videoAlreadyOnYD = this.state.videoAlreadyOnYD.slice();
+      dbResponse.forEach((elem) => {
+        if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
+      });
 
-          for (let i = 0; i < videoFromYDdatabase.length; i += 1) {
+      const now = Date.now();
+      let time = now - publishedAt;
+      const year = 31536000000;
+      const month = 2629740000;
+      const day = 86400000;
+      const hour = 3600000;
+      const min = 60000;
 
+      if (time >= year) {
+        const years = (time / year).toFixed(0);
+        years === 1 ? time = `${years} year ago` : time = `${years} years ago`;
+      } else if (time >= month) {
+        const months = (time / month).toFixed(0);
+        months === 1 ? time = `${months} month ago` : time = `${months} months ago`;
+      } else if (time >= day) {
+        const days = (time / day).toFixed(0);
+        days === 1 ? time = `${days} day ago` : time = `${days} days ago`;
+      } else if (time >= hour) {
+        const hours = (time / hour).toFixed(0);
+        hours === 1 ? time = `${hours} hour ago` : time = `${hours} hours ago`;
+      } else {
+        const minutes = (time / min).toFixed(0);
+        minutes === 1 ? time = `${minutes} minutes ago` : time = `${minutes} minutes ago`;
+      }
 
-            const item = videoFromYDdatabase[i];
-            const id = item.id;
-            // const thumbnailDefault = item.snippet.thumbnails.default;
-            // const thumbnailMedium = item.snippet.thumbnails.medium;
-            const thumbnailHigh = item.snippet.thumbnails.high;
-            let title = item.snippet.title;
-            const description = item.snippet.description;
-            const author = item.snippet.channelTitle;
-            let describer;
-            let views = item.statistics.viewCount;
-            const publishedAt = new Date(item.snippet.publishedAt);
-
-            dbResponse.forEach((elem) => {
-              if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
-            });
-
-            const now = Date.now();
-            let time = now - publishedAt;
-            const year = 31536000000;
-            const month = 2629740000;
-            const day = 86400000;
-            const hour = 3600000;
-            const min = 60000;
-
-            if (time >= year) {
-              const years = (time / year).toFixed(0);
-              years === 1 ? time = `${years} year ago` : time = `${years} years ago`;
-            } else if (time >= month) {
-              const months = (time / month).toFixed(0);
-              months === 1 ? time = `${months} month ago` : time = `${months} months ago`;
-            } else if (time >= day) {
-              const days = (time / day).toFixed(0);
-              days === 1 ? time = `${days} day ago` : time = `${days} days ago`;
-            } else if (time >= hour) {
-              const hours = (time / hour).toFixed(0);
-              hours === 1 ? time = `${hours} hour ago` : time = `${hours} hours ago`;
-            } else {
-              const minutes = (time / min).toFixed(0);
-              minutes === 1 ? time = `${minutes} minutes ago` : time = `${minutes} minutes ago`;
-            }
-
-            // if (title.length > 50) title = `${title.slice(0, 50)}...`;
-            if (views >= 1000000000) views = `${(views/1000000000).toFixed(1)}B views`;
-            else if (views >= 1000000) views = `${(views/1000000).toFixed(1)}M views`;
-            else if (views >= 1000) views = `${(views/1000).toFixed(0)}K views`;
-            else if (views === 1) views = `${views} view`;
-            else views = `${views} views`;
-            videoAlreadyOnYD.push(
-              <VideoCard
-                key={i}
-                id={id}
-                description={description}
-                thumbnailHighUrl={thumbnailHigh.url}
-                title={title}
-                author={author}
-                describer={describer}
-                views={views}
-                time={time}
-                buttons='off'
-              />);
-          }
+      // if (title.length > 50) title = `${title.slice(0, 50)}...`;
+      if (views >= 1000000000) views = `${(views/1000000000).toFixed(1)}B views`;
+      else if (views >= 1000000) views = `${(views/1000000).toFixed(1)}M views`;
+      else if (views >= 1000) views = `${(views/1000).toFixed(0)}K views`;
+      else if (views === 1) views = `${views} view`;
+      else views = `${views} views`;
+      videoAlreadyOnYD.push(
+        <VideoCard
+          key={i}
+          id={id}
+          description={description}
+          thumbnailHighUrl={thumbnailHigh.url}
+          title={title}
+          author={author}
+          describer={describer}
+          views={views}
+          time={time}
+          buttons='off'
+        />);
+    }
     this.setState({
       videoAlreadyOnYD: videoAlreadyOnYD,
     });
   }
 
   renderVideoNotOnYD(videoFromYoutube) {
-      const videoNotOnYD = this.state.videoNotOnYD.slice();
-          for (let i = 0; i < videoFromYoutube.length; i += 1) {
-            const item = videoFromYoutube[i];
-            const id = item.id;
-            // const thumbnailDefault = item.snippet.thumbnails.default;
-            // const thumbnailMedium = item.snippet.thumbnails.medium;
-            const thumbnailHigh = item.snippet.thumbnails.high;
-            let title = item.snippet.title;
-            const description = item.snippet.description;
-            const author = item.snippet.channelTitle;
-            let describer;
-            let views = item.statistics.viewCount;
-            const publishedAt = new Date(item.snippet.publishedAt);
+    const videoNotOnYD = this.state.videoNotOnYD.slice();
+    for (let i = 0; i < videoFromYoutube.length; i += 1) {
+      const item = videoFromYoutube[i];
+      const id = item.id;
+      // const thumbnailDefault = item.snippet.thumbnails.default;
+      // const thumbnailMedium = item.snippet.thumbnails.medium;
+      const thumbnailHigh = item.snippet.thumbnails.high;
+      let title = item.snippet.title;
+      const description = item.snippet.description;
+      const author = item.snippet.channelTitle;
+      let describer;
+      let views = item.statistics.viewCount;
+      const publishedAt = new Date(item.snippet.publishedAt);
 
-            const now = Date.now();
-            let time = now - publishedAt;
-            const year = 31536000000;
-            const month = 2629740000;
-            const day = 86400000;
-            const hour = 3600000;
-            const min = 60000;
+      const now = Date.now();
+      let time = now - publishedAt;
+      const year = 31536000000;
+      const month = 2629740000;
+      const day = 86400000;
+      const hour = 3600000;
+      const min = 60000;
 
-            if (time >= year) {
-              const years = (time / year).toFixed(0);
-              years === 1 ? time = `${years} year ago` : time = `${years} years ago`;
-            } else if (time >= month) {
-              const months = (time / month).toFixed(0);
-              months === 1 ? time = `${months} month ago` : time = `${months} months ago`;
-            } else if (time >= day) {
-              const days = (time / day).toFixed(0);
-              days === 1 ? time = `${days} day ago` : time = `${days} days ago`;
-            } else if (time >= hour) {
-              const hours = (time / hour).toFixed(0);
-              hours === 1 ? time = `${hours} hour ago` : time = `${hours} hours ago`;
-            } else {
-              const minutes = (time / min).toFixed(0);
-              minutes === 1 ? time = `${minutes} minutes ago` : time = `${minutes} minutes ago`;
-            }
+      if (time >= year) {
+        const years = (time / year).toFixed(0);
+        years === 1 ? time = `${years} year ago` : time = `${years} years ago`;
+      } else if (time >= month) {
+        const months = (time / month).toFixed(0);
+        months === 1 ? time = `${months} month ago` : time = `${months} months ago`;
+      } else if (time >= day) {
+        const days = (time / day).toFixed(0);
+        days === 1 ? time = `${days} day ago` : time = `${days} days ago`;
+      } else if (time >= hour) {
+        const hours = (time / hour).toFixed(0);
+        hours === 1 ? time = `${hours} hour ago` : time = `${hours} hours ago`;
+      } else {
+        const minutes = (time / min).toFixed(0);
+        minutes === 1 ? time = `${minutes} minutes ago` : time = `${minutes} minutes ago`;
+      }
 
-            if (title.length > 100) title = `${title.slice(0, 100)}...`;
-            if (views >= 1000000000) views = `${(views / 1000000000).toFixed(1)}B views`;
-            else if (views >= 1000000) views = `${(views / 1000000).toFixed(1)}M views`;
-            else if (views >= 1000) views = `${(views / 1000).toFixed(0)}K views`;
-            else if (views === 1) views = `${views} view`;
-            else views = `${views} views`;
+      if (title.length > 100) title = `${title.slice(0, 100)}...`;
+      if (views >= 1000000000) views = `${(views / 1000000000).toFixed(1)}B views`;
+      else if (views >= 1000000) views = `${(views / 1000000).toFixed(1)}M views`;
+      else if (views >= 1000) views = `${(views / 1000).toFixed(0)}K views`;
+      else if (views === 1) views = `${views} view`;
+      else views = `${views} views`;
 
-            videoNotOnYD.push(
-              <VideoCard
-                key={i}
-                id={id}
-                description={description}
-                thumbnailHighUrl={thumbnailHigh.url}
-                title={title}
-                author={author}
-                views={views}
-                time={time}
-                vote_count={0}
-                buttons='on'
-                upVoteClick={(e) => this.upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time)}
-                describeClick={()=> this.describeClick(id)}
-              />
-            );
-          }
+      videoNotOnYD.push(
+        <VideoCard
+          key={i}
+          id={id}
+          description={description}
+          thumbnailHighUrl={thumbnailHigh.url}
+          title={title}
+          author={author}
+          views={views}
+          time={time}
+          vote_count={0}
+          buttons='on'
+          upVoteClick={(e) => this.upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time)}
+          describeClick={()=> this.describeClick(id)}
+        />
+      );
+    }
 
     this.setState({
       videoNotOnYD: videoNotOnYD,
@@ -293,13 +268,14 @@ class SearchPageTest extends Component {
   componentDidMount() {
     let currentSearchValue = this.props.getState().searchValue;
     if (currentSearchValue !== '') {
-      this.letFetch(currentSearchValue);
+      this.getSearchResultsFromYdAndYt(currentSearchValue);
     }
   }
 
+  // ????????????????????????????????????????????????????????????????????????????????
   componentWillReceiveProps() {
     setTimeout( () => {
-      this.letFetch(this.props.getState().searchValue);
+      this.getSearchResultsFromYdAndYt(this.props.getState().searchValue);
     }, 0);
   }
 
@@ -344,5 +320,4 @@ class SearchPageTest extends Component {
   }
 }
 
-export default SearchPageTest;
-
+export default SearchPage;
