@@ -561,7 +561,21 @@ class AuthoringTool extends Component {
   }
 
   publishVideo() {
-    alert('published');
+    const url = `${conf.apiUrl}/videos/${this.state.videoId}`;
+    const xhr = new XMLHttpRequest();
+    xhr.open('put', url, true);
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.setRequestHeader('Content-type', 'application/json');
+    const data = new FormData();
+    data.append('publish', 'true');
+    xhr.onload = function () {
+      self.setState({
+        videoData: JSON.parse(this.responseText).result,
+      }, () => {
+        self.parseVideoData();
+      });
+    };
+    xhr.send(data);
   }
 
   getState() {

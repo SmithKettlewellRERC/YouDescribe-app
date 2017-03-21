@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
@@ -84,15 +83,16 @@ class SearchPage extends Component {
       e.target.className === 'fa fa-heart') {
       if (e.target.className === 'fa fa-heart') e.target.parentElement.className = 'w3-btn w3-white w3-text-red w3-left';
       else e.target.className = 'w3-btn w3-white w3-text-red w3-left';
-      console.log('heart activated and video request added to wishlist or incremented by 1');
     }
-
-    let body = JSON.stringify({
+    const body = JSON.stringify({
         title: title,
         id: id,
-    })
-
+    });
     fetch(`${conf.apiUrl}/wishlist`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
       method: 'post',
       body: body,
     })
@@ -272,6 +272,7 @@ class SearchPage extends Component {
     }
   }
 
+  // ????????????????????????????????????????????????????????????????????????????????
   componentWillReceiveProps() {
     setTimeout( () => {
       this.getSearchResultsFromYdAndYt(this.props.getState().searchValue);
