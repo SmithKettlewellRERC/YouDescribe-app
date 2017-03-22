@@ -9,6 +9,22 @@ import {
 import Playhead from '../playhead/Playhead.jsx';
 
 const Editor = (props) => {
+  // Open a dialog box
+  function dialogOpen() {
+    const dialogBox = document.getElementById('dialog-box');
+
+    if (dialogBox.style.display === 'none') {
+      dialogBox.style.display = 'block';
+    }
+  }
+
+  // Close a dialog box
+  function dialogClose() {
+    const dialogBox = document.getElementById('dialog-box');
+
+    dialogBox.style.display = 'none';
+  }
+
   return (
     <div id="editor" className="w3-card-2">
       <div className="w3-card-4">
@@ -23,10 +39,10 @@ const Editor = (props) => {
                 <span className="w3-right">{props.videoDurationToDisplay}</span>
               </div>
 
-              {/* This is the line that need to add time mark*/}
+              {/* This is the line that need to add time mark */}
               <hr />
 
-              {/* This is moving line that show the time*/}
+              {/* This is moving line that show the time */}
               <Playhead
                 playheadPosition={props.playheadPosition}
                 playheadTailHeight={props.playheadTailHeight}
@@ -63,7 +79,25 @@ const Editor = (props) => {
         </div>
       </div>
       <div className="w3-right-align w3-border-top w3-border-black w3-padding">
-        <Button title="Publish the video along with all audio description tracks" text="Publish" color="w3-indigo" onClick={props.publishVideo} />
+        <Button
+          title="Publish the video along with all audio description tracks"
+          text="Publish"
+          color="w3-indigo"
+          onClick={props.publishVideo}
+        />
+      <div id="publish-dialog" style={{ display: 'none' }}>
+        <div className="w3-card-4 w3-indigo centered">
+          <p>Your audio description has been published along with the video</p>
+          <div className="">
+            <Button
+              title="Okay"
+              text="Okay"
+              color="w3-white"
+              onClick={props.closePublishDialog}
+              />
+          </div>
+        </div>
+      </div>
       </div>
     </div>
   );

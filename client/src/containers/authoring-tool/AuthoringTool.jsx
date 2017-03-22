@@ -55,7 +55,7 @@ class AuthoringTool extends Component {
       selectedTrackComponentLabel: '',
       selectedTrackComponentUrl: null,
     };
-    
+
     // Bindings.
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
@@ -65,6 +65,7 @@ class AuthoringTool extends Component {
     this.recordAudioClip = this.recordAudioClip.bind(this);
     this.uploadAudioRecorded = this.uploadAudioRecorded.bind(this);
     this.setSelectedTrack = this.setSelectedTrack.bind(this);
+    this.closePublishDialog = this.closePublishDialog.bind(this);
   }
 
   componentDidMount() {
@@ -547,7 +548,38 @@ class AuthoringTool extends Component {
     xhr.send(formData);
   }
 
+  // Open a dialog box
+  dialogOpen() {
+    const dialogBox = document.getElementById('dialog-box');
+
+    if (dialogBox.style.display === 'none') {
+      dialogBox.style.display = 'block';
+    }
+  }
+
+  // Close a dialog box
+  dialogClose() {
+    const dialogBox = document.getElementById('dialog-box');
+
+    dialogBox.style.display = 'none';
+  }
+
+  // Close a dialog box
+  closePublishDialog() {
+    const publishDialog = document.getElementById('publish-dialog');
+
+    if (publishDialog.style.display === 'block') {
+      publishDialog.style.display = 'none';
+    }
+  }
+
   publishVideo() {
+    const publishDialog = document.getElementById('publish-dialog');
+console.log(publishDialog.style.display);
+    if (publishDialog.style.display === 'none') {
+      publishDialog.style.display = 'block';
+    }
+
     const url = `${conf.apiUrl}/videos/${this.state.videoId}`;
     const xhr = new XMLHttpRequest();
     xhr.open('put', url, true);
