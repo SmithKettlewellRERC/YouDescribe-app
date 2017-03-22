@@ -10,6 +10,11 @@ const conf = require('../../shared/config')();
 class AuthoringTool extends Component {
   constructor(props) {
     super(props);
+    this.LOGGED_USER = {
+      _id: '58cf556546e13d72f1c70490',
+      name: 'Rodrigo',
+      email: 'lemerodrigo@gmail.com',
+    };
     this.watcher = null;
     this.videoState = -1;
     this.currentClip = null;
@@ -36,10 +41,8 @@ class AuthoringTool extends Component {
       currentTimeInVideo: 0,
 
       // Audio descriptions.
-      audioDescriptionsIds: [],
-      audioDescriptionsIdsUsers: {},
-      audioDescriptionsIdsAudioClips: {},
-      selectedAudioDescriptionId: null,
+      audioDescriptionId: null,
+      audioDescriptionAudioClips: {},
 
       // Tracks controls.
       tracksComponents: [],
@@ -52,6 +55,8 @@ class AuthoringTool extends Component {
       selectedTrackComponentLabel: '',
       selectedTrackComponentUrl: null,
     };
+    
+    // Bindings.
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
     this.publishVideo = this.publishVideo.bind(this);
@@ -65,14 +70,6 @@ class AuthoringTool extends Component {
   componentDidMount() {
     this.fetchVideoData();
     this.scrollingFix();
-  }
-
-  getAudioClips() {
-    if (this.state.audioDescriptionsIdsAudioClips && this.state.selectedAudioDescriptionId) {
-      return this.state.audioDescriptionsIdsAudioClips[this.state.selectedAudioDescriptionId];
-    } else {
-      return [];
-    }
   }
 
   // 2. The main get request that gets the json from our api.
@@ -102,60 +99,41 @@ class AuthoringTool extends Component {
   parseVideoData() {
     console.log('3 -> parseVideoData');
     const videoData = Object.assign({}, this.state.videoData);
-    const audioDescriptionsIds = [];
-    const audioDescriptionsIdsUsers = {};
-    const audioDescriptionsIdsAudioClips = {};
+
+    let audioDescriptionId = null;
+    const audioDescriptionAudioClips = {};
+
     if (videoData && videoData.audio_descriptions && videoData.audio_descriptions.length > 0) {
-      videoData.audio_descriptions.forEach((ad) => {
-        audioDescriptionsIds.push(ad['_id']);
-        audioDescriptionsIdsUsers[ad['_id']] = ad['user'];
-        audioDescriptionsIdsAudioClips[ad['_id']] = [];
-        if (ad.audio_clips.length > 0) {
-          ad.audio_clips.forEach((audioClip) => {
-            audioClip.url = `${conf.audioClipsUploadsPath}${audioClip.file_path}/${audioClip.file_name}`;
-            audioDescriptionsIdsAudioClips[ad['_id']].push(audioClip);
-          });
+      // This looping won't be necessary when the API just delivery the owned AD for the current video.
+      for (let i = 0; i < videoData.audio_descriptions.length; i++) {
+        const ad = videoData.audio_descriptions[i];
+        if (ad.user._id === this.LOGGED_USER._id) {
+          audioDescriptionId = ad['_id'];
+          if (ad.audio_clips.length > 0) {
+            ad.audio_clips.forEach((audioClip) => {
+              audioClip.url = `${conf.audioClipsUploadsPath}${audioClip.file_path}/${audioClip.file_name}`;
+              audioDescriptionAudioClips[audioClip['_id']] = audioClip;
+            });
+          }
+          break;
         }
-      });
+      }
     }
     this.setState({
       videoData,
-      audioDescriptionsIds,
-      audioDescriptionsIdsUsers,
-      audioDescriptionsIdsAudioClips,
+      audioDescriptionId,
+      audioDescriptionAudioClips,
     }, () => {
-      this.setAudioDescriptionActive();
+      this.preLoadAudioClips();
     });
   }
 
-  // 4.
-  setAudioDescriptionActive() {
-    console.log('4 -> setAudioDescriptionActive');
-    let selectedAudioDescriptionId = null;
-    if (!this.state.selectedAudioDescriptionId) {
-      selectedAudioDescriptionId = this.state.audioDescriptionsIds[0];
-    }
-
-    let audioClipsLength = 0;
-    if (this.state.audioDescriptionsIdsAudioClips && selectedAudioDescriptionId) {
-      audioClipsLength = this.getAudioClips().length;
-    }
-    const playheadTailHeight = audioClipsLength === 7 ? audioClipsLength * 27 : 189;
-
-    this.setState({
-      selectedAudioDescriptionId,
-      playheadTailHeight,
-    }, () => {
-      this.preLoadAudioClips();
-    });    
-  }
-
-  // 5
+  // 4
   preLoadAudioClips() {
-    console.log('5 -> preLoadAudioClips');
+    console.log('4 -> preLoadAudioClips');
     const self = this;
 
-    const audioClips = this.getAudioClips();
+    const audioClips = Object.values(this.state.audioDescriptionAudioClips);
 
     if (audioClips.length > 0) {
       const promises = [];
@@ -175,10 +153,10 @@ class AuthoringTool extends Component {
     }
   }
 
-  // 6
+  // 5
   getVideoDuration() {
     const self = this;
-    console.log('6 -> getVideoDuration');
+    console.log('5 -> getVideoDuration');
     const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet&key=${conf.youTubeApiKey}`;
     fetch(url).then(response => response.json()).then((data) => {
       this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
@@ -194,12 +172,14 @@ class AuthoringTool extends Component {
     });
   }
 
-  // 7
+  // 6
   loadExistingTracks() {
-    console.log('7 -> loadTracksComponents');
+    console.log('6 -> loadTracksComponents');
     const tracksComponents = [];
-    if (this.getAudioClips().length > 0) {
-      this.getAudioClips().forEach((audioClip, idx) => {
+    const audioClips = Object.values(this.state.audioDescriptionAudioClips);
+    const audioClipsLength = audioClips.length;
+    if (audioClipsLength > 0) {
+      audioClips.forEach((audioClip, idx) => {
         tracksComponents.push(<Track
           key={idx}
           id={idx}
@@ -212,15 +192,20 @@ class AuthoringTool extends Component {
         />);
       });
     }
-    this.setState({ tracksComponents }, () => {
+    const playheadTailHeight = audioClipsLength === 7 ? audioClipsLength * 27 : 189;
+    this.setState({
+      tracksComponents,
+      playheadTailHeight,
+    }, () => {
       this.initVideoPlayer();
     });
   }
 
-  // 8
+  // 7
   initVideoPlayer() {
-    console.log('8 -> initVideoPlayer -> YouTube Id: ', this.state.videoId);
+    console.log('7 -> initVideoPlayer -> YouTube Id: ', this.state.videoId);
     const self = this;
+
     if (YT.loaded) {
       startVideo();
     } else {
@@ -230,12 +215,14 @@ class AuthoringTool extends Component {
     }
 
     function onVideoPlayerReady() {
-      self.audioClipsCopy = self.getAudioClips().slice();
+      const audioClips = self.state.audioDescriptionAudioClips;
+      self.audioClipsCopy = Object.values(audioClips);
       initAudioRecorder();
     }
 
     function onPlayerStateChange(event) {
       self.videoState = event.data;
+      const audioClips = Object.values(self.state.audioDescriptionAudioClips);
       self.setState({ videoState: event.data }, () => {
         switch (event.data) {
           // ended
@@ -254,7 +241,7 @@ class AuthoringTool extends Component {
             break;
           // paused
           case 2:
-            self.audioClipsCopy = self.getAudioClips().slice();
+            self.audioClipsCopy = audioClips.slice();
             if (self.currentClip && self.currentClip.playbackType === 'inline') {
               self.currentClip.pause();
             }
@@ -265,7 +252,7 @@ class AuthoringTool extends Component {
             break;
           // buffering
           case 3:
-            self.audioClipsCopy = self.getAudioClips().slice();
+            self.audioClipsCopy = audioClips.slice();
             if (self.currentClip && self.currentClip.playbackType === 'inline') {
               self.currentClip.pause();
             }
@@ -300,9 +287,9 @@ class AuthoringTool extends Component {
     }
   }
 
-  // 9
+  // 8
   videoProgressWatcher() {
-    console.log('9 -> videoProgressWatcher')
+    console.log('8 -> videoProgressWatcher')
 
     const interval = 50;
 
@@ -375,14 +362,13 @@ class AuthoringTool extends Component {
                 },
               });
             }
-                break;
-              default:
-                console.log('Audio clip format not labelled or incorrect');
-            }
+            break;
+          default:
+            console.log('Audio clip format not labelled or incorrect');
+          }
         }
     }, interval);
   }
-
 
   componentWillUnmount() {
     if (this.watcher) {
@@ -539,7 +525,7 @@ class AuthoringTool extends Component {
     formData.append('label', this.state.selectedTrackComponentLabel);
     formData.append('playbackType', this.state.selectedTrackComponentPlaybackType);
     formData.append('startTime', this.state.selectedTrackComponentAudioClipStartTime);
-    formData.append('audioDescriptionId', this.state.selectedAudioDescriptionId);
+    formData.append('audioDescriptionId', this.state.audioDescriptionId);
     if (this.state.selectedTrackComponentPlaybackType === 'extended') {
       formData.append('endTime', this.state.selectedTrackComponentAudioClipStartTime);
     } else {
@@ -551,6 +537,7 @@ class AuthoringTool extends Component {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function () {
+      // console.log(JSON.parse(this.responseText).result);
       self.setState({
         videoData: JSON.parse(this.responseText).result,
       }, () => {
