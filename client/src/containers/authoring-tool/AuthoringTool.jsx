@@ -543,7 +543,7 @@ class AuthoringTool extends Component {
       }, () => {
         self.parseVideoData();
       });
-    };
+    }
     xhr.send(formData);
   }
 

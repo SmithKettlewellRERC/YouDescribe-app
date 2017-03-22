@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
 import Slider from '../../components/slider/Slider.jsx';
+import AudioDescriptionSelector from '../../components/audio-description-selector/AudioDescriptionSelector.jsx';
 import DescriberChooser from '../../components/describer-chooser/DescriberChooser.jsx';
 
 const conf = require('../../shared/config')();
@@ -17,8 +18,6 @@ class VideoPage extends Component {
     this.state = {
       videoId: props.params.videoId,
       videoUrl: `${conf.apiUrl}/videos/${props.params.videoId}`,
-
-      currentVideoDescriber: '',
 
       // Audio descriptions.
       audioDescriptionsIds: [],
@@ -37,6 +36,7 @@ class VideoPage extends Component {
     };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
+    this.setAudioDescriptionActive = this.setAudioDescriptionActive.bind(this);
     // this.sliderIsReady = this.sliderIsReady.bind(this);
   }
 
@@ -107,19 +107,18 @@ class VideoPage extends Component {
   // 4.
   setAudioDescriptionActive() {
     console.log('4 -> setAudioDescriptionActive');
-    let selectedAudioDescriptionId = null;
-    if (!this.state.selectedAudioDescriptionId) {
-      selectedAudioDescriptionId = this.state.audioDescriptionsIds[0];
-    }
 
-    let audioClipsLength = 0;
-    if (this.state.audioDescriptionsIdsAudioClips && selectedAudioDescriptionId) {
-      audioClipsLength = this.getAudioClips().length;
+    let selectedAudioDescriptionId = null;
+    if (this.state.selectedAudioDescriptionId !== null) {
+      selectedAudioDescriptionId = this.state.selectedAudioDescriptionId;
+    } else {
+      selectedAudioDescriptionId = this.state.audioDescriptionsIds[0];
     }
 
     this.setState({
       selectedAudioDescriptionId,
     }, () => {
+      console.log('Selected audio description ID', selectedAudioDescriptionId);
       this.preLoadAudioClips();
     });
   }
@@ -154,6 +153,13 @@ class VideoPage extends Component {
     const self = this;
     console.log('6 -> initVideoPlayer', this.state.videoId);
     if (YT.loaded) {
+      // If the video is playing, we need to change the state.
+      if (this.state.videoPlayer) {
+        const r = confirm("By changing the video describer, we have to restart the video. Are you sure you want to change?");
+        if (r == true) {
+          this.state.videoPlayer.stopVideo();
+        }
+      }
       startVideo();
     } else {
       window.onYouTubeIframeAPIReady = () => {
@@ -336,28 +342,30 @@ class VideoPage extends Component {
     return this.state;
   }
 
-  updateState(newState) {
-    this.setState(newState);
-  }
-
-  handleOption(event) {
-    console.log(event.target.value);
-    this.setState({ currentVideoDescriber: event.target.value });
+  updateState(newState, callback) {
+    this.setState(newState, callback);
   }
 
   // 1
   render() {
+    console.log('1 -> Render')
     return (
       <main id="video-player">
         <div className="w3-row">
-          <div
-            id="video"
-            className="w3-card-2"
-          >
+          <div id="video" className="w3-card-2">
             <div id="playerVP" />
           </div>
         </div>
-        <Slider updateState={this.updateState} sliderIsReady={this.sliderIsReady} />
+        <Slider
+          updateState={this.updateState}
+          sliderIsReady={this.sliderIsReady}
+        />
+        <AudioDescriptionSelector
+          updateState={this.updateState}
+          audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
+          selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
+          setAudioDescriptionActive={this.setAudioDescriptionActive}
+        />
       </main>
     );
   }
