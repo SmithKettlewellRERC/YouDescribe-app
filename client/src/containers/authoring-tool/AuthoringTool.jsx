@@ -11,9 +11,9 @@ class AuthoringTool extends Component {
   constructor(props) {
     super(props);
     this.LOGGED_USER = {
-      _id: '58cf556546e13d72f1c70490',
-      name: 'Rodrigo',
-      email: 'lemerodrigo@gmail.com',
+      _id: '58d2c722456b6c3f706d77c8',
+      name: 'Curt',
+      email: 'jobob@aol.com',
     };
     this.watcher = null;
     this.videoState = -1;
@@ -106,7 +106,7 @@ class AuthoringTool extends Component {
 
     if (videoData && videoData.audio_descriptions && videoData.audio_descriptions.length > 0) {
       // This looping won't be necessary when the API just delivery the owned AD for the current video.
-      for (let i = 0; i < videoData.audio_descriptions.length; i++) {
+      for (let i = 0; i < videoData.audio_descriptions.length; i += 1) {
         const ad = videoData.audio_descriptions[i];
         if (ad.user._id === this.LOGGED_USER._id) {
           audioDescriptionId = ad['_id'];
@@ -566,6 +566,7 @@ class AuthoringTool extends Component {
 
   // Close a dialog box
   closePublishDialog() {
+    alert('HI!')
     const publishDialog = document.getElementById('publish-dialog');
 
     if (publishDialog.style.display === 'block') {

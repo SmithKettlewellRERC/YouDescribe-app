@@ -37,7 +37,6 @@ class VideoPage extends Component {
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
     this.setAudioDescriptionActive = this.setAudioDescriptionActive.bind(this);
-    // this.sliderIsReady = this.sliderIsReady.bind(this);
   }
 
   componentDidMount() {
@@ -169,8 +168,6 @@ class VideoPage extends Component {
 
     function onVideoPlayerReady() {
       self.audioClipsCopy = self.getAudioClips().slice();
-      // console.log('slider ready', self.sliderIsReady());
-      // self.sliderIsReady();
     }
 
     function onPlayerStateChange(event) {
@@ -362,12 +359,8 @@ class VideoPage extends Component {
           </div>
         </main>
         <div style={{ width: '100%' }}>
-          <Slider updateState={this.updateState} sliderIsReady={this.sliderIsReady} />
+          <Slider updateState={this.updateState} />
         </div>
-        <Slider
-          updateState={this.updateState}
-          sliderIsReady={this.sliderIsReady}
-        />
         <AudioDescriptionSelector
           updateState={this.updateState}
           audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}

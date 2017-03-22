@@ -85,19 +85,19 @@ const Editor = (props) => {
           color="w3-indigo"
           onClick={props.publishVideo}
         />
-      <div id="publish-dialog" style={{ display: 'none' }}>
-        <div className="w3-card-4 w3-indigo centered">
-          <p>Your audio description has been published along with the video</p>
-          <div className="">
-            <Button
-              title="Okay"
-              text="Okay"
-              color="w3-white"
-              onClick={props.closePublishDialog}
+        <div id="publish-dialog" style={{ display: 'none' }}>
+          <div className="w3-card-4 w3-indigo centered w3-padding">
+            <h6>Your audio description has been published along with the video</h6>
+            <div className="w3-center w3-padding">
+              <Button
+                title="Okay"
+                text="Okay"
+                color="w3-white"
+                onClick={props.publishVideo}
               />
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </div>
   );
