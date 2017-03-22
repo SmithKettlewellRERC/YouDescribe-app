@@ -3,6 +3,7 @@ import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
 const conf = require('../../shared/config')();
+import { ourFetch } from '../../shared/helperFunctions';
 // import seedData from './seedData.js';
 
 class WishList extends Component {
@@ -36,14 +37,13 @@ class WishList extends Component {
     // voteCount + 1;
     voteCount = voteCount + 1;
 
-    fetch(`${conf.apiUrl}/wishlist`, {
+    ourFetch(`${conf.apiUrl}/wishlist`, true, {
       headers: {
         'Content-Type': 'application/json'
       },
       method: 'post',
       body,
     })
-    .then(res => res.json())
     .then((res) => {
       let new_count = res.result.votes;
       console.log('posted id')
@@ -86,8 +86,7 @@ class WishList extends Component {
     let dbResponse;
 
     // replace this url with the wishlist database
-    fetch(`${conf.apiUrl}/wishlist`)
-      .then(response => response.json())
+    ourFetch(`${conf.apiUrl}/wishlist`)
       .then((response) => {
         dbResponse = response.result;
         for (let i = 0; i < response.result.length; i += 1) {
@@ -98,8 +97,7 @@ class WishList extends Component {
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
         const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
-        fetch(url)
-        .then(response => response.json())
+        ourFetch(url)
         .then((data) => {
           const videos = this.state.videos.slice();
           for (let i = 0; i < data.items.length; i += 1) {
