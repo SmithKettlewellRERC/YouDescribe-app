@@ -38,16 +38,11 @@ class VideoPage extends Component {
     };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
-    this.sliderIsReady = this.sliderIsReady.bind(this);
+    // this.sliderIsReady = this.sliderIsReady.bind(this);
   }
 
   componentDidMount() {
     this.fetchVideoData();
-  }
-
-  sliderIsReady(input) {
-    console.log(input);
-    return input;
   }
 
   getAudioClips() {
@@ -187,8 +182,8 @@ class VideoPage extends Component {
 
     function onVideoPlayerReady() {
       self.audioClipsCopy = self.getAudioClips().slice();
-      console.log('slider ready', self.sliderIsReady());
-      self.sliderIsReady();
+      // console.log('slider ready', self.sliderIsReady());
+      // self.sliderIsReady();
     }
 
     function onPlayerStateChange(event) {
@@ -204,7 +199,6 @@ class VideoPage extends Component {
             break;
           case 1:
             // playing
-            // self.state.videoPlayer.setVolume(self.state.sliderValue);
             if (self.currentClip && self.currentClip.playbackType === 'extended') {
               self.currentClip.stop();
             }
@@ -261,7 +255,6 @@ class VideoPage extends Component {
   // 7
   videoProgressWatcher() {
     console.log('6 -> videoProgressWatcher')
-
     const interval = 50;
 
     if (this.watcher) {
@@ -273,17 +266,18 @@ class VideoPage extends Component {
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
       const videoVolume = this.state.videoPlayer.getVolume();
 
-      this.setState({
-        currentVideoProgress,
-        videoVolume,
-      });
+      // this.setState({
+      //   currentVideoProgress,
+      //   videoVolume,
+      // });
 
-      // this.state.videoPlayer.setVolume(100 - this.state.sliderValue);
-      this.state.videoPlayer.setVolume(100 - this.state.sliderValue);
-      if (this.currentClip) this.currentClip.volume(this.state.sliderValue / 100);
+      if (this.currentClip) {
+        this.currentClip.volume(this.state.sliderValue / 100);
+        this.state.videoPlayer.setVolume((100 - this.state.sliderValue) * 0.1);
+      } else this.state.videoPlayer.setVolume(100 - this.state.sliderValue);
 
-      console.log('yt volume', videoVolume);
-      console.log('clip volume', this.state.currentClipVolume);
+      // console.log('yt volume', videoVolume);
+      // console.log('clip volume', this.state.currentClipVolume);
 
       for (let i = 0; i < this.audioClipsCopy.length; i += 1) {
         switch (this.audioClipsCopy[i].playback_type) {
@@ -295,7 +289,7 @@ class VideoPage extends Component {
                 html5: true,
                 volume: this.state.sliderValue / 100,
                 onload: () => {
-                  this.currentClip.playbackType = 'inline',
+                  this.currentClip.playbackType = 'inline';
                   this.currentClip.seek(currentVideoProgress - +this.audioClipsCopy[i].start_time, this.currentClip.play());
                   this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
                 },
@@ -304,8 +298,7 @@ class VideoPage extends Component {
                 },
                 onplay: () => {
                   console.log('## INLINE PLAYING');
-                  this.previousVideoVolume = videoVolume;
-                  // this.state.videoPlayer.setVolume(10);
+                  // this.previousVideoVolume = videoVolume;
                 },
                 onend: () => {
                   this.currentClip = null;
@@ -340,11 +333,11 @@ class VideoPage extends Component {
                 },
               });
             }
-                break;
-              default:
-                console.log('Audio clip format not labelled or incorrect');
-            }
+            break;
+          default:
+            console.log('Audio clip format not labelled or incorrect');
         }
+      }
     }, interval);
   }
 
