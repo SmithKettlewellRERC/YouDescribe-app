@@ -39,9 +39,9 @@ export function ourFetch(url, JSONparsing = true, optionObj = { method: 'GET' })
     req.onload = () => {
       if (req.status === 200) {
         if (JSONparsing) {
-          resolve(JSON.parse(req.responseText));
+          resolve(JSON.parse(req.response));
         } else {
-          resolve(req.responseText);
+          resolve(req.response);
         }
       } else {
         reject(Error(req.statusText));

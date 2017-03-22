@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Howl } from 'howler';
 import Slider from '../../components/slider/Slider.jsx';
 import DescriberChooser from '../../components/describer-chooser/DescriberChooser.jsx';
+import { ourFetch } from '../../shared/helperFunctions';
 
 const conf = require('../../shared/config')();
 
@@ -57,26 +58,44 @@ class VideoPage extends Component {
     }
   }
 
-  // 2
+  // 2 Keep this for safari bug detecting
+  // fetchVideoData() {
+  //   console.log('2 -> fetchingVideoData');
+  //   const self = this;
+  //   const xhr = new XMLHttpRequest();
+  //   xhr.open('GET', this.state.videoUrl, true);
+  //   xhr.onload = function () {
+  //     if (xhr.readyState === 4) {
+  //       const response = JSON.parse(xhr.response);
+  //       const result = response.result
+  //         ? response.result
+  //         : {};
+  //       self.setState({
+  //         videoData: result,
+  //       }, () => {
+  //         self.parseVideoData();
+  //       });
+  //     }
+  //   };
+  //   xhr.send();
+  // }
+
+  //2 relaced fetchVideoData with the new Fetch
   fetchVideoData() {
     console.log('2 -> fetchingVideoData');
     const self = this;
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', this.state.videoUrl, true);
-    xhr.onload = function () {
-      if (xhr.readyState === 4) {
-        const response = JSON.parse(xhr.response);
+    ourFetch(this.state.videoUrl)
+    .then((response) => {
         const result = response.result
           ? response.result
           : {};
         self.setState({
           videoData: result,
         }, () => {
+          console.log(self.state.videoData);
           self.parseVideoData();
         });
-      }
-    };
-    xhr.send();
+    })
   }
 
   // 3
@@ -140,7 +159,7 @@ class VideoPage extends Component {
       const promises = [];
       audioClips.forEach((audioObj, idx) => {
         console.log(idx + 1, audioObj.url);
-        promises.push(fetch(audioObj.url));
+        promises.push(ourFetch(audioObj.url, false));
       });
       Promise.all(promises).then(function() {
         console.log('All audios loaded.');
