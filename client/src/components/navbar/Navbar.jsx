@@ -42,7 +42,6 @@ const Navbar = (props) => {
   // Close the sidenav with the close button
   function menuClose() {
     const mySidenav = document.getElementById('mySidenav');
-
     mySidenav.style.display = 'none';
   }
 

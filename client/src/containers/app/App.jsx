@@ -20,18 +20,11 @@ class App extends Component {
   }
 
   componentWillMount() {
-    // gapi.load('auth2', function() {
-    //   gapi.auth2.init({
-    //     client_id: '858526011072-sakg4fjlvdiug24rsim2fm748pi1n4nc.apps.googleusercontent.com'
-    //   });
-    // });
-
     const searchValue = this.props.location.query.q;
     this.setState({
       searchValue: searchValue,
     });
   }
-
 
   componentDidMount() {
     gapi.load('auth2', function() {

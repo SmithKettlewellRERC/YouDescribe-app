@@ -86,10 +86,6 @@ class SearchPage extends Component {
         id: id,
     });
     ourFetch(`${conf.apiUrl}/wishlist`, true, {
-      // headers: {
-      //   'Accept': 'application/json',
-      //   'Content-Type': 'application/json',
-      // },
       method: 'post',
       body: body,
     })
@@ -127,8 +123,6 @@ class SearchPage extends Component {
     for (let i = 0; i < videoFromYDdatabase.length; i += 1) {
       const item = videoFromYDdatabase[i];
       const id = item.id;
-      // const thumbnailDefault = item.snippet.thumbnails.default;
-      // const thumbnailMedium = item.snippet.thumbnails.medium;
       const thumbnailHigh = item.snippet.thumbnails.high;
       let title = item.snippet.title;
       const description = item.snippet.description;
@@ -196,8 +190,6 @@ class SearchPage extends Component {
     for (let i = 0; i < videoFromYoutube.length; i += 1) {
       const item = videoFromYoutube[i];
       const id = item.id;
-      // const thumbnailDefault = item.snippet.thumbnails.default;
-      // const thumbnailMedium = item.snippet.thumbnails.medium;
       const thumbnailHigh = item.snippet.thumbnails.high;
       let title = item.snippet.title;
       const description = item.snippet.description;
@@ -263,13 +255,6 @@ class SearchPage extends Component {
 
   componentDidMount() {
     this.getSearchResultsFromYdAndYt();
-  }
-
-  // ????????????????????????????????????????????????????????????????????????????????
-  componentWillReceiveProps() {
-    setTimeout( () => {
-      this.getSearchResultsFromYdAndYt(this.props.getState().searchValue);
-    }, 0);
   }
 
   loadMoreResults() {
