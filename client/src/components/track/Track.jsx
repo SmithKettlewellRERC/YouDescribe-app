@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ActionIcon from '../action-icon/ActionIcon.jsx';
+import AlertBox from '../alert-box/AlertBox.jsx';
 
 const conf = require('../../shared/config');
 

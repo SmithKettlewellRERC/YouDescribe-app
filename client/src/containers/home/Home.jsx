@@ -127,7 +127,7 @@ class Home extends Component {
           {this.state.videos}
         </main>
 
-        <div className="w3-margin-top w3-center">
+        <div id="load-more" className="w3-margin-top w3-center">
           <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
         </div>
 

@@ -11,8 +11,9 @@
 @import './components/track/track';
 @import './components/video-card/videocard';
 @import './components/slider/slider';
-@import './components/audio-description-selector/_audiosescriptionselector';
+@import './components/audio-description-selector/audiodescriptionselector';
 @import './components/describer-chooser/describerchooser';
+@import './components/alert-box/alertbox';
 
 @import './containers/app/app';
 @import './containers/authoring-tool/authoringtool';

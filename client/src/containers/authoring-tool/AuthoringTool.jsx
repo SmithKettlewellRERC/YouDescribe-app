@@ -10,11 +10,7 @@ const conf = require('../../shared/config')();
 class AuthoringTool extends Component {
   constructor(props) {
     super(props);
-    this.LOGGED_USER = {
-      _id: '58d2c722456b6c3f706d77c8',
-      name: 'Curt',
-      email: 'jobob@aol.com',
-    };
+    this.LOGGED_USER = '58d2cf76913595e32a4e366b';
     this.watcher = null;
     this.videoState = -1;
     this.currentClip = null;
@@ -54,6 +50,13 @@ class AuthoringTool extends Component {
       selectedTrackComponentAudioClipDuration: -1,
       selectedTrackComponentLabel: '',
       selectedTrackComponentUrl: null,
+
+      // Alert box parameters
+      alertBoxBackgroundColor: '',
+      alertBoxContent: '',
+      alertBoxTitle: '',
+      alertBoxText: '',
+      alertBoxButtonColor: '',
     };
 
     // Bindings.
@@ -65,7 +68,8 @@ class AuthoringTool extends Component {
     this.recordAudioClip = this.recordAudioClip.bind(this);
     this.uploadAudioRecorded = this.uploadAudioRecorded.bind(this);
     this.setSelectedTrack = this.setSelectedTrack.bind(this);
-    this.closePublishDialog = this.closePublishDialog.bind(this);
+    this.alertBoxOpen = this.alertBoxOpen.bind(this);
+    this.alertBoxClose = this.alertBoxClose.bind(this);
   }
 
   componentDidMount() {
@@ -108,7 +112,7 @@ class AuthoringTool extends Component {
       // This looping won't be necessary when the API just delivery the owned AD for the current video.
       for (let i = 0; i < videoData.audio_descriptions.length; i += 1) {
         const ad = videoData.audio_descriptions[i];
-        if (ad.user._id === this.LOGGED_USER._id) {
+        if (ad.user._id === this.LOGGED_USER) {
           audioDescriptionId = ad['_id'];
           if (ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
@@ -385,14 +389,16 @@ class AuthoringTool extends Component {
     // I will just add tracks if all existant have urls.
     for (let i = 0; i < tracks.length; i += 1) {
       if (tracks[i].props.data.url === '') {
-        alert('Finish using your available record tracks.');
+        this.alertBoxOpen('unused-track');
+        // alert('Finish using your available record tracks.');
         return;
       }
     }
 
     // Don't allow adding more tracks while recording.
     if (this.state.selectedTrackComponentStatus === 'recording') {
-      alert('You can just add more tracks when you finish recording the existing one.');
+      this.alertBoxOpen('recording-in-process');
+      // alert('You can just add more tracks when you finish recording the existing one.');
       return;
     }
 
@@ -440,7 +446,8 @@ class AuthoringTool extends Component {
   recordAudioClip(e, trackId) {
     if (this.state.selectedTrackComponentId !== trackId) {
       if (this.state.selectedTrackComponentStatus === 'recording') {
-        alert('You need to stop recording in order to activate any other track');
+        this.alertBoxOpen();
+        // alert('You need to stop recording in order to activate any other track');
         return;
       }
     }
@@ -538,7 +545,7 @@ class AuthoringTool extends Component {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function () {
-      // console.log(JSON.parse(this.responseText).result);
+      console.log(JSON.parse(this.responseText).result);
       self.setState({
         videoData: JSON.parse(this.responseText).result,
       }, () => {
@@ -549,37 +556,36 @@ class AuthoringTool extends Component {
   }
 
   // Open a dialog box
-  dialogOpen() {
-    const dialogBox = document.getElementById('dialog-box');
+  alertBoxOpen(id) {
+    console.log('alert box id', id);
+    const alertBox = document.getElementById(id);
 
-    if (dialogBox.style.display === 'none') {
-      dialogBox.style.display = 'block';
+    // // set parameters for the alert box
+    // this.setState({
+    //   alertBoxBackgroundColor,
+    //   alertBoxContent,
+    //   alertBoxTitle,
+    //   alertBoxText,
+    //   alertBoxButtonColor,
+    // });
+
+    if (alertBox.style.display === 'none') {
+      alertBox.style.display = 'block';
     }
   }
 
   // Close a dialog box
-  dialogClose() {
-    const dialogBox = document.getElementById('dialog-box');
+  alertBoxClose(e) {
+    const alertBox = document.getElementById(e.target.parentNode.parentNode.parentNode.parentNode.parentNode.id);
 
-    dialogBox.style.display = 'none';
-  }
-
-  // Close a dialog box
-  closePublishDialog() {
-    alert('HI!')
-    const publishDialog = document.getElementById('publish-dialog');
-
-    if (publishDialog.style.display === 'block') {
-      publishDialog.style.display = 'none';
+    if (alertBox.style.display === 'block') {
+      alertBox.style.display = 'none';
     }
   }
 
   publishVideo() {
-    const publishDialog = document.getElementById('publish-dialog');
-console.log(publishDialog.style.display);
-    if (publishDialog.style.display === 'none') {
-      publishDialog.style.display = 'block';
-    }
+
+    this.alertBoxOpen('publish-button');
 
     const url = `${conf.apiUrl}/videos/${this.state.videoId}`;
     const xhr = new XMLHttpRequest();
@@ -669,6 +675,7 @@ console.log(publishDialog.style.display);
               getState={this.getState}
               updateState={this.updateState}
               publishVideo={this.publishVideo}
+              alertBoxClose={this.alertBoxClose}
               addAudioClipTrack={this.addAudioClipTrack}
               recordAudioClip={this.recordAudioClip}
               {...this.state}

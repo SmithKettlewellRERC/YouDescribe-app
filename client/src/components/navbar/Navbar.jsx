@@ -54,16 +54,21 @@ const Navbar = (props) => {
         <div className="w3-bar w3-white w3-card-2 w3-text-indigo">
           <logo role="img" title="YouDescribe logo">
             <Link to="/" title="YouDescribe logo" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-small w3-hide-medium">
-              {/* <img
+              <img
                 alt="YouDescribe logo"
                 height="24px"
-                src={path.join(__dirname, 'assets', 'img', 'logo_youdescribe.png')}
-                />*/}
-                <span className="w3-text-black">You</span><span className="w3-indigo curve">Describe</span>
+                src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_full.png')}
+              />
+                {/* <span className="w3-text-black">You</span><span className="w3-indigo curve">Describe</span> */}
               </Link>
 
               <Link to="/" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-large">
-                <span>Y</span><span className="w3-indigo curve">D</span>
+                <img
+                  alt="YouDescribe logo"
+                  height="24px"
+                  src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_partial.png')}
+                />
+                {/* <span>Y</span><span className="w3-indigo curve">D</span> */}
               </Link>
           </logo>
 
