@@ -34,7 +34,9 @@ export function ourFetch(url, JSONparsing = true, optionObj = { method: 'GET' })
     const req = new XMLHttpRequest();
     req.open(optionObj.method, url);
     if (optionObj.headers) {
-      req.setRequestHeader(optionObj.headers);
+      for (let key in optionObj.headers) {
+        req.setRequestHeader(key,optionObj.headers[key]);
+      }
     }
     req.onload = () => {
       if (req.status === 200) {

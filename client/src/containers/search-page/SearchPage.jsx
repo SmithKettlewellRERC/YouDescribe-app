@@ -15,11 +15,11 @@ class SearchPage extends Component {
     };
   }
 
-  getSearchResultsFromYdAndYt(searchValue) {
-    if (typeof(searchValue) !== 'string') {
-      searchValue = '';
-    }
-    const q = encodeURIComponent(searchValue);
+  getSearchResultsFromYdAndYt() {
+    const value = this.props.location.query.q;
+    console.log(value);
+
+    const q = encodeURIComponent(value);
     const serverVideoIds = [];
     let ids;
     let dbResponse;
@@ -262,10 +262,7 @@ class SearchPage extends Component {
   }
 
   componentDidMount() {
-    let currentSearchValue = this.props.getState().searchValue;
-    if (currentSearchValue !== '') {
-      this.getSearchResultsFromYdAndYt(currentSearchValue);
-    }
+    this.getSearchResultsFromYdAndYt();
   }
 
   // ????????????????????????????????????????????????????????????????????????????????
@@ -280,7 +277,7 @@ class SearchPage extends Component {
   }
 
   render() {
-    const searchTerm = `"${this.props.getState().searchValue}"`;
+    const searchTerm = `"${this.props.location.query.q}"`;
     return (
       <div id="search-page" title="YouDescribe search results page">
 

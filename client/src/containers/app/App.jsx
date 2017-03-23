@@ -43,19 +43,10 @@ class App extends Component {
     return this.state;
   }
 
-  // use algorithm to seperate
-  clickHandler(searchValue) {
-    this.setState({
-      searchValue: searchValue,
-    });
-    const q = encodeURIComponent(searchValue);
-    browserHistory.push(`/search?q=${q}`);
-  }
-
   render() {
     return (
       <div>
-        <Navbar updateSearch={searchValue => this.clickHandler(searchValue)} />
+        <Navbar />
         {React.cloneElement(this.props.children, {
           getState: this.getState,
           getVideoProgress: this.getVideoProgress,
