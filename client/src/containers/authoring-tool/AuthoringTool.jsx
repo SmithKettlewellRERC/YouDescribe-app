@@ -4,17 +4,14 @@ import Notes from '../../components/notes/Notes.jsx';
 import Editor from '../../components/editor/Editor.jsx';
 import Track from '../../components/track/Track.jsx';
 import { convertISO8601ToSeconds, convertSecondsToEditorFormat } from '../../shared/helperFunctions';
+import { ourFetch } from '../../shared/helperFunctions';
 
 const conf = require('../../shared/config')();
 
 class AuthoringTool extends Component {
   constructor(props) {
     super(props);
-    this.LOGGED_USER = {
-      _id: '58cf556546e13d72f1c70490',
-      name: 'Rodrigo',
-      email: 'lemerodrigo@gmail.com',
-    };
+    this.LOGGED_USER = '58d20f8e46e13da71bd1a9d5';
     this.watcher = null;
     this.videoState = -1;
     this.currentClip = null;
@@ -107,7 +104,7 @@ class AuthoringTool extends Component {
       // This looping won't be necessary when the API just delivery the owned AD for the current video.
       for (let i = 0; i < videoData.audio_descriptions.length; i++) {
         const ad = videoData.audio_descriptions[i];
-        if (ad.user._id === this.LOGGED_USER._id) {
+        if (ad.user._id === this.LOGGED_USER) {
           audioDescriptionId = ad['_id'];
           if (ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
@@ -139,7 +136,7 @@ class AuthoringTool extends Component {
       const promises = [];
       audioClips.forEach((audioObj, idx) => {
         console.log(audioObj.url);
-        promises.push(fetch(audioObj.url));
+        promises.push(ourFetch(audioObj.url));
       });
       Promise.all(promises).then(function() {
         console.log('All audios loaded.');
@@ -158,7 +155,7 @@ class AuthoringTool extends Component {
     const self = this;
     console.log('5 -> getVideoDuration');
     const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet&key=${conf.youTubeApiKey}`;
-    fetch(url).then(response => response.json()).then((data) => {
+    ourFetch(url).then((data) => {
       this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
       this.setState({
         videoTitle: data.items[0].snippet.title,
@@ -537,13 +534,13 @@ class AuthoringTool extends Component {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function () {
-      // console.log(JSON.parse(this.responseText).result);
+      console.log(JSON.parse(this.responseText).result);
       self.setState({
         videoData: JSON.parse(this.responseText).result,
       }, () => {
         self.parseVideoData();
       });
-    };
+    }
     xhr.send(formData);
   }
 

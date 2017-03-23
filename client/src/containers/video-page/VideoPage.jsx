@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
 import Slider from '../../components/slider/Slider.jsx';
+import AudioDescriptionSelector from '../../components/audio-description-selector/AudioDescriptionSelector.jsx';
 import DescriberChooser from '../../components/describer-chooser/DescriberChooser.jsx';
+import { ourFetch } from '../../shared/helperFunctions';
 
 const conf = require('../../shared/config')();
 
@@ -17,8 +19,6 @@ class VideoPage extends Component {
     this.state = {
       videoId: props.params.videoId,
       videoUrl: `${conf.apiUrl}/videos/${props.params.videoId}`,
-
-      currentVideoDescriber: '',
 
       // Audio descriptions.
       audioDescriptionsIds: [],
@@ -37,6 +37,7 @@ class VideoPage extends Component {
     };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
+    this.setAudioDescriptionActive = this.setAudioDescriptionActive.bind(this);
     // this.sliderIsReady = this.sliderIsReady.bind(this);
   }
 
@@ -52,26 +53,44 @@ class VideoPage extends Component {
     }
   }
 
-  // 2
+  // 2 Keep this for safari bug detecting
+  // fetchVideoData() {
+  //   console.log('2 -> fetchingVideoData');
+  //   const self = this;
+  //   const xhr = new XMLHttpRequest();
+  //   xhr.open('GET', this.state.videoUrl, true);
+  //   xhr.onload = function () {
+  //     if (xhr.readyState === 4) {
+  //       const response = JSON.parse(xhr.response);
+  //       const result = response.result
+  //         ? response.result
+  //         : {};
+  //       self.setState({
+  //         videoData: result,
+  //       }, () => {
+  //         self.parseVideoData();
+  //       });
+  //     }
+  //   };
+  //   xhr.send();
+  // }
+
+  //2 relaced fetchVideoData with the new Fetch
   fetchVideoData() {
     console.log('2 -> fetchingVideoData');
     const self = this;
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', this.state.videoUrl, true);
-    xhr.onload = function () {
-      if (xhr.readyState === 4) {
-        const response = JSON.parse(xhr.response);
+    ourFetch(this.state.videoUrl)
+    .then((response) => {
         const result = response.result
           ? response.result
           : {};
         self.setState({
           videoData: result,
         }, () => {
+          console.log(self.state.videoData);
           self.parseVideoData();
         });
-      }
-    };
-    xhr.send();
+    })
   }
 
   // 3
@@ -107,19 +126,18 @@ class VideoPage extends Component {
   // 4.
   setAudioDescriptionActive() {
     console.log('4 -> setAudioDescriptionActive');
-    let selectedAudioDescriptionId = null;
-    if (!this.state.selectedAudioDescriptionId) {
-      selectedAudioDescriptionId = this.state.audioDescriptionsIds[0];
-    }
 
-    let audioClipsLength = 0;
-    if (this.state.audioDescriptionsIdsAudioClips && selectedAudioDescriptionId) {
-      audioClipsLength = this.getAudioClips().length;
+    let selectedAudioDescriptionId = null;
+    if (this.state.selectedAudioDescriptionId !== null) {
+      selectedAudioDescriptionId = this.state.selectedAudioDescriptionId;
+    } else {
+      selectedAudioDescriptionId = this.state.audioDescriptionsIds[0];
     }
 
     this.setState({
       selectedAudioDescriptionId,
     }, () => {
+      console.log('Selected audio description ID', selectedAudioDescriptionId);
       this.preLoadAudioClips();
     });
   }
@@ -135,7 +153,7 @@ class VideoPage extends Component {
       const promises = [];
       audioClips.forEach((audioObj, idx) => {
         console.log(idx + 1, audioObj.url);
-        promises.push(fetch(audioObj.url));
+        promises.push(ourFetch(audioObj.url, false));
       });
       Promise.all(promises).then(function() {
         console.log('All audios loaded.');
@@ -154,6 +172,13 @@ class VideoPage extends Component {
     const self = this;
     console.log('6 -> initVideoPlayer', this.state.videoId);
     if (YT.loaded) {
+      // If the video is playing, we need to change the state.
+      if (this.state.videoPlayer) {
+        const r = confirm("By changing the video describer, we have to restart the video. Are you sure you want to change?");
+        if (r == true) {
+          this.state.videoPlayer.stopVideo();
+        }
+      }
       startVideo();
     } else {
       window.onYouTubeIframeAPIReady = () => {
@@ -336,18 +361,15 @@ class VideoPage extends Component {
     return this.state;
   }
 
-  updateState(newState) {
-    this.setState(newState);
-  }
-
-  handleOption(event) {
-    console.log(event.target.value);
-    this.setState({ currentVideoDescriber: event.target.value });
+  updateState(newState, callback) {
+    this.setState(newState, callback);
   }
 
   // 1
   render() {
+    console.log('1 -> Render')
     return (
+
       <div id="video-player">
         <main role="application" title="Video player">
           <div className="w3-row">
@@ -359,9 +381,16 @@ class VideoPage extends Component {
             </div>
           </div>
         </main>
-        <div style={{ width: '100%' }}>
-          <Slider updateState={this.updateState} sliderIsReady={this.sliderIsReady} />
-        </div>
+        <Slider
+          updateState={this.updateState}
+          sliderIsReady={this.sliderIsReady}
+        />
+        <AudioDescriptionSelector
+          updateState={this.updateState}
+          audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
+          selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
+          setAudioDescriptionActive={this.setAudioDescriptionActive}
+        />
       </div>
     );
   }
