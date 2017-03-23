@@ -42,7 +42,6 @@ const Navbar = (props) => {
   // Close the sidenav with the close button
   function menuClose() {
     const mySidenav = document.getElementById('mySidenav');
-
     mySidenav.style.display = 'none';
   }
 
@@ -69,7 +68,7 @@ const Navbar = (props) => {
 
           <div role="search" className="w3-left">
             {/* <input type="text" className="w3-amber w3-border-0 w3-padding" style={{ width: '100%' }} /> */}
-            <SearchBar updateSearch={searchValue => props.updateSearch(searchValue)} />
+            <SearchBar />
           </div>
 
           {/* Right-sided navbar links */}

@@ -1,3 +1,4 @@
+
 export function convertISO8601ToSeconds(input) {
   const reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
   let hours = 0, minutes = 0, seconds = 0, totalseconds;
@@ -26,3 +27,28 @@ export function convertSecondsToEditorFormat(timeInSeconds) {
 
   return `${hours}:${minutes}:${seconds}:${milliseconds}`;
 }
+
+//fetch function that work accross platform
+export function ourFetch(url, JSONparsing = true, optionObj = { method: 'GET' }) {
+  return new Promise( (resolve, reject) => {
+    const req = new XMLHttpRequest();
+    req.open(optionObj.method, url);
+    if (optionObj.headers) {
+      for (let key in optionObj.headers) {
+        req.setRequestHeader(key,optionObj.headers[key]);
+      }
+    }
+    req.onload = () => {
+      if (req.status === 200) {
+        if (JSONparsing) {
+          resolve(JSON.parse(req.response));
+        } else {
+          resolve(req.response);
+        }
+      } else {
+        reject(Error(req.statusText));
+      }
+    };
+    req.send(optionObj.body);
+  });
+};
