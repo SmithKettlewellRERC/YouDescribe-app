@@ -123,6 +123,8 @@ class SearchPage extends Component {
     for (let i = 0; i < videoFromYDdatabase.length; i += 1) {
       const item = videoFromYDdatabase[i];
       const id = item.id;
+      // const thumbnailDefault = item.snippet.thumbnails.default;
+      // const thumbnailMedium = item.snippet.thumbnails.medium;
       const thumbnailHigh = item.snippet.thumbnails.high;
       let title = item.snippet.title;
       const description = item.snippet.description;
@@ -190,6 +192,8 @@ class SearchPage extends Component {
     for (let i = 0; i < videoFromYoutube.length; i += 1) {
       const item = videoFromYoutube[i];
       const id = item.id;
+      // const thumbnailDefault = item.snippet.thumbnails.default;
+      // const thumbnailMedium = item.snippet.thumbnails.medium;
       const thumbnailHigh = item.snippet.thumbnails.high;
       let title = item.snippet.title;
       const description = item.snippet.description;
@@ -255,6 +259,14 @@ class SearchPage extends Component {
 
   componentDidMount() {
     this.getSearchResultsFromYdAndYt();
+  }
+
+  // ????????????????????????????????????????????????????????????????????????????????
+  // setTimeout ensure it run after app render
+  componentWillReceiveProps() {
+    setTimeout( () => {
+      this.getSearchResultsFromYdAndYt();
+    }, 0);
   }
 
   loadMoreResults() {

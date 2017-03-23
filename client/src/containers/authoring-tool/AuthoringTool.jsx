@@ -11,11 +11,7 @@ const conf = require('../../shared/config')();
 class AuthoringTool extends Component {
   constructor(props) {
     super(props);
-    this.LOGGED_USER = {
-      _id: '58cf556546e13d72f1c70490',
-      name: 'Rodrigo',
-      email: 'lemerodrigo@gmail.com',
-    };
+    this.LOGGED_USER = '58d20f8e46e13da71bd1a9d5';
     this.watcher = null;
     this.videoState = -1;
     this.currentClip = null;
@@ -108,7 +104,7 @@ class AuthoringTool extends Component {
       // This looping won't be necessary when the API just delivery the owned AD for the current video.
       for (let i = 0; i < videoData.audio_descriptions.length; i++) {
         const ad = videoData.audio_descriptions[i];
-        if (ad.user._id === this.LOGGED_USER._id) {
+        if (ad.user._id === this.LOGGED_USER) {
           audioDescriptionId = ad['_id'];
           if (ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
@@ -538,13 +534,13 @@ class AuthoringTool extends Component {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function () {
-      // console.log(JSON.parse(this.responseText).result);
+      console.log(JSON.parse(this.responseText).result);
       self.setState({
         videoData: JSON.parse(this.responseText).result,
       }, () => {
         self.parseVideoData();
       });
-    };
+    }
     xhr.send(formData);
   }
 

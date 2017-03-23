@@ -19,13 +19,6 @@ class App extends Component {
     this.getState = this.getState.bind(this);
   }
 
-  componentWillMount() {
-    const searchValue = this.props.location.query.q;
-    this.setState({
-      searchValue: searchValue,
-    });
-  }
-
   componentDidMount() {
     gapi.load('auth2', function() {
       gapi.auth2.init();
