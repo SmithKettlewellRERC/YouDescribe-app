@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { IndexLink, Link } from 'react-router';
 import path from 'path';
-
-// import SearchBar from '../search-bar/SearchBar.jsx';
 import NavLink from '../nav-link/NavLink.jsx';
 import SearchBar from '../search-bar/SearchBar.jsx'
 import LoginButton from '../login-button/LoginButton.jsx';
