@@ -5,6 +5,7 @@ import Editor from '../../components/editor/Editor.jsx';
 import Track from '../../components/track/Track.jsx';
 import { convertISO8601ToSeconds, convertSecondsToEditorFormat } from '../../shared/helperFunctions';
 import { ourFetch } from '../../shared/helperFunctions';
+import { browserHistory } from 'react-router';
 
 const conf = require('../../shared/config')();
 
@@ -54,7 +55,7 @@ class AuthoringTool extends Component {
     };
     
     // Bindings.
-    this.getState = this.getState.bind(this);
+    this.getATState = this.getATState.bind(this);
     this.updateState = this.updateState.bind(this);
     this.publishVideo = this.publishVideo.bind(this);
     this.updateTrackLabel = this.updateTrackLabel.bind(this);
@@ -62,6 +63,14 @@ class AuthoringTool extends Component {
     this.recordAudioClip = this.recordAudioClip.bind(this);
     this.uploadAudioRecorded = this.uploadAudioRecorded.bind(this);
     this.setSelectedTrack = this.setSelectedTrack.bind(this);
+  }
+
+  componentWillMount() {
+    const isLoggedIn = this.props.getAppState().isLoggedIn;
+    if (isLoggedIn === false) {
+      alert('You have to be logged in to describe a video')
+      browserHistory.goBack();
+    }
   }
 
   componentDidMount() {
@@ -182,7 +191,7 @@ class AuthoringTool extends Component {
           id={idx}
           data={audioClip}
           actionIconClass={'fa-step-forward'}
-          getState={this.getState}
+          getATState={this.getATState}
           recordAudioClip={this.recordAudioClip}
           updateTrackLabel={this.updateTrackLabel}
           setSelectedTrack={this.setSelectedTrack}
@@ -407,7 +416,7 @@ class AuthoringTool extends Component {
         id={newTrackId}
         data={audioClip}
         actionIconClass={'fa-circle'}
-        getState={this.getState}
+        getATState={this.getATState}
         recordAudioClip={this.recordAudioClip}
         updateTrackLabel={this.updateTrackLabel}
         setSelectedTrack={this.setSelectedTrack}
@@ -501,7 +510,7 @@ class AuthoringTool extends Component {
             id={this.state.selectedTrackComponentId}
             data={audioClip}
             actionIconClass={classIcon}
-            getState={this.getState}
+            getATState={this.getATState}
             recordAudioClip={this.recordAudioClip}
             updateTrackLabel={this.updateTrackLabel}
             setSelectedTrack={this.setSelectedTrack}
@@ -562,7 +571,7 @@ class AuthoringTool extends Component {
     xhr.send(data);
   }
 
-  getState() {
+  getATState() {
     return this.state;
   }
 
@@ -630,7 +639,7 @@ class AuthoringTool extends Component {
         <div className="w3-row w3-margin-top w3-hide-small w3-hide-medium">
           <div className="w3-col w3-margin-bottom">
             <Editor
-              getState={this.getState}
+              getATState={this.getATState}
               updateState={this.updateState}
               publishVideo={this.publishVideo}
               addAudioClipTrack={this.addAudioClipTrack}

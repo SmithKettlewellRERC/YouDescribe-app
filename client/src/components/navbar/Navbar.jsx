@@ -28,10 +28,10 @@ class Navbar extends Component {
   }
 
   render() {
-    const isLoggedIn = this.props.getState().isLoggedIn;
+    const isLoggedIn = this.props.isLoggedIn;
     let loginComponent = null;
     if (isLoggedIn) {
-      loginComponent = <LogoutButton logOut={this.props.logOut} getState={this.props.getState} />;
+      loginComponent = <LogoutButton logOut={this.props.logOut} getAppState={this.props.getAppState} />;
     } else {
       loginComponent = <LoginButton />;
     }

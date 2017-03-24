@@ -17,8 +17,6 @@ class SearchPage extends Component {
 
   getSearchResultsFromYdAndYt() {
     const value = this.props.location.query.q;
-    console.log(value);
-
     const q = encodeURIComponent(value);
     const serverVideoIds = [];
     let ids;
@@ -44,7 +42,7 @@ class SearchPage extends Component {
         this.setState({
           videoAlreadyOnYD: [],
         }, () => {
-          this.renderVideoFromYD(dbResponse, videoFromYDdatabase);
+          this.renderVideosFromYD(dbResponse, videoFromYDdatabase);
         });
       })
       .then(() => {
@@ -67,7 +65,7 @@ class SearchPage extends Component {
                 this.setState({
                   videoNotOnYD: [],
                 }, () => {
-                  this.renderVideoNotOnYD(videoFromYoutube);
+                  this.renderVideosFromYT(videoFromYoutube);
                 });
               });
           });
@@ -114,11 +112,7 @@ class SearchPage extends Component {
     })
   }
 
-  describeClick(id) {
-    browserHistory.push('/authoring-tool/' + id)
-  }
-
-  renderVideoFromYD(dbResponse, videoFromYDdatabase) {
+  renderVideosFromYD(dbResponse, videoFromYDdatabase) {
     const videoAlreadyOnYD = this.state.videoAlreadyOnYD.slice();
     for (let i = 0; i < videoFromYDdatabase.length; i += 1) {
       const item = videoFromYDdatabase[i];
@@ -179,6 +173,7 @@ class SearchPage extends Component {
           describer={describer}
           views={views}
           time={time}
+          getAppState={this.props.getAppState}
           buttons='off'
         />);
     }
@@ -187,7 +182,7 @@ class SearchPage extends Component {
     });
   }
 
-  renderVideoNotOnYD(videoFromYoutube) {
+  renderVideosFromYT(videoFromYoutube) {
     const videoNotOnYD = this.state.videoNotOnYD.slice();
     for (let i = 0; i < videoFromYoutube.length; i += 1) {
       const item = videoFromYoutube[i];
@@ -238,16 +233,16 @@ class SearchPage extends Component {
         <VideoCard
           key={i}
           id={id}
+          isLoggedIn={this.props.isLoggedIn}
           description={description}
           thumbnailHighUrl={thumbnailHigh.url}
           title={title}
           author={author}
           views={views}
           time={time}
-          vote_count={0}
+          votes={0}
           buttons='on'
-          upVoteClick={(e) => this.upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time)}
-          describeClick={()=> this.describeClick(id)}
+          getAppState={this.props.getAppState}
         />
       );
     }
@@ -261,8 +256,6 @@ class SearchPage extends Component {
     this.getSearchResultsFromYdAndYt();
   }
 
-  // ????????????????????????????????????????????????????????????????????????????????
-  // setTimeout ensure it run after app render
   componentWillReceiveProps() {
     setTimeout( () => {
       this.getSearchResultsFromYdAndYt();

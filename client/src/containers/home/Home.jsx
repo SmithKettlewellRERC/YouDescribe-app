@@ -92,6 +92,7 @@ class Home extends Component {
               <VideoCard
                 key={i}
                 id={id}
+                isLoggedIn={this.props.isLoggedIn}
                 description={description}
                 thumbnailHighUrl={thumbnailHigh.url}
                 title={title}
