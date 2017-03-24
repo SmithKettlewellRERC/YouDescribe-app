@@ -232,7 +232,7 @@ class Slider extends Component {
         <div className="clearfix">
           <span id="sliderLabel" className="floatLeft">Volume:</span>
           <div id="sliderRail1" className="sliderRail floatLeft">
-            <button className="sliderThumb" id="sliderThumb1" role="slider" aria-labelledby="sliderLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50%"></button>
+            <button className="sliderThumb" id="sliderThumb1" role="slider" aria-labelledby="sliderLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50%" accessKey="v"></button>
           </div>
           <span id="sliderValue1"className="floatLeft">
             50%

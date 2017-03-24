@@ -38,7 +38,6 @@ class VideoPage extends Component {
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
     this.setAudioDescriptionActive = this.setAudioDescriptionActive.bind(this);
-    // this.sliderIsReady = this.sliderIsReady.bind(this);
   }
 
   componentDidMount() {
@@ -188,8 +187,6 @@ class VideoPage extends Component {
 
     function onVideoPlayerReady() {
       self.audioClipsCopy = self.getAudioClips().slice();
-      // console.log('slider ready', self.sliderIsReady());
-      // self.sliderIsReady();
     }
 
     function onPlayerStateChange(event) {
@@ -261,7 +258,7 @@ class VideoPage extends Component {
   // 7
   videoProgressWatcher() {
     console.log('6 -> videoProgressWatcher')
-    const interval = 50;
+    const interval = 100;
 
     if (this.watcher) {
       clearInterval(this.watcher);
@@ -314,7 +311,7 @@ class VideoPage extends Component {
             }
             break;
           case 'extended':
-            if (Math.abs(+this.audioClipsCopy[i].start_time - currentVideoProgress) <= interval / 1000 ||
+            if (Math.abs(+this.audioClipsCopy[i].start_time - currentVideoProgress) <= interval / 2000 ||
             (+this.audioClipsCopy[i].start_time < 0.5 && currentVideoProgress <= interval / 500)) {
               console.log('## EXTENDED ##');
               this.currentClip = new Howl({
@@ -369,23 +366,27 @@ class VideoPage extends Component {
   render() {
     console.log('1 -> Render')
     return (
-      <main id="video-player">
-        <div className="w3-row">
-          <div id="video" className="w3-card-2">
-            <div id="playerVP" />
+      <div id="video-player">
+        <main role="application" title="Video player">
+          <div className="w3-row">
+            <div
+              id="video"
+              className="w3-card-2"
+              >
+              <div id="playerVP" />
+            </div>
           </div>
+        </main>
+        <div style={{ width: '100%' }}>
+          <Slider updateState={this.updateState} />
         </div>
-        <Slider
-          updateState={this.updateState}
-          sliderIsReady={this.sliderIsReady}
-        />
         <AudioDescriptionSelector
           updateState={this.updateState}
           audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
           selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
           setAudioDescriptionActive={this.setAudioDescriptionActive}
         />
-      </main>
+    </div>
     );
   }
 }

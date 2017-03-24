@@ -279,11 +279,11 @@ class SearchPage extends Component {
           <div id="on-yd" className="w3-row">
             {this.state.videoAlreadyOnYD}
           </div>
-
-          <div className="w3-margin-top w3-center">
-            <button className="w3-btn w3-indigo w3-text-shadow w3-margin-bottom" onClick={this.loadMoreResults}>Load More</button>
-          </div>
         </main>
+
+          <div id="load-more" className="w3-margin-top w3-center">
+            <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+          </div>
 
         <div className="w3-container w3-indigo">
           <h2>Videos without audio descriptions matching {searchTerm}</h2>

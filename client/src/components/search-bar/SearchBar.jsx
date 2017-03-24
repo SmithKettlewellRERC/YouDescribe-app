@@ -20,7 +20,7 @@ const SearchBar = (props) => {
             available in the first section. If not, Youtube videos without
             audio descriptions matching the search criteria will be listed in
             the second section and requests for any of those videos can be made`}
-            className="w3-padding-small" type="search" placeholder="Search" defaultValue=""
+            className="w3-padding-small w3-border w3-border-indigo" type="search" placeholder="Search" defaultValue=""
           />
         </div>
         <div className="w3-left">

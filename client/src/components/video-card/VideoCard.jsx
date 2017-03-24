@@ -77,10 +77,10 @@ class VideoCard extends Component {
               <a href="#">{this.props.describer}</a> (describer)
             </h6>
           </div>
-          <div className="w3-container w3-padding-8">
+          <div className="w3-container" style={{ paddingTop: '8px' }}>
             <h6><div className="w3-left">{this.props.views}</div><div className="w3-right"> {this.props.time}</div></h6>
           </div>
-          <div className="w3-container w3-padding-8">
+          <div className="w3-container" style={{ paddingBottom: '8px' }}>
             {buttons}
           </div>
         </div>
