@@ -10,7 +10,7 @@ const conf = require('../../shared/config')();
 class AuthoringTool extends Component {
   constructor(props) {
     super(props);
-    this.LOGGED_USER = '58d2cf76913595e32a4e366b';
+    this.LOGGED_USER = '58d41ed6c8a8c2b43a65a437';
     this.watcher = null;
     this.videoState = -1;
     this.currentClip = null;
@@ -110,8 +110,12 @@ class AuthoringTool extends Component {
 
     if (videoData && videoData.audio_descriptions && videoData.audio_descriptions.length > 0) {
       // This looping won't be necessary when the API just delivery the owned AD for the current video.
+      console.log('VIDEO DATA DESCs', videoData.audio_descriptions);
       for (let i = 0; i < videoData.audio_descriptions.length; i += 1) {
         const ad = videoData.audio_descriptions[i];
+        console.log('AD ###', ad);
+        console.log('USER ID', ad.user._id);
+        console.log('LOGGED USER', this.LOGGED_USER);
         if (ad.user._id === this.LOGGED_USER) {
           audioDescriptionId = ad['_id'];
           if (ad.audio_clips.length > 0) {
