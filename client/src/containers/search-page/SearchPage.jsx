@@ -17,7 +17,6 @@ class SearchPage extends Component {
 
   getSearchResultsFromYdAndYt() {
     const value = this.props.location.query.q;
-    console.log(value);
 
     const q = encodeURIComponent(value);
     const serverVideoIds = [];

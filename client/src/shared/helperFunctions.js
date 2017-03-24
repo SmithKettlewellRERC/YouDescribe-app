@@ -51,4 +51,5 @@ export function ourFetch(url, JSONparsing = true, optionObj = { method: 'GET' })
     };
     req.send(optionObj.body);
   });
-};
+}
+

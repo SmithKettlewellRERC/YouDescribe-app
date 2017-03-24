@@ -3,7 +3,6 @@ import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
 import { ourFetch } from '../../shared/helperFunctions';
 
-
 const conf = require('../../shared/config')();
 
 class Home extends Component {
