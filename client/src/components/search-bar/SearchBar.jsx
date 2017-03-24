@@ -5,8 +5,9 @@ import { browserHistory } from 'react-router';
 const SearchBar = (props) => {
   const updateSearch = (e) => {
     e.preventDefault();
-    const value = e.target[0].value;
-    props.updateSearch(value);
+    const searchValue = e.target[0].value;
+    const q = encodeURIComponent(searchValue);
+    browserHistory.push(`/search?q=${q}`);
   };
 
   return (

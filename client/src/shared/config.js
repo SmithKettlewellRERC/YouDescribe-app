@@ -8,6 +8,7 @@ module.exports = () => {
   const audioClipsUploadsPath = `${baseUrl}:${apiPort}/uploads`;
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';
   const youTubeApiKey = 'AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls';
+  const googleClientId = '1056671841574-e1r4soednlur8hl2sl0ooumpvftt1s2k.apps.googleusercontent.com';
 
   // Video Player Setup
   const videoPlayerWathcerInterval = 50; // Miliseconds
@@ -27,5 +28,6 @@ module.exports = () => {
     videoPlayerWathcerDelay,
     seekToPositionDelayFix,
     trackSinewaveAreaWidth,
+    googleClientId,
   };
 };

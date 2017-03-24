@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
+import { ourFetch } from '../../shared/helperFunctions';
+
 
 const conf = require('../../shared/config')();
 
@@ -21,8 +23,8 @@ class Home extends Component {
     let ids;
     let dbResponse;
 
-    fetch(`${conf.apiUrl}/videos`)
-      .then(response => response.json())
+    ourFetch(`${conf.apiUrl}/videos`)
+      // .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
         for (let i = 0; i < response.result.length; i += 1) {
@@ -33,8 +35,8 @@ class Home extends Component {
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
         const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
-        fetch(url)
-        .then(response => response.json())
+        ourFetch(url)
+        // .then(response => response.json())
         .then((data) => {
           const videos = this.state.videos.slice();
           for (let i = 0; i < data.items.length; i += 1) {
@@ -90,6 +92,7 @@ class Home extends Component {
               <VideoCard
                 key={i}
                 id={id}
+                isLoggedIn={this.props.isLoggedIn}
                 description={description}
                 thumbnailHighUrl={thumbnailHigh.url}
                 title={title}

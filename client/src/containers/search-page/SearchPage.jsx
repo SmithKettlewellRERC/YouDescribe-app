@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
+import { ourFetch } from '../../shared/helperFunctions';
 
 const conf = require('../../shared/config')();
 
@@ -14,11 +15,9 @@ class SearchPage extends Component {
     };
   }
 
-  getSearchResultsFromYdAndYt(searchValue) {
-    if (typeof(searchValue) !== 'string') {
-      searchValue = '';
-    }
-    const q = encodeURIComponent(searchValue);
+  getSearchResultsFromYdAndYt() {
+    const value = this.props.location.query.q;
+    const q = encodeURIComponent(value);
     const serverVideoIds = [];
     let ids;
     let dbResponse;
@@ -27,8 +26,7 @@ class SearchPage extends Component {
     let videoFromYoutube = [];
     let idsYTvideo;
 
-    fetch(`${conf.apiUrl}/videos/search?q=${q}`)
-    .then(response => response.json())
+    ourFetch(`${conf.apiUrl}/videos/search?q=${q}`)
     .then((response) => {
       dbResponse = response.result;
       for (let i = 0; i < dbResponse.length; i += 1) {
@@ -38,20 +36,18 @@ class SearchPage extends Component {
     })
     .then(() => {
       const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
-      fetch(urlfForYT)
-      .then(response => response.json())
+      ourFetch(urlfForYT)
       .then((videoDataFromYDdatabase) => {
         videoFromYDdatabase = videoDataFromYDdatabase.items;
         this.setState({
           videoAlreadyOnYD: [],
         }, () => {
-          this.renderVideoFromYD(dbResponse, videoFromYDdatabase);
+          this.renderVideosFromYD(dbResponse, videoFromYDdatabase);
         });
       })
       .then(() => {
           const urlForYD = `${conf.youTubeApiUrl}/search?part=snippet&q=${q}&maxResults=50&key=${conf.youTubeApiKey}`;
-          fetch(urlForYD)
-          .then(response => response.json())
+          ourFetch(urlForYD)
           .then((videos) => {
             for (let i = 0; i < videos.items.length; i += 1) {
               const temp = videos.items[i].id.videoId;
@@ -63,14 +59,13 @@ class SearchPage extends Component {
           })
           .then(() => {
             const urlForYT = `${conf.youTubeApiUrl}/videos?id=${idsYTvideo}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
-            fetch(urlForYT)
-              .then(response => response.json())
+            ourFetch(urlForYT)
               .then((videoFromYoutubes) => {
                 videoFromYoutube = videoFromYoutubes.items;
                 this.setState({
                   videoNotOnYD: [],
                 }, () => {
-                  this.renderVideoNotOnYD(videoFromYoutube);
+                  this.renderVideosFromYT(videoFromYoutube);
                 });
               });
           });
@@ -88,17 +83,12 @@ class SearchPage extends Component {
         title: title,
         id: id,
     });
-    fetch(`${conf.apiUrl}/wishlist`, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
+    ourFetch(`${conf.apiUrl}/wishlist`, true, {
       method: 'post',
       body: body,
     })
-    .then(res => res.json())
     .then((res) => {
-      let new_count = res.result.votes;
+      let new_count = res.votes;
       let newState = this.state.videoNotOnYD.slice();
       newState[i] = (
           <VideoCard
@@ -122,11 +112,7 @@ class SearchPage extends Component {
     })
   }
 
-  describeClick(id) {
-    browserHistory.push('/authoring-tool/' + id)
-  }
-
-  renderVideoFromYD(dbResponse, videoFromYDdatabase) {
+  renderVideosFromYD(dbResponse, videoFromYDdatabase) {
     const videoAlreadyOnYD = this.state.videoAlreadyOnYD.slice();
     for (let i = 0; i < videoFromYDdatabase.length; i += 1) {
       const item = videoFromYDdatabase[i];
@@ -187,6 +173,7 @@ class SearchPage extends Component {
           describer={describer}
           views={views}
           time={time}
+          getAppState={this.props.getAppState}
           buttons='off'
         />);
     }
@@ -195,7 +182,7 @@ class SearchPage extends Component {
     });
   }
 
-  renderVideoNotOnYD(videoFromYoutube) {
+  renderVideosFromYT(videoFromYoutube) {
     const videoNotOnYD = this.state.videoNotOnYD.slice();
     for (let i = 0; i < videoFromYoutube.length; i += 1) {
       const item = videoFromYoutube[i];
@@ -246,16 +233,16 @@ class SearchPage extends Component {
         <VideoCard
           key={i}
           id={id}
+          isLoggedIn={this.props.isLoggedIn}
           description={description}
           thumbnailHighUrl={thumbnailHigh.url}
           title={title}
           author={author}
           views={views}
           time={time}
-          vote_count={0}
+          votes={0}
           buttons='on'
-          upVoteClick={(e) => this.upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time)}
-          describeClick={()=> this.describeClick(id)}
+          getAppState={this.props.getAppState}
         />
       );
     }
@@ -266,16 +253,12 @@ class SearchPage extends Component {
   }
 
   componentDidMount() {
-    let currentSearchValue = this.props.getState().searchValue;
-    if (currentSearchValue !== '') {
-      this.getSearchResultsFromYdAndYt(currentSearchValue);
-    }
+    this.getSearchResultsFromYdAndYt();
   }
 
-  // ????????????????????????????????????????????????????????????????????????????????
   componentWillReceiveProps() {
     setTimeout( () => {
-      this.getSearchResultsFromYdAndYt(this.props.getState().searchValue);
+      this.getSearchResultsFromYdAndYt();
     }, 0);
   }
 
@@ -284,7 +267,7 @@ class SearchPage extends Component {
   }
 
   render() {
-    const searchTerm = `"${this.props.getState().searchValue}"`;
+    const searchTerm = `"${this.props.location.query.q}"`;
     return (
       <div id="search-page" title="YouDescribe search results page">
 
