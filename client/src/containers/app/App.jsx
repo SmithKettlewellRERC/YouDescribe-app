@@ -33,7 +33,7 @@ class App extends Component {
   componentWillMount() {
     const searchValue = this.props.location.query.q;
     this.setState({
-      searchValue: searchValue,
+      searchValue,
     });
   }
 
@@ -46,7 +46,7 @@ class App extends Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ token: token }),
+      body: JSON.stringify({ token }),
     })
     .then((res) => {
       this.setState({
@@ -93,7 +93,7 @@ class App extends Component {
 
   clickHandler(searchValue) {
     this.setState({
-      searchValue: searchValue,
+      searchValue,
     });
     const q = encodeURIComponent(searchValue);
     browserHistory.push(`/search?q=${q}`);

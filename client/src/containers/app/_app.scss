@@ -365,14 +365,3 @@ input[type=checkbox].w3-check:disabled+.w3-validate,input[type=radio].w3-radio:d
   position: absolute;
   left: -10000px;
 }
-.vid-card {
-  width: 194px;
-  padding: 0 8px;
-  .w3-card-2 {
-    .vid-title {
-      overflow-x: hidden;
-      height: 110px;
-    }
-    background-color: #fff;
-  }
-}
