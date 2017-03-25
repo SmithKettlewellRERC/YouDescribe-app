@@ -3,7 +3,6 @@ import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
 import { ourFetch } from '../../shared/helperFunctions';
 
-
 const conf = require('../../shared/config')();
 
 class Home extends Component {
@@ -16,14 +15,24 @@ class Home extends Component {
       searchQuery: '',
       videos: [],
     };
+
+    this.currentPage = 1;
+    this.fetchingVideosToHome = this.fetchingVideosToHome.bind(this);
+    this.loadMoreResults = this.loadMoreResults.bind(this);
   }
 
   componentDidMount() {
+    this.fetchingVideosToHome();
+  }
+
+  fetchingVideosToHome() {
     const serverVideoIds = [];
     let ids;
     let dbResponse;
+    const url = (`${conf.apiUrl}/videos?page=${this.currentPage}`);
+    console.log('fetching ', url);
 
-    ourFetch(`${conf.apiUrl}/videos`)
+    ourFetch(url)
       // .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
@@ -41,6 +50,7 @@ class Home extends Component {
           const videos = this.state.videos.slice();
           for (let i = 0; i < data.items.length; i += 1) {
             const item = data.items[i];
+            const _id = item._id;
             const id = item.id;
             // const thumbnailDefault = item.snippet.thumbnails.default;
             // const thumbnailMedium = item.snippet.thumbnails.medium;
@@ -88,9 +98,11 @@ class Home extends Component {
             else if (views === 1) views = `${views} view`;
             else views = `${views} views`;
 
+            console.log('key added: ',((this.count * 30) - 30 + i));
+
             videos.push(
               <VideoCard
-                key={i}
+                key={_id}
                 id={id}
                 isLoggedIn={this.props.isLoggedIn}
                 description={description}
@@ -114,7 +126,8 @@ class Home extends Component {
   }
 
   loadMoreResults() {
-    alert('Working in progress...')
+    this.currentPage += 1;
+    this.fetchingVideosToHome();
   }
 
   // displayed on page
