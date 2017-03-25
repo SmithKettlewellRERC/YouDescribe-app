@@ -20,6 +20,14 @@ class SearchPage extends Component {
 
     // all the video Ids that we found in YD database
     this.videoIds = null;
+    // the video database that we found in YD database
+    this.dbResponse = null;
+
+    //binding function to this
+    this.loadMoreVideosFromYD = this.loadMoreVideosFromYD.bind(this);
+    this.loadMoreVideosFromYT = this.loadMoreVideosFromYT.bind(this);
+
+    this.currentPage = 1;
   }
 
   componentDidMount() {
@@ -36,19 +44,18 @@ class SearchPage extends Component {
     const value = this.props.location.query.q;
     const q = encodeURIComponent(value);
     const serverVideoIds = [];
-    let dbResponse;
 
     ourFetch(`${conf.apiUrl}/videos/search?q=${q}`)
     .then((response) => {
-      dbResponse = response.result;
-      for (let i = 0; i < dbResponse.length; i += 1) {
-        serverVideoIds.push(dbResponse[i].youtube_id);
+      this.dbResponse = response.result;
+      for (let i = 0; i < this.dbResponse.length; i += 1) {
+        serverVideoIds.push(this.dbResponse[i].youtube_id);
       }
 
       this.videoIds = serverVideoIds.join(',');
     })
     .then(() => {
-      this.fetchAndRenderVideoFromYD(dbResponse)
+      this.fetchAndRenderVideoFromYD(this.dbResponse)
       .then(() => this.fetchAndRenderVideoFromYT(q, this.videoIds));
     });
   }
@@ -56,15 +63,19 @@ class SearchPage extends Component {
   fetchAndRenderVideoFromYD(dbResponse, page = 1) {
     const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${this.videoIds}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
     return ourFetch(urlfForYT)
-      .then((videoDataFromYDdatabase) => {
-        const videoFromYDdatabase = videoDataFromYDdatabase.items;
+    .then((videoDataFromYDdatabase) => {
+      const videoFromYDdatabase = videoDataFromYDdatabase.items;
 
+      if (page === 1) {
         this.setState({
           videoAlreadyOnYD: [],
         }, () => {
           this.renderVideosFromYD(dbResponse, videoFromYDdatabase);
         });
-      });
+      } else {
+        this.renderVideosFromYD(dbResponse, videoFromYDdatabase);
+      }
+    });
   }
 
   fetchAndRenderVideoFromYT(q, ids) {
@@ -132,6 +143,14 @@ class SearchPage extends Component {
         videoNotOnYD: newState,
       })
     })
+  }
+
+  loadMoreVideosFromYD() {
+    alert('Working in progress...');
+  }
+
+  loadMoreVideosFromYT() {
+    alert('Working in progress...');
   }
 
   renderVideosFromYD(dbResponse, videoFromYDdatabase) {
@@ -216,11 +235,6 @@ class SearchPage extends Component {
     });
   }
 
-
-  loadMoreResults() {
-    alert('Working in progress...');
-  }
-
   render() {
     const searchTerm = `"${this.props.location.query.q}"`;
     return (
@@ -237,7 +251,7 @@ class SearchPage extends Component {
         </main>
 
           <div id="load-more" className="w3-margin-top w3-center">
-            <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+            <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYD} />
           </div>
 
         <div className="w3-container w3-indigo">
@@ -251,7 +265,7 @@ class SearchPage extends Component {
         </main>
 
         <div id="load-more" className="w3-margin-top w3-center">
-          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYT} />
         </div>
       </div>
     );
