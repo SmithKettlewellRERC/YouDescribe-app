@@ -19,13 +19,24 @@ class Home extends Component {
       searchQuery: '',
       videos: [],
     };
+
+    this.currentPage = 1;
+    this.fetchingVideosToHome = this.fetchingVideosToHome.bind(this);
+    this.loadMoreResults = this.loadMoreResults.bind(this);
   }
 
   componentDidMount() {
+    this.fetchingVideosToHome();
+  }
+
+  fetchingVideosToHome() {
     const serverVideoIds = [];
     let ids;
+    let dbResponse;
+    const url = (`${conf.apiUrl}/videos?page=${this.currentPage}`);
 
-    ourFetch(`${conf.apiUrl}/videos`)
+    ourFetch(url)
+      // .then(response => response.json())
       .then((response) => {
         this.dbResponse = response.result;
         for (let i = 0; i < response.result.length; i += 1) {
@@ -84,7 +95,8 @@ class Home extends Component {
   }
 
   loadMoreResults() {
-    alert('Working in progress...')
+    this.currentPage += 1;
+    this.fetchingVideosToHome();
   }
 
   // displayed on page
