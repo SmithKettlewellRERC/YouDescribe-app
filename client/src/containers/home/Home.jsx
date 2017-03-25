@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
-import { ourFetch } from '../../shared/helperFunctions';
-
+import {
+  ourFetch,
+  convertTimeToCardFormat,
+  convertViewsToCardFormat,
+} from '../../shared/helperFunctions';
 
 const conf = require('../../shared/config')();
 
 class Home extends Component {
   constructor(props) {
     super(props);
-
+    this.dbResponse = {};
     // function bindings
 
     this.state = {
@@ -21,94 +24,61 @@ class Home extends Component {
   componentDidMount() {
     const serverVideoIds = [];
     let ids;
-    let dbResponse;
 
     ourFetch(`${conf.apiUrl}/videos`)
-      // .then(response => response.json())
       .then((response) => {
-        dbResponse = response.result;
+        this.dbResponse = response.result;
         for (let i = 0; i < response.result.length; i += 1) {
           serverVideoIds.push(response.result[i].youtube_id);
         }
         ids = serverVideoIds.join(',');
       })
       .then(() => {
-        // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
         const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
         ourFetch(url)
-        // .then(response => response.json())
-        .then((data) => {
-          const videos = this.state.videos.slice();
-          for (let i = 0; i < data.items.length; i += 1) {
-            const item = data.items[i];
-            const id = item.id;
-            // const thumbnailDefault = item.snippet.thumbnails.default;
-            // const thumbnailMedium = item.snippet.thumbnails.medium;
-            const thumbnailHigh = item.snippet.thumbnails.high;
-            let title = item.snippet.title;
-            const description = item.snippet.description;
-            const author = item.snippet.channelTitle;
-            let describer;
-            let views = item.statistics.viewCount;
-            const publishedAt = new Date(item.snippet.publishedAt);
-
-            dbResponse.forEach((elem) => {
-              if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
-            });
-
-            const now = Date.now();
-            let time = now - publishedAt;
-            const year = 31536000000;
-            const month = 2629740000;
-            const day = 86400000;
-            const hour = 3600000;
-            const min = 60000;
-
-            if (time >= year) {
-              const years = (time / year).toFixed(0);
-              years === 1 ? time = `${years} year ago` : time = `${years} years ago`;
-            } else if (time >= month) {
-              const months = (time / month).toFixed(0);
-              months === 1 ? time = `${months} month ago` : time = `${months} months ago`;
-            } else if (time >= day) {
-              const days = (time / day).toFixed(0);
-              days === 1 ? time = `${days} day ago` : time = `${days} days ago`;
-            } else if (time >= hour) {
-              const hours = (time / hour).toFixed(0);
-              hours === 1 ? time = `${hours} hour ago` : time = `${hours} hours ago`;
-            } else {
-              const minutes = (time / min).toFixed(0);
-              minutes === 1 ? time = `${minutes} minutes ago` : time = `${minutes} minutes ago`;
-            }
-
-            if (title.length > 100) title = `${title.slice(0, 100)}...`;
-            if (views >= 1000000000) views = `${(views / 1000000000).toFixed(1)}B views`;
-            else if (views >= 1000000) views = `${(views / 1000000).toFixed(1)}M views`;
-            else if (views >= 1000) views = `${(views / 1000).toFixed(0)}K views`;
-            else if (views === 1) views = `${views} view`;
-            else views = `${views} views`;
-
-            videos.push(
-              <VideoCard
-                key={i}
-                id={id}
-                isLoggedIn={this.props.isLoggedIn}
-                description={description}
-                thumbnailHighUrl={thumbnailHigh.url}
-                title={title}
-                author={author}
-                describer={describer}
-                views={views}
-                time={time}
-                buttons="off"
-              />);
-          }
-          this.setState({ videos });
-        });
+        .then(data => this.parseFetchedData(data));
       });
   }
 
   // functions
+  parseFetchedData(data) {
+    const videos = this.state.videos.slice();
+    for (let i = 0; i < data.items.length; i += 1) {
+      const item = data.items[i];
+      const id = item.id;
+      const thumbnailMedium = item.snippet.thumbnails.medium;
+      const title = item.snippet.title;
+      const description = item.snippet.description;
+      const author = item.snippet.channelTitle;
+      let describer;
+      const views = convertViewsToCardFormat(Number(item.statistics.viewCount));
+      const publishedAt = new Date(item.snippet.publishedAt);
+
+      this.dbResponse.forEach((elem) => {
+        if (elem._id === id) describer = `${elem.audio_descriptions[1].legacy_author_name} (describer)`;
+      });
+
+      const now = Date.now();
+      const time = convertTimeToCardFormat(Number(now - publishedAt));
+
+      videos.push(
+        <VideoCard
+          key={i}
+          id={id}
+          description={description}
+          thumbnailMediumUrl={thumbnailMedium.url}
+          title={title}
+          author={author}
+          describer={describer}
+          views={views}
+          time={time}
+          buttons="off"
+          isLoggedIn={this.props.isLoggedIn}
+        />);
+    }
+    this.setState({ videos });
+  }
+
   handleChange(event) {
     this.setState({ searchQuery: event.target.value });
   }

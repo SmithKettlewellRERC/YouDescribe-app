@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Howl } from 'howler';
 import Slider from '../../components/slider/Slider.jsx';
 import AudioDescriptionSelector from '../../components/audio-description-selector/AudioDescriptionSelector.jsx';
-import DescriberChooser from '../../components/describer-chooser/DescriberChooser.jsx';
 import { ourFetch } from '../../shared/helperFunctions';
 
 const conf = require('../../shared/config')();
@@ -47,9 +46,8 @@ class VideoPage extends Component {
   getAudioClips() {
     if (this.state.audioDescriptionsIdsAudioClips && this.state.selectedAudioDescriptionId) {
       return this.state.audioDescriptionsIdsAudioClips[this.state.selectedAudioDescriptionId];
-    } else {
-      return [];
     }
+    return [];
   }
 
   // 2 Keep this for safari bug detecting
@@ -74,22 +72,22 @@ class VideoPage extends Component {
   //   xhr.send();
   // }
 
-  //2 relaced fetchVideoData with the new Fetch
+  // 2 relaced fetchVideoData with the new Fetch
   fetchVideoData() {
     console.log('2 -> fetchingVideoData');
     const self = this;
     ourFetch(this.state.videoUrl)
     .then((response) => {
-        const result = response.result
-          ? response.result
-          : {};
-        self.setState({
-          videoData: result,
-        }, () => {
-          console.log(self.state.videoData);
-          self.parseVideoData();
-        });
-    })
+      const result = response.result
+        ? response.result
+        : {};
+      self.setState({
+        videoData: result,
+      }, () => {
+        console.log(self.state.videoData);
+        self.parseVideoData();
+      });
+    });
   }
 
   // 3
@@ -154,11 +152,11 @@ class VideoPage extends Component {
         console.log(idx + 1, audioObj.url);
         promises.push(ourFetch(audioObj.url, false));
       });
-      Promise.all(promises).then(function() {
+      Promise.all(promises).then(function () {
         console.log('All audios loaded.');
         self.initVideoPlayer();
       })
-      .catch(function(errorAllAudios) {
+      .catch(function (errorAllAudios) {
         console.log('ERROR LOADING AUDIOS -> ', errorAllAudios);
       });
     } else {
@@ -285,7 +283,8 @@ class VideoPage extends Component {
       for (let i = 0; i < this.audioClipsCopy.length; i += 1) {
         switch (this.audioClipsCopy[i].playback_type) {
           case 'inline':
-            if (currentVideoProgress >= +this.audioClipsCopy[i].start_time && currentVideoProgress < +this.audioClipsCopy[i].end_time) {
+            if (currentVideoProgress >= +this.audioClipsCopy[i].start_time &&
+              currentVideoProgress < +this.audioClipsCopy[i].end_time) {
               console.log('## INLINE');
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
@@ -297,7 +296,7 @@ class VideoPage extends Component {
                   this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
                 },
                 onloaderror: (errToLoad) => {
-                  console.log('Impossible to load', errToLoad)
+                  console.log('Impossible to load', errToLoad);
                 },
                 onplay: () => {
                   console.log('## INLINE PLAYING');
@@ -372,7 +371,7 @@ class VideoPage extends Component {
             <div
               id="video"
               className="w3-card-2"
-              >
+            >
               <div id="playerVP" />
             </div>
           </div>
@@ -386,7 +385,7 @@ class VideoPage extends Component {
           selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
           setAudioDescriptionActive={this.setAudioDescriptionActive}
         />
-    </div>
+      </div>
     );
   }
 }
