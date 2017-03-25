@@ -102,8 +102,6 @@ class Home extends Component {
             else if (views === 1) views = `${views} view`;
             else views = `${views} views`;
 
-            console.log(_id);
-
             videos.push(
               <VideoCard
                 key={_id}

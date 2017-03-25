@@ -25,6 +25,8 @@ class SearchPage extends Component {
     const videoFoundOnYTIds = [];
     let videoFromYoutube = [];
     let idsYTvideo;
+    let oldVideoAlreadyOnYD = this.state.videoAlreadyOnYD.slice();
+    let oldvideoNotOnYD = this.state.videoNotOnYD.slice();
 
     ourFetch(`${conf.apiUrl}/videos/search?q=${q}`)
     .then((response) => {
@@ -39,6 +41,7 @@ class SearchPage extends Component {
       ourFetch(urlfForYT)
       .then((videoDataFromYDdatabase) => {
         videoFromYDdatabase = videoDataFromYDdatabase.items;
+
         this.setState({
           videoAlreadyOnYD: [],
         }, () => {
