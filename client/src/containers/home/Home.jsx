@@ -26,6 +26,7 @@ class Home extends Component {
   }
 
   fetchingVideosToHome() {
+    const serverVideo_Ids = [];
     const serverVideoIds = [];
     let ids;
     let dbResponse;
@@ -36,21 +37,24 @@ class Home extends Component {
       // .then(response => response.json())
       .then((response) => {
         dbResponse = response.result;
+
         for (let i = 0; i < response.result.length; i += 1) {
           serverVideoIds.push(response.result[i].youtube_id);
+          serverVideo_Ids.push(response.result[i]._id);
         }
         ids = serverVideoIds.join(',');
       })
       .then(() => {
         // ids = 'poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM,poq6AoHn4HM';
         const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+        console.log(url);
         ourFetch(url)
         // .then(response => response.json())
         .then((data) => {
           const videos = this.state.videos.slice();
           for (let i = 0; i < data.items.length; i += 1) {
             const item = data.items[i];
-            const _id = item._id;
+            const _id = serverVideo_Ids[i];
             const id = item.id;
             // const thumbnailDefault = item.snippet.thumbnails.default;
             // const thumbnailMedium = item.snippet.thumbnails.medium;
@@ -98,7 +102,7 @@ class Home extends Component {
             else if (views === 1) views = `${views} view`;
             else views = `${views} views`;
 
-            console.log('key added: ',((this.count * 30) - 30 + i));
+            console.log(_id);
 
             videos.push(
               <VideoCard
