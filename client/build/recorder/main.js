@@ -94,6 +94,6 @@ function initAudioRecorder(callback) {
         },
     }, gotStream, function(e) {
         alert('You can just use this editor if you have a working microphone pluged in and if you allow access.');
-        console.log(e);
+        // console.log(e);
     });
 }

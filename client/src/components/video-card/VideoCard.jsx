@@ -67,21 +67,27 @@ class VideoCard extends Component {
         )
     }
     return (
-      <div className="vid-card w3-margin-top w3-left">
+      <div id="video-card" className="w3-margin-top w3-left">
         <div className="w3-card-2 w3-hover-shadow">
-          <Link to={'/video/' + this.props.id}><img alt={this.props.description} src={this.props.thumbnailHighUrl} width="100%" /></Link>
-          <div className="w3-container vid-title">
-            <h5><Link to={'/video/' + this.props.id}>{this.props.title}</Link></h5>
-            <h6>
-              <a href="#">{this.props.author}</a><br />
-              <a href="#">{this.props.describer}</a> (describer)
-            </h6>
-          </div>
-          <div className="w3-container" style={{ paddingTop: '8px' }}>
-            <h6><div className="w3-left">{this.props.views}</div><div className="w3-right"> {this.props.time}</div></h6>
-          </div>
-          <div className="w3-container" style={{ paddingBottom: '8px' }}>
-            {buttons}
+          <Link to={'/video/' + this.props.id}><img alt={this.props.description} src={this.props.thumbnailMediumUrl} width="100%" /></Link>
+          <div className="w3-container w3-padding-bottom">
+            <div id="card-title-container">
+              <div id="card-title">
+                <h5><Link to={'/video/' + this.props.id}>{this.props.title}</Link></h5>
+              </div>
+              <div id="card-author">
+                <h6>
+                  <a href="#">{this.props.author}</a><br />
+                  <a href="#">{this.props.describer}</a>
+                </h6>
+              </div>
+            </div>
+            <div id="card-stats">
+              <h6><div className="w3-left">{this.props.views}</div><div className="w3-right"> {this.props.time}</div></h6>
+            </div>
+            <div id="card-buttons">
+              {buttons}
+            </div>
           </div>
         </div>
       </div>

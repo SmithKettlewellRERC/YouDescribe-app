@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
-import { ourFetch } from '../../shared/helperFunctions';
+import {
+  ourFetch,
+  convertTimeToCardFormat,
+  convertViewsToCardFormat,
+} from '../../shared/helperFunctions';
 
 const conf = require('../../shared/config')();
 
@@ -12,7 +16,7 @@ class SearchPage extends Component {
     this.state = {
       videoAlreadyOnYD: [],
       videoNotOnYD: [],
-    };
+    }
   }
 
   getSearchResultsFromYdAndYt() {
@@ -69,11 +73,11 @@ class SearchPage extends Component {
                 });
               });
           });
-        });
+      });
     });
   }
 
-  upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time) {
+  upVoteClick(e, i, id, description, thumbnailMediumUrl, title, author, views, time) {
     if (e.target.className === 'w3-btn w3-white w3-text-indigo w3-left' ||
       e.target.className === 'fa fa-heart') {
       if (e.target.className === 'fa fa-heart') e.target.parentElement.className = 'w3-btn w3-white w3-text-red w3-left';
@@ -95,14 +99,14 @@ class SearchPage extends Component {
             key={i}
             id={id}
             description={description}
-            thumbnailHighUrl={thumbnailHigh.url}
+            thumbnailMediumUrlUrl={thumbnailMediumUrl.url}
             title={title}
             author={author}
             views={views}
             time={time}
             buttons='on'
             vote_count={new_count}
-            upVoteClick={() => this.upVoteClick(i, id, description, thumbnailHigh, title, author, views, time, new_count)}
+            upVoteClick={() => this.upVoteClick(i, id, description, thumbnailMediumUrl, title, author, views, time, new_count)}
             describeClick={()=> this.describeClick(id)}
           />
       )
@@ -117,68 +121,40 @@ class SearchPage extends Component {
     for (let i = 0; i < videoFromYDdatabase.length; i += 1) {
       const item = videoFromYDdatabase[i];
       const id = item.id;
-      // const thumbnailDefault = item.snippet.thumbnails.default;
-      // const thumbnailMedium = item.snippet.thumbnails.medium;
-      const thumbnailHigh = item.snippet.thumbnails.high;
-      let title = item.snippet.title;
+      const thumbnailMedium = item.snippet.thumbnails.medium;
+      const title = item.snippet.title;
       const description = item.snippet.description;
       const author = item.snippet.channelTitle;
-      let describer;
-      let views = item.statistics.viewCount;
+      const views = convertViewsToCardFormat(Number(item.statistics.viewCount));
       const publishedAt = new Date(item.snippet.publishedAt);
 
-      dbResponse.forEach((elem) => {
-        if (elem._id === id) describer = elem.audio_descriptions[1].legacy_author_name;
-      });
+      // let describer;
+      // dbResponse.forEach((elem) => {
+      //   console.log(elem);
+      //   console.log(elem._id);
+      //   console.log(id);
+      //   if (elem.youtube_id === id) describer = `${elem.audio_descriptions[1].legacy_author_name} (describer)`;
+      // });
 
       const now = Date.now();
-      let time = now - publishedAt;
-      const year = 31536000000;
-      const month = 2629740000;
-      const day = 86400000;
-      const hour = 3600000;
-      const min = 60000;
+      const time = convertTimeToCardFormat(Number(now - publishedAt));
 
-      if (time >= year) {
-        const years = (time / year).toFixed(0);
-        years === 1 ? time = `${years} year ago` : time = `${years} years ago`;
-      } else if (time >= month) {
-        const months = (time / month).toFixed(0);
-        months === 1 ? time = `${months} month ago` : time = `${months} months ago`;
-      } else if (time >= day) {
-        const days = (time / day).toFixed(0);
-        days === 1 ? time = `${days} day ago` : time = `${days} days ago`;
-      } else if (time >= hour) {
-        const hours = (time / hour).toFixed(0);
-        hours === 1 ? time = `${hours} hour ago` : time = `${hours} hours ago`;
-      } else {
-        const minutes = (time / min).toFixed(0);
-        minutes === 1 ? time = `${minutes} minutes ago` : time = `${minutes} minutes ago`;
-      }
-
-      // if (title.length > 50) title = `${title.slice(0, 50)}...`;
-      if (views >= 1000000000) views = `${(views/1000000000).toFixed(1)}B views`;
-      else if (views >= 1000000) views = `${(views/1000000).toFixed(1)}M views`;
-      else if (views >= 1000) views = `${(views/1000).toFixed(0)}K views`;
-      else if (views === 1) views = `${views} view`;
-      else views = `${views} views`;
       videoAlreadyOnYD.push(
         <VideoCard
           key={i}
           id={id}
           description={description}
-          thumbnailHighUrl={thumbnailHigh.url}
+          thumbnailMediumUrl={thumbnailMedium.url}
           title={title}
           author={author}
-          describer={describer}
           views={views}
           time={time}
+          buttons="off"
           getAppState={this.props.getAppState}
-          buttons='off'
         />);
     }
     this.setState({
-      videoAlreadyOnYD: videoAlreadyOnYD,
+      videoAlreadyOnYD,
     });
   }
 
@@ -187,68 +163,37 @@ class SearchPage extends Component {
     for (let i = 0; i < videoFromYoutube.length; i += 1) {
       const item = videoFromYoutube[i];
       const id = item.id;
-      // const thumbnailDefault = item.snippet.thumbnails.default;
-      // const thumbnailMedium = item.snippet.thumbnails.medium;
-      const thumbnailHigh = item.snippet.thumbnails.high;
-      let title = item.snippet.title;
+      const thumbnailMedium = item.snippet.thumbnails.medium;
+      const title = item.snippet.title;
       const description = item.snippet.description;
       const author = item.snippet.channelTitle;
-      let describer;
-      let views = item.statistics.viewCount;
+      const views = convertViewsToCardFormat(Number(item.statistics.viewCount));
       const publishedAt = new Date(item.snippet.publishedAt);
+      // let describer;
 
       const now = Date.now();
-      let time = now - publishedAt;
-      const year = 31536000000;
-      const month = 2629740000;
-      const day = 86400000;
-      const hour = 3600000;
-      const min = 60000;
-
-      if (time >= year) {
-        const years = (time / year).toFixed(0);
-        years === 1 ? time = `${years} year ago` : time = `${years} years ago`;
-      } else if (time >= month) {
-        const months = (time / month).toFixed(0);
-        months === 1 ? time = `${months} month ago` : time = `${months} months ago`;
-      } else if (time >= day) {
-        const days = (time / day).toFixed(0);
-        days === 1 ? time = `${days} day ago` : time = `${days} days ago`;
-      } else if (time >= hour) {
-        const hours = (time / hour).toFixed(0);
-        hours === 1 ? time = `${hours} hour ago` : time = `${hours} hours ago`;
-      } else {
-        const minutes = (time / min).toFixed(0);
-        minutes === 1 ? time = `${minutes} minutes ago` : time = `${minutes} minutes ago`;
-      }
-
-      if (title.length > 100) title = `${title.slice(0, 100)}...`;
-      if (views >= 1000000000) views = `${(views / 1000000000).toFixed(1)}B views`;
-      else if (views >= 1000000) views = `${(views / 1000000).toFixed(1)}M views`;
-      else if (views >= 1000) views = `${(views / 1000).toFixed(0)}K views`;
-      else if (views === 1) views = `${views} view`;
-      else views = `${views} views`;
+      const time = convertTimeToCardFormat(Number(now - publishedAt));
 
       videoNotOnYD.push(
         <VideoCard
           key={i}
           id={id}
-          isLoggedIn={this.props.isLoggedIn}
           description={description}
-          thumbnailHighUrl={thumbnailHigh.url}
+          thumbnailMediumUrl={thumbnailMedium.url}
           title={title}
           author={author}
           views={views}
           time={time}
-          votes={0}
-          buttons='on'
+          buttons="on"
           getAppState={this.props.getAppState}
+
+          votes={0}
         />
       );
     }
 
     this.setState({
-      videoNotOnYD: videoNotOnYD,
+      videoNotOnYD,
     });
   }
 
