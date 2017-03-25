@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ActionIcon from '../action-icon/ActionIcon.jsx';
+import AlertBox from '../alert-box/AlertBox.jsx';
 
 const conf = require('../../shared/config');
 
@@ -22,11 +23,6 @@ class Track extends Component {
   }
 
   render() {
-    // console.log('WIDTH', conf.trackSinewaveAreaWidth);
-    // console.log('START TIME', this.props.data.start_time);
-    // console.log('DURATION', this.props.getState().videoDuration);
-    // console.log('CLIP START TIME', this.props.getState().selectedTrackComponentAudioClipStartTime)
-    // console.log('CLIP START TIME', this.props.getState().currentVideoProgress)
     return (
       <div id="track" className="w3-row w3-display-container">
         <div className="w3-col l3 m3 s3">
@@ -54,7 +50,7 @@ class Track extends Component {
           <div
             id="sinewave"
             style={{
-              left: `${755 * (this.props.data.start_time / this.props.getState().videoDuration)}px`,
+              left: `${755 * (this.props.data.start_time / this.props.getATState().videoDuration)}px`,
               width: `${50}px`,
               height: '27px',
             }}

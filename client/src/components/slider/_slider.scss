@@ -41,11 +41,13 @@ height: 0;
 }
 
 .clearfix {
-display: inline-block;
-margin-top: 16px;
+// display: inline-block;
+// margin-top: 16px;
+width: 640px;
+margin: 16px auto 0px;
 position: relative;
-float: left;
-left: 185px;
+// float: left;
+// left: 185px;
 }
 
 #keyboard-controls {

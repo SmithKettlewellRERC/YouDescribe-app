@@ -7,12 +7,14 @@
 @import './components/notes/notes';
 @import './components/playhead/playhead';
 @import './components/search-bar/searchbar';
-@import './components/sign-in/signin';
 @import './components/track/track';
 @import './components/video-card/videocard';
 @import './components/slider/slider';
-@import './components/audio-description-selector/_audiosescriptionselector';
+@import './components/audio-description-selector/audiodescriptionselector';
 @import './components/describer-chooser/describerchooser';
+@import './components/alert-box/alertbox';
+@import './components/login-button/loginbutton';
+@import './components/logout-button/logoutbutton';
 
 @import './containers/app/app';
 @import './containers/authoring-tool/authoringtool';

@@ -5,13 +5,14 @@ import Editor from '../../components/editor/Editor.jsx';
 import Track from '../../components/track/Track.jsx';
 import { convertISO8601ToSeconds, convertSecondsToEditorFormat } from '../../shared/helperFunctions';
 import { ourFetch } from '../../shared/helperFunctions';
+import { browserHistory } from 'react-router';
 
 const conf = require('../../shared/config')();
 
 class AuthoringTool extends Component {
   constructor(props) {
     super(props);
-    this.LOGGED_USER = '58d20f8e46e13da71bd1a9d5';
+    this.LOGGED_USER = '58d41ed6c8a8c2b43a65a437';
     this.watcher = null;
     this.videoState = -1;
     this.currentClip = null;
@@ -51,10 +52,17 @@ class AuthoringTool extends Component {
       selectedTrackComponentAudioClipDuration: -1,
       selectedTrackComponentLabel: '',
       selectedTrackComponentUrl: null,
+
+      // Alert box parameters
+      alertBoxBackgroundColor: '',
+      alertBoxContent: '',
+      alertBoxTitle: '',
+      alertBoxText: '',
+      alertBoxButtonColor: '',
     };
-    
+
     // Bindings.
-    this.getState = this.getState.bind(this);
+    this.getATState = this.getATState.bind(this);
     this.updateState = this.updateState.bind(this);
     this.publishVideo = this.publishVideo.bind(this);
     this.updateTrackLabel = this.updateTrackLabel.bind(this);
@@ -62,6 +70,16 @@ class AuthoringTool extends Component {
     this.recordAudioClip = this.recordAudioClip.bind(this);
     this.uploadAudioRecorded = this.uploadAudioRecorded.bind(this);
     this.setSelectedTrack = this.setSelectedTrack.bind(this);
+    this.alertBoxOpen = this.alertBoxOpen.bind(this);
+    this.alertBoxClose = this.alertBoxClose.bind(this);
+  }
+
+  componentWillMount() {
+    const isLoggedIn = this.props.getAppState().isLoggedIn;
+    if (isLoggedIn === false) {
+      alert('You have to be logged in to describe a video')
+      browserHistory.goBack();
+    }
   }
 
   componentDidMount() {
@@ -102,8 +120,12 @@ class AuthoringTool extends Component {
 
     if (videoData && videoData.audio_descriptions && videoData.audio_descriptions.length > 0) {
       // This looping won't be necessary when the API just delivery the owned AD for the current video.
-      for (let i = 0; i < videoData.audio_descriptions.length; i++) {
+      console.log('VIDEO DATA DESCs', videoData.audio_descriptions);
+      for (let i = 0; i < videoData.audio_descriptions.length; i += 1) {
         const ad = videoData.audio_descriptions[i];
+        console.log('AD ###', ad);
+        console.log('USER ID', ad.user._id);
+        console.log('LOGGED USER', this.LOGGED_USER);
         if (ad.user._id === this.LOGGED_USER) {
           audioDescriptionId = ad['_id'];
           if (ad.audio_clips.length > 0) {
@@ -182,7 +204,7 @@ class AuthoringTool extends Component {
           id={idx}
           data={audioClip}
           actionIconClass={'fa-step-forward'}
-          getState={this.getState}
+          getATState={this.getATState}
           recordAudioClip={this.recordAudioClip}
           updateTrackLabel={this.updateTrackLabel}
           setSelectedTrack={this.setSelectedTrack}
@@ -381,14 +403,16 @@ class AuthoringTool extends Component {
     // I will just add tracks if all existant have urls.
     for (let i = 0; i < tracks.length; i += 1) {
       if (tracks[i].props.data.url === '') {
-        alert('Finish using your available record tracks.');
+        this.alertBoxOpen('unused-track');
+        // alert('Finish using your available record tracks.');
         return;
       }
     }
 
     // Don't allow adding more tracks while recording.
     if (this.state.selectedTrackComponentStatus === 'recording') {
-      alert('You can just add more tracks when you finish recording the existing one.');
+      this.alertBoxOpen('recording-in-process');
+      // alert('You can just add more tracks when you finish recording the existing one.');
       return;
     }
 
@@ -407,7 +431,7 @@ class AuthoringTool extends Component {
         id={newTrackId}
         data={audioClip}
         actionIconClass={'fa-circle'}
-        getState={this.getState}
+        getATState={this.getATState}
         recordAudioClip={this.recordAudioClip}
         updateTrackLabel={this.updateTrackLabel}
         setSelectedTrack={this.setSelectedTrack}
@@ -436,7 +460,8 @@ class AuthoringTool extends Component {
   recordAudioClip(e, trackId) {
     if (this.state.selectedTrackComponentId !== trackId) {
       if (this.state.selectedTrackComponentStatus === 'recording') {
-        alert('You need to stop recording in order to activate any other track');
+        this.alertBoxOpen();
+        // alert('You need to stop recording in order to activate any other track');
         return;
       }
     }
@@ -501,7 +526,7 @@ class AuthoringTool extends Component {
             id={this.state.selectedTrackComponentId}
             data={audioClip}
             actionIconClass={classIcon}
-            getState={this.getState}
+            getATState={this.getATState}
             recordAudioClip={this.recordAudioClip}
             updateTrackLabel={this.updateTrackLabel}
             setSelectedTrack={this.setSelectedTrack}
@@ -544,7 +569,38 @@ class AuthoringTool extends Component {
     xhr.send(formData);
   }
 
+  // Open a dialog box
+  alertBoxOpen(id) {
+    console.log('alert box id', id);
+    const alertBox = document.getElementById(id);
+
+    // // set parameters for the alert box
+    // this.setState({
+    //   alertBoxBackgroundColor,
+    //   alertBoxContent,
+    //   alertBoxTitle,
+    //   alertBoxText,
+    //   alertBoxButtonColor,
+    // });
+
+    if (alertBox.style.display === 'none') {
+      alertBox.style.display = 'block';
+    }
+  }
+
+  // Close a dialog box
+  alertBoxClose(e) {
+    const alertBox = document.getElementById(e.target.parentNode.parentNode.parentNode.parentNode.parentNode.id);
+
+    if (alertBox.style.display === 'block') {
+      alertBox.style.display = 'none';
+    }
+  }
+
   publishVideo() {
+
+    this.alertBoxOpen('publish-button');
+
     const url = `${conf.apiUrl}/videos/${this.state.videoId}`;
     const xhr = new XMLHttpRequest();
     xhr.open('put', url, true);
@@ -562,7 +618,7 @@ class AuthoringTool extends Component {
     xhr.send(data);
   }
 
-  getState() {
+  getATState() {
     return this.state;
   }
 
@@ -630,9 +686,10 @@ class AuthoringTool extends Component {
         <div className="w3-row w3-margin-top w3-hide-small w3-hide-medium">
           <div className="w3-col w3-margin-bottom">
             <Editor
-              getState={this.getState}
+              getATState={this.getATState}
               updateState={this.updateState}
               publishVideo={this.publishVideo}
+              alertBoxClose={this.alertBoxClose}
               addAudioClipTrack={this.addAudioClipTrack}
               recordAudioClip={this.recordAudioClip}
               {...this.state}

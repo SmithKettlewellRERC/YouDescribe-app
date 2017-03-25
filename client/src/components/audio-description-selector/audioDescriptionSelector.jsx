@@ -14,10 +14,11 @@ class AudioDescriptionSelector extends Component {
       this.props.setAudioDescriptionActive();
     });
   }
-  
+
   render() {
     const options = [];
     const ads = this.props.audioDescriptionsIdsUsers;
+    console.log(ads);
     Object.keys(ads).forEach((ad) => {
       options.push(<option value={ad}>{ads[ad].name}</option>);
     });

@@ -3,6 +3,8 @@ import React from 'react';
 import Button from '../button/Button.jsx';
 import ActionIcon from '../action-icon/ActionIcon.jsx';
 import Track from '../../components/track/Track.jsx';
+import AlertBox from '../../components/alert-box/AlertBox.jsx';
+
 import {
   convertSecondsToEditorFormat,
 } from '../../shared/helperFunctions';
@@ -23,10 +25,10 @@ const Editor = (props) => {
                 <span className="w3-right">{props.videoDurationToDisplay}</span>
               </div>
 
-              {/* This is the line that need to add time mark*/}
+              {/* This is the line that need to add time mark */}
               <hr />
 
-              {/* This is moving line that show the time*/}
+              {/* This is moving line that show the time */}
               <Playhead
                 playheadPosition={props.playheadPosition}
                 playheadTailHeight={props.playheadTailHeight}
@@ -49,13 +51,31 @@ const Editor = (props) => {
         <div id="add-track-row" className="w3-row w3-display-container">
           <div className="w3-col l3 m3 s3">
             <div className="cont">
-              <div className="w3-padding-right w3-left">
+              <div className="w3-left" style={{ paddingRight: '14px' }}>
                 <Button title="Add an inline audio description track which plays concurrently with the video's audio" text="Add inline" color="w3-yellow" onClick={() => props.addAudioClipTrack('inline')} />
               </div>
               <div className="w3-left">
                 <Button title="Add an extended audio description track which pauses the video as it plays and then resumes the video when it finishes" text="Add extended" color="w3-purple" onClick={() => props.addAudioClipTrack('extended')}  />
               </div>
             </div>
+            <AlertBox
+              id="unused-track"
+              backgroundColor="w3-red"
+              content={<div><i className="fa fa-exclamation-triangle" aria-hidden="true"></i><h5>UNUSED TRACK AVAILABLE</h5><h6>Please use the unused track before adding a new one</h6></div>}
+              title="Unused track available. Please use the unused track before adding a new one."
+              text="Dismiss"
+              buttonColor="w3-white"
+              alertBoxClose={props.alertBoxClose}
+            />
+            <AlertBox
+              id="recording-in-process"
+              backgroundColor="w3-red"
+              content={<div><i className="fa fa-exclamation-triangle" aria-hidden="true"></i><h5>RECORDING IN PROCESS</h5><h6>Please finish your current recording before adding a new track</h6></div>}
+              title="Recording in process. Please finish your current recording before adding a new track."
+              text="Dismiss"
+              buttonColor="w3-white"
+              alertBoxClose={props.alertBoxClose}
+            />
           </div>
           <div className="w3-col l9 m9 s9">
             <div id="add-track-space" />
@@ -63,7 +83,21 @@ const Editor = (props) => {
         </div>
       </div>
       <div className="w3-right-align w3-border-top w3-border-black w3-padding">
-        <Button title="Publish the video along with all audio description tracks" text="Publish" color="w3-indigo" onClick={props.publishVideo} />
+        <Button
+          title="Publish the video along with all audio description tracks"
+          text="Publish"
+          color="w3-indigo"
+          onClick={props.publishVideo}
+        />
+      <AlertBox
+        id="publish-button"
+        backgroundColor="w3-indigo"
+        content={<div><i className="fa fa-thumbs-up" aria-hidden="true"></i><h5>Audio description successfully published</h5></div>}
+        title="Successfully published"
+        text="Okay"
+        buttonColor="w3-white"
+        alertBoxClose={props.alertBoxClose}
+      />
       </div>
     </div>
   );

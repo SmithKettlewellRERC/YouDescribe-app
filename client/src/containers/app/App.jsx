@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Navbar from '../../components/navbar/Navbar.jsx';
-import NavbarMaterial from '../../components/navbar/Navbar(material).jsx';
 import Footer from '../../components/footer/Footer.jsx';
+import { ourFetch } from '../../shared/helperFunctions.js';
 import { browserHistory } from 'react-router';
 
 const conf = require('./../../shared/config')();
@@ -13,28 +13,104 @@ class App extends Component {
     this.state = {
       editorTimerValue: 0,
       searchValue: '',
-    };
 
-    // Global methods.
-    this.getState = this.getState.bind(this);
+      // Authentication.
+      auth2: null,
+      name: '',
+      isLoggedIn: false,
+      token: '',
+    };
+    this.initGoogleAuth = this.initGoogleAuth.bind(this);
+    this.loginSuccess = this.loginSuccess.bind(this);
+    this.logOut = this.logOut.bind(this);
+    this.getAppState = this.getAppState.bind(this);
   }
 
-  componentDidMount() {
-    gapi.load('auth2', function() {
-      gapi.auth2.init();
+  getAppState() {
+    return this.state;
+  }
+
+  componentWillMount() {
+    const searchValue = this.props.location.query.q;
+    this.setState({
+      searchValue: searchValue,
     });
   }
 
-  getState() {
-    return this.state;
+  loginSuccess() {
+    const googleUser = this.state.auth2.currentUser.get();
+    const token = googleUser.getAuthResponse().id_token;
+
+    ourFetch(`${conf.apiUrl}/auth`, true, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: token }),
+    })
+    .then((res) => {
+      this.setState({
+        name: res.result.name,
+        isLoggedIn: true,
+        token,
+      });
+    });
+  }
+
+  loginFailure() {
+    console.log('login failure');
+  }
+
+  logOut() {
+    this.state.auth2.signOut().then(() => {
+      this.setState({
+        name: '',
+        isLoggedIn: false,
+        token: '',
+      }, () => {
+        this.initGoogleAuth();
+      });
+    });
+  }
+
+  initGoogleAuth() {
+    const self = this;
+    gapi.load('auth2', function() {
+      const auth2 = gapi.auth2.init({
+        client_id: conf.googleClientId,
+        fetch_basic_profile: true,
+        scope: 'email profile openid'
+      });
+      self.setState({ auth2 }, () => {
+        self.state.auth2.attachClickHandler('btn-signin', {}, self.loginSuccess, self.loginFailure);
+      });
+    })
+  }
+
+  componentDidMount() {
+    window.addEventListener('google-auth-lib-loaded', this.initGoogleAuth);
+  }
+
+  clickHandler(searchValue) {
+    this.setState({
+      searchValue: searchValue,
+    });
+    const q = encodeURIComponent(searchValue);
+    browserHistory.push(`/search?q=${q}`);
   }
 
   render() {
     return (
       <div>
-        <Navbar />
+        <Navbar
+          getAppState={this.getAppState}
+          isLoggedIn={this.state.isLoggedIn}
+          logOut={this.logOut}
+          updateSearch={searchValue => this.clickHandler(searchValue)}
+        />
         {React.cloneElement(this.props.children, {
-          getState: this.getState,
+          getAppState: this.getAppState,
+          isLoggedIn: this.state.isLoggedIn,
           getVideoProgress: this.getVideoProgress,
         })}
         <Footer />
