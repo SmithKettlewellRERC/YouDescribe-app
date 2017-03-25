@@ -29,7 +29,7 @@ class Home extends Component {
     const serverVideoIds = [];
     let ids;
     let dbResponse;
-    const url = (`${conf.apiUrl}/videos?paglac troie=${this.currentPage}`);
+    const url = (`${conf.apiUrl}/videos?page=${this.currentPage}`);
     console.log('fetching ', url);
 
     ourFetch(url)
