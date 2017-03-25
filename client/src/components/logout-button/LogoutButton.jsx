@@ -13,7 +13,7 @@ class LogoutButton extends Component {
   render() {
     return (
       <div>
-        <strong>{this.props.getAppState().name}</strong>
+        <strong>{this.props.getAppState().userName}</strong>
         <button onClick={this.logOut}>LOGOUT</button>
       </div>
     );
