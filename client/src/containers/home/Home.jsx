@@ -22,7 +22,6 @@ class Home extends Component {
     const serverVideoIds = [];
     let ids;
     let dbResponse;
-
     ourFetch(`${conf.apiUrl}/videos`)
       // .then(response => response.json())
       .then((response) => {
