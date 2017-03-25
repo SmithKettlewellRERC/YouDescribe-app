@@ -16,21 +16,27 @@ class SearchPage extends Component {
     this.state = {
       videoAlreadyOnYD: [],
       videoNotOnYD: [],
-    }
+    };
+
+    // all the video Ids that we found in YD database
+    this.videoIds = null;
+  }
+
+  componentDidMount() {
+    this.getSearchResultsFromYdAndYt();
+  }
+
+  componentWillReceiveProps() {
+    setTimeout(() => {
+      this.getSearchResultsFromYdAndYt();
+    }, 0);
   }
 
   getSearchResultsFromYdAndYt() {
     const value = this.props.location.query.q;
     const q = encodeURIComponent(value);
     const serverVideoIds = [];
-    let ids;
     let dbResponse;
-    let videoFromYDdatabase = [];
-    const videoFoundOnYTIds = [];
-    let videoFromYoutube = [];
-    let idsYTvideo;
-    let oldVideoAlreadyOnYD = this.state.videoAlreadyOnYD.slice();
-    let oldvideoNotOnYD = this.state.videoNotOnYD.slice();
 
     ourFetch(`${conf.apiUrl}/videos/search?q=${q}`)
     .then((response) => {
@@ -38,45 +44,54 @@ class SearchPage extends Component {
       for (let i = 0; i < dbResponse.length; i += 1) {
         serverVideoIds.push(dbResponse[i].youtube_id);
       }
-      ids = serverVideoIds.join(',');
+
+      this.videoIds = serverVideoIds.join(',');
     })
     .then(() => {
-      const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
-      ourFetch(urlfForYT)
+      this.fetchAndRenderVideoFromYD(dbResponse)
+      .then(() => this.fetchAndRenderVideoFromYT(q, this.videoIds));
+    });
+  }
+
+  fetchAndRenderVideoFromYD(dbResponse, page = 1) {
+    const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${this.videoIds}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+    return ourFetch(urlfForYT)
       .then((videoDataFromYDdatabase) => {
-        videoFromYDdatabase = videoDataFromYDdatabase.items;
+        const videoFromYDdatabase = videoDataFromYDdatabase.items;
 
         this.setState({
           videoAlreadyOnYD: [],
         }, () => {
           this.renderVideosFromYD(dbResponse, videoFromYDdatabase);
         });
-      })
-      .then(() => {
-          const urlForYD = `${conf.youTubeApiUrl}/search?part=snippet&q=${q}&maxResults=50&key=${conf.youTubeApiKey}`;
-          ourFetch(urlForYD)
-          .then((videos) => {
-            for (let i = 0; i < videos.items.length; i += 1) {
-              const temp = videos.items[i].id.videoId;
-              if (!(ids.indexOf(temp) > -1)) {
-                videoFoundOnYTIds.push(videos.items[i].id.videoId);
-              }
-            }
-            idsYTvideo = videoFoundOnYTIds.join(',');
-          })
-          .then(() => {
-            const urlForYT = `${conf.youTubeApiUrl}/videos?id=${idsYTvideo}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
-            ourFetch(urlForYT)
-              .then((videoFromYoutubes) => {
-                videoFromYoutube = videoFromYoutubes.items;
-                this.setState({
-                  videoNotOnYD: [],
-                }, () => {
-                  this.renderVideosFromYT(videoFromYoutube);
-                });
-              });
-          });
       });
+  }
+
+  fetchAndRenderVideoFromYT(q, ids) {
+    let idsYTvideo;
+    const urlForYD = `${conf.youTubeApiUrl}/search?part=snippet&q=${q}&maxResults=50&key=${conf.youTubeApiKey}`;
+    ourFetch(urlForYD)
+    .then((videos) => {
+      const videoFoundOnYTIds = [];
+      for (let i = 0; i < videos.items.length; i += 1) {
+        const temp = videos.items[i].id.videoId;
+        if (!(ids.indexOf(temp) > -1)) {
+          videoFoundOnYTIds.push(videos.items[i].id.videoId);
+        }
+      }
+      idsYTvideo = videoFoundOnYTIds.join(',');
+    })
+    .then(() => {
+      const urlForYT = `${conf.youTubeApiUrl}/videos?id=${idsYTvideo}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+      ourFetch(urlForYT)
+        .then((videoFromYoutubes) => {
+          const videoFromYoutube = videoFromYoutubes.items;
+          this.setState({
+            videoNotOnYD: [],
+          }, () => {
+            this.renderVideosFromYT(videoFromYoutube);
+          });
+        });
     });
   }
 
@@ -123,6 +138,7 @@ class SearchPage extends Component {
     const videoAlreadyOnYD = this.state.videoAlreadyOnYD.slice();
     for (let i = 0; i < videoFromYDdatabase.length; i += 1) {
       const item = videoFromYDdatabase[i];
+      const _id = dbResponse[i]._id;
       const id = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
       const title = item.snippet.title;
@@ -144,7 +160,7 @@ class SearchPage extends Component {
 
       videoAlreadyOnYD.push(
         <VideoCard
-          key={i}
+          key={_id}
           id={id}
           description={description}
           thumbnailMediumUrl={thumbnailMedium.url}
@@ -200,15 +216,6 @@ class SearchPage extends Component {
     });
   }
 
-  componentDidMount() {
-    this.getSearchResultsFromYdAndYt();
-  }
-
-  componentWillReceiveProps() {
-    setTimeout( () => {
-      this.getSearchResultsFromYdAndYt();
-    }, 0);
-  }
 
   loadMoreResults() {
     alert('Working in progress...');
