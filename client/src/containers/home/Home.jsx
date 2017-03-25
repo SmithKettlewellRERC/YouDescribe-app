@@ -13,13 +13,10 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.dbResponse = {};
-    // function bindings
-
     this.state = {
       searchQuery: '',
       videos: [],
     };
-
     this.currentPage = 1;
     this.fetchingVideosToHome = this.fetchingVideosToHome.bind(this);
     this.loadMoreResults = this.loadMoreResults.bind(this);
@@ -46,7 +43,6 @@ class Home extends Component {
       })
       .then(() => {
         const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
-        console.log(url);
         ourFetch(url)
 
         .then(data => this.parseFetchedData(data, serverVideo_Ids));
