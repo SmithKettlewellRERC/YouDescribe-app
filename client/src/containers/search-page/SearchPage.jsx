@@ -16,7 +16,7 @@ class SearchPage extends Component {
     this.state = {
       videoAlreadyOnYD: [],
       videoNotOnYD: [],
-    };
+    }
   }
 
   getSearchResultsFromYdAndYt() {
