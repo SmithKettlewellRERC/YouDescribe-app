@@ -26,6 +26,7 @@ class SearchPage extends Component {
     //binding function to this
     this.loadMoreVideosFromYD = this.loadMoreVideosFromYD.bind(this);
     this.loadMoreVideosFromYT = this.loadMoreVideosFromYT.bind(this);
+    this.getSearchResultsFromYdAndYt = this.getSearchResultsFromYdAndYt.bind(this);
 
     this.currentPage = 1;
   }
@@ -36,16 +37,18 @@ class SearchPage extends Component {
 
   componentWillReceiveProps() {
     setTimeout(() => {
+      this.currentPage = 1;
       this.getSearchResultsFromYdAndYt();
     }, 0);
   }
 
-  getSearchResultsFromYdAndYt() {
+  getSearchResultsFromYdAndYt(page = 1) {
     const value = this.props.location.query.q;
     const q = encodeURIComponent(value);
     const serverVideoIds = [];
-
-    ourFetch(`${conf.apiUrl}/videos/search?q=${q}`)
+    const url = `${conf.apiUrl}/videos/search?q=${q}&page=${page}`;
+    console.log('Fetching to ', url, ' to get data');
+    ourFetch(url)
     .then((response) => {
       this.dbResponse = response.result;
       for (let i = 0; i < this.dbResponse.length; i += 1) {
@@ -55,8 +58,12 @@ class SearchPage extends Component {
       this.videoIds = serverVideoIds.join(',');
     })
     .then(() => {
-      this.fetchAndRenderVideoFromYD(this.dbResponse)
-      .then(() => this.fetchAndRenderVideoFromYT(q, this.videoIds));
+      if (page === 1) {
+        this.fetchAndRenderVideoFromYD(this.dbResponse)
+        .then(() => this.fetchAndRenderVideoFromYT(q, this.videoIds));
+      } else {
+        this.fetchAndRenderVideoFromYD(this.dbResponse, page);
+      }
     });
   }
 
@@ -146,7 +153,8 @@ class SearchPage extends Component {
   }
 
   loadMoreVideosFromYD() {
-    alert('Working in progress...');
+    this.currentPage += 1;
+    this.getSearchResultsFromYdAndYt(this.currentPage);
   }
 
   loadMoreVideosFromYT() {
@@ -192,7 +200,7 @@ class SearchPage extends Component {
         />);
     }
     this.setState({
-      videoAlreadyOnYD,
+      videoAlreadyOnYD: videoAlreadyOnYD,
     });
   }
 
