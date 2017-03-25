@@ -42,42 +42,34 @@ class Navbar extends Component {
         <div className="w3-top">
           <div className="w3-bar w3-white w3-card-2 w3-text-indigo">
             <logo role="img" title="YouDescribe logo">
-              <Link role="link" to="/" title="YouDescribe logo" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-small w3-hide-medium" style={{ height: '54px' }}>
+              <Link role="link" to="/" title="YouDescribe logo" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-small w3-hide-medium">
                 <img
                   alt="YouDescribe logo"
                   height="100%"
                   src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_full.png')}
                 />
-                  {/* <span className="w3-text-black">You</span><span className="w3-indigo curve">Describe</span> */}
-                </Link>
+              </Link>
 
-                <Link role="link" to="/" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-large" style={{ height: '54px' }}>
-                  <img
-                    alt="YouDescribe logo"
-                    height="100%"
-                    src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_partial.png')}
-                  />
-                  {/* <span>Y</span><span className="w3-indigo curve">D</span> */}
-                </Link>
+              <Link role="link" to="/" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-large" style={{ height: '54px' }}>
+                <img
+                  alt="YouDescribe logo"
+                  height="100%"
+                  src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_partial.png')}
+                />
+              </Link>
             </logo>
 
             <div role="search" className="w3-left">
-              {/* <input type="text" className="w3-amber w3-border-0 w3-padding" style={{ width: '100%' }} /> */}
-              <SearchBar updateSearch={searchValue => props.updateSearch(searchValue)} />
+              <SearchBar updateSearch={searchValue => this.props.updateSearch(searchValue)} />
             </div>
 
             {/* Right-sided navbar links */}
             <nav role="navigation" className="w3-right w3-hide-small w3-hide-medium">
-              {/*<span className="w3-bar-item"><SearchBar /></span>*/}
-              {/*<Link to="/authoring-tool/6hk6y8dhkeE" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>*/}
               <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
-              {/*<div class="g-signin" data-onsuccess={this.props.onSignIn}></div>*/}
-              {/*<a className="w3-right w3-padding-top" href="#" onClick={signOut}>Sign out</a>*/}
-              {/*<div className="g-signin2 w3-right w3-padding-top w3-padding-right" onClick={onSignIn}></div>*/}
               {loginComponent}
             </nav>
-            {/* Hide right-floated links on small screens and replace them with a menu icon */}
 
+            {/* Hide right-floated links on small screens and replace them with a menu icon */}
             <a href="javascript:void(0)" className="w3-bar-item w3-button w3-right w3-hide-large" onClick={this.menuOpen}>
               <i className="fa fa-bars"></i>
             </a>
@@ -87,12 +79,12 @@ class Navbar extends Component {
         {/* Sidenav on small screens when clicking the menu icon */}
         <nav id="mySidenav" className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-large" style={{ display: 'none' }}>
           <a href="javascript:void(0)" onClick={this.menuClose} className="w3-large w3-padding-16">Close ×</a>
-            {/*}<Link to="/authoring-tool/6hk6y8dhkeE" className="w3-bar-item w3-button"><i className="fa fa-th"></i> AUTHORING TOOL</Link>*/}
-            <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
-            {loginComponent}
+          <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
+          {loginComponent}
         </nav>
       </header>
     );
   }
 }
+
 export default Navbar;
