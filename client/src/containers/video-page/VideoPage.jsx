@@ -78,16 +78,15 @@ class VideoPage extends Component {
     const self = this;
     ourFetch(this.state.videoUrl)
     .then((response) => {
-      const result = response.result
-        ? response.result
-        : {};
-      self.setState({
-        videoData: result,
-      }, () => {
-        console.log(self.state.videoData);
-        self.parseVideoData();
-      });
-    });
+        const result = response.result
+          ? response.result
+          : {};
+        self.setState({
+          videoData: result,
+        }, () => {
+          self.parseVideoData();
+        });
+    })
   }
 
   // 3
@@ -363,7 +362,7 @@ class VideoPage extends Component {
 
   // 1
   render() {
-    console.log('1 -> Render')
+    // console.log('1 -> Render');
     return (
       <div id="video-player">
         <main role="application" title="Video player">

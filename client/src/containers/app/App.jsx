@@ -18,6 +18,7 @@ class App extends Component {
       auth2: null,
       name: '',
       isLoggedIn: false,
+      userId: null,
       token: '',
     };
     this.initGoogleAuth = this.initGoogleAuth.bind(this);
@@ -40,7 +41,6 @@ class App extends Component {
   loginSuccess() {
     const googleUser = this.state.auth2.currentUser.get();
     const token = googleUser.getAuthResponse().id_token;
-
     ourFetch(`${conf.apiUrl}/auth`, true, {
       method: 'POST',
       headers: {
@@ -49,7 +49,9 @@ class App extends Component {
       body: JSON.stringify({ token }),
     })
     .then((res) => {
+      console.log(res);
       this.setState({
+        userId: res.result._id,
         name: res.result.name,
         isLoggedIn: true,
         token,
@@ -73,6 +75,24 @@ class App extends Component {
     });
   }
 
+  checkIfUserIsLoggedIn() {
+    this.state.auth2.then(() => {
+      if (this.state.auth2.isSignedIn.get()) {
+        const googleUser = this.state.auth2.currentUser.get();
+        const userProfile = googleUser.getBasicProfile();
+        const token = googleUser.getAuthResponse().id_token;
+        this.setState({
+          isLoggedIn: true,
+          name: userProfile.getName(),
+          token: token,
+        });
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+
   initGoogleAuth() {
     const self = this;
     gapi.load('auth2', function() {
@@ -83,6 +103,7 @@ class App extends Component {
       });
       self.setState({ auth2 }, () => {
         self.state.auth2.attachClickHandler('btn-signin', {}, self.loginSuccess, self.loginFailure);
+        self.checkIfUserIsLoggedIn();
       });
     })
   }

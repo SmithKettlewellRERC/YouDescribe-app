@@ -30,22 +30,23 @@ class Home extends Component {
   }
 
   fetchingVideosToHome() {
+    const serverVideo_Ids = [];
     const serverVideoIds = [];
     let ids;
     let dbResponse;
     const url = (`${conf.apiUrl}/videos?page=${this.currentPage}`);
-
     ourFetch(url)
-      // .then(response => response.json())
       .then((response) => {
         this.dbResponse = response.result;
         for (let i = 0; i < response.result.length; i += 1) {
           serverVideoIds.push(response.result[i].youtube_id);
+          serverVideo_Ids.push(response.result[i]._id);
         }
         ids = serverVideoIds.join(',');
       })
       .then(() => {
         const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+        console.log(url);
         ourFetch(url)
         .then(data => this.parseFetchedData(data));
       });

@@ -1,12 +1,10 @@
 module.exports = () => {
-  const isProduction = false;
   const apiVersion = 'v1';
-  const protocol = 'http';
-  const apiPort = isProduction ? '8080' : '8080';
-  // const baseUrl = isProduction ? `${protocol}://webng.io` : `${protocol}://localhost`;
-  const baseUrl = isProduction ? `${protocol}://webng.io` : `${protocol}://192.168.0.94`;
-  const apiUrl = `${baseUrl}:${apiPort}/${apiVersion}`;
-  const audioClipsUploadsPath = `${baseUrl}:${apiPort}/uploads`;
+
+  // const appUrl = `http://webng.io`;
+  const appUrl = 'http://localhost';
+  const apiUrl = `http://192.168.0.94:8080/${apiVersion}`;
+  const audioClipsUploadsPath = `http://localhost:8080/uploads`;
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';
   const youTubeApiKey = 'AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls';
   const googleClientId = '1056671841574-e1r4soednlur8hl2sl0ooumpvftt1s2k.apps.googleusercontent.com';
