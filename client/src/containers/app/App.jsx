@@ -18,6 +18,7 @@ class App extends Component {
       auth2: null,
       name: '',
       isLoggedIn: false,
+      userId: null,
       token: '',
     };
     this.initGoogleAuth = this.initGoogleAuth.bind(this);
@@ -50,6 +51,7 @@ class App extends Component {
     .then((res) => {
       console.log(res);
       this.setState({
+        userId: res.result._id,
         name: res.result.name,
         isLoggedIn: true,
         token,

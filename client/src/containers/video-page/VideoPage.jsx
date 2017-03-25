@@ -86,7 +86,7 @@ class VideoPage extends Component {
         self.setState({
           videoData: result,
         }, () => {
-          console.log(self.state.videoData);
+          // console.log(self.state.videoData);
           self.parseVideoData();
         });
     })
@@ -364,7 +364,7 @@ class VideoPage extends Component {
 
   // 1
   render() {
-    console.log('1 -> Render')
+    // console.log('1 -> Render');
     return (
       <div id="video-player">
         <main role="application" title="Video player">
