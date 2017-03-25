@@ -3,7 +3,7 @@ module.exports = () => {
   const apiVersion = 'v1';
   const protocol = 'http';
   const apiPort = isProduction ? '8080' : '8080';
-  const baseUrl = isProduction ? `${protocol}://webng.io` : `${protocol}://192.168.0.101`;
+  const baseUrl = isProduction ? `${protocol}://webng.io` : `${protocol}://localhost`;
   const apiUrl = `${baseUrl}:${apiPort}/${apiVersion}`;
   const audioClipsUploadsPath = `${baseUrl}:${apiPort}/uploads`;
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';
