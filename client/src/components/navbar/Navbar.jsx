@@ -3,8 +3,8 @@ import { IndexLink, Link } from 'react-router';
 import path from 'path';
 import NavLink from '../nav-link/NavLink.jsx';
 import SearchBar from '../search-bar/SearchBar.jsx'
-import LoginButton from '../login-button/LoginButton.jsx';
-import LogoutButton from '../logout-button/LogoutButton.jsx';
+import SignInButton from '../sign-in-button/SignInButton.jsx';
+import SignOutButton from '../sign-out-button/SignOutButton.jsx';
 
 class Navbar extends Component {
   constructor(props) {
@@ -28,12 +28,12 @@ class Navbar extends Component {
   }
 
   render() {
-    const isLoggedIn = this.props.isLoggedIn;
-    let loginComponent = null;
-    if (isLoggedIn) {
-      loginComponent = <LogoutButton logOut={this.props.logOut} getAppState={this.props.getAppState} />;
+    const isSignedIn = this.props.isSignedIn;
+    let signInComponent = null;
+    if (isSignedIn) {
+      signInComponent = <SignOutButton signOut={this.props.signOut} getAppState={this.props.getAppState} />;
     } else {
-      loginComponent = <LoginButton />;
+      signInComponent = <SignInButton />;
     }
     return (
       <header role="banner" id="navbar">
@@ -42,7 +42,7 @@ class Navbar extends Component {
         <div className="w3-top">
           <div className="w3-bar w3-white w3-card-2 w3-text-indigo">
             <logo role="img" title="YouDescribe logo">
-              <Link role="link" to="/" title="YouDescribe logo" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-small w3-hide-medium">
+              <Link role="link" to="/" title="YouDescribe logo" id="logo" className="w3-bar-item w3-hide-small w3-hide-medium">
                 <img
                   alt="YouDescribe logo"
                   height="100%"
@@ -50,7 +50,7 @@ class Navbar extends Component {
                 />
               </Link>
 
-              <Link role="link" to="/" id="logo" className="w3-bar-item w3-button w3-slim w3-hide-large" style={{ height: '54px' }}>
+              <Link role="link" to="/" id="logo" className="w3-bar-item w3-hide-large">
                 <img
                   alt="YouDescribe logo"
                   height="100%"
@@ -65,12 +65,14 @@ class Navbar extends Component {
 
             {/* Right-sided navbar links */}
             <nav role="navigation" className="w3-right w3-hide-small w3-hide-medium">
-              <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
-              {loginComponent}
+              <Link to="/wishlist" className="w3-bar-item" style={{ position: 'relative', top: '10px' }}><i className="fa fa-heart">&nbsp;&nbsp;</i>WISH LIST</Link>
+              <div className="w3-bar-item" style={{ position: 'relative', top: '4px' }}>
+                {signInComponent}
+              </div>
             </nav>
 
             {/* Hide right-floated links on small screens and replace them with a menu icon */}
-            <a href="javascript:void(0)" className="w3-bar-item w3-button w3-right w3-hide-large" onClick={this.menuOpen}>
+            <a href="javascript:void(0)" className="w3-bar-item w3-right w3-hide-large" style={{ position: 'relative', top: '8px' }} onClick={this.menuOpen}>
               <i className="fa fa-bars"></i>
             </a>
           </div>
@@ -80,7 +82,7 @@ class Navbar extends Component {
         <nav id="mySidenav" className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-large" style={{ display: 'none' }}>
           <a href="javascript:void(0)" onClick={this.menuClose} className="w3-large w3-padding-16">Close ×</a>
           <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
-          {loginComponent}
+          {signInComponent}
         </nav>
       </header>
     );

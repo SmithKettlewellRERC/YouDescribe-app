@@ -6,6 +6,18 @@
     width: 194px;
     padding: 0 8px;
   }
+  #card-thumbnail {
+    position: relative;
+    #card-duration {
+      position: absolute;
+      bottom: -1px;
+      right: 2px;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      font-size: 10px;
+      padding: 2px;
+    }
+  }
   #card-title-container {
     height: 100px;
     #card-title {

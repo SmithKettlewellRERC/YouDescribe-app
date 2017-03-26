@@ -6,6 +6,8 @@ import {
   ourFetch,
   convertTimeToCardFormat,
   convertViewsToCardFormat,
+  convertISO8601ToSeconds,
+  convertSecondsToCardFormat,
 } from '../../shared/helperFunctions';
 
 const conf = require('../../shared/config')();
@@ -16,7 +18,7 @@ class SearchPage extends Component {
     this.state = {
       videoAlreadyOnYD: [],
       videoNotOnYD: [],
-    }
+    };
   }
 
   getSearchResultsFromYdAndYt() {
@@ -39,7 +41,7 @@ class SearchPage extends Component {
       ids = serverVideoIds.join(',');
     })
     .then(() => {
-      const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+      const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${ids}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
       ourFetch(urlfForYT)
       .then((videoDataFromYDdatabase) => {
         videoFromYDdatabase = videoDataFromYDdatabase.items;
@@ -50,8 +52,8 @@ class SearchPage extends Component {
         });
       })
       .then(() => {
-          const urlForYD = `${conf.youTubeApiUrl}/search?part=snippet&q=${q}&maxResults=50&key=${conf.youTubeApiKey}`;
-          ourFetch(urlForYD)
+        const urlForYD = `${conf.youTubeApiUrl}/search?part=snippet&q=${q}&maxResults=50&key=${conf.youTubeApiKey}`;
+        ourFetch(urlForYD)
           .then((videos) => {
             for (let i = 0; i < videos.items.length; i += 1) {
               const temp = videos.items[i].id.videoId;
@@ -62,7 +64,7 @@ class SearchPage extends Component {
             idsYTvideo = videoFoundOnYTIds.join(',');
           })
           .then(() => {
-            const urlForYT = `${conf.youTubeApiUrl}/videos?id=${idsYTvideo}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+            const urlForYT = `${conf.youTubeApiUrl}/videos?id=${idsYTvideo}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
             ourFetch(urlForYT)
               .then((videoFromYoutubes) => {
                 videoFromYoutube = videoFromYoutubes.items;
@@ -84,36 +86,36 @@ class SearchPage extends Component {
       else e.target.className = 'w3-btn w3-white w3-text-red w3-left';
     }
     const body = JSON.stringify({
-        title: title,
-        id: id,
+      title,
+      id,
     });
     ourFetch(`${conf.apiUrl}/wishlist`, true, {
       method: 'post',
-      body: body,
+      body,
     })
     .then((res) => {
-      let new_count = res.votes;
-      let newState = this.state.videoNotOnYD.slice();
+      const newCount = res.votes;
+      const newState = this.state.videoNotOnYD.slice();
       newState[i] = (
-          <VideoCard
-            key={i}
-            id={id}
-            description={description}
-            thumbnailMediumUrlUrl={thumbnailMediumUrl.url}
-            title={title}
-            author={author}
-            views={views}
-            time={time}
-            buttons='on'
-            vote_count={new_count}
-            upVoteClick={() => this.upVoteClick(i, id, description, thumbnailMediumUrl, title, author, views, time, new_count)}
-            describeClick={()=> this.describeClick(id)}
-          />
-      )
+        <VideoCard
+          key={i}
+          id={id}
+          description={description}
+          thumbnailMediumUrlUrl={thumbnailMediumUrl.url}
+          title={title}
+          author={author}
+          views={views}
+          time={time}
+          buttons='on'
+          vote_count={newCount}
+          upVoteClick={() => this.upVoteClick(i, id, description, thumbnailMediumUrl, title, author, views, time, newCount)}
+          describeClick={() => this.describeClick(id)}
+        />
+    );
       this.setState({
         videoNotOnYD: newState,
-      })
-    })
+      });
+    });
   }
 
   renderVideosFromYD(dbResponse, videoFromYDdatabase) {
@@ -122,6 +124,7 @@ class SearchPage extends Component {
       const item = videoFromYDdatabase[i];
       const id = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
+      const duration = convertSecondsToCardFormat(convertISO8601ToSeconds(item.contentDetails.duration));
       const title = item.snippet.title;
       const description = item.snippet.description;
       const author = item.snippet.channelTitle;
@@ -145,6 +148,7 @@ class SearchPage extends Component {
           id={id}
           description={description}
           thumbnailMediumUrl={thumbnailMedium.url}
+          duration={duration}
           title={title}
           author={author}
           views={views}
@@ -164,6 +168,7 @@ class SearchPage extends Component {
       const item = videoFromYoutube[i];
       const id = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
+      const duration = convertSecondsToCardFormat(convertISO8601ToSeconds(item.contentDetails.duration));
       const title = item.snippet.title;
       const description = item.snippet.description;
       const author = item.snippet.channelTitle;
@@ -180,6 +185,7 @@ class SearchPage extends Component {
           id={id}
           description={description}
           thumbnailMediumUrl={thumbnailMedium.url}
+          duration={duration}
           title={title}
           author={author}
           views={views}
@@ -188,8 +194,7 @@ class SearchPage extends Component {
           getAppState={this.props.getAppState}
 
           votes={0}
-        />
-      );
+        />);
     }
 
     this.setState({
