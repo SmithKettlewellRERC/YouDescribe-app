@@ -5,6 +5,8 @@ import {
   ourFetch,
   convertTimeToCardFormat,
   convertViewsToCardFormat,
+  convertISO8601ToSeconds,
+  convertSecondsToCardFormat,
 } from '../../shared/helperFunctions';
 
 const conf = require('../../shared/config')();
@@ -42,7 +44,7 @@ class Home extends Component {
         ids = serverVideoIds.join(',');
       })
       .then(() => {
-        const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+        const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
         ourFetch(url)
 
         .then(data => this.parseFetchedData(data, serverVideo_Ids));
@@ -57,6 +59,7 @@ class Home extends Component {
       const _id = serverVideo_Ids[i];
       const id = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
+      const duration = convertSecondsToCardFormat(convertISO8601ToSeconds(item.contentDetails.duration));
       const title = item.snippet.title;
       const description = item.snippet.description;
       const author = item.snippet.channelTitle;
@@ -77,13 +80,14 @@ class Home extends Component {
           id={id}
           description={description}
           thumbnailMediumUrl={thumbnailMedium.url}
+          duration={duration}
           title={title}
           author={author}
           describer={describer}
           views={views}
           time={time}
           buttons="off"
-          isLoggedIn={this.props.isLoggedIn}
+          isSignedIn={this.props.isSignedIn}
         />);
     }
     this.setState({ videos });

@@ -17,14 +17,14 @@ class App extends Component {
 
       // Authentication.
       auth2: null,
-      isLoggedIn: false,
+      isSignedIn: false,
       userId: '',
       userToken: '',
       userName: '',
     };
     this.initGoogleAuth = this.initGoogleAuth.bind(this);
-    this.loginGoogleSuccess = this.loginGoogleSuccess.bind(this);
-    this.logOut = this.logOut.bind(this);
+    this.googleSignInSuccess = this.googleSignInSuccess.bind(this);
+    this.signOut = this.signOut.bind(this);
     this.getAppState = this.getAppState.bind(this);
   }
 
@@ -39,7 +39,7 @@ class App extends Component {
     });
   }
 
-  loginGoogleSuccess() {
+  googleSignInSuccess() {
     const googleUser = this.state.auth2.currentUser.get();
     const userToken = googleUser.getAuthResponse().id_token;
     ourFetch(`${conf.apiUrl}/auth`, true, {
@@ -51,7 +51,7 @@ class App extends Component {
     })
     .then((res) => {
       this.setState({
-        isLoggedIn: true,
+        isSignedIn: true,
         userName: res.result.name,
         userId: res.result._id,
         userToken: userToken,
@@ -61,8 +61,8 @@ class App extends Component {
     });
   }
 
-  loginGoogleFailure() {
-    console.log('login failure');
+  googleSignInFailure() {
+    console.log('sign in failure');
   }
 
   initGoogleAuth() {
@@ -76,7 +76,7 @@ class App extends Component {
       self.setState({
         auth2,
       }, () => {
-        self.state.auth2.attachClickHandler('btn-signin', {}, self.loginGoogleSuccess, self.loginGoogleFailure);
+        self.state.auth2.attachClickHandler('btn-sign-in', {}, self.googleSignInSuccess, self.googleSignInFailure);
         self.refreshUserInfo();
       });
     })
@@ -85,13 +85,13 @@ class App extends Component {
   refreshUserInfo() {
     const self = this;
     this.state.auth2.then(() => {
-      if (this.state.auth2.isSignedIn.get()) { 
+      if (this.state.auth2.isSignedIn.get()) {
         const userId = this.getCookie('userId');
         const userToken = this.getCookie('userToken');
         const userName = this.getCookie('userName');
         if (userId && userToken && userName) {
           self.setState({
-            isLoggedIn: true,
+            isSignedIn: true,
             userName: userName,
             userId: userId,
             userToken: userToken,
@@ -100,7 +100,7 @@ class App extends Component {
           });
         } else {
           self.setState({
-            isLoggedIn: false,
+            isSignedIn: false,
             userName: '',
             userId: '',
             userToken: '',
@@ -112,10 +112,10 @@ class App extends Component {
     });
   }
 
-  logOut() {
+  signOut() {
     this.state.auth2.signOut().then(() => {
       this.setState({
-        isLoggedIn: false,
+        isSignedIn: false,
         userName: '',
         userId: '',
         userToken: '',
@@ -175,13 +175,13 @@ class App extends Component {
       <div>
         <Navbar
           getAppState={this.getAppState}
-          isLoggedIn={this.state.isLoggedIn}
-          logOut={this.logOut}
+          isSignedIn={this.state.isSignedIn}
+          signOut={this.signOut}
           updateSearch={searchValue => this.clickHandler(searchValue)}
         />
         {React.cloneElement(this.props.children, {
           getAppState: this.getAppState,
-          isLoggedIn: this.state.isLoggedIn,
+          isSignedIn: this.state.isSignedIn,
           getVideoProgress: this.getVideoProgress,
         })}
         <Footer />
