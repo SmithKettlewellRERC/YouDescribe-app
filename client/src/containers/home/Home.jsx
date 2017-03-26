@@ -46,16 +46,17 @@ class Home extends Component {
       .then(() => {
         const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
         ourFetch(url)
-        .then(data => this.parseFetchedData(data));
+
+        .then(data => this.parseFetchedData(data, serverVideo_Ids));
       });
   }
 
   // functions
-  parseFetchedData(data) {
-    console.log(data.items);
+  parseFetchedData(data,serverVideo_Ids) {
     const videos = this.state.videos.slice();
     for (let i = 0; i < data.items.length; i += 1) {
       const item = data.items[i];
+      const _id = serverVideo_Ids[i];
       const id = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
       const duration = convertSecondsToCardFormat(convertISO8601ToSeconds(item.contentDetails.duration));
@@ -75,7 +76,7 @@ class Home extends Component {
 
       videos.push(
         <VideoCard
-          key={i}
+          key={_id}
           id={id}
           description={description}
           thumbnailMediumUrl={thumbnailMedium.url}

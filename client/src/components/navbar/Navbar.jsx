@@ -65,8 +65,8 @@ class Navbar extends Component {
 
             {/* Right-sided navbar links */}
             <nav role="navigation" className="w3-right w3-hide-small w3-hide-medium">
-              <Link to="/wishlist" className="w3-bar-item" style={{ position: 'relative', top: '10px' }}><i className="fa fa-heart">&nbsp;&nbsp;</i>WISH LIST</Link>
-              <div className="w3-bar-item" style={{ position: 'relative', top: '4px' }}>
+              <Link to="/wishlist" className="w3-bar-item" style={{ position: 'relative', top: '8px' }}><i className="fa fa-heart">&nbsp;&nbsp;</i>WISH LIST</Link>
+              <div className="w3-bar-item" style={{ position: 'relative', top: '2px' }}>
                 {signInComponent}
               </div>
             </nav>

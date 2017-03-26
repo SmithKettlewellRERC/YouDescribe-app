@@ -14,7 +14,7 @@ class SignOutButton extends Component {
   render() {
     return (
       <div>
-        <span style={{ float: 'right', position: 'relative', top: '5px', paddingLeft: '4px' }}>{this.props.getAppState().userName}</span>
+        <span style={{ float: 'right', position: 'relative', top: '6px', paddingLeft: '4px' }}>{this.props.getAppState().userName}</span>
         <span style={{ float: 'right' }}>
           <Button
             id="btn-sign-out"
