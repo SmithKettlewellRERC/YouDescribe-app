@@ -16,7 +16,8 @@ class VideoCard extends Component {
     if (!this.props.getAppState().isLoggedIn) {
       alert('You have to be legged in in order to up vote');
     } else {
-      ourFetch(`${conf.apiUrl}/wishlist`, true, {
+      const url = `${conf.apiUrl}/wishlist?token=${this.props.getAppState().userToken}`;
+      ourFetch(url, true, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -82,7 +82,7 @@ function ourFetch(url, JSONparsing = true, optionObj = { method: 'GET' }) {
           resolve(req.response);
         }
       } else {
-        reject(Error(req.statusText));
+        reject(JSON.parse(req.response));
       }
     };
     req.send(optionObj.body);
