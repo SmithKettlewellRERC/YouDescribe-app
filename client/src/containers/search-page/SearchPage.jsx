@@ -21,7 +21,7 @@ class SearchPage extends Component {
     // all the video Ids that we found in YD database
     this.videoIds = null;
     // the video database that we found in YD database
-    this.dbResponse = null;
+    this.dbResultArray = null;
 
     //binding function to this
     this.loadMoreVideosFromYD = this.loadMoreVideosFromYD.bind(this);
@@ -50,19 +50,19 @@ class SearchPage extends Component {
     console.log('Fetching to ', url, ' to get data');
     ourFetch(url)
     .then((response) => {
-      this.dbResponse = response.result;
-      for (let i = 0; i < this.dbResponse.length; i += 1) {
-        serverVideoIds.push(this.dbResponse[i].youtube_id);
+      this.dbResultArray = response.result;
+      for (let i = 0; i < this.dbResultArray.length; i += 1) {
+        serverVideoIds.push(this.dbResultArray[i].youtube_id);
       }
 
       this.videoIds = serverVideoIds.join(',');
     })
     .then(() => {
       if (page === 1) {
-        this.fetchAndRenderVideoFromYD(this.dbResponse)
+        this.fetchAndRenderVideoFromYD(this.dbResultArray)
         .then(() => this.fetchAndRenderVideoFromYT(q, this.videoIds));
       } else {
-        this.fetchAndRenderVideoFromYD(this.dbResponse, page);
+        this.fetchAndRenderVideoFromYD(this.dbResultArray, page);
       }
     });
   }

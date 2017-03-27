@@ -3,7 +3,7 @@ module.exports = () => {
 
   // const appUrl = `http://webng.io`;
   const appUrl = 'http://localhost';
-  const apiUrl = `http://192.168.0.94:8080/${apiVersion}`;
+  const apiUrl = `http://localhost:8080/${apiVersion}`;
   const audioClipsUploadsPath = `http://localhost:8080/uploads`;
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';
   const youTubeApiKey = 'AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls';
