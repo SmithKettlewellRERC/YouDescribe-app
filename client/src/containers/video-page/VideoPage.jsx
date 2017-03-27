@@ -271,10 +271,12 @@ class VideoPage extends Component {
       //   videoVolume,
       // });
 
-      if (this.currentClip) {
+      if (this.currentClip && this.currentClip.playback_type === 'inline') {
         this.currentClip.volume(this.state.sliderValue / 100);
         this.state.videoPlayer.setVolume((100 - this.state.sliderValue) * 0.1);
-      } else this.state.videoPlayer.setVolume(100 - this.state.sliderValue);
+      } else {
+        this.state.videoPlayer.setVolume(100 - this.state.sliderValue);
+      }
 
       // console.log('yt volume', videoVolume);
       // console.log('clip volume', this.state.currentClipVolume);
