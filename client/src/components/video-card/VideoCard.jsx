@@ -13,7 +13,6 @@ class VideoCard extends Component {
   }
 
   upVote() {
-    console.log(this.props.getAppState())
     if (!this.props.getAppState().isSignedIn) {
       alert('You have to be legged in in order to up vote');
     } else {
