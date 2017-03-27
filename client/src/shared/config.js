@@ -2,6 +2,7 @@ module.exports = () => {
   const apiVersion = 'v1';
 
   // const appUrl = `http://webng.io`;
+
   const appUrl = 'http://localhost';
   const apiUrl = `http://localhost:8080/${apiVersion}`;
   const audioClipsUploadsPath = `http://localhost:8080/uploads`;
