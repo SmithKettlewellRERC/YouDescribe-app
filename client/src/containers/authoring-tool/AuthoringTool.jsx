@@ -74,8 +74,8 @@ class AuthoringTool extends Component {
   }
 
   componentWillMount() {
-    const isLoggedIn = this.props.getAppState().isLoggedIn;
-    if (isLoggedIn === false) {
+    const isSignedIn = this.props.getAppState().isSignedIn;
+    if (isSignedIn === false) {
       alert('You have to be logged in to describe a video')
       browserHistory.goBack();
     }
@@ -453,7 +453,7 @@ class AuthoringTool extends Component {
   }
 
   recordAudioClip(e, trackId) {
-    if (!this.props.getAppState().isLoggedIn) {
+    if (!this.props.getAppState().isSignedIn) {
       alert('You need to be logged in in order to record audio clips');
       return;
     }
