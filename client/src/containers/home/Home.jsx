@@ -111,7 +111,7 @@ class Home extends Component {
           <h2>Most popular</h2>
         </header>
 
-        <main className="w3-row">
+        <main role="main" className="w3-row">
           {this.state.videos}
         </main>
 
