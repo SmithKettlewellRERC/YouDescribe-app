@@ -49,7 +49,6 @@ class SearchPage extends Component {
     const q = encodeURIComponent(value);
     const serverVideoIds = [];
     const url = `${conf.apiUrl}/videos/search?q=${q}&page=${page}`;
-    console.log('Fetching to ', url, ' to get data');
     ourFetch(url)
     .then((response) => {
       this.dbResponse = response.result;
@@ -74,7 +73,6 @@ class SearchPage extends Component {
     return ourFetch(urlfForYT)
     .then((videoDataFromYDdatabase) => {
       const videoFromYDdatabase = videoDataFromYDdatabase.items;
-
       if (page === 1) {
         this.setState({
           videoAlreadyOnYD: [],
@@ -115,46 +113,6 @@ class SearchPage extends Component {
     });
   }
 
-  upVoteClick(e, i, id, description, thumbnailMediumUrl, duration, title, author, views, time) {
-    if (e.target.className === 'w3-btn w3-white w3-text-indigo w3-left' ||
-      e.target.className === 'fa fa-heart') {
-      if (e.target.className === 'fa fa-heart') e.target.parentElement.className = 'w3-btn w3-white w3-text-red w3-left';
-      else e.target.className = 'w3-btn w3-white w3-text-red w3-left';
-    }
-    const body = JSON.stringify({
-      title,
-      id,
-    });
-    ourFetch(`${conf.apiUrl}/wishlist`, true, {
-      method: 'post',
-      body,
-    })
-    .then((res) => {
-      const newCount = res.votes;
-      const newState = this.state.videoNotOnYD.slice();
-      newState[i] = (
-        <VideoCard
-          key={i}
-          id={id}
-          description={description}
-          thumbnailMediumUrlUrl={thumbnailMediumUrl.url}
-          duration={duration}
-          title={title}
-          author={author}
-          views={views}
-          time={time}
-          buttons='on'
-          vote_count={newCount}
-          upVoteClick={() => this.upVoteClick(i, id, description, thumbnailMediumUrl, title, author, views, time, newCount)}
-          describeClick={() => this.describeClick(id)}
-        />
-    );
-      this.setState({
-        videoNotOnYD: newState,
-      });
-    });
-  }
-
   loadMoreVideosFromYD() {
     this.currentPage += 1;
     this.getSearchResultsFromYdAndYt(this.currentPage);
@@ -177,15 +135,6 @@ class SearchPage extends Component {
       const author = item.snippet.channelTitle;
       const views = convertViewsToCardFormat(Number(item.statistics.viewCount));
       const publishedAt = new Date(item.snippet.publishedAt);
-
-      // let describer;
-      // dbResponse.forEach((elem) => {
-      //   console.log(elem);
-      //   console.log(elem._id);
-      //   console.log(id);
-      //   if (elem.youtube_id === id) describer = `${elem.audio_descriptions[1].legacy_author_name} (describer)`;
-      // });
-
       const now = Date.now();
       const time = convertTimeToCardFormat(Number(now - publishedAt));
 

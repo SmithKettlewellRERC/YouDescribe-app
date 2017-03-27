@@ -266,11 +266,6 @@ class VideoPage extends Component {
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
       const videoVolume = this.state.videoPlayer.getVolume();
 
-      // this.setState({
-      //   currentVideoProgress,
-      //   videoVolume,
-      // });
-
       if (this.currentClip && this.currentClip.playback_type === 'inline') {
         this.currentClip.volume(this.state.sliderValue / 100);
         this.state.videoPlayer.setVolume((100 - this.state.sliderValue) * 0.1);
@@ -278,18 +273,16 @@ class VideoPage extends Component {
         this.state.videoPlayer.setVolume(100 - this.state.sliderValue);
       }
 
-      // console.log('yt volume', videoVolume);
-      // console.log('clip volume', this.state.currentClipVolume);
-
       for (let i = 0; i < this.audioClipsCopy.length; i += 1) {
         switch (this.audioClipsCopy[i].playback_type) {
           case 'inline':
+        // console.log(this.audioClipsCopy[i].playback_type)
             if (currentVideoProgress >= +this.audioClipsCopy[i].start_time &&
               currentVideoProgress < +this.audioClipsCopy[i].end_time) {
               console.log('## INLINE');
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
-                html5: true,
+                html5: false,
                 volume: this.state.sliderValue / 100,
                 onload: () => {
                   this.currentClip.playbackType = 'inline';
@@ -311,12 +304,13 @@ class VideoPage extends Component {
             }
             break;
           case 'extended':
+        // console.log(this.audioClipsCopy[i].playback_type)
             if (Math.abs(+this.audioClipsCopy[i].start_time - currentVideoProgress) <= interval / 2000 ||
             (+this.audioClipsCopy[i].start_time < 0.5 && currentVideoProgress <= interval / 500)) {
               console.log('## EXTENDED ##');
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
-                html5: true,
+                html5: false,
                 volume: this.state.sliderValue / 100,
                 onload: () => {
                   this.currentClip.playbackType = 'extended';

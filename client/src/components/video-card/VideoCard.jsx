@@ -13,7 +13,8 @@ class VideoCard extends Component {
   }
 
   upVote() {
-    if (!this.props.getAppState().isLoggedIn) {
+    console.log(this.props.getAppState())
+    if (!this.props.getAppState().isSignedIn) {
       alert('You have to be legged in in order to up vote');
     } else {
       const url = `${conf.apiUrl}/wishlist?token=${this.props.getAppState().userToken}`;
@@ -39,7 +40,7 @@ class VideoCard extends Component {
     // }
 
   describeThisVideo() {
-    if (this.props.getAppState().isLoggedIn) {
+    if (this.props.getAppState().isSignedIn) {
       browserHistory.push('/authoring-tool/' + this.props.id);
     } else {
       alert('You have to be legged in in order to describe this video');
