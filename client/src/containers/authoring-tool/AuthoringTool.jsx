@@ -331,7 +331,7 @@ class AuthoringTool extends Component {
               console.log('## INLINE');
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
-                html5: true,
+                html5: false,
                 onload: () => {
                   this.currentClip.playbackType = 'inline',
                   this.currentClip.seek(currentVideoProgress - +this.audioClipsCopy[i].start_time, this.currentClip.play());
@@ -357,7 +357,7 @@ class AuthoringTool extends Component {
               console.log('Extended audio description clip');
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
-                html5: true,
+                html5: false,
                 onload: () => {
                   this.currentClip.playbackType = 'extended';
                   this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
