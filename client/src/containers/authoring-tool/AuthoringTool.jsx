@@ -74,8 +74,8 @@ class AuthoringTool extends Component {
   }
 
   componentWillMount() {
-    const isLoggedIn = this.props.getAppState().isLoggedIn;
-    if (isLoggedIn === false) {
+    const isSignedIn = this.props.getAppState().isSignedIn;
+    if (isSignedIn === false) {
       alert('You have to be logged in to describe a video')
       browserHistory.goBack();
     }
@@ -112,7 +112,6 @@ class AuthoringTool extends Component {
   // 3. We must call this method only once.
   parseVideoData() {
     console.log('3 -> parseVideoData');
-    console.log('#############', this.props.getAppState().userId)
     const videoData = Object.assign({}, this.state.videoData);
 
     let audioDescriptionId = null;
@@ -332,7 +331,7 @@ class AuthoringTool extends Component {
               console.log('## INLINE');
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
-                html5: true,
+                html5: false,
                 onload: () => {
                   this.currentClip.playbackType = 'inline',
                   this.currentClip.seek(currentVideoProgress - +this.audioClipsCopy[i].start_time, this.currentClip.play());
@@ -358,7 +357,7 @@ class AuthoringTool extends Component {
               console.log('Extended audio description clip');
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
-                html5: true,
+                html5: false,
                 onload: () => {
                   this.currentClip.playbackType = 'extended';
                   this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
@@ -454,6 +453,11 @@ class AuthoringTool extends Component {
   }
 
   recordAudioClip(e, trackId) {
+    if (!this.props.getAppState().isSignedIn) {
+      alert('You need to be logged in in order to record audio clips');
+      return;
+    }
+
     if (this.state.selectedTrackComponentId !== trackId) {
       if (this.state.selectedTrackComponentStatus === 'recording') {
         this.alertBoxOpen();
@@ -493,8 +497,8 @@ class AuthoringTool extends Component {
       });
     } else if (e.target.className === 'fa fa-step-forward') {
       // SEEK TO.
-      const seekToValue = clickedTrackComponent.props.data.start_time;
       console.log('Seek video to', seekToValue);
+      const seekToValue = clickedTrackComponent.props.data.start_time;
       this.state.videoPlayer.seekTo(parseFloat(seekToValue) - conf.seekToPositionDelayFix, true);
       this.state.videoPlayer.unMute();
       this.state.videoPlayer.pauseVideo();
@@ -551,7 +555,7 @@ class AuthoringTool extends Component {
     }
     formData.append('duration', args.duration);
     formData.append('wavfile', args.audioBlob);
-    const url = `${conf.apiUrl}/audioclips/${this.state.videoId}`;
+    const url = `${conf.apiUrl}/audioclips/${this.state.videoId}?token=${this.props.getAppState().userToken}`;
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function () {

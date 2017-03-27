@@ -6,6 +6,8 @@ import {
   ourFetch,
   convertTimeToCardFormat,
   convertViewsToCardFormat,
+  convertISO8601ToSeconds,
+  convertSecondsToCardFormat,
 } from '../../shared/helperFunctions';
 
 const conf = require('../../shared/config')();
@@ -47,7 +49,6 @@ class SearchPage extends Component {
     const q = encodeURIComponent(value);
     const serverVideoIds = [];
     const url = `${conf.apiUrl}/videos/search?q=${q}&page=${page}`;
-    console.log('Fetching to ', url, ' to get data');
     ourFetch(url)
     .then((response) => {
       this.dbResultArray = response.result;
@@ -68,11 +69,10 @@ class SearchPage extends Component {
   }
 
   fetchAndRenderVideoFromYD(dbResponse, page = 1) {
-    const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${this.videoIds}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+    const urlfForYT = `${conf.youTubeApiUrl}/videos?id=${this.videoIds}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
     return ourFetch(urlfForYT)
     .then((videoDataFromYDdatabase) => {
       const videoFromYDdatabase = videoDataFromYDdatabase.items;
-
       if (page === 1) {
         this.setState({
           videoAlreadyOnYD: [],
@@ -100,7 +100,7 @@ class SearchPage extends Component {
       idsYTvideo = videoFoundOnYTIds.join(',');
     })
     .then(() => {
-      const urlForYT = `${conf.youTubeApiUrl}/videos?id=${idsYTvideo}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+      const urlForYT = `${conf.youTubeApiUrl}/videos?id=${idsYTvideo}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
       ourFetch(urlForYT)
         .then((videoFromYoutubes) => {
           const videoFromYoutube = videoFromYoutubes.items;
@@ -111,45 +111,6 @@ class SearchPage extends Component {
           });
         });
     });
-  }
-
-  upVoteClick(e, i, id, description, thumbnailMediumUrl, title, author, views, time) {
-    if (e.target.className === 'w3-btn w3-white w3-text-indigo w3-left' ||
-      e.target.className === 'fa fa-heart') {
-      if (e.target.className === 'fa fa-heart') e.target.parentElement.className = 'w3-btn w3-white w3-text-red w3-left';
-      else e.target.className = 'w3-btn w3-white w3-text-red w3-left';
-    }
-    const body = JSON.stringify({
-        title: title,
-        id: id,
-    });
-    ourFetch(`${conf.apiUrl}/wishlist`, true, {
-      method: 'post',
-      body: body,
-    })
-    .then((res) => {
-      let new_count = res.votes;
-      let newState = this.state.videoNotOnYD.slice();
-      newState[i] = (
-          <VideoCard
-            key={i}
-            id={id}
-            description={description}
-            thumbnailMediumUrlUrl={thumbnailMediumUrl.url}
-            title={title}
-            author={author}
-            views={views}
-            time={time}
-            buttons='on'
-            vote_count={new_count}
-            upVoteClick={() => this.upVoteClick(i, id, description, thumbnailMediumUrl, title, author, views, time, new_count)}
-            describeClick={()=> this.describeClick(id)}
-          />
-      )
-      this.setState({
-        videoNotOnYD: newState,
-      })
-    })
   }
 
   loadMoreVideosFromYD() {
@@ -168,20 +129,12 @@ class SearchPage extends Component {
       const _id = dbResponse[i]._id;
       const id = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
+      const duration = convertSecondsToCardFormat(convertISO8601ToSeconds(item.contentDetails.duration));
       const title = item.snippet.title;
       const description = item.snippet.description;
       const author = item.snippet.channelTitle;
       const views = convertViewsToCardFormat(Number(item.statistics.viewCount));
       const publishedAt = new Date(item.snippet.publishedAt);
-
-      // let describer;
-      // dbResponse.forEach((elem) => {
-      //   console.log(elem);
-      //   console.log(elem._id);
-      //   console.log(id);
-      //   if (elem.youtube_id === id) describer = `${elem.audio_descriptions[1].legacy_author_name} (describer)`;
-      // });
-
       const now = Date.now();
       const time = convertTimeToCardFormat(Number(now - publishedAt));
 
@@ -191,6 +144,7 @@ class SearchPage extends Component {
           id={id}
           description={description}
           thumbnailMediumUrl={thumbnailMedium.url}
+          duration={duration}
           title={title}
           author={author}
           views={views}
@@ -200,7 +154,7 @@ class SearchPage extends Component {
         />);
     }
     this.setState({
-      videoAlreadyOnYD: videoAlreadyOnYD,
+      videoAlreadyOnYD,
     });
   }
 
@@ -210,6 +164,7 @@ class SearchPage extends Component {
       const item = videoFromYoutube[i];
       const id = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
+      const duration = convertSecondsToCardFormat(convertISO8601ToSeconds(item.contentDetails.duration));
       const title = item.snippet.title;
       const description = item.snippet.description;
       const author = item.snippet.channelTitle;
@@ -226,16 +181,15 @@ class SearchPage extends Component {
           id={id}
           description={description}
           thumbnailMediumUrl={thumbnailMedium.url}
+          duration={duration}
           title={title}
           author={author}
           views={views}
           time={time}
           buttons="on"
           getAppState={this.props.getAppState}
-
           votes={0}
-        />
-      );
+        />);
     }
 
     this.setState({

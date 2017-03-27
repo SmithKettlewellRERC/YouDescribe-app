@@ -13,10 +13,12 @@ class VideoCard extends Component {
   }
 
   upVote() {
-    if (!this.props.getAppState().isLoggedIn) {
+    console.log(this.props.getAppState())
+    if (!this.props.getAppState().isSignedIn) {
       alert('You have to be legged in in order to up vote');
     } else {
-      ourFetch(`${conf.apiUrl}/wishlist`, true, {
+      const url = `${conf.apiUrl}/wishlist?token=${this.props.getAppState().userToken}`;
+      ourFetch(url, true, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,7 +40,7 @@ class VideoCard extends Component {
     // }
 
   describeThisVideo() {
-    if (this.props.getAppState().isLoggedIn) {
+    if (this.props.getAppState().isSignedIn) {
       browserHistory.push('/authoring-tool/' + this.props.id);
     } else {
       alert('You have to be legged in in order to describe this video');
@@ -69,7 +71,10 @@ class VideoCard extends Component {
     return (
       <div id="video-card" className="w3-margin-top w3-left">
         <div className="w3-card-2 w3-hover-shadow">
-          <Link to={'/video/' + this.props.id}><img alt={this.props.description} src={this.props.thumbnailMediumUrl} width="100%" /></Link>
+          <div id="card-thumbnail">
+            <Link to={'/video/' + this.props.id}><img alt={this.props.description} src={this.props.thumbnailMediumUrl} width="100%" /></Link>
+            <div id="card-duration">{this.props.duration}</div>
+          </div>
           <div className="w3-container w3-padding-bottom">
             <div id="card-title-container">
               <div id="card-title">
