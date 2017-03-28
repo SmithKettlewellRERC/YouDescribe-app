@@ -12,7 +12,6 @@ class SignOutButton extends Component {
   }
 
   render() {
-            console.log(this.props.getAppState().userPicture)
     return (
       <div>
         <img src={this.props.getAppState().userPicture} />
