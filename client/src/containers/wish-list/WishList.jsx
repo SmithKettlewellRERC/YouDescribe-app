@@ -16,71 +16,84 @@ class WishList extends Component {
     this.state = {
       videos: [],
     };
+    this.dbResultArray = [];
+    this.currentPage = 1;
+    this.fetchingVideosToWishlist = this.fetchingVideosToWishlist.bind(this);
+    this.loadMoreResults = this.loadMoreResults.bind(this);
   }
 
   componentDidMount() {
-    this.renderVideosInWishlist();
+    this.fetchingVideosToWishlist();
   }
 
-  renderVideosInWishlist() {
+  fetchingVideosToWishlist() {
+    const serverVideo_Ids = [];
     const serverVideoIds = [];
     let ids;
     let dbResponse;
 
-    ourFetch(`${conf.apiUrl}/wishlist`)
+    const url = (`${conf.apiUrl}/wishlist?page=${this.currentPage}`);
+    ourFetch(url)
     .then((response) => {
-      dbResponse = response.result;
-      for (let i = 0; i < response.result.length; i += 1) {
-        serverVideoIds.push(response.result[i].youtube_id);
+      this.dbResultArray = response.result;
+      for (let i = 0; i < this.dbResultArray.length; i += 1) {
+        serverVideoIds.push(this.dbResultArray[i].youtube_id);
+        serverVideo_Ids.push(this.dbResultArray[i]._id);
       }
       ids = serverVideoIds.join(',');
     })
     .then(() => {
       const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
       ourFetch(url)
-      .then((data) => {
-        const videos = this.state.videos.slice();
-        for (let i = 0; i < data.items.length; i += 1) {
-          const item = data.items[i];
-          const id = item.id;
-          const thumbnailMedium = item.snippet.thumbnails.medium;
-          const title = item.snippet.title;
-          const description = item.snippet.description;
-          const author = item.snippet.channelTitle;
-          const views = convertViewsToCardFormat(Number(item.statistics.viewCount));
-          const publishedAt = new Date(item.snippet.publishedAt);
-
-          let votes;
-          dbResponse.forEach((elem) => {
-            if (elem._id === id) {
-              votes = elem.votes;
-            }
-          });
-
-          const now = Date.now();
-          const time = convertTimeToCardFormat(Number(now - publishedAt));
-
-          videos.push(
-            <VideoCard
-              key={i}
-              id={id}
-              thumbnailMediumUrl={thumbnailMedium.url}
-              title={title}
-              description={description}
-              author={author}
-              views={views}
-              votes={votes}
-              time={time}
-              buttons="on"
-              getAppState={this.props.getAppState}
-            />,
-          );
-        }
-        this.setState({ videos }, () => {
-          browserHistory.push('/wishlist');
-        });
-      });
+      .then(data => this.parseFetchedData(data, serverVideo_Ids));
     });
+  }
+
+  parseFetchedData(data, serverVideo_Ids) {
+    const videos = this.state.videos.slice();
+    for (let i = 0; i < data.items.length; i += 1) {
+      const item = data.items[i];
+      const _id = serverVideo_Ids[i];
+      const id = item.id;
+      const thumbnailMedium = item.snippet.thumbnails.medium;
+      const title = item.snippet.title;
+      const description = item.snippet.description;
+      const author = item.snippet.channelTitle;
+      const views = convertViewsToCardFormat(Number(item.statistics.viewCount));
+      const publishedAt = new Date(item.snippet.publishedAt);
+
+      let votes;
+      this.dbResultArray.forEach((elem) => {
+        if (elem._id === id) {
+          votes = elem.votes;
+        }
+      });
+
+      const now = Date.now();
+      const time = convertTimeToCardFormat(Number(now - publishedAt));
+
+      videos.push(
+        <VideoCard
+          key={_id}
+          id={id}
+          thumbnailMediumUrl={thumbnailMedium.url}
+          title={title}
+          description={description}
+          author={author}
+          views={views}
+          votes={votes}
+          time={time}
+          buttons="on"
+          getAppState={this.props.getAppState}
+        />,
+      );
+    }
+    this.setState({ videos });
+  }
+
+  loadMoreResults() {
+    this.currentPage += 1;
+    this.fetchingVideosToWishlist();
   }
 
   render() {
@@ -93,7 +106,7 @@ class WishList extends Component {
           {this.state.videos}
         </main>
         <div id="load-more" className="w3-margin-top w3-center">
-          <Button title="Load more videos" color="w3-indigo" text="Load more" />
+          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
         </div>
       </div>
     );

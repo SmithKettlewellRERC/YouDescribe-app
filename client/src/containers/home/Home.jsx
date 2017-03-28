@@ -14,7 +14,7 @@ const conf = require('../../shared/config')();
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.dbResponse = {};
+    this.dbResultArray = [];
     this.state = {
       searchQuery: '',
       videos: [],
@@ -32,14 +32,13 @@ class Home extends Component {
     const serverVideo_Ids = [];
     const serverVideoIds = [];
     let ids;
-    let dbResponse;
     const url = (`${conf.apiUrl}/videos?page=${this.currentPage}`);
     ourFetch(url)
       .then((response) => {
-        this.dbResponse = response.result;
-        for (let i = 0; i < response.result.length; i += 1) {
-          serverVideoIds.push(response.result[i].youtube_id);
-          serverVideo_Ids.push(response.result[i]._id);
+        this.dbResultArray = response.result;
+        for (let i = 0; i < this.dbResultArray.length; i += 1) {
+          serverVideoIds.push(this.dbResultArray[i].youtube_id);
+          serverVideo_Ids.push(this.dbResultArray[i]._id);
         }
         ids = serverVideoIds.join(',');
       })
@@ -66,7 +65,7 @@ class Home extends Component {
       const views = convertViewsToCardFormat(Number(item.statistics.viewCount));
       const publishedAt = new Date(item.snippet.publishedAt);
 
-      this.dbResponse.forEach((elem) => {
+      this.dbResultArray.forEach((elem) => {
         if (elem._id === id) describer = `${elem.audio_descriptions[1].legacy_author_name} (describer)`;
       });
 
