@@ -37,16 +37,16 @@ class Slider extends Component {
 
   //get the ratio between the slider length and the slider's value maximum
   calibrate(target) {
-  	var rail = target.parentNode;
-  	var sliderLength = rail.clientWidth - target.clientWidth;
-  	var max = parseInt(target.getAttribute('aria-valuemax'));
+  	let rail = target.parentNode;
+  	let sliderLength = rail.clientWidth - target.clientWidth;
+  	let max = parseInt(target.getAttribute('aria-valuemax'));
   	return sliderLength / max;
   }
 
   //get the left offset of the rail, needed for conversion of mouse coordinates
   getHOffset(elem) {
-  	var node = elem;
-  	var offset = node.offsetLeft;
+  	let node = elem;
+  	let offset = node.offsetLeft;
   		while(node.offsetParent) {
   			node = node.offsetParent;
   			if (node.nodeName.toLowerCase() != "html") {
@@ -57,7 +57,7 @@ class Slider extends Component {
   }
 
   getHScrollOffset() {
-  	var scrollOffset
+  	let scrollOffset
   	if (window.pageLeft !== undefined) {
   			scrollOffset = window.pageLeft;
   	}
@@ -72,9 +72,9 @@ class Slider extends Component {
 
   handleKeyDown(event) {
     var event = event || window.event;
-  	var keyCode = event.keyCode || event.charCode;
-  	var target = event.target || event.srcElement;
-  	var passThrough = true;
+  	let keyCode = event.keyCode || event.charCode;
+  	let target = event.target || event.srcElement;
+  	let passThrough = true;
   	switch (keyCode) {
   		case 37: // left arrow
   			this.decrement(target, false);
@@ -116,9 +116,9 @@ class Slider extends Component {
 
   handleRailMouseDown(event) {
   	event = event || window.event;
-  	var target = event.target || event.srcElement;
-  	var thumb = this.$(target.id.replace(/Rail/, 'Thumb'));
-  	var newPos = event.clientX - this.getHOffset(target)+ this.getHScrollOffset() - (thumb.clientWidth / 2);
+  	let target = event.target || event.srcElement;
+  	let thumb = this.$(target.id.replace(/Rail/, 'Thumb'));
+  	let newPos = event.clientX - this.getHOffset(target)+ this.getHScrollOffset() - (thumb.clientWidth / 2);
   	this.changeValue(thumb, this.mapPositionToValue(thumb, newPos));
   	if (!document.activeElement || !document.activeElement !== thumb) {
   		thumb.focus();
@@ -128,7 +128,7 @@ class Slider extends Component {
 
   handleThumbMouseDown(event) {
   	event = event || window.event;
-  	var target = event.target || event.srcElement;
+  	let target = event.target || event.srcElement;
   	this.gDragging = target.id;
   	this.gDragOffset = event.clientX - this.getHOffset(target.parentNode) - target.offsetLeft + this.getHScrollOffset();
   	document.onmousemove = this.handleDrag;
@@ -146,8 +146,8 @@ class Slider extends Component {
   		return;
   	}
   	else {
-  		var target = this.$(this.gDragging);
-  		var newPos = event.clientX - this.getHOffset(target.parentNode) + this.getHScrollOffset() - this.gDragOffset;
+  		let target = this.$(this.gDragging);
+  		let newPos = event.clientX - this.getHOffset(target.parentNode) + this.getHScrollOffset() - this.gDragOffset;
   		this.changeValue(target, this.mapPositionToValue(target, newPos));
   	}
   }
@@ -166,22 +166,22 @@ class Slider extends Component {
 
   increment(target, byChunk) {
 
-      var newValue = parseInt(target.getAttribute('aria-valuenow')) + (byChunk ? 10 : 1);
+      let newValue = parseInt(target.getAttribute('aria-valuenow')) + (byChunk ? 10 : 1);
 
       this.changeValue(target, newValue);
   }
 
   decrement(target, byChunk) {
-  	var newValue = parseInt(target.getAttribute('aria-valuenow')) - (byChunk ? 10 : 1);
+  	let newValue = parseInt(target.getAttribute('aria-valuenow')) - (byChunk ? 10 : 1);
   	this.changeValue(target, newValue);
   }
 
   changeValue(target, value) {
-  	var ratio = this.calibrate(target);
-  	var min = parseInt(target.getAttribute('aria-valuemin'));
-  	var max = parseInt(target.getAttribute('aria-valuemax'));
-  	var newValue = Math.min(Math.max(value, min), max);
-  	var newPos = Math.round(newValue * ratio);
+  	let ratio = this.calibrate(target);
+  	let min = parseInt(target.getAttribute('aria-valuemin'));
+  	let max = parseInt(target.getAttribute('aria-valuemax'));
+  	let newValue = Math.min(Math.max(value, min), max);
+  	let newPos = Math.round(newValue * ratio);
   	target.style.left = newPos + "px";
 
   	target.setAttribute('aria-valuenow', newValue);
@@ -191,7 +191,7 @@ class Slider extends Component {
   }
 
   updateValueIndicator(id, value) {
-  	var elem = this.$(id);
+  	let elem = this.$(id);
   	elem.replaceChild(document.createTextNode(value), elem.firstChild);
   }
 
@@ -202,8 +202,8 @@ class Slider extends Component {
 
   	slider.parentNode.onfocus = function(event) { //temp IE fix
   		event = event || window.event;
-  		var target = event.target || event.srcElement;
-  		var thumb = this.$(target.id.replace(/Rail/, 'Thumb'));
+  		let target = event.target || event.srcElement;
+  		let thumb = this.$(target.id.replace(/Rail/, 'Thumb'));
   		if (thumb)
   			thumb.focus();
   	}

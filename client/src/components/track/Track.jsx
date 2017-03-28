@@ -23,6 +23,7 @@ class Track extends Component {
   }
 
   render() {
+    console.log('DURATION', this.props.getATState().videoDurationInSeconds);
     return (
       <div id="track" className="w3-row w3-display-container">
         <div className="w3-col l3 m3 s3">
@@ -50,8 +51,8 @@ class Track extends Component {
           <div
             id="sinewave"
             style={{
-              left: `${755 * (this.props.data.start_time / this.props.getATState().videoDuration)}px`,
-              width: `${50}px`,
+              left: `${755 * (this.props.data.start_time / this.props.getATState().videoDurationInSeconds)}px`,
+              width: `${Math.abs((755 * ((this.props.data.end_time - this.props.data.start_time) / this.props.getATState().videoDurationInSeconds)) - 1)}px`,
               height: '27px',
             }}
           >
