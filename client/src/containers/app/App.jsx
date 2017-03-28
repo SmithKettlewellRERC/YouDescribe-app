@@ -21,6 +21,7 @@ class App extends Component {
       userId: '',
       userToken: '',
       userName: '',
+      userPicture: '',
     };
     this.initGoogleAuth = this.initGoogleAuth.bind(this);
     this.googleSignInSuccess = this.googleSignInSuccess.bind(this);
@@ -56,6 +57,7 @@ class App extends Component {
         userName: res.result.name,
         userId: res.result._id,
         userToken: userToken,
+        userPicture: res.result.picture,
       }, () => {
         this.setCookie();
       });
@@ -90,12 +92,14 @@ class App extends Component {
         const userId = this.getCookie('userId');
         const userToken = this.getCookie('userToken');
         const userName = this.getCookie('userName');
+        const userPicture = this.getCookie('userPicture');
         if (userId && userToken && userName) {
           self.setState({
             isSignedIn: true,
             userName: userName,
             userId: userId,
             userToken: userToken,
+            userPicture: userPicture,
           }, () => {
             self.setCookie();
           });
@@ -105,6 +109,7 @@ class App extends Component {
             userName: '',
             userId: '',
             userToken: '',
+            userPicture: '',
           }, () => {
             self.resetCookie();
           });
@@ -117,11 +122,13 @@ class App extends Component {
     const userId = this.getCookie('userId');
     const userToken = this.getCookie('userToken');
     const userName = this.getCookie('userName');
+    const userPicture = this.getCookie('userPicture');
     if (userId && userToken && userName) {
       return {
         userId,
         userName,
         userToken,
+        userPicture,
       };
     }
     return null;
@@ -148,12 +155,14 @@ class App extends Component {
     document.cookie = `userId=${this.state.userId};expires=${exp};path=/`;
     document.cookie = `userToken=${this.state.userToken};expires=${exp};path=/`;
     document.cookie = `userName=${this.state.userName};expires=${exp};path=/`;
+    document.cookie = `userPicture=${this.state.userPicture};expires=${exp};path=/`;
   }
 
   resetCookie() {
     document.cookie = `userId=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
     document.cookie = `userToken=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
     document.cookie = `userName=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+    document.cookie = `userPicture=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
   }
 
   getCookie(cname) {
@@ -171,7 +180,6 @@ class App extends Component {
     }
     return '';
   }
-
 
   componentDidMount() {
     window.addEventListener('google-auth-lib-loaded', this.initGoogleAuth);

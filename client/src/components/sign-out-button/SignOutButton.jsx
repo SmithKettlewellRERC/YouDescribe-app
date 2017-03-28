@@ -12,8 +12,10 @@ class SignOutButton extends Component {
   }
 
   render() {
+            console.log(this.props.getAppState().userPicture)
     return (
       <div>
+        <img src={this.props.getAppState().userPicture} />
         <span style={{ float: 'right', position: 'relative', top: '6px', paddingLeft: '4px' }}>{this.props.getAppState().userName}</span>
         <span style={{ float: 'right' }}>
           <Button
