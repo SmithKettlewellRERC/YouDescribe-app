@@ -75,10 +75,10 @@ class AuthoringTool extends Component {
 
   componentWillMount() {
     const isSignedIn = this.props.getAppState().isSignedIn;
-    if (isSignedIn === false) {
-      alert('You have to be logged in to describe a video')
-      browserHistory.goBack();
-    }
+    // if (isSignedIn === false) {
+    //   alert('You have to be logged in to describe a video')
+    //   browserHistory.goBack();
+    // }
   }
 
   componentDidMount() {
@@ -121,7 +121,7 @@ class AuthoringTool extends Component {
       // This looping won't be necessary when the API just delivery the owned AD for the current video.
       for (let i = 0; i < videoData.audio_descriptions.length; i += 1) {
         const ad = videoData.audio_descriptions[i];
-        if (ad.user._id === this.props.getAppState().userId) {
+        if (ad.user._id === this.props.getUserInfo().userId) {
           audioDescriptionId = ad['_id'];
           if (ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
@@ -152,8 +152,7 @@ class AuthoringTool extends Component {
     if (audioClips.length > 0) {
       const promises = [];
       audioClips.forEach((audioObj, idx) => {
-        console.log(audioObj.url);
-        promises.push(ourFetch(audioObj.url));
+        promises.push(ourFetch(audioObj.url, false));
       });
       Promise.all(promises).then(function() {
         console.log('All audios loaded.');
@@ -217,7 +216,7 @@ class AuthoringTool extends Component {
 
   // 7
   initVideoPlayer() {
-    console.log('7 -> initVideoPlayer -> YouTube Id: ', this.state.videoId);
+    console.log('7 -> initVideoPlayer');
     const self = this;
 
     if (YT.loaded) {

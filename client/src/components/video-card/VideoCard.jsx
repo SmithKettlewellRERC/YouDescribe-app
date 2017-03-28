@@ -13,7 +13,6 @@ class VideoCard extends Component {
   }
 
   upVote() {
-    console.log(this.props.getAppState())
     if (!this.props.getAppState().isSignedIn) {
       alert('You have to be legged in in order to up vote');
     } else {
@@ -26,7 +25,11 @@ class VideoCard extends Component {
         body: JSON.stringify({ id: this.props.id }),
       })
       .then((res) => {
-        console.log(res);
+        console.log(res.status);
+      })
+      .catch(err => {
+        console.log(err);
+        alert('It was impossible to vote. Maybe your session has expired. Try to logout and login again.');
       });
     }
   }

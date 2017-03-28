@@ -26,6 +26,7 @@ class App extends Component {
     this.googleSignInSuccess = this.googleSignInSuccess.bind(this);
     this.signOut = this.signOut.bind(this);
     this.getAppState = this.getAppState.bind(this);
+    this.getUserInfo = this.getUserInfo.bind(this);
   }
 
   getAppState() {
@@ -112,6 +113,20 @@ class App extends Component {
     });
   }
 
+  getUserInfo() {
+    const userId = this.getCookie('userId');
+    const userToken = this.getCookie('userToken');
+    const userName = this.getCookie('userName');
+    if (userId && userToken && userName) {
+      return {
+        userId,
+        userName,
+        userToken,
+      };
+    }
+    return null;
+  }
+
   signOut() {
     this.state.auth2.signOut().then(() => {
       this.setState({
@@ -183,6 +198,7 @@ class App extends Component {
           getAppState: this.getAppState,
           isSignedIn: this.state.isSignedIn,
           getVideoProgress: this.getVideoProgress,
+          getUserInfo: this.getUserInfo,
         })}
         <Footer />
       </div>
