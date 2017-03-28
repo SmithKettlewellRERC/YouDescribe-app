@@ -599,24 +599,30 @@ class AuthoringTool extends Component {
   }
 
   publishVideo() {
+    const self = this;
+    // this.alertBoxOpen('publish-button');
 
-    this.alertBoxOpen('publish-button');
-
-    const url = `${conf.apiUrl}/videos/${this.state.videoId}`;
-    const xhr = new XMLHttpRequest();
-    xhr.open('put', url, true);
-    xhr.setRequestHeader('Accept', 'application/json');
-    xhr.setRequestHeader('Content-type', 'application/json');
-    const data = new FormData();
-    data.append('publish', 'true');
-    xhr.onload = function () {
-      self.setState({
-        videoData: JSON.parse(this.responseText).result,
-      }, () => {
-        self.parseVideoData();
-      });
-    };
-    xhr.send(data);
+    const resultConfirm = confirm('Are you sure you wanna publish this video?');
+    if (resultConfirm) {
+      const url = `${conf.apiUrl}/videos/${this.state.videoId}?token=${this.props.getAppState().userToken}`;
+      const xhr = new XMLHttpRequest();
+      xhr.open('post', url);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      xhr.onload = function () {
+        const result = JSON.parse(this.responseText).result;
+        if (result._id) {
+          console.log('Video published');
+          self.setState({
+            videoData: result,
+          }, () => {
+            self.parseVideoData();
+          });
+        } else {
+          console.log('There was a problem to publish your video');
+        }
+      };
+      xhr.send();
+    }
   }
 
   getATState() {
