@@ -50,43 +50,27 @@ class VideoPage extends Component {
     return [];
   }
 
-  // 2 Keep this for safari bug detecting
-  // fetchVideoData() {
-  //   console.log('2 -> fetchingVideoData');
-  //   const self = this;
-  //   const xhr = new XMLHttpRequest();
-  //   xhr.open('GET', this.state.videoUrl, true);
-  //   xhr.onload = function () {
-  //     if (xhr.readyState === 4) {
-  //       const response = JSON.parse(xhr.response);
-  //       const result = response.result
-  //         ? response.result
-  //         : {};
-  //       self.setState({
-  //         videoData: result,
-  //       }, () => {
-  //         self.parseVideoData();
-  //       });
-  //     }
-  //   };
-  //   xhr.send();
-  // }
-
-  // 2 relaced fetchVideoData with the new Fetch
+  // 2
   fetchVideoData() {
     console.log('2 -> fetchingVideoData');
     const self = this;
     ourFetch(this.state.videoUrl)
     .then((response) => {
-        const result = response.result
-          ? response.result
-          : {};
+      console.log('RESPONSE')
+      if (response.result) {
         self.setState({
-          videoData: result,
+          videoData: response.result,
         }, () => {
           self.parseVideoData();
         });
+      } else {
+        self.parseVideoData();
+      }
     })
+    .catch(err => {
+      console.log(err)
+      self.parseVideoData();
+    });
   }
 
   // 3
@@ -255,7 +239,7 @@ class VideoPage extends Component {
   // 7
   videoProgressWatcher() {
     console.log('6 -> videoProgressWatcher')
-    const interval = 100;
+    const interval = 200;
 
     if (this.watcher) {
       clearInterval(this.watcher);
@@ -264,9 +248,9 @@ class VideoPage extends Component {
 
     this.watcher = setInterval(() => {
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
-      const videoVolume = this.state.videoPlayer.getVolume();
+      // const videoVolume = this.state.videoPlayer.getVolume();
 
-      if (this.currentClip && this.currentClip.playback_type === 'inline') {
+      if (this.currentClip && this.currentClip.playbackType === 'inline') {
         this.currentClip.volume(this.state.sliderValue / 100);
         this.state.videoPlayer.setVolume((100 - this.state.sliderValue) * 0.1);
       } else {
@@ -286,8 +270,9 @@ class VideoPage extends Component {
                 volume: this.state.sliderValue / 100,
                 onload: () => {
                   this.currentClip.playbackType = 'inline';
-                  this.currentClip.seek(currentVideoProgress - +this.audioClipsCopy[i].start_time, this.currentClip.play());
+                  const temp = +this.audioClipsCopy[i]
                   this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
+                  this.currentClip.seek(currentVideoProgress - temp.start_time, this.currentClip.play());
                 },
                 onloaderror: (errToLoad) => {
                   console.log('Impossible to load', errToLoad);
@@ -379,6 +364,8 @@ class VideoPage extends Component {
           audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
           selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
           setAudioDescriptionActive={this.setAudioDescriptionActive}
+          videoId={this.state.videoId}
+          getAppState={this.props.getAppState}
         />
       </div>
     );

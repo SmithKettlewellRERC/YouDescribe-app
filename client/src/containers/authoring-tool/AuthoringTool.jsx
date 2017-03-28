@@ -146,8 +146,8 @@ class AuthoringTool extends Component {
   preLoadAudioClips() {
     console.log('4 -> preLoadAudioClips');
     const self = this;
-
     const audioClips = Object.values(this.state.audioDescriptionAudioClips);
+    console.log('AUDIOCLIPS', audioClips);
 
     if (audioClips.length > 0) {
       const promises = [];
@@ -176,6 +176,7 @@ class AuthoringTool extends Component {
       this.setState({
         videoTitle: data.items[0].snippet.title,
         videoDescription: data.items[0].snippet.description,
+        videoDurationInSeconds: this.videoDurationInSeconds,
         videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
       }, () => {
         self.loadExistingTracks();
@@ -193,19 +194,20 @@ class AuthoringTool extends Component {
     const audioClipsLength = audioClips.length;
     if (audioClipsLength > 0) {
       audioClips.forEach((audioClip, idx) => {
-        tracksComponents.push(<Track
-          key={idx}
-          id={idx}
-          data={audioClip}
-          actionIconClass={'fa-step-forward'}
-          getATState={this.getATState}
-          recordAudioClip={this.recordAudioClip}
-          updateTrackLabel={this.updateTrackLabel}
-          setSelectedTrack={this.setSelectedTrack}
-        />);
+        tracksComponents.push(
+          <Track
+            key={idx}
+            id={idx}
+            data={audioClip}
+            actionIconClass={'fa-step-forward'}
+            getATState={this.getATState}
+            recordAudioClip={this.recordAudioClip}
+            updateTrackLabel={this.updateTrackLabel}
+            setSelectedTrack={this.setSelectedTrack}
+          />);
       });
     }
-    const playheadTailHeight = audioClipsLength === 7 ? audioClipsLength * 27 : 189;
+    const playheadTailHeight = audioClipsLength !== 7 ? audioClipsLength * 27 : 189;
     this.setState({
       tracksComponents,
       playheadTailHeight,
