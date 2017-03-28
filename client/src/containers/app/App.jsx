@@ -150,12 +150,17 @@ class App extends Component {
 
   setCookie() {
     let exp = new Date();
-    exp.setTime(exp.getTime()+(12*60*60*1000));
+    // Our cookie must expire before Google Auth Cookie!
+    exp.setTime(exp.getTime()+(1000));
     exp = exp.toGMTString();
-    document.cookie = `userId=${this.state.userId};expires=${exp};path=/`;
-    document.cookie = `userToken=${this.state.userToken};expires=${exp};path=/`;
-    document.cookie = `userName=${this.state.userName};expires=${exp};path=/`;
-    document.cookie = `userPicture=${this.state.userPicture};expires=${exp};path=/`;
+    document.cookie = `userId=${this.state.userId};path=/`;
+    document.cookie = `userToken=${this.state.userToken};path=/`;
+    document.cookie = `userName=${this.state.userName};path=/`;
+    document.cookie = `userPicture=${this.state.userPicture};path=/`;
+    // document.cookie = `userId=${this.state.userId};expires=${exp};path=/`;
+    // document.cookie = `userToken=${this.state.userToken};expires=${exp};path=/`;
+    // document.cookie = `userName=${this.state.userName};expires=${exp};path=/`;
+    // document.cookie = `userPicture=${this.state.userPicture};expires=${exp};path=/`;
   }
 
   resetCookie() {
