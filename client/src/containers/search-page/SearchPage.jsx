@@ -23,14 +23,14 @@ class SearchPage extends Component {
     // all the video Ids that we found in YD database
     this.videoIds = null;
     // the video database that we found in YD database
-    this.dbResultArray = null;
+    this.videoDbResonseVideos = null;
 
     //binding function to this
     this.loadMoreVideosFromYD = this.loadMoreVideosFromYD.bind(this);
     this.loadMoreVideosFromYT = this.loadMoreVideosFromYT.bind(this);
     this.getSearchResultsFromYdAndYt = this.getSearchResultsFromYdAndYt.bind(this);
 
-    this.currentPage = 1;
+    this.currentPageNumber = 1;
   }
 
   componentDidMount() {
@@ -39,7 +39,7 @@ class SearchPage extends Component {
 
   componentWillReceiveProps() {
     setTimeout(() => {
-      this.currentPage = 1;
+      this.currentPageNumber = 1;
       this.getSearchResultsFromYdAndYt();
     }, 0);
   }
@@ -51,19 +51,19 @@ class SearchPage extends Component {
     const url = `${conf.apiUrl}/videos/search?q=${q}&page=${page}`;
     ourFetch(url)
     .then((response) => {
-      this.dbResultArray = response.result;
-      for (let i = 0; i < this.dbResultArray.length; i += 1) {
-        serverVideoIds.push(this.dbResultArray[i].youtube_id);
+      this.videoDbResonseVideos = response.result;
+      for (let i = 0; i < this.videoDbResonseVideos.length; i += 1) {
+        serverVideoIds.push(this.videoDbResonseVideos[i].youtube_id);
       }
 
       this.videoIds = serverVideoIds.join(',');
     })
     .then(() => {
       if (page === 1) {
-        this.fetchAndRenderVideoFromYD(this.dbResultArray)
+        this.fetchAndRenderVideoFromYD(this.videoDbResonseVideos)
         .then(() => this.fetchAndRenderVideoFromYT(q, this.videoIds));
       } else {
-        this.fetchAndRenderVideoFromYD(this.dbResultArray, page);
+        this.fetchAndRenderVideoFromYD(this.videoDbResonseVideos, page);
       }
     });
   }
@@ -114,8 +114,8 @@ class SearchPage extends Component {
   }
 
   loadMoreVideosFromYD() {
-    this.currentPage += 1;
-    this.getSearchResultsFromYdAndYt(this.currentPage);
+    this.currentPageNumber += 1;
+    this.getSearchResultsFromYdAndYt(this.currentPageNumber);
   }
 
   loadMoreVideosFromYT() {

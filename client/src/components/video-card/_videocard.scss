@@ -19,11 +19,11 @@
     }
   }
   #card-title-container {
-    height: 100px;
+    height: 80px;
     #card-title {
       // max-height: 41px;
       // white-space: nowrap;
-      line-height: 18px;
+      line-height: 16px;
       text-overflow: ellipsis;
       overflow: hidden;
       display: -webkit-box;
@@ -43,5 +43,17 @@
   }
   button {
     margin-bottom: 4px;
+  }
+  h3 {
+    line-height: 17px;
+    margin: 8px 0 0 0;
+  }
+  h4, h4 a {
+    color: grey;
+    line-height: 11px;
+    margin: 4px 0 0 0;
+  }
+  h4 a:hover {
+    color: #337ab7;
   }
 }

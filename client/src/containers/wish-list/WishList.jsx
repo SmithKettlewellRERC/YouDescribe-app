@@ -16,8 +16,8 @@ class WishList extends Component {
     this.state = {
       videos: [],
     };
-    this.dbResultArray = [];
-    this.currentPage = 1;
+    this.wishlistDbResponseVideo = [];
+    this.currentPageNumber = 1;
     this.fetchingVideosToWishlist = this.fetchingVideosToWishlist.bind(this);
     this.loadMoreResults = this.loadMoreResults.bind(this);
   }
@@ -32,13 +32,13 @@ class WishList extends Component {
     let ids;
     let dbResponse;
 
-    const url = (`${conf.apiUrl}/wishlist?page=${this.currentPage}`);
+    const url = (`${conf.apiUrl}/wishlist?page=${this.currentPageNumber}`);
     ourFetch(url)
     .then((response) => {
-      this.dbResultArray = response.result;
-      for (let i = 0; i < this.dbResultArray.length; i += 1) {
-        serverVideoIds.push(this.dbResultArray[i].youtube_id);
-        serverVideo_Ids.push(this.dbResultArray[i]._id);
+      this.wishlistDbResponseVideo = response.result;
+      for (let i = 0; i < this.wishlistDbResponseVideo.length; i += 1) {
+        serverVideoIds.push(this.wishlistDbResponseVideo[i].youtube_id);
+        serverVideo_Ids.push(this.wishlistDbResponseVideo[i]._id);
       }
       ids = serverVideoIds.join(',');
     })
@@ -63,7 +63,7 @@ class WishList extends Component {
       const publishedAt = new Date(item.snippet.publishedAt);
 
       let votes;
-      this.dbResultArray.forEach((elem) => {
+      this.wishlistDbResponseVideo.forEach((elem) => {
         if (elem._id === id) {
           votes = elem.votes;
         }
@@ -92,7 +92,7 @@ class WishList extends Component {
   }
 
   loadMoreResults() {
-    this.currentPage += 1;
+    this.currentPageNumber += 1;
     this.fetchingVideosToWishlist();
   }
 
