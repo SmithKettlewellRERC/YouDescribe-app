@@ -379,6 +379,8 @@ class VideoPage extends Component {
           audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
           selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
           setAudioDescriptionActive={this.setAudioDescriptionActive}
+          videoId={this.state.videoId}
+          getAppState={this.props.getAppState}
         />
       </div>
     );
