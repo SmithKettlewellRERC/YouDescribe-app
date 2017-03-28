@@ -105,8 +105,8 @@ class Home extends Component {
     return (
       <div id="home" title="YouDescribe home page">
 
-        <header role="banner" title="" className="w3-container w3-indigo">
-          <h2>Most popular</h2>
+        <header role="banner" className="w3-container w3-indigo">
+          <h2>Most popular YouTube videos with audio description</h2>
         </header>
 
         <main role="main" className="w3-row">
