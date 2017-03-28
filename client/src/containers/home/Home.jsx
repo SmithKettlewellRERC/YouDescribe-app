@@ -46,7 +46,6 @@ class Home extends Component {
       .then(() => {
         const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
         ourFetch(url)
-
         .then(data => this.parseFetchedData(data, serverVideo_Ids));
       });
   }
