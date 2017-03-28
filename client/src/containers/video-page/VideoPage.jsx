@@ -255,7 +255,7 @@ class VideoPage extends Component {
   // 7
   videoProgressWatcher() {
     console.log('6 -> videoProgressWatcher')
-    const interval = 100;
+    const interval = 200;
 
     if (this.watcher) {
       clearInterval(this.watcher);
@@ -264,9 +264,9 @@ class VideoPage extends Component {
 
     this.watcher = setInterval(() => {
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
-      const videoVolume = this.state.videoPlayer.getVolume();
+      // const videoVolume = this.state.videoPlayer.getVolume();
 
-      if (this.currentClip && this.currentClip.playback_type === 'inline') {
+      if (this.currentClip && this.currentClip.playbackType === 'inline') {
         this.currentClip.volume(this.state.sliderValue / 100);
         this.state.videoPlayer.setVolume((100 - this.state.sliderValue) * 0.1);
       } else {
@@ -286,8 +286,9 @@ class VideoPage extends Component {
                 volume: this.state.sliderValue / 100,
                 onload: () => {
                   this.currentClip.playbackType = 'inline';
-                  this.currentClip.seek(currentVideoProgress - +this.audioClipsCopy[i].start_time, this.currentClip.play());
+                  const temp = +this.audioClipsCopy[i]
                   this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
+                  this.currentClip.seek(currentVideoProgress - temp.start_time, this.currentClip.play());
                 },
                 onloaderror: (errToLoad) => {
                   console.log('Impossible to load', errToLoad);
