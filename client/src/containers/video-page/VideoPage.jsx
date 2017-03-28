@@ -50,43 +50,27 @@ class VideoPage extends Component {
     return [];
   }
 
-  // 2 Keep this for safari bug detecting
-  // fetchVideoData() {
-  //   console.log('2 -> fetchingVideoData');
-  //   const self = this;
-  //   const xhr = new XMLHttpRequest();
-  //   xhr.open('GET', this.state.videoUrl, true);
-  //   xhr.onload = function () {
-  //     if (xhr.readyState === 4) {
-  //       const response = JSON.parse(xhr.response);
-  //       const result = response.result
-  //         ? response.result
-  //         : {};
-  //       self.setState({
-  //         videoData: result,
-  //       }, () => {
-  //         self.parseVideoData();
-  //       });
-  //     }
-  //   };
-  //   xhr.send();
-  // }
-
-  // 2 relaced fetchVideoData with the new Fetch
+  // 2
   fetchVideoData() {
     console.log('2 -> fetchingVideoData');
     const self = this;
     ourFetch(this.state.videoUrl)
     .then((response) => {
-        const result = response.result
-          ? response.result
-          : {};
+      console.log('RESPONSE')
+      if (response.result) {
         self.setState({
-          videoData: result,
+          videoData: response.result,
         }, () => {
           self.parseVideoData();
         });
+      } else {
+        self.parseVideoData();
+      }
     })
+    .catch(err => {
+      console.log(err)
+      self.parseVideoData();
+    });
   }
 
   // 3
