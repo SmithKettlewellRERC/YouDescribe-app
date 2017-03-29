@@ -1,0 +1,15 @@
+#user-videos-page {
+  background-color: #fff;
+  min-height: 100vh;
+  main {
+    width: 416px;
+    padding: 0px 8px;
+    margin: 0 auto 50px auto;
+    @media (min-width:601px) {
+      width: 601px;
+    }
+    @media screen and (min-width: 993px) {
+      width: 993px;
+    }
+  }
+}

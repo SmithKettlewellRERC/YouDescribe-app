@@ -10,7 +10,7 @@
     position: relative;
     #card-duration {
       position: absolute;
-      bottom: -1px;
+      bottom: 2px;
       right: 2px;
       background-color: rgba(0, 0, 0, 0.6);
       color: white;
@@ -21,8 +21,7 @@
   #card-title-container {
     height: 80px;
     #card-title {
-      // max-height: 41px;
-      // white-space: nowrap;
+      color: #337ab7;
       line-height: 18px;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -36,13 +35,19 @@
   }
   #card-stats {
     height: 12px;
-    // padding-bottom: 8px;
   }
   #card-buttons {
     // margin-bottom: 8px;
   }
   button {
+    outline: 1px solid #475CAE;
+    outline-offset: -1px;
+    margin-top: 10px;
     margin-bottom: 4px;
+    @media (min-width:601px) {
+      padding: 4px 8px;
+      font-size: 11px;
+    }
   }
   h3 {
     line-height: 17px;

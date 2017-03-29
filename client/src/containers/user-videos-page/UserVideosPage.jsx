@@ -89,25 +89,29 @@ class UserVideosPage extends Component {
           author={author}
           views={views}
           time={time}
-          buttons="off"
+          buttons="edit"
           isSignedIn={this.props.isSignedIn}
         />
       );
     }
-    this.setState({ videoComponents: videoComponents });
+    this.setState({ videoComponents });
   }
 
   render() {
     return (
-      <div id="uservideospage" title="User videos page">
+      <div id="user-videos-page" title="User described videos page">
 
         <header role="banner" className="w3-container w3-indigo">
-          <h2>Videos with audio descriptions by {this.state.userName}</h2>
+          <h2>Described videos by {this.state.userName}</h2>
         </header>
 
         <main role="main" className="w3-row">
           {this.state.videoComponents}
         </main>
+
+        <div id="load-more" className="w3-margin-top w3-center w3-padding-32">
+          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+        </div>
 
       </div>
     );
