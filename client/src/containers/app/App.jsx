@@ -56,7 +56,7 @@ class App extends Component {
         isSignedIn: true,
         userName: res.result.name,
         userId: res.result._id,
-        userToken: userToken,
+        userToken,
         userPicture: res.result.picture,
       }, () => {
         this.setCookie();
