@@ -1,8 +1,25 @@
-#audioDescriptionSelector {
+#audio-description-selector {
   width: 300px;
   margin: 16px auto 0px;
   position: relative;
-  top: -37px;
-  left: 230px;
+  top: 0px;
+  left: 32px;
+  color: #fff;
   // float: right;
+  @media screen and (min-width: 601px) {
+    top: -68px;
+    left: 219px;
+  }
+  #audio-description-selector-header {
+    position: relative;
+    left: 80px;
+    padding-bottom: 8px;
+  }
+  select {
+    text-align-last:center;
+    color: white;
+    background-color: #000;
+    border: 0;
+    outline: 1px solid #CCC;
+  }
 }

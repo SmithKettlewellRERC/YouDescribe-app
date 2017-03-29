@@ -198,12 +198,13 @@ class SearchPage extends Component {
   }
 
   render() {
-    const searchTerm = `"${this.props.location.query.q}"`;
+    // const searchTerm = `"${this.props.location.query.q}"`;
+    // <h2>Described videos matching {searchTerm}</h2>
     return (
       <div id="search-page" title="YouDescribe search results page">
 
         <div className="w3-container w3-indigo">
-          <h2>Videos with audio descriptions matching {searchTerm}</h2>
+          <h2>Described videos</h2>
         </div>
 
         <main>
@@ -217,7 +218,7 @@ class SearchPage extends Component {
           </div>
 
         <div className="w3-container w3-indigo">
-          <h2>Videos without audio descriptions matching {searchTerm}</h2>
+          <h2>Non-described videos</h2>
         </div>
 
         <main>
