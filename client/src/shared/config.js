@@ -6,8 +6,8 @@ module.exports = () => {
   let audioClipsUploadsPath = 'http://api.youdescribe.org/uploads';
 
   if (href.indexOf('localhost') != -1 || href.indexOf('dev') != -1) {
-    apiUrl = `http://dev-api.youdescribe.org:8080/${apiVersion}`;
-    audioClipsUploadsPath = 'http://dev-api.youdescribe.org:8080/uploads';    
+    apiUrl = `http://localhost:8080/${apiVersion}`;
+    audioClipsUploadsPath = 'http://localhost:8080/uploads';    
   }
 
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';
