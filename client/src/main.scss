@@ -11,10 +11,11 @@
 @import './components/video-card/videocard';
 @import './components/slider/slider';
 @import './components/audio-description-selector/audiodescriptionselector';
-@import './components/describer-chooser/describerchooser';
 @import './components/alert-box/alertbox';
 @import './components/sign-in-button/signinbutton';
 @import './components/sign-out-button/signoutbutton';
+@import './components/user-avatar/useravatar';
+@import './components/user-menu/usermenu';
 
 @import './containers/app/app';
 @import './containers/authoring-tool/authoringtool';

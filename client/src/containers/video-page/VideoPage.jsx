@@ -358,15 +358,15 @@ class VideoPage extends Component {
         </main>
         <div style={{ width: '100%' }}>
           <Slider updateState={this.updateState} />
+          <AudioDescriptionSelector
+            updateState={this.updateState}
+            audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
+            selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
+            setAudioDescriptionActive={this.setAudioDescriptionActive}
+            videoId={this.state.videoId}
+            getAppState={this.props.getAppState}
+            />
         </div>
-        <AudioDescriptionSelector
-          updateState={this.updateState}
-          audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
-          selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
-          setAudioDescriptionActive={this.setAudioDescriptionActive}
-          videoId={this.state.videoId}
-          getAppState={this.props.getAppState}
-        />
       </div>
     );
   }

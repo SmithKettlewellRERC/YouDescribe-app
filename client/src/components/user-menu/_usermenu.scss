@@ -1,0 +1,51 @@
+#user-menu {
+  display: none;
+  .arrow-up {
+    position: absolute;
+    left: 22px;
+    top: 42px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+
+    border-bottom: 10px solid #9894B2;
+  }
+  .w3-card-4 {
+    // z-index: 99!important;
+    // overflow: visible;
+    position: fixed;
+    right: 16px;
+    top: 54px;
+    width: 200px;
+    height: 150px;
+    background-color: white;
+    // background-color: red;
+    .user-menu-header {
+      background-color: #9894B2;
+      width: 100%;
+      // height: 50px;
+      color: white;
+      text-align: center;
+      padding: 4px 0px;
+      h4 {
+        margin: 0px;
+        // padding: 0;
+      }
+    }
+    .my-described-videos-button {
+      position: relative;
+      top: 20px;
+      left: 21px;
+    }
+    hr {
+      position: relative;
+      top: 18px;
+    }
+    .sign-out-button {
+      position: relative;
+      top: 8px;
+      left: 63px;
+    }
+  }
+}
