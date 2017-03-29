@@ -6,11 +6,9 @@ module.exports = () => {
   let audioClipsUploadsPath = 'http://api.youdescribe.org/uploads';
 
   if (href.indexOf('localhost') != -1 || href.indexOf('dev') != -1) {
-    apiUrl = `http://dev-api.youdescribe,org:8080/${apiVersion}`;
-    audioClipsUploadsPath = 'http://dev-api.youdescribe,org:8080/uploads';    
+    apiUrl = `http://dev-api.youdescribe.org:8080/${apiVersion}`;
+    audioClipsUploadsPath = 'http://dev-api.youdescribe.org:8080/uploads';    
   }
-
-  console.log('API URL', apiUrl);
 
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';
   const youTubeApiKey = 'AIzaSyCG7xsho1pmQavWYYglY9E2VILAnOGsZls';
