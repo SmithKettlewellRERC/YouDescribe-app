@@ -37,9 +37,13 @@
       position: relative;
       top: 16px;
       left: 16px;
+      span {
+        position: relative;
+        top: -5px;
+      }
     }
     .fa {
-      font-size: 20px
+      font-size: 30px;
     }
     hr {
       position: relative;
@@ -58,9 +62,12 @@
       font-size: 11px;
       // font-weight: 100;
     }
-    a, a:hover {
+    a {
       text-decoration: none;
       color: #616183;
+    }
+    a:hover {
+      color: #9894B2;
     }
   }
 }

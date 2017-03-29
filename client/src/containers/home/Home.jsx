@@ -84,7 +84,7 @@ class Home extends Component {
           describer={describer}
           views={views}
           time={time}
-          buttons="off"
+          buttons="none"
           isSignedIn={this.props.isSignedIn}
         />);
     }
