@@ -3,15 +3,13 @@
   height: 8px;
   border: 1px solid #999999;
   position: relative;
-  margin: 0px 3px 0px 3px;
+  margin: 0px 3px;
   top: 8px;
 }
 .sliderThumb:focus{
   border: 1px solid #000;
   background-color: #00CCCC;
 }
-
-
 
 .sliderThumb {
   margin: 0px;
@@ -30,8 +28,8 @@
 }
 
 
-/* clearfix */
-.clearfix:after {
+/* volume-balancer */
+.volume-balancer:after {
 content: ".";
 display: block;
 clear: both;
@@ -40,14 +38,23 @@ line-height: 0;
 height: 0;
 }
 
-.clearfix {
-// display: inline-block;
-// margin-top: 16px;
-width: 640px;
-margin: 16px auto 0px;
-position: relative;
-// float: left;
-// left: 185px;
+.volume-balancer {
+  width: 640px;
+  margin: auto 0px;
+  position: relative;
+  color: #fff;
+  padding-left: 28px;
+  @media screen and (min-width: 601px) {
+    padding-left: 16px;
+  }
+  #volume-balancer-header {
+    position: relative;
+    left: 102px;
+    padding-bottom: 8px;
+    @media screen and (min-width: 601px) {
+      left: 80px;
+    }
+  }
 }
 
 #keyboard-controls {
@@ -56,10 +63,10 @@ position: relative;
   margin-left: 100px;
 }
 
-html[xmlns] .clearfix {
+html[xmlns] .volume-balancer {
 display: block;
 }
 
-* html .clearfix {
+* html .volume-balancer {
 height: 1%;
 }

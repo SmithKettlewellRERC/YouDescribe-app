@@ -219,7 +219,7 @@ class VideoPage extends Component {
       if (self.state.videoPlayer === null) {
         self.setState({
           videoPlayer: new YT.Player('playerVP', {
-            height: '100%',
+            width: '100%',
             videoId: self.state.videoId,
             enablejsapi: true,
             fs: 1,
@@ -347,26 +347,24 @@ class VideoPage extends Component {
     return (
       <div id="video-player">
         <main role="application" title="Video player">
-          <div className="w3-row">
-            <div
-              id="video"
-              className="w3-card-2"
-            >
+          <div className="">
+
+            <div id="video" className="w3-card-2">
               <div id="playerVP" />
+              <div id="video-controls">
+                <Slider updateState={this.updateState} />
+                <AudioDescriptionSelector
+                  updateState={this.updateState}
+                  audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
+                  selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
+                  setAudioDescriptionActive={this.setAudioDescriptionActive}
+                  videoId={this.state.videoId}
+                  getAppState={this.props.getAppState}
+                  />
+              </div>
             </div>
           </div>
         </main>
-        <div style={{ width: '100%' }}>
-          <Slider updateState={this.updateState} />
-          <AudioDescriptionSelector
-            updateState={this.updateState}
-            audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
-            selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
-            setAudioDescriptionActive={this.setAudioDescriptionActive}
-            videoId={this.state.videoId}
-            getAppState={this.props.getAppState}
-            />
-        </div>
       </div>
     );
   }

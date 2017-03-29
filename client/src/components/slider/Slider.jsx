@@ -20,7 +20,7 @@ class Slider extends Component {
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);
     this.changeValue = this.changeValue.bind(this);
-    this.updateValueIndicator = this.updateValueIndicator.bind(this);
+    // this.updateValueIndicator = this.updateValueIndicator.bind(this);
     this.setHandlers = this.setHandlers.bind(this);
     this.cancelEvent = this.cancelEvent.bind(this);
     this.init = this.init.bind(this);
@@ -186,14 +186,14 @@ class Slider extends Component {
 
   	target.setAttribute('aria-valuenow', newValue);
   	target.setAttribute('aria-valuetext', newValue + "%");
-  	this.updateValueIndicator(target.id.replace(/Thumb/, 'Value'), newValue + "%");
+  	// this.updateValueIndicator(target.id.replace(/Thumb/, 'Value'), newValue + "%");
     this.props.updateState({ sliderValue: newValue });
   }
 
-  updateValueIndicator(id, value) {
-  	let elem = this.$(id);
-  	elem.replaceChild(document.createTextNode(value), elem.firstChild);
-  }
+  // updateValueIndicator(id, value) {
+  // 	let elem = this.$(id);
+  // 	elem.replaceChild(document.createTextNode(value), elem.firstChild);
+  // }
 
   setHandlers(slider) {
   	slider.parentNode.onmousedown = this.handleRailMouseDown;
@@ -228,16 +228,15 @@ class Slider extends Component {
 
   render() {
     return (
-      <div>
-        <div className="clearfix">
-          <span id="sliderLabel" className="floatLeft">Volume:</span>
-          <div id="sliderRail1" className="sliderRail floatLeft">
-            <button className="sliderThumb" id="sliderThumb1" role="slider" aria-labelledby="sliderLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50%" accessKey="v"></button>
-          </div>
-          <span id="sliderValue1"className="floatLeft">
-            50%
-          </span>
+      <div className="volume-balancer">
+        <div id="volume-balancer-header">Volume balancer</div>
+        <span id="sliderLabel" className="floatLeft">Video</span>
+        <div id="sliderRail1" className="sliderRail floatLeft">
+          <button className="sliderThumb" id="sliderThumb1" role="slider" aria-labelledby="sliderLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50%" accessKey="v"></button>
         </div>
+        <span className="floatLeft">
+          Description
+        </span>
       </div>
     );
   }
