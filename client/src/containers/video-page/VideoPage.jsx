@@ -348,10 +348,8 @@ class VideoPage extends Component {
       <div id="video-player">
         <main role="application" title="Video player">
           <div className="w3-row">
-            <div
-              id="video"
-              className="w3-card-2"
-            >
+
+            <div id="video" className="w3-card-2">
               <div id="playerVP" />
             </div>
           </div>
