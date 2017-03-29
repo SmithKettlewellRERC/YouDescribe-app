@@ -75,21 +75,21 @@ class VideoCard extends Component {
       <div id="video-card" className="w3-margin-top w3-left" title="">
         <div className="w3-card-2 w3-hover-shadow">
           <div id="card-thumbnail">
-            <Link to={'/video/' + this.props.id}><img alt="" src={this.props.thumbnailMediumUrl} width="100%" /></Link>
-            <div role="" title={this.props.duration} id="card-duration">{this.props.duration}</div>
+            <Link role="link" to={'/video/' + this.props.id}><img alt="" src={this.props.thumbnailMediumUrl} width="100%" /></Link>
+            <div id="card-duration">{this.props.duration}</div>
           </div>
           <div className="w3-container w3-padding-bottom">
             <div id="card-title-container">
               <div id="card-title">
-                <Link to={`/video/${this.props.id}`}><h3>{this.props.title}</h3></Link>
+                <h3><Link role="link" to={'/video/' + this.props.id}>{this.props.title}</Link></h3>
               </div>
               <div id="card-author">
-                <h4>{this.props.author}</h4><br />
+                <h4>{this.props.author}</h4>
                 {/* <a href="#">{this.props.describer}</a> */}
               </div>
             </div>
             <div id="card-stats">
-              <h4><div className="w3-left">{this.props.views}</div><div className="w3-right"> {this.props.time}</div></h4>
+              <h4><div className="w3-left">{this.props.views}</div><div className="w3-right">{this.props.time}</div></h4>
             </div>
             <div id="card-buttons">
               {buttons}

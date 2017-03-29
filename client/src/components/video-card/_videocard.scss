@@ -23,11 +23,9 @@
     #card-title {
       // max-height: 41px;
       // white-space: nowrap;
-      // width: 100px;
-      // line-height: 18px;
+      line-height: 18px;
       text-overflow: ellipsis;
       overflow: hidden;
-      display: block;
       display: -webkit-box;
       -webkit-line-clamp: 2; // max nb lines to show
       -webkit-box-orient: vertical;
