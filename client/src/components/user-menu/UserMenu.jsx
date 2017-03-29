@@ -15,9 +15,9 @@ class UserMenu extends Component {
       <div id="user-menu">
         <div className="arrow-up"></div>
         <div className="w3-card-4">
-          <div className="user-menu-header"><h4>{this.props.getAppState().userName}</h4></div>
+          <div className="user-menu-header"><h3>{this.props.getAppState().userName}</h3></div>
           <div className="my-described-videos-button">
-          <Link to={myVideosUrl} title="View my described videos">My videos</Link>
+          <Link to={myVideosUrl} title="View my described videos"><i className="fa fa-film" aria-hidden="true"></i> My videos</Link>
           </div>
           <hr />
           <div className="sign-out-button">
