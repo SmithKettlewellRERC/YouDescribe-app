@@ -4,15 +4,18 @@ import path from 'path';
 import NavLink from '../nav-link/NavLink.jsx';
 import SearchBar from '../search-bar/SearchBar.jsx'
 import SignInButton from '../sign-in-button/SignInButton.jsx';
-import SignOutButton from '../sign-out-button/SignOutButton.jsx';
+// import SignOutButton from '../sign-out-button/SignOutButton.jsx';
+import UserAvatar from '../user-avatar/UserAvatar.jsx';
 
 class Navbar extends Component {
   constructor(props) {
     super(props);
+
+    this.navMenuOpen = this.navMenuOpen.bind(this);
   }
 
   // Toggle between showing and hiding the sidenav when clicking the menu icon
-  menuOpen() {
+  navMenuOpen() {
     const mySidenav = document.getElementById('mySidenav');
     if (mySidenav.style.display === 'block') {
       mySidenav.style.display = 'none';
@@ -22,16 +25,25 @@ class Navbar extends Component {
   }
 
   // Close the sidenav with the close button
-  menuClose() {
+  navMenuClose() {
     const mySidenav = document.getElementById('mySidenav');
     mySidenav.style.display = 'none';
+  }
+
+  userMenuOpen() {
+    const userMenu = document.getElementById('user-menu');
+    if (userMenu.style.display === 'block') {
+      userMenu.style.display = 'none';
+    } else {
+      userMenu.style.display = 'block';
+    }
   }
 
   render() {
     const isSignedIn = this.props.isSignedIn;
     let signInComponent = null;
     if (isSignedIn) {
-      signInComponent = <SignOutButton signOut={this.props.signOut} getAppState={this.props.getAppState} />;
+      signInComponent = <UserAvatar signOut={this.props.signOut} userMenuOpen={this.userMenuOpen} getAppState={this.props.getAppState} />;
     } else {
       signInComponent = <SignInButton />;
     }
@@ -72,7 +84,7 @@ class Navbar extends Component {
             </nav>
 
             {/* Hide right-floated links on small screens and replace them with a menu icon */}
-            <a href="javascript:void(0)" className="w3-bar-item w3-right w3-hide-large" style={{ position: 'relative', top: '8px' }} onClick={this.menuOpen}>
+            <a href="javascript:void(0)" className="w3-bar-item w3-right w3-hide-large" style={{ position: 'relative', top: '8px' }} onClick={this.navMenuOpen}>
               <i className="fa fa-bars"></i>
             </a>
           </div>
@@ -80,7 +92,7 @@ class Navbar extends Component {
 
         {/* Sidenav on small screens when clicking the menu icon */}
         <nav id="mySidenav" className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-large" style={{ display: 'none' }}>
-          <a href="javascript:void(0)" onClick={this.menuClose} className="w3-large w3-padding-16">Close ×</a>
+          <a href="javascript:void(0)" onClick={this.navMenuClose} className="w3-large w3-padding-16">Close ×</a>
           <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
           {signInComponent}
         </nav>

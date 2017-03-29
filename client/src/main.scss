@@ -11,10 +11,11 @@
 @import './components/video-card/videocard';
 @import './components/slider/slider';
 @import './components/audio-description-selector/audiodescriptionselector';
-@import './components/describer-chooser/describerchooser';
 @import './components/alert-box/alertbox';
 @import './components/sign-in-button/signinbutton';
 @import './components/sign-out-button/signoutbutton';
+@import './components/user-avatar/useravatar';
+@import './components/user-menu/usermenu';
 
 @import './containers/app/app';
 @import './containers/authoring-tool/authoringtool';
@@ -23,4 +24,5 @@
 @import './containers/not-found/notfound';
 @import './containers/search-page/searchpage';
 @import './containers/video-page/videopage';
+@import './containers/user-videos-page/uservideospage';
 @import './containers/wish-list/wishlist';
