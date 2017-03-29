@@ -149,7 +149,7 @@ class SearchPage extends Component {
           author={author}
           views={views}
           time={time}
-          buttons="off"
+          buttons="none"
           getAppState={this.props.getAppState}
         />);
     }
@@ -186,7 +186,7 @@ class SearchPage extends Component {
           author={author}
           views={views}
           time={time}
-          buttons="on"
+          buttons="upvote-describe"
           getAppState={this.props.getAppState}
           votes={0}
         />);

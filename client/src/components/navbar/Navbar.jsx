@@ -30,7 +30,7 @@ class Navbar extends Component {
     mySidenav.style.display = 'none';
   }
 
-  userMenuOpen() {
+  userMenuToggle() {
     const userMenu = document.getElementById('user-menu');
     if (userMenu.style.display === 'block') {
       userMenu.style.display = 'none';
@@ -43,7 +43,7 @@ class Navbar extends Component {
     const isSignedIn = this.props.isSignedIn;
     let signInComponent = null;
     if (isSignedIn) {
-      signInComponent = <UserAvatar signOut={this.props.signOut} userMenuOpen={this.userMenuOpen} getAppState={this.props.getAppState} />;
+      signInComponent = <UserAvatar signOut={this.props.signOut} userMenuToggle={this.userMenuToggle} getAppState={this.props.getAppState} />;
     } else {
       signInComponent = <SignInButton />;
     }
