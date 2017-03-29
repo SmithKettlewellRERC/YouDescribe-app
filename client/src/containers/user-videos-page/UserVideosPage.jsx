@@ -33,7 +33,6 @@ class UserVideosPage extends Component {
 
   getUserInfo() {
     const url = (`${conf.apiUrl}/users/${this.userId}`);
-    console.log(url)
     ourFetch(url)
     .then((response) => {
       if (response.result) {

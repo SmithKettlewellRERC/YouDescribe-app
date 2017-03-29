@@ -82,14 +82,16 @@ class VideoPage extends Component {
     const audioDescriptionsIdsAudioClips = {};
     if (videoData && videoData.audio_descriptions && videoData.audio_descriptions.length > 0) {
       videoData.audio_descriptions.forEach((ad) => {
-        audioDescriptionsIds.push(ad['_id']);
-        audioDescriptionsIdsUsers[ad['_id']] = ad['user'];
-        audioDescriptionsIdsAudioClips[ad['_id']] = [];
-        if (ad.audio_clips.length > 0) {
-          ad.audio_clips.forEach((audioClip) => {
-            audioClip.url = `${conf.audioClipsUploadsPath}${audioClip.file_path}/${audioClip.file_name}`;
-            audioDescriptionsIdsAudioClips[ad['_id']].push(audioClip);
-          });
+        if (ad.status === 'published') {
+          audioDescriptionsIds.push(ad['_id']);
+          audioDescriptionsIdsUsers[ad['_id']] = ad['user'];
+          audioDescriptionsIdsAudioClips[ad['_id']] = [];
+          if (ad.audio_clips.length > 0) {
+            ad.audio_clips.forEach((audioClip) => {
+              audioClip.url = `${conf.audioClipsUploadsPath}${audioClip.file_path}/${audioClip.file_name}`;
+              audioDescriptionsIdsAudioClips[ad['_id']].push(audioClip);
+            });
+          }
         }
       });
     }

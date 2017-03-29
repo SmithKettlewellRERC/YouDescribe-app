@@ -39,6 +39,7 @@ class AuthoringTool extends Component {
 
       // Audio descriptions.
       audioDescriptionId: null,
+      audioDescriptionStatus: null,
       audioDescriptionAudioClips: {},
 
       // Tracks controls.
@@ -63,7 +64,8 @@ class AuthoringTool extends Component {
     // Bindings.
     this.getATState = this.getATState.bind(this);
     this.updateState = this.updateState.bind(this);
-    this.publishVideo = this.publishVideo.bind(this);
+    this.publishAudioDescription = this.publishAudioDescription.bind(this);
+    this.unpublishAudioDescription = this.unpublishAudioDescription.bind(this);
     this.updateTrackLabel = this.updateTrackLabel.bind(this);
     this.addAudioClipTrack = this.addAudioClipTrack.bind(this);
     this.recordAudioClip = this.recordAudioClip.bind(this);
@@ -115,6 +117,7 @@ class AuthoringTool extends Component {
     const videoData = Object.assign({}, this.state.videoData);
 
     let audioDescriptionId = null;
+    let audioDescriptionStatus = null;
     const audioDescriptionAudioClips = {};
 
     if (videoData && videoData.audio_descriptions && videoData.audio_descriptions.length > 0) {
@@ -123,6 +126,7 @@ class AuthoringTool extends Component {
         const ad = videoData.audio_descriptions[i];
         if (ad.user._id === this.props.getUserInfo().userId) {
           audioDescriptionId = ad['_id'];
+          audioDescriptionStatus = ad['status'];
           if (ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
               audioClip.url = `${conf.audioClipsUploadsPath}${audioClip.file_path}/${audioClip.file_name}`;
@@ -136,6 +140,7 @@ class AuthoringTool extends Component {
     this.setState({
       videoData,
       audioDescriptionId,
+      audioDescriptionStatus,
       audioDescriptionAudioClips,
     }, () => {
       this.preLoadAudioClips();
@@ -147,11 +152,11 @@ class AuthoringTool extends Component {
     console.log('4 -> preLoadAudioClips');
     const self = this;
     const audioClips = Object.values(this.state.audioDescriptionAudioClips);
-    console.log('AUDIOCLIPS', audioClips);
 
     if (audioClips.length > 0) {
       const promises = [];
       audioClips.forEach((audioObj, idx) => {
+        console.log(audioObj.url)
         promises.push(ourFetch(audioObj.url, false));
       });
       Promise.all(promises).then(function() {
@@ -598,30 +603,51 @@ class AuthoringTool extends Component {
     }
   }
 
-  publishVideo() {
+  publishAudioDescription() {
     const self = this;
-    // this.alertBoxOpen('publish-button');
-
-    const resultConfirm = confirm('Are you sure you wanna publish this video?');
+    const resultConfirm = confirm('Are you sure you wanna publish this audio description?');
     if (resultConfirm) {
-      const url = `${conf.apiUrl}/videos/${this.state.videoId}?token=${this.props.getAppState().userToken}`;
-      const xhr = new XMLHttpRequest();
-      xhr.open('post', url);
-      xhr.setRequestHeader('Content-type', 'application/json');
-      xhr.onload = function () {
-        const result = JSON.parse(this.responseText).result;
+      const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=publish&token=${this.props.getAppState().userToken}`;
+      ourFetch(url, true, {
+        method: 'POST',
+      })
+      .then(response => {
+        const result = response.result;
+        // console.log(result)
         if (result._id) {
-          console.log('Video published');
           self.setState({
             videoData: result,
           }, () => {
             self.parseVideoData();
           });
         } else {
-          console.log('There was a problem to publish your video');
+          console.log('There was a problem to publish your audio description');
         }
-      };
-      xhr.send();
+      });
+    }
+  }
+
+ unpublishAudioDescription() {
+    const self = this;
+    const resultConfirm = confirm('Are you sure you wanna unpublish this audio description?');
+    if (resultConfirm) {
+      const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=unpublish&token=${this.props.getAppState().userToken}`;
+      ourFetch(url, true, {
+        method: 'POST',
+      })
+      .then(response => {
+        const result = response.result;
+        // console.log(result)
+        if (result._id) {
+          self.setState({
+            videoData: result,
+          }, () => {
+            self.parseVideoData();
+          });
+        } else {
+          console.log('There was a problem to unpublish your audio description');
+        }
+      });
     }
   }
 
@@ -692,7 +718,8 @@ class AuthoringTool extends Component {
             <Editor
               getATState={this.getATState}
               updateState={this.updateState}
-              publishVideo={this.publishVideo}
+              publishAudioDescription={this.publishAudioDescription}
+              unpublishAudioDescription={this.unpublishAudioDescription}
               alertBoxClose={this.alertBoxClose}
               addAudioClipTrack={this.addAudioClipTrack}
               recordAudioClip={this.recordAudioClip}

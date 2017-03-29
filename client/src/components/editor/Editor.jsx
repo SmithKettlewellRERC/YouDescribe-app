@@ -11,6 +11,25 @@ import {
 import Playhead from '../playhead/Playhead.jsx';
 
 const Editor = (props) => {
+  const audioDescriptionId = props.getATState().audioDescriptionId;
+  const audioDescriptionStatus = props.getATState().audioDescriptionStatus;
+  let publishButton = null;
+  if (audioDescriptionStatus === 'draft') {
+    publishButton = <Button
+      title="Publish the video along with all audio description tracks"
+      text="Publish"
+      color="w3-indigo"
+      onClick={props.publishAudioDescription}
+    />
+  }
+  if (audioDescriptionStatus === 'published') {
+    publishButton = <Button
+      title="Unpublish this audio description for the current video"
+      text="Unpublish"
+      color="w3-indigo"
+      onClick={props.unpublishAudioDescription}
+    />
+  }
   return (
     <div id="editor" className="w3-card-2">
       <div className="w3-card-4">
@@ -83,21 +102,16 @@ const Editor = (props) => {
         </div>
       </div>
       <div className="w3-right-align w3-border-top w3-border-black w3-padding">
-        <Button
-          title="Publish the video along with all audio description tracks"
-          text="Publish"
-          color="w3-indigo"
-          onClick={props.publishVideo}
+        {publishButton}
+        <AlertBox
+          id="publish-button"
+          backgroundColor="w3-indigo"
+          content={<div><i className="fa fa-thumbs-up" aria-hidden="true"></i><h5>Audio description successfully published</h5></div>}
+          title="Successfully published"
+          text="Okay"
+          buttonColor="w3-white"
+          alertBoxClose={props.alertBoxClose}
         />
-      <AlertBox
-        id="publish-button"
-        backgroundColor="w3-indigo"
-        content={<div><i className="fa fa-thumbs-up" aria-hidden="true"></i><h5>Audio description successfully published</h5></div>}
-        title="Successfully published"
-        text="Okay"
-        buttonColor="w3-white"
-        alertBoxClose={props.alertBoxClose}
-      />
       </div>
     </div>
   );

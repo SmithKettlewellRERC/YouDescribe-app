@@ -23,7 +23,6 @@ class Track extends Component {
   }
 
   render() {
-    console.log('DURATION', this.props.getATState().videoDurationInSeconds);
     return (
       <div id="track" className="w3-row w3-display-container">
         <div className="w3-col l3 m3 s3">
