@@ -26,12 +26,12 @@ class AudioDescriptionSelector extends Component {
 
   render() {
     const options = [];
-    options.push(<option value="">None</option>);
+    options.push(<option key={-1} value="">None</option>);
     const ads = this.props.audioDescriptionsIdsUsers;
-    Object.keys(ads).forEach((ad) => {
-      options.push(<option value={ad}>{ads[ad].name}</option>);
+    Object.keys(ads).forEach((ad, idx) => {
+      options.push(<option key={idx+1} value={ad}>{ads[ad].name}</option>);
     });
-    options.push(<option value="add">Add a new audio description</option>);
+    options.push(<option key={0} value="add">Add a new audio description</option>);
     let selectedAudioDescriptionId = '';
     if (this.props.selectedAudioDescriptionId !== null) {
       selectedAudioDescriptionId = this.props.selectedAudioDescriptionId;
