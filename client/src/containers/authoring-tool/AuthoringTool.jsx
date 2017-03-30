@@ -293,11 +293,16 @@ class AuthoringTool extends Component {
           videoPlayer: new YT.Player('playerAT', {
             height: '100%',
             videoId: self.state.videoId,
-            enablejsapi: true,
-            fs: 0,
-            rel: 0,
-            controls: 2,
-            disablekb: 1,
+            playerVars: {
+              // 'controls': 1,
+              modestbranding: 1,
+              fs: 0,
+              rel: 0,
+              disablekb: 0,
+              cc_load_policy: 0,
+              iv_load_policy: 3,
+            },
+            // enablejsapi: true,
             events: {
               onReady: onVideoPlayerReady,
               onStateChange: onPlayerStateChange,
@@ -401,16 +406,16 @@ class AuthoringTool extends Component {
     // I will just add tracks if all existant have urls.
     for (let i = 0; i < tracks.length; i += 1) {
       if (tracks[i].props.data.url === '') {
-        this.alertBoxOpen('unused-track');
-        // alert('Finish using your available record tracks.');
+        // this.alertBoxOpen('unused-track');
+        alert('Finish using your available record tracks.');
         return;
       }
     }
 
     // Don't allow adding more tracks while recording.
     if (this.state.selectedTrackComponentStatus === 'recording') {
-      this.alertBoxOpen('recording-in-process');
-      // alert('You can just add more tracks when you finish recording the existing one.');
+      // this.alertBoxOpen('recording-in-process');
+      alert('You can just add more tracks when you finish recording the existing one.');
       return;
     }
 
@@ -442,8 +447,22 @@ class AuthoringTool extends Component {
       tracksComponents: tracks,
       selectedTrackComponentPlaybackType: playbackType,
       playheadTailHeight,
+      selectedTrackComponentId: null,
+      selectedTrackComponentStatus: null,
+      selectedTrackComponentLabel: '',
+      selectedTrackComponentUrl: '',
+      selectedTrackComponentAudioClipStartTime: 0,
+      selectedTrackComponentAudioClipSEndTime: -1,
+      selectedTrackComponentAudioClipDuration: -1,
     });
   }
+
+
+
+
+
+
+
 
   getTrackComponentByTrackId(trackId) {
     const tc = this.state.tracksComponents;
@@ -463,8 +482,8 @@ class AuthoringTool extends Component {
 
     if (this.state.selectedTrackComponentId !== trackId) {
       if (this.state.selectedTrackComponentStatus === 'recording') {
-        this.alertBoxOpen();
-        // alert('You need to stop recording in order to activate any other track');
+        // this.alertBoxOpen();
+        alert('You need to stop recording in order to activate any other track');
         return;
       }
     }
