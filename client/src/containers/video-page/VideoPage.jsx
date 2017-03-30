@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Howl } from 'howler';
 import Slider from '../../components/slider/Slider.jsx';
 import Spinner from '../../components/spinner/Spinner.jsx';
+import Spinner2 from '../../components/spinner2/Spinner2.jsx';
 import AudioDescriptionSelector from '../../components/audio-description-selector/AudioDescriptionSelector.jsx';
 import { ourFetch } from '../../shared/helperFunctions';
 
@@ -361,7 +362,7 @@ class VideoPage extends Component {
 
             <div id="video" className="w3-card-2">
               <div id="playerVP" />
-              <Spinner style={{ width: 50, height: 50 }} />
+              <Spinner />
               <div id="video-controls">
                 <Slider updateState={this.updateState} />
                 <AudioDescriptionSelector

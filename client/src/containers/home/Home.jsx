@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
 import Spinner from '../../components/spinner/Spinner.jsx';
+import Spinner2 from '../../components/spinner2/Spinner2.jsx';
 import {
   ourFetch,
   convertTimeToCardFormat,
@@ -31,32 +32,32 @@ class Home extends Component {
   }
 
   fetchingVideosToHome() {
-    const serverVideo_Ids = [];
-    const serverVideoIds = [];
+    const youDescribeVideosIds = [];
+    const youTubeVideosIds = [];
     let ids;
     const url = (`${conf.apiUrl}/videos?page=${this.currentPage}`);
     ourFetch(url)
       .then((response) => {
         this.dbResultArray = response.result;
         for (let i = 0; i < this.dbResultArray.length; i += 1) {
-          serverVideoIds.push(this.dbResultArray[i].youtube_id);
-          serverVideo_Ids.push(this.dbResultArray[i]._id);
+          youTubeVideosIds.push(this.dbResultArray[i].youtube_id);
+          youDescribeVideosIds.push(this.dbResultArray[i]._id);
         }
-        ids = serverVideoIds.join(',');
+        ids = youTubeVideosIds.join(',');
       })
       .then(() => {
         const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
         ourFetch(url)
-        .then(data => this.parseFetchedData(data, serverVideo_Ids));
+        .then(data => this.parseFetchedData(data, youDescribeVideosIds));
       });
   }
 
   // functions
-  parseFetchedData(data,serverVideo_Ids) {
+  parseFetchedData(data, youDescribeVideosIds) {
     const videos = this.state.videos.slice();
     for (let i = 0; i < data.items.length; i += 1) {
       const item = data.items[i];
-      const _id = serverVideo_Ids[i];
+      const _id = youDescribeVideosIds[i];
       const id = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
       const duration = convertSecondsToCardFormat(convertISO8601ToSeconds(item.contentDetails.duration));
@@ -104,7 +105,7 @@ class Home extends Component {
   }
 
   closeSpinner() {
-    const spinner = document.getElementById('spinner');
+    const spinner = document.getElementsByClassName('spinner')[0];
     spinner.style.display = 'none';
   }
 
@@ -117,7 +118,7 @@ class Home extends Component {
           <h2>Popular described videos</h2>
         </header>
 
-        <Spinner style={{ width: 200, height: 200 }} />
+        <Spinner2 />
 
         <main role="main" className="w3-row">
           {this.state.videos}
