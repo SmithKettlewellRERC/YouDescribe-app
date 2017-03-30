@@ -19,10 +19,9 @@ class AuthoringTool extends Component {
     this.videoDurationInSeconds = -1;
 
     this.state = {
-      allSet: false,
+      // Video main info.
       videoId: props.params.videoId,
       videoUrl: `${conf.apiUrl}/videos/${props.params.videoId}`,
-      notes: '',
 
       // Video controls and data.
       videoData: {},
@@ -39,6 +38,8 @@ class AuthoringTool extends Component {
 
       // Audio descriptions.
       audioDescriptionId: null,
+      audioDescriptionStatus: null,
+      audioDescriptionNotes: '',
       audioDescriptionAudioClips: {},
 
       // Tracks controls.
@@ -63,7 +64,8 @@ class AuthoringTool extends Component {
     // Bindings.
     this.getATState = this.getATState.bind(this);
     this.updateState = this.updateState.bind(this);
-    this.publishVideo = this.publishVideo.bind(this);
+    this.publishAudioDescription = this.publishAudioDescription.bind(this);
+    this.unpublishAudioDescription = this.unpublishAudioDescription.bind(this);
     this.updateTrackLabel = this.updateTrackLabel.bind(this);
     this.addAudioClipTrack = this.addAudioClipTrack.bind(this);
     this.recordAudioClip = this.recordAudioClip.bind(this);
@@ -71,6 +73,7 @@ class AuthoringTool extends Component {
     this.setSelectedTrack = this.setSelectedTrack.bind(this);
     this.alertBoxOpen = this.alertBoxOpen.bind(this);
     this.alertBoxClose = this.alertBoxClose.bind(this);
+    this.updateNotes = this.updateNotes.bind(this);
   }
 
   componentWillMount() {
@@ -82,47 +85,49 @@ class AuthoringTool extends Component {
   }
 
   componentDidMount() {
-    this.fetchVideoData();
+    this.getYDVideoData();
     this.scrollingFix();
   }
 
-  // 2. The main get request that gets the json from our api.
-  fetchVideoData() {
-    console.log('2 -> fetchingVideoData');
+  // 2
+  getYDVideoData() {
+    console.log('2 -> getYDVideoData');
     const self = this;
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', this.state.videoUrl, true);
-    xhr.onload = function () {
-      if (xhr.readyState === 4) {
-        const response = JSON.parse(xhr.response);
-        if (response.result) {
-          self.setState({
-            videoData: response.result,
-          }, () => {
-            self.parseVideoData();
-          });
-        } else {
-          self.parseVideoData();
-        }
-      }
-    };
-    xhr.send();
+    ourFetch(this.state.videoUrl)
+    .then(response => {
+      if (response.result) {
+        self.setState({
+          videoData: response.result,
+        }, () => {
+          self.parseYDVideoData();
+        });
+      } else {
+        self.parseYDVideoData();
+      }      
+    })
+    .catch(err => {
+      self.parseYDVideoData();
+    });
   }
 
-  // 3. We must call this method only once.
-  parseVideoData() {
-    console.log('3 -> parseVideoData');
+  // 3
+  parseYDVideoData() {
+    console.log('3 -> parseYDVideoData');
     const videoData = Object.assign({}, this.state.videoData);
 
     let audioDescriptionId = null;
+    let audioDescriptionStatus = null;
+    let audioDescriptionNotes = '';
     const audioDescriptionAudioClips = {};
 
     if (videoData && videoData.audio_descriptions && videoData.audio_descriptions.length > 0) {
-      // This looping won't be necessary when the API just delivery the owned AD for the current video.
+      // This looping won't be necessary when the API just delivery the owned AD for the current user.
       for (let i = 0; i < videoData.audio_descriptions.length; i += 1) {
         const ad = videoData.audio_descriptions[i];
         if (ad.user._id === this.props.getUserInfo().userId) {
           audioDescriptionId = ad['_id'];
+          audioDescriptionStatus = ad['status'];
+          audioDescriptionNotes = ad['notes'];
           if (ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
               audioClip.url = `${conf.audioClipsUploadsPath}${audioClip.file_path}/${audioClip.file_name}`;
@@ -136,7 +141,9 @@ class AuthoringTool extends Component {
     this.setState({
       videoData,
       audioDescriptionId,
+      audioDescriptionStatus,
       audioDescriptionAudioClips,
+      audioDescriptionNotes,
     }, () => {
       this.preLoadAudioClips();
     });
@@ -147,7 +154,6 @@ class AuthoringTool extends Component {
     console.log('4 -> preLoadAudioClips');
     const self = this;
     const audioClips = Object.values(this.state.audioDescriptionAudioClips);
-    console.log('AUDIOCLIPS', audioClips);
 
     if (audioClips.length > 0) {
       const promises = [];
@@ -155,21 +161,21 @@ class AuthoringTool extends Component {
         promises.push(ourFetch(audioObj.url, false));
       });
       Promise.all(promises).then(function() {
-        console.log('All audios loaded.');
-        self.getVideoDuration();
+        console.log('Total audio clips:', audioClips.length, 'Audio clips loaded:', promises.length);
+        self.getYTVideoInfo();
       })
       .catch(function(errorAllAudios) {
         console.log('ERROR LOADING AUDIOS -> ', errorAllAudios);
       });
     } else {
-      self.getVideoDuration();
+      self.getYTVideoInfo();
     }
   }
 
   // 5
-  getVideoDuration() {
+  getYTVideoInfo() {
     const self = this;
-    console.log('5 -> getVideoDuration');
+    console.log('5 -> getYTVideoInfo');
     const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet&key=${conf.youTubeApiKey}`;
     ourFetch(url).then((data) => {
       this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
@@ -188,7 +194,7 @@ class AuthoringTool extends Component {
 
   // 6
   loadExistingTracks() {
-    console.log('6 -> loadTracksComponents');
+    console.log('6 -> loadExistingTracks');
     const tracksComponents = [];
     const audioClips = Object.values(this.state.audioDescriptionAudioClips);
     const audioClipsLength = audioClips.length;
@@ -287,11 +293,16 @@ class AuthoringTool extends Component {
           videoPlayer: new YT.Player('playerAT', {
             height: '100%',
             videoId: self.state.videoId,
-            enablejsapi: true,
-            fs: 0,
-            rel: 0,
-            controls: 2,
-            disablekb: 1,
+            playerVars: {
+              // 'controls': 1,
+              modestbranding: 1,
+              fs: 0,
+              rel: 0,
+              disablekb: 0,
+              cc_load_policy: 0,
+              iv_load_policy: 3,
+            },
+            // enablejsapi: true,
             events: {
               onReady: onVideoPlayerReady,
               onStateChange: onPlayerStateChange,
@@ -329,7 +340,6 @@ class AuthoringTool extends Component {
         switch (this.audioClipsCopy[i].playback_type) {
           case 'inline':
             if (currentVideoProgress >= +this.audioClipsCopy[i].start_time && currentVideoProgress < +this.audioClipsCopy[i].end_time) {
-              console.log('## INLINE');
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
                 html5: false,
@@ -342,7 +352,6 @@ class AuthoringTool extends Component {
                   console.log('Impossible to load', errToLoad)
                 },
                 onplay: () => {
-                  console.log('Inline audio description clip');
                   this.previousVideoVolume = videoVolume;
                 },
                 onend: () => {
@@ -355,7 +364,6 @@ class AuthoringTool extends Component {
           case 'extended':
             if (Math.abs(+this.audioClipsCopy[i].start_time - currentVideoProgress) <= interval / 1000 ||
             (+this.audioClipsCopy[i].start_time < 0.5 && currentVideoProgress <= interval / 500)) {
-              console.log('Extended audio description clip');
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
                 html5: false,
@@ -368,7 +376,6 @@ class AuthoringTool extends Component {
                   console.log('Impossible to load current audio', errToLoad)
                 },
                 onplay: () => {
-                  console.log('Extended?');
                   this.state.videoPlayer.pauseVideo();
                 },
                 onend: () => {
@@ -399,16 +406,16 @@ class AuthoringTool extends Component {
     // I will just add tracks if all existant have urls.
     for (let i = 0; i < tracks.length; i += 1) {
       if (tracks[i].props.data.url === '') {
-        this.alertBoxOpen('unused-track');
-        // alert('Finish using your available record tracks.');
+        // this.alertBoxOpen('unused-track');
+        alert('Finish using your available record tracks.');
         return;
       }
     }
 
     // Don't allow adding more tracks while recording.
     if (this.state.selectedTrackComponentStatus === 'recording') {
-      this.alertBoxOpen('recording-in-process');
-      // alert('You can just add more tracks when you finish recording the existing one.');
+      // this.alertBoxOpen('recording-in-process');
+      alert('You can just add more tracks when you finish recording the existing one.');
       return;
     }
 
@@ -440,8 +447,22 @@ class AuthoringTool extends Component {
       tracksComponents: tracks,
       selectedTrackComponentPlaybackType: playbackType,
       playheadTailHeight,
+      selectedTrackComponentId: null,
+      selectedTrackComponentStatus: null,
+      selectedTrackComponentLabel: '',
+      selectedTrackComponentUrl: '',
+      selectedTrackComponentAudioClipStartTime: 0,
+      selectedTrackComponentAudioClipSEndTime: -1,
+      selectedTrackComponentAudioClipDuration: -1,
     });
   }
+
+
+
+
+
+
+
 
   getTrackComponentByTrackId(trackId) {
     const tc = this.state.tracksComponents;
@@ -461,8 +482,8 @@ class AuthoringTool extends Component {
 
     if (this.state.selectedTrackComponentId !== trackId) {
       if (this.state.selectedTrackComponentStatus === 'recording') {
-        this.alertBoxOpen();
-        // alert('You need to stop recording in order to activate any other track');
+        // this.alertBoxOpen();
+        alert('You need to stop recording in order to activate any other track');
         return;
       }
     }
@@ -498,8 +519,8 @@ class AuthoringTool extends Component {
       });
     } else if (e.target.className === 'fa fa-step-forward') {
       // SEEK TO.
-      console.log('Seek video to', seekToValue);
       const seekToValue = clickedTrackComponent.props.data.start_time;
+      console.log('Seek video to', seekToValue);
       this.state.videoPlayer.seekTo(parseFloat(seekToValue) - conf.seekToPositionDelayFix, true);
       this.state.videoPlayer.unMute();
       this.state.videoPlayer.pauseVideo();
@@ -539,7 +560,6 @@ class AuthoringTool extends Component {
   }
 
   uploadAudioRecorded(args) {
-
     const self = this;
     const formData = new FormData();
     formData.append('title', this.state.videoTitle);
@@ -549,6 +569,7 @@ class AuthoringTool extends Component {
     formData.append('playbackType', this.state.selectedTrackComponentPlaybackType);
     formData.append('startTime', this.state.selectedTrackComponentAudioClipStartTime);
     formData.append('audioDescriptionId', this.state.audioDescriptionId);
+    formData.append('audioDescriptionNotes', this.state.audioDescriptionNotes);
     if (this.state.selectedTrackComponentPlaybackType === 'extended') {
       formData.append('endTime', this.state.selectedTrackComponentAudioClipStartTime);
     } else {
@@ -564,13 +585,12 @@ class AuthoringTool extends Component {
       self.setState({
         videoData: JSON.parse(this.responseText).result,
       }, () => {
-        self.parseVideoData();
+        self.parseYDVideoData();
       });
     }
     xhr.send(formData);
   }
 
-  // Open a dialog box
   alertBoxOpen(id) {
     console.log('alert box id', id);
     const alertBox = document.getElementById(id);
@@ -589,7 +609,6 @@ class AuthoringTool extends Component {
     }
   }
 
-  // Close a dialog box
   alertBoxClose(e) {
     const alertBox = document.getElementById(e.target.parentNode.parentNode.parentNode.parentNode.parentNode.id);
 
@@ -598,30 +617,52 @@ class AuthoringTool extends Component {
     }
   }
 
-  publishVideo() {
+  publishAudioDescription() {
+    console.log('publishAudioDescription');
     const self = this;
-    // this.alertBoxOpen('publish-button');
-
-    const resultConfirm = confirm('Are you sure you wanna publish this video?');
+    const resultConfirm = confirm('Are you sure you wanna publish this audio description?');
     if (resultConfirm) {
-      const url = `${conf.apiUrl}/videos/${this.state.videoId}?token=${this.props.getAppState().userToken}`;
-      const xhr = new XMLHttpRequest();
-      xhr.open('post', url);
-      xhr.setRequestHeader('Content-type', 'application/json');
-      xhr.onload = function () {
-        const result = JSON.parse(this.responseText).result;
+      const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=publish&token=${this.props.getAppState().userToken}`;
+      ourFetch(url, true, {
+        method: 'POST',
+      })
+      .then(response => {
+        const result = response.result;
+        // console.log(result)
         if (result._id) {
-          console.log('Video published');
           self.setState({
             videoData: result,
           }, () => {
-            self.parseVideoData();
+            self.parseYDVideoData();
           });
         } else {
-          console.log('There was a problem to publish your video');
+          console.log('There was a problem to publish your audio description');
         }
-      };
-      xhr.send();
+      });
+    }
+  }
+
+  unpublishAudioDescription() {
+   console.log('unpublishAudioDescription');
+    const self = this;
+    const resultConfirm = confirm('Are you sure you wanna unpublish this audio description?');
+    if (resultConfirm) {
+      const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=unpublish&token=${this.props.getAppState().userToken}`;
+      ourFetch(url, true, {
+        method: 'POST',
+      })
+      .then(response => {
+        const result = response.result;
+        if (result._id) {
+          self.setState({
+            videoData: result,
+          }, () => {
+            self.parseYDVideoData();
+          });
+        } else {
+          console.log('There was a problem to unpublish your audio description');
+        }
+      });
     }
   }
 
@@ -668,23 +709,23 @@ class AuthoringTool extends Component {
     });
   }
 
+  updateNotes(e) {
+    this.setState({
+      audioDescriptionNotes: e.target.value,
+    });
+  }
+
   // 1
   render() {
     // console.log('1 -> render authoring tool')
     return (
       <main id="authoring-tool">
         <div className="w3-row">
-          <div
-            id="video-section"
-            className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium"
-          >
+          <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
             <div id="playerAT" />
           </div>
-          <div
-            id="notes-section"
-            className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium"
-          >
-            <Notes />
+          <div id="notes-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
+            <Notes updateNotes={this.updateNotes} getATState={this.getATState} />
           </div>
         </div>
         <div className="w3-row w3-margin-top w3-hide-small w3-hide-medium">
@@ -692,7 +733,8 @@ class AuthoringTool extends Component {
             <Editor
               getATState={this.getATState}
               updateState={this.updateState}
-              publishVideo={this.publishVideo}
+              publishAudioDescription={this.publishAudioDescription}
+              unpublishAudioDescription={this.unpublishAudioDescription}
               alertBoxClose={this.alertBoxClose}
               addAudioClipTrack={this.addAudioClipTrack}
               recordAudioClip={this.recordAudioClip}

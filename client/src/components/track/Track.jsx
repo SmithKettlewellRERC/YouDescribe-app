@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ActionIcon from '../action-icon/ActionIcon.jsx';
 import AlertBox from '../alert-box/AlertBox.jsx';
-
 const conf = require('../../shared/config');
 
 class Track extends Component {
@@ -14,16 +13,24 @@ class Track extends Component {
     this.wavesurfer = null;
   }
 
-  componentDidMount() {
-    // this.wavesurfer = WaveSurfer.create({
-    //   container: `#wave${this.props.id}`,
-    //   waveColor: 'white'
-    // });
-    // this.wavesurfer.load(this.url);
-  }
-
   render() {
-    console.log('DURATION', this.props.getATState().videoDurationInSeconds);
+    let label;
+    if (this.props.data._id) {
+      if (this.props.data.label === '') {
+        label = <input type="text" value="No label for this track" readOnly />;
+      } else {
+        label = <input type="text" value={this.props.data.label} readOnly />;
+      }
+    } else {
+      label = <input
+        type="text"
+        placeholder={'Enter some label for this track'}
+        onChange={this.props.updateTrackLabel}
+        onKeyPress={evt => {
+          this.props.setSelectedTrack(evt, this.props.id)
+        }}
+      />
+    }
     return (
       <div id="track" className="w3-row w3-display-container">
         <div className="w3-col l3 m3 s3">
@@ -32,15 +39,7 @@ class Track extends Component {
               <div id="type" className={this.styleButton}>{this.labelText}</div>
             </div>
             <div className="w3-left">
-              <input
-                type="text"
-                value={this.label}
-                placeholder={'Enter some label'}
-                onChange={this.props.updateTrackLabel}
-                onKeyPress={(evt) => {
-                  this.props.setSelectedTrack(evt, this.props.id)
-                }}
-              />
+              {label}
             </div>
             <div id="track-action" className="w3-right">
               <ActionIcon {...this.props} />
@@ -56,9 +55,7 @@ class Track extends Component {
               height: '27px',
             }}
           >
-            <div
-              id={`wave${this.props.id}`}
-            />
+            <div id={`wave${this.props.id}`} />
           </div>
         </div>
       </div>
