@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
-import Slider from '../../components/slider/Slider.jsx';
+import VolumeBalancer from '../../components/volume-balancer/VolumeBalancer.jsx';
+import VideoPlayerAccessibleSeekbar from '../../components/video-player-accessible-seekbar/VideoPlayerAccessibleSeekbar.jsx';
 import AudioDescriptionSelector from '../../components/audio-description-selector/AudioDescriptionSelector.jsx';
 import { ourFetch } from '../../shared/helperFunctions';
+import { convertISO8601ToSeconds, convertSecondsToEditorFormat } from '../../shared/helperFunctions';
+
 
 const conf = require('../../shared/config')();
 
@@ -32,11 +35,13 @@ class VideoPage extends Component {
       videoPlayer: null,
       videoState: -1,
       videoVolume: 0,
-      sliderValue: 50,
+      balancerValue: 50,
     };
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
     this.setAudioDescriptionActive = this.setAudioDescriptionActive.bind(this);
+    this.playVideo = this.playVideo.bind(this);
+    this.pauseVideo = this.pauseVideo.bind(this);
   }
 
   componentDidMount() {
@@ -170,6 +175,7 @@ class VideoPage extends Component {
 
     function onVideoPlayerReady() {
       self.audioClipsCopy = self.getAudioClips().slice();
+      self.getVideoDuration();
     }
 
     function onPlayerStateChange(event) {
@@ -185,6 +191,7 @@ class VideoPage extends Component {
             break;
           case 1:
             // playing
+            self.playVideo();
             if (self.currentClip && self.currentClip.playbackType === 'extended') {
               self.currentClip.stop();
             }
@@ -192,6 +199,7 @@ class VideoPage extends Component {
             break;
           case 2:
             // paused
+            self.pauseVideo();
             self.audioClipsCopy = self.getAudioClips().slice();
             if (self.currentClip && self.currentClip.playbackType === 'inline') {
               self.currentClip.pause();
@@ -239,9 +247,29 @@ class VideoPage extends Component {
   }
 
   // 7
+  getVideoDuration() {
+    console.log('7 -> getVideoDuration');
+    const self = this;
+    const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet&key=${conf.youTubeApiKey}`;
+    ourFetch(url).then((data) => {
+      this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
+      this.setState({
+        videoTitle: data.items[0].snippet.title,
+        videoDescription: data.items[0].snippet.description,
+        videoDurationInSeconds: this.videoDurationInSeconds,
+        videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
+      }, () => {
+        self.loadExistingTracks();
+      });
+    }).catch((err) => {
+      console.log('Unable to load the video you are trying to edit.', err);
+    });
+  }
+
+  // 8
   videoProgressWatcher() {
-    console.log('6 -> videoProgressWatcher')
-    const interval = 200;
+    console.log('8 -> videoProgressWatcher')
+    const interval = 100;
 
     if (this.watcher) {
       clearInterval(this.watcher);
@@ -253,10 +281,10 @@ class VideoPage extends Component {
       // const videoVolume = this.state.videoPlayer.getVolume();
 
       if (this.currentClip && this.currentClip.playbackType === 'inline') {
-        this.currentClip.volume(this.state.sliderValue / 100);
-        this.state.videoPlayer.setVolume((100 - this.state.sliderValue) * 0.1);
+        this.currentClip.volume(this.state.balancerValue / 100);
+        this.state.videoPlayer.setVolume((100 - this.state.balancerValue) * 0.1);
       } else {
-        this.state.videoPlayer.setVolume(100 - this.state.sliderValue);
+        this.state.videoPlayer.setVolume(100 - this.state.balancerValue);
       }
 
       for (let i = 0; i < this.audioClipsCopy.length; i += 1) {
@@ -269,7 +297,7 @@ class VideoPage extends Component {
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
                 html5: false,
-                volume: this.state.sliderValue / 100,
+                volume: this.state.balancerValue / 100,
                 onload: () => {
                   this.currentClip.playbackType = 'inline';
                   const temp = +this.audioClipsCopy[i]
@@ -298,7 +326,7 @@ class VideoPage extends Component {
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
                 html5: false,
-                volume: this.state.sliderValue / 100,
+                volume: this.state.balancerValue / 100,
                 onload: () => {
                   this.currentClip.playbackType = 'extended';
                   this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
@@ -343,6 +371,36 @@ class VideoPage extends Component {
     this.setState(newState, callback);
   }
 
+  playVideo() {
+    const play = document.getElementById('play-button');
+    const pause = document.getElementById('pause-button');
+
+    play.style.display = 'none';
+    pause.style.display = 'block';
+    this.state.videoPlayer.playVideo();
+  }
+
+  pauseVideo() {
+    const play = document.getElementById('play-button');
+    const pause = document.getElementById('pause-button');
+
+    pause.style.display = 'none';
+    play.style.display = 'block';
+    this.state.videoPlayer.pauseVideo();
+  }
+
+  // playPauseToggle() {
+  //   const play = document.getElementById('play-button');
+  //   const pause = document.getElementById('pause-button');
+  //   if (play.style.display === 'block') {
+  //     play.style.display = 'none';
+  //     pause.style.display = 'block';
+  //   } else {
+  //     pause.style.display = 'none';
+  //     play.style.display = 'block';
+  //   }
+  // }
+
   // 1
   render() {
     // console.log('1 -> Render');
@@ -354,7 +412,10 @@ class VideoPage extends Component {
             <div id="video" className="w3-card-2">
               <div id="playerVP" />
               <div id="video-controls">
-                <Slider updateState={this.updateState} />
+                <VideoPlayerAccessibleSeekbar updateState={this.updateState} getState={this.getState} />
+                <div id="play-button" onClick={this.playVideo} accessKey="p"><i className="fa fa-play" aria-hidden="true"></i></div>
+                <div id="pause-button" onClick={this.pauseVideo} accessKey="s"><i className="fa fa-pause" aria-hidden="true"></i></div>
+                <VolumeBalancer updateState={this.updateState} />
                 <AudioDescriptionSelector
                   updateState={this.updateState}
                   audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
@@ -362,7 +423,7 @@ class VideoPage extends Component {
                   setAudioDescriptionActive={this.setAudioDescriptionActive}
                   videoId={this.state.videoId}
                   getAppState={this.props.getAppState}
-                  />
+                />
               </div>
             </div>
           </div>

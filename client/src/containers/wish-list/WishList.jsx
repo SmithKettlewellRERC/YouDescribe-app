@@ -83,7 +83,7 @@ class WishList extends Component {
           views={views}
           votes={votes}
           time={time}
-          buttons="on"
+          buttons="upvote-describe"
           getAppState={this.props.getAppState}
         />,
       );
