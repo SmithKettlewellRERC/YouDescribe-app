@@ -62,15 +62,23 @@ class VideoCard extends Component {
     }
 
     let buttons;
-    if (this.props.buttons === 'on') {
-      buttons =
-        (
-          <div>
-            <div><Button title="Request an audio description for this video" text={<i className="fa fa-heart"></i>} color="w3-white w3-text-indigo w3-left" onClick={this.upVote} /><span id="vote-count">{voteCount}</span></div>
-            <Button title="Create an audio description for this video" text="Describe" color="w3-indigo w3-right" onClick={this.describeThisVideo} />
-          </div>
-        )
+
+    if (this.props.buttons === 'upvote-describe') {
+      buttons = (
+        <div>
+          <Button title="Request an audio description for this video" text={<i className="fa fa-heart"></i>} color="w3-white w3-text-indigo w3-left" onClick={this.upVote} />
+          <span id="vote-count">{voteCount}</span>
+          <Button title="Create an audio description for this video" text="Describe" color="w3-indigo w3-right" onClick={this.describeThisVideo} />
+        </div>
+      );
+    } else if (this.props.buttons === 'edit') {
+      buttons = (
+        <div>
+          <Button title="Edit the audio description for this video" text="Edit" color="w3-indigo w3-block" onClick={this.editThisVideo} />
+        </div>
+      );
     }
+
     return (
       <div id="video-card" className="w3-margin-top w3-left" title="">
         <div className="w3-card-2 w3-hover-shadow">

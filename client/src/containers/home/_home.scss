@@ -1,60 +1,15 @@
-// body,h1,h2,h3,h4,h5,h6 {font-family: "open sans"}
-
 #home {
+  background-color: #fff;
   min-height: 100vh;
-  // .vid-card {
-  //   width: 194px;
-  //   padding: 0 8px;
-  //   .w3-card-2 {
-  //     .vid-title {
-  //       overflow-x: hidden;
-  //       height: 110px;
-  //     }
-  //     background-color: #fff;
-  //   }
-  // }
   main {
     width: 416px;
     padding: 0px 8px;
     margin: 0 auto 50px auto;
-    @media (min-width:601px){
+    @media (min-width:601px) {
       width: 601px;
     }
     @media screen and (min-width: 993px) {
       width: 993px;
-    }
-  }
-  // button {
-  //   // -webkit-box-shadow:inset 0px 0px 0px 1px #475CAE;
-  //   // -moz-box-shadow:inset 0px 0px 0px 1px #475CAE;
-  //   // box-shadow:inset 0px 0px 0px 1px #475CAE;
-  //   // border: 10px solid blue;
-  //   // box-sizing: border-box;
-  //   outline: 1px solid #475CAE;
-  //   outline-offset: -1px;
-  //   // height: 30px;
-  //   margin-top: 0px;
-  //   // margin-bottom: 30px!important;
-  // }
-  background-color: #fff;
-  line-height: 1.1;
-  h2 {
-    // padding-top: 50px;
-    font-size: 20px;
-  }
-  h5 {
-    font-size: 14px;
-    margin-bottom: 3px;
-  }
-  h6 {
-    margin: 0px;
-    font-size: 11px;
-    color: #555;
-    a {
-      color: #555;
-    }
-    a:hover {
-      color: #337ab7;
     }
   }
 }

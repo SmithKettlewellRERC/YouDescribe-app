@@ -10,8 +10,8 @@ class UserAvatar extends Component {
   render() {
     return (
       <div id="user-avatar">
-        <img src={this.props.getAppState().userPicture} height="33px" onClick={this.props.userMenuOpen} />
-        <UserMenu getAppState={this.props.getAppState} signOut={this.props.signOut} />
+        <img src={this.props.getAppState().userPicture} height="33px" onClick={this.props.userMenuToggle} />
+        <UserMenu getAppState={this.props.getAppState} signOut={this.props.signOut} userMenuToggle={this.props.userMenuToggle} />
       </div>
     );
   }
