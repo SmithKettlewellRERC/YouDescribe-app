@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
+import Slider from '../../components/slider/Slider.jsx';
+import Spinner from '../../components/spinner/Spinner.jsx';
+import Spinner2 from '../../components/spinner2/Spinner2.jsx';
 import VolumeBalancer from '../../components/volume-balancer/VolumeBalancer.jsx';
 import VideoPlayerAccessibleSeekbar from '../../components/video-player-accessible-seekbar/VideoPlayerAccessibleSeekbar.jsx';
 import AudioDescriptionSelector from '../../components/audio-description-selector/AudioDescriptionSelector.jsx';
@@ -40,6 +43,7 @@ class VideoPage extends Component {
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
     this.setAudioDescriptionActive = this.setAudioDescriptionActive.bind(this);
+    this.closeSpinner = this.closeSpinner.bind(this);
     this.playVideo = this.playVideo.bind(this);
     this.pauseVideo = this.pauseVideo.bind(this);
   }
@@ -226,6 +230,9 @@ class VideoPage extends Component {
     }
 
     function startVideo() {
+      console.log('replacing current div with the video');
+      self.closeSpinner();
+
       if (self.state.videoPlayer === null) {
         self.setState({
           videoPlayer: new YT.Player('playerVP', {
@@ -371,6 +378,11 @@ class VideoPage extends Component {
     this.setState(newState, callback);
   }
 
+  closeSpinner() {
+    const spinner = document.getElementById('spinner');
+    spinner.style.display = 'none';
+  }
+
   playVideo() {
     const play = document.getElementById('play-button');
     const pause = document.getElementById('pause-button');
@@ -411,6 +423,7 @@ class VideoPage extends Component {
 
             <div id="video" className="w3-card-2">
               <div id="playerVP" />
+              <Spinner />
               <div id="video-controls">
                 <VideoPlayerAccessibleSeekbar updateState={this.updateState} getState={this.getState} />
                 <div id="play-button" onClick={this.playVideo} accessKey="p"><i className="fa fa-play" aria-hidden="true"></i></div>
