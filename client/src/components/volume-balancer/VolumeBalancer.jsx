@@ -187,7 +187,7 @@ class Slider extends Component {
   	target.setAttribute('aria-valuenow', newValue);
   	target.setAttribute('aria-valuetext', newValue + "%");
   	// this.updateValueIndicator(target.id.replace(/Thumb/, 'Value'), newValue + "%");
-    this.props.updateState({ sliderValue: newValue });
+    this.props.updateState({ balancerValue: newValue });
   }
 
   // updateValueIndicator(id, value) {
@@ -210,10 +210,10 @@ class Slider extends Component {
   }
 
   cancelEvent(event) {
-  	if (typeof event.stopPropagation == "function") {
+  	if (typeof event.stopPropagation === 'function') {
   		event.stopPropagation();
   	}
-  	else if (typeof event.cancelBubble != "undefined") {
+  	else if (typeof event.cancelBubble !== 'undefined') {
   		event.cancelBubble = true;
   	}
   	if (event.preventDefault) {
@@ -229,7 +229,6 @@ class Slider extends Component {
   render() {
     return (
       <div className="volume-balancer">
-        <div id="volume-balancer-header">Volume balancer</div>
         <span id="sliderLabel" className="floatLeft">Video</span>
         <div id="sliderRail1" className="sliderRail floatLeft">
           <button className="sliderThumb" id="sliderThumb1" role="slider" aria-labelledby="sliderLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50%" accessKey="v"></button>
@@ -237,6 +236,7 @@ class Slider extends Component {
         <span className="floatLeft">
           Description
         </span>
+        <div id="volume-balancer-header">Volume balancer</div>
       </div>
     );
   }

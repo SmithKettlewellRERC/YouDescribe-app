@@ -52,7 +52,6 @@ class Home extends Component {
       });
   }
 
-  // functions
   parseFetchedData(data, youDescribeVideosIds) {
     const videos = this.state.videos.slice();
     for (let i = 0; i < data.items.length; i += 1) {

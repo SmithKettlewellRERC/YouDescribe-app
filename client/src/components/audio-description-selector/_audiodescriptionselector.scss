@@ -2,17 +2,19 @@
   width: 300px;
   margin: 16px auto 0px;
   position: relative;
-  top: 0px;
+  top: 40px;
   left: 32px;
   color: #fff;
   // float: right;
   @media screen and (min-width: 601px) {
-    top: -68px;
+    top: -24px;
     left: 219px;
   }
   #audio-description-selector-header {
     position: relative;
-    left: 80px;
+    left: 90px;
+    top: 4px;
+    font-size: 11px;
     padding-bottom: 8px;
   }
   select {
