@@ -81,8 +81,8 @@ class UserVideosPage extends Component {
 
       videoComponents.push(
         <VideoCard
-          key={youDescribeVideoId}
-          id={youDescribeVideoId}
+          key={youTubeId}
+          id={youTubeId}
           thumbnailMediumUrl={thumbnail.url}
           duration={duration}
           title={title}
@@ -91,6 +91,7 @@ class UserVideosPage extends Component {
           time={time}
           buttons="edit"
           isSignedIn={this.props.isSignedIn}
+          getAppState={this.props.getAppState}
         />
       );
     }
@@ -110,7 +111,7 @@ class UserVideosPage extends Component {
         </main>
 
         <div id="load-more" className="w3-margin-top w3-center w3-padding-32">
-          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+          {/*<Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />*/}
         </div>
 
       </div>
