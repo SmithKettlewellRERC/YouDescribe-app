@@ -228,7 +228,7 @@ class SearchPage extends Component {
         </main>
 
         <div id="load-more" className="w3-margin-top w3-center">
-          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYT} />
+          {/*<Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYT} />*/}
         </div>
       </div>
     );
