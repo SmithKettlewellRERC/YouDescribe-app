@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
 import Slider from '../../components/slider/Slider.jsx';
+import Spinner from '../../components/spinner/Spinner.jsx';
 import AudioDescriptionSelector from '../../components/audio-description-selector/AudioDescriptionSelector.jsx';
 import { ourFetch } from '../../shared/helperFunctions';
 
@@ -37,6 +38,7 @@ class VideoPage extends Component {
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
     this.setAudioDescriptionActive = this.setAudioDescriptionActive.bind(this);
+    this.closeSpinner = this.closeSpinner.bind(this);
   }
 
   componentDidMount() {
@@ -216,6 +218,9 @@ class VideoPage extends Component {
     }
 
     function startVideo() {
+      console.log('replacing current div with the video');
+      self.closeSpinner();
+
       if (self.state.videoPlayer === null) {
         self.setState({
           videoPlayer: new YT.Player('playerVP', {
@@ -341,6 +346,11 @@ class VideoPage extends Component {
     this.setState(newState, callback);
   }
 
+  closeSpinner() {
+    const spinner = document.getElementById('spinner');
+    spinner.style.display = 'none';
+  }
+
   // 1
   render() {
     // console.log('1 -> Render');
@@ -351,6 +361,7 @@ class VideoPage extends Component {
 
             <div id="video" className="w3-card-2">
               <div id="playerVP" />
+              <Spinner style={{ width: 50, height: 50 }} />
               <div id="video-controls">
                 <Slider updateState={this.updateState} />
                 <AudioDescriptionSelector
@@ -360,7 +371,7 @@ class VideoPage extends Component {
                   setAudioDescriptionActive={this.setAudioDescriptionActive}
                   videoId={this.state.videoId}
                   getAppState={this.props.getAppState}
-                  />
+                />
               </div>
             </div>
           </div>
