@@ -38,10 +38,10 @@ class AudioDescriptionSelector extends Component {
     }
     return (
       <div id="audio-description-selector">
-        <div id="audio-description-selector-header">Describer</div>
         <select onChange={this.handleChange} value={selectedAudioDescriptionId}>
           {options}
         </select>
+        <div id="audio-description-selector-header">Describer</div>
         <span>{this.props.currentVideoDescriber}</span>
       </div>
     );
