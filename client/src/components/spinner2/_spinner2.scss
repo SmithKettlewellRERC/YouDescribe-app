@@ -4,9 +4,15 @@ $count: 6;
 $time: 0.45s;
 $amount: 40px;
 
-body, html {
-  height: 100%;
-}
+// body, html {
+//   height: 100%;
+// }
+// body {
+//   background: #ecf0f1;
+//   height: 100%;
+//   background-image: linear-gradient(-45deg, #7f8c8d, #ecf0f1, #95a5a6);
+//   background-repeat: no-repeat;
+// }
 .spinner {
   height: 10px;
   width: $count * $size * 2;
@@ -14,11 +20,6 @@ body, html {
   padding-left: 40px;
   display: block;
 }
-body {
-  background: #ecf0f1;
-  height: 100%;
-  background-image: linear-gradient(-45deg, #7f8c8d, #ecf0f1, #95a5a6);
-  background-repeat: no-repeat;}
 .dot {
   float: left;
   height: $size;
@@ -27,7 +28,7 @@ body {
   background-color: #000;
   background-image: linear-gradient(rgba(white, 0.3), transparent), radial-gradient(#9894b2, #616183);
   background-position: top center;
-  margin: $gap ($size * 0.25); 
+  margin: $gap ($size * 0.25);
   animation: bounce $time infinite ease alternate;
   $inc: (($time / $count) * -1) * 1;
   @for $i from 1 through $count {

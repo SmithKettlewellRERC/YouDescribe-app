@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
-import Slider from '../../components/slider/Slider.jsx';
 import Spinner from '../../components/spinner/Spinner.jsx';
 import Spinner2 from '../../components/spinner2/Spinner2.jsx';
 import VolumeBalancer from '../../components/volume-balancer/VolumeBalancer.jsx';
