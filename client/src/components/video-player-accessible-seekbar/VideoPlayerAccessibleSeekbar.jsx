@@ -117,8 +117,9 @@ class Slider extends Component {
   handleRailMouseDown(event) {
   	event = event || window.event;
   	let target = event.target || event.srcElement;
-  	let thumb = this.$(target.id.replace(/Rail/, 'Thumb'));
-  	let newPos = event.clientX - this.getHOffset(target)+ this.getHScrollOffset() - (thumb.clientWidth / 2);
+    console.log('SEEKBAR TARGET ###', target);
+  	let thumb = this.$(target.id.replace(/rail/, 'thumb1'));
+  	let newPos = event.clientX - this.getHOffset(target) + this.getHScrollOffset() - (thumb.clientWidth / 2);
   	this.changeValue(thumb, this.mapPositionToValue(thumb, newPos));
   	if (!document.activeElement || !document.activeElement !== thumb) {
   		thumb.focus();
@@ -177,17 +178,21 @@ class Slider extends Component {
   }
 
   changeValue(target, value) {
-  	let ratio = this.calibrate(target);
-  	let min = parseInt(target.getAttribute('aria-valuemin'));
-  	let max = parseInt(target.getAttribute('aria-valuemax'));
-  	let newValue = Math.min(Math.max(value, min), max);
-  	let newPos = Math.round(newValue * ratio);
+    console.log('SEEKBAR TARGET', target);
+  	const ratio = this.calibrate(target);
+    console.log(target.getAttribute('aria-valuemin'), target.getAttribute('aria-valuemax'));
+  	const min = parseInt(target.getAttribute('aria-valuemin'));
+  	const max = parseInt(target.getAttribute('aria-valuemax'));
+    console.log(min, max);
+  	const newValue = Math.min(Math.max(value, min), max);
+  	// const newPos = Math.round(newValue * ratio);
+  	const newPos = Math.round(newValue * ratio);
   	target.style.left = newPos + "px";
 
   	target.setAttribute('aria-valuenow', newValue);
   	target.setAttribute('aria-valuetext', newValue + "%");
   	// this.updateValueIndicator(target.id.replace(/Thumb/, 'Value'), newValue + "%");
-    console.log('### NEW VALUE', (newValue / 100) * this.props.videoDurationInSeconds);
+    // this.setState({ videoPlayerAccessibilitySeekbarValue: newValue })
     this.props.videoPlayer.seekTo((newValue / 100) * this.props.videoDurationInSeconds);
   }
 
@@ -201,7 +206,7 @@ class Slider extends Component {
   	slider.onmousedown 	= this.handleThumbMouseDown;
   	slider.onkeydown 	= this.handleKeyDown;
 
-  	slider.parentNode.onfocus = function(event) { //temp IE fix
+  	slider.parentNode.onfocus = function(event) { // temp IE fix
   		event = event || window.event;
   		let target = event.target || event.srcElement;
   		let thumb = this.$(target.id.replace(/Rail/, 'Thumb'));
@@ -211,10 +216,10 @@ class Slider extends Component {
   }
 
   cancelEvent(event) {
-  	if (typeof event.stopPropagation == "function") {
+  	if (typeof event.stopPropagation === "function") {
   		event.stopPropagation();
   	}
-  	else if (typeof event.cancelBubble != "undefined") {
+  	else if (typeof event.cancelBubble !== "undefined") {
   		event.cancelBubble = true;
   	}
   	if (event.preventDefault) {
@@ -228,7 +233,6 @@ class Slider extends Component {
   }
 
   render() {
-    console.log('### VALUE', this.props.videoPlayerAccessibilitySeekbarValue);
     return (
       <div className="seekbar">
         <div id="seekbar-slider-rail" className="seekbar-slider-rail floatLeft">
@@ -239,8 +243,8 @@ class Slider extends Component {
             aria-labelledby="sliderLabel"
             aria-valuemin="0"
             aria-valuemax="100"
-            aria-valuenow="50"
-            aria-valuetext="50%"
+            aria-valuenow="0"
+            aria-valuetext="0%"
             accessKey="j"
             style={{ left: `${this.props.videoPlayerAccessibilitySeekbarValue * 100}%` }}
           />
