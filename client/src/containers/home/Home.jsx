@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
+
+import Spinner2 from '../../components/spinner2/Spinner2.jsx';
 import {
   ourFetch,
   convertTimeToCardFormat,
@@ -21,7 +23,8 @@ class Home extends Component {
     };
     this.currentPage = 1;
     this.fetchingVideosToHome = this.fetchingVideosToHome.bind(this);
-  this.loadMoreResults = this.loadMoreResults.bind(this);
+    this.loadMoreResults = this.loadMoreResults.bind(this);
+    this.closeSpinner = this.closeSpinner.bind(this);
   }
 
   componentDidMount() {
@@ -87,6 +90,8 @@ class Home extends Component {
           isSignedIn={this.props.isSignedIn}
         />);
     }
+
+    this.closeSpinner();
     this.setState({ videos });
   }
 
@@ -99,6 +104,12 @@ class Home extends Component {
     this.fetchingVideosToHome();
   }
 
+
+  closeSpinner() {
+    const spinner = document.getElementsByClassName('spinner2')[0];
+    spinner.style.display = 'none';
+  }
+
   // displayed on page
   render() {
     return (
@@ -107,6 +118,8 @@ class Home extends Component {
         <header role="banner" className="w3-container w3-indigo">
           <h2>Popular described videos</h2>
         </header>
+
+        <Spinner2 />
 
         <main role="main" className="w3-row">
           {this.state.videos}

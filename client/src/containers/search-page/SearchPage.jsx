@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
+import Spinner2 from '../../components/spinner2/Spinner2.jsx';
 import {
   ourFetch,
   convertTimeToCardFormat,
@@ -29,7 +30,10 @@ class SearchPage extends Component {
     this.loadMoreVideosFromYD = this.loadMoreVideosFromYD.bind(this);
     this.loadMoreVideosFromYT = this.loadMoreVideosFromYT.bind(this);
     this.getSearchResultsFromYdAndYt = this.getSearchResultsFromYdAndYt.bind(this);
-
+    this.closeSpinnerAtTop = this.closeSpinnerAtTop.bind(this);
+    this.openSpinnerAtTop = this.openSpinnerAtTop.bind(this);
+    this.closeSpinnerAtBottom = this.closeSpinnerAtBottom.bind(this);
+    this.openSpinnerAtBottom = this.openSpinnerAtBottom.bind(this);
     this.currentPageNumber = 1;
   }
 
@@ -39,6 +43,8 @@ class SearchPage extends Component {
 
   componentWillReceiveProps() {
     setTimeout(() => {
+      this.openSpinnerAtTop();
+      this.openSpinnerAtBottom();
       this.currentPageNumber = 1;
       this.getSearchResultsFromYdAndYt();
     }, 0);
@@ -153,6 +159,7 @@ class SearchPage extends Component {
           getAppState={this.props.getAppState}
         />);
     }
+    this.closeSpinnerAtTop();
     this.setState({
       videoAlreadyOnYD,
     });
@@ -192,9 +199,30 @@ class SearchPage extends Component {
         />);
     }
 
+    this.closeSpinnerAtBottom();
     this.setState({
       videoNotOnYD,
     });
+  }
+
+  closeSpinnerAtTop() {
+    const spinner = document.getElementsByClassName('spinner2')[0];
+    spinner.style.display = 'none';
+  }
+
+  openSpinnerAtTop() {
+    const spinner = document.getElementsByClassName('spinner2')[0];
+    spinner.style.display = 'block';
+  }
+
+  closeSpinnerAtBottom() {
+    const spinner = document.getElementsByClassName('spinner2')[1];
+    spinner.style.display = 'none';
+  }
+
+  openSpinnerAtBottom() {
+    const spinner = document.getElementsByClassName('spinner2')[1];
+    spinner.style.display = 'block';
   }
 
   render() {
@@ -206,6 +234,8 @@ class SearchPage extends Component {
         <div className="w3-container w3-indigo">
           <h2>Described videos</h2>
         </div>
+
+        <Spinner2 />
 
         <main>
           <div id="on-yd" className="w3-row">
@@ -220,6 +250,8 @@ class SearchPage extends Component {
         <div className="w3-container w3-indigo">
           <h2>Non-described videos</h2>
         </div>
+
+        <Spinner2 />
 
         <main>
           <div className="w3-row">
