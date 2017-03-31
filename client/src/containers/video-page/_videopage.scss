@@ -1,4 +1,5 @@
 #video-player {
+  color: #fff;
   main {
     margin: 0;
     padding: 0;
@@ -27,7 +28,7 @@
     // margin-bottom: 0px;
     @media screen and (min-width: 601px) {
       width: 640px;
-      height: 450px;
+      height: 550px;
       margin: 0 auto;
     }
   }
@@ -43,22 +44,24 @@
       margin: 0 auto;
       height: 68px;
     }
+    #play-button, #pause-button {
+      font-size: 18px;
+      position: absolute;
+      margin-left: 29px;
+      top: 451px;
+    }
+    #play-button {
+      display: block;
+    }
+    #pause-button {
+      display: none;
+    }
   }
 
   #playerVP{
 
   }
 
-  // #spinner {
-  //   border: 16px solid #f3f3f3;
-  //   border-radius: 50%;
-  //   border-top: 16px solid #3498db;
-  //   width: 250px;
-  //   height: 250px;
-  //   -webkit-animation: spin 1s linear infinite;
-  //   animation: spin 1s linear infinite;
-  //   margin: auto;
-  // }
 
   // @-webkit-keyframes spin {
   //   0% { -webkit-transform: rotate(0deg); }

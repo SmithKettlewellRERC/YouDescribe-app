@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
+
 import Spinner2 from '../../components/spinner2/Spinner2.jsx';
 import {
   ourFetch,
@@ -51,7 +52,6 @@ class Home extends Component {
       });
   }
 
-  // functions
   parseFetchedData(data, youDescribeVideosIds) {
     const videos = this.state.videos.slice();
     for (let i = 0; i < data.items.length; i += 1) {
@@ -90,6 +90,7 @@ class Home extends Component {
           isSignedIn={this.props.isSignedIn}
         />);
     }
+
     this.closeSpinner();
     this.setState({ videos });
   }
@@ -102,6 +103,7 @@ class Home extends Component {
     this.currentPage += 1;
     this.fetchingVideosToHome();
   }
+
 
   closeSpinner() {
     const spinner = document.getElementsByClassName('spinner2')[0];

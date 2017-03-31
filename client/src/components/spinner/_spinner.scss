@@ -1,7 +1,9 @@
 .spinner{
+  float: left;
   height: 300px;
   position:relative;
   display: block;
+  left: 50%;
 }
 
 .spinner-loader{

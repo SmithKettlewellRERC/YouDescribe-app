@@ -9,15 +9,16 @@
 @import './components/search-bar/searchbar';
 @import './components/track/track';
 @import './components/video-card/videocard';
-@import './components/slider/slider';
+@import './components/volume-balancer/VolumeBalancer';
+@import './components/video-player-accessible-seekbar/VideoPlayerAccessibleSeekbar';
 @import './components/audio-description-selector/audiodescriptionselector';
 @import './components/alert-box/alertbox';
 @import './components/sign-in-button/signinbutton';
 @import './components/sign-out-button/signoutbutton';
 @import './components/user-avatar/useravatar';
 @import './components/user-menu/usermenu';
-@import './components/spinner/spinner';
 @import './components/spinner2/spinner2';
+@import './components/spinner/spinner';
 
 @import './containers/app/app';
 @import './containers/authoring-tool/authoringtool';
