@@ -127,7 +127,7 @@ class SearchPage extends Component {
     for (let i = 0; i < videoFromYDdatabase.length; i += 1) {
       const item = videoFromYDdatabase[i];
       const _id = dbResponse[i]._id;
-      const id = item.id;
+      const youTubeId = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
       const duration = convertSecondsToCardFormat(convertISO8601ToSeconds(item.contentDetails.duration));
       const title = item.snippet.title;
@@ -141,7 +141,7 @@ class SearchPage extends Component {
       videoAlreadyOnYD.push(
         <VideoCard
           key={_id}
-          id={id}
+          youTubeId={youTubeId}
           description={description}
           thumbnailMediumUrl={thumbnailMedium.url}
           duration={duration}
@@ -162,7 +162,7 @@ class SearchPage extends Component {
     const videoNotOnYD = this.state.videoNotOnYD.slice();
     for (let i = 0; i < videoFromYoutube.length; i += 1) {
       const item = videoFromYoutube[i];
-      const id = item.id;
+      const youTubeId = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
       const duration = convertSecondsToCardFormat(convertISO8601ToSeconds(item.contentDetails.duration));
       const title = item.snippet.title;
@@ -178,7 +178,7 @@ class SearchPage extends Component {
       videoNotOnYD.push(
         <VideoCard
           key={i}
-          id={id}
+          youTubeId={youTubeId}
           description={description}
           thumbnailMediumUrl={thumbnailMedium.url}
           duration={duration}

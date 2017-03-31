@@ -77,7 +77,7 @@ class AuthoringTool extends Component {
   }
 
   componentWillMount() {
-    const isSignedIn = this.props.getAppState().isSignedIn;
+    // const isSignedIn = this.props.getAppState().isSignedIn;
     // if (isSignedIn === false) {
     //   alert('You have to be logged in to describe a video')
     //   browserHistory.goBack();
@@ -400,6 +400,11 @@ class AuthoringTool extends Component {
   }
 
   addAudioClipTrack(playbackType) {
+    if (!this.props.getAppState().isSignedIn) {
+      alert('You have to be logged in in order to describe this video');
+      return;
+    }
+
     // Current tracks components.
     const tracks = this.state.tracksComponents.slice();
 
@@ -456,13 +461,6 @@ class AuthoringTool extends Component {
       selectedTrackComponentAudioClipDuration: -1,
     });
   }
-
-
-
-
-
-
-
 
   getTrackComponentByTrackId(trackId) {
     const tc = this.state.tracksComponents;
@@ -562,6 +560,9 @@ class AuthoringTool extends Component {
   uploadAudioRecorded(args) {
     const self = this;
     const formData = new FormData();
+    formData.append('wavfile', args.audioBlob);
+    formData.append('userId', this.props.getAppState().userId);
+    formData.append('userToken', this.props.getAppState().userToken);
     formData.append('title', this.state.videoTitle);
     formData.append('description', this.state.videoDescription);
     formData.append('notes', this.state.notes);
@@ -576,12 +577,11 @@ class AuthoringTool extends Component {
       formData.append('endTime', this.state.selectedTrackComponentAudioClipStartTime + args.duration);
     }
     formData.append('duration', args.duration);
-    formData.append('wavfile', args.audioBlob);
-    const url = `${conf.apiUrl}/audioclips/${this.state.videoId}?token=${this.props.getAppState().userToken}`;
+    const url = `${conf.apiUrl}/audioclips/${this.state.videoId}`;
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function () {
-      console.log(JSON.parse(this.responseText).result);
+      // console.log(JSON.parse(this.responseText).result);
       self.setState({
         videoData: JSON.parse(this.responseText).result,
       }, () => {
@@ -622,9 +622,16 @@ class AuthoringTool extends Component {
     const self = this;
     const resultConfirm = confirm('Are you sure you wanna publish this audio description?');
     if (resultConfirm) {
-      const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=publish&token=${this.props.getAppState().userToken}`;
+      const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=publish`;
       ourFetch(url, true, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: this.props.getAppState().userId,
+          userToken: this.props.getAppState().userToken,
+        }),
       })
       .then(response => {
         const result = response.result;
