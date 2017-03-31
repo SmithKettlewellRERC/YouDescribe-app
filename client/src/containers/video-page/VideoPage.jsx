@@ -36,6 +36,7 @@ class VideoPage extends Component {
       videoData: {},
       videoPlayer: null,
       videoState: -1,
+      videoPlayerAccessibilitySeekbarValue: 0,
       videoVolume: 0,
       balancerValue: 50,
     };
@@ -237,11 +238,12 @@ class VideoPage extends Component {
           videoPlayer: new YT.Player('playerVP', {
             width: '100%',
             videoId: self.state.videoId,
-            enablejsapi: true,
-            fs: 1,
-            rel: 0,
-            controls: 2,
-            disablekb: 1,
+            playerVars: {
+              rel: 0,
+              controls: 0,
+              disablekb: 1,
+              autoplay: true,
+            },
             events: {
               onReady: onVideoPlayerReady,
               onStateChange: onPlayerStateChange,
@@ -283,7 +285,11 @@ class VideoPage extends Component {
     }
 
     this.watcher = setInterval(() => {
+      console.log('###seekbar value', this.state.videoPlayerAccessibilitySeekbarValue);
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
+      console.log(currentVideoProgress);
+      console.log('### Duration in seconds', this.state.videoDurationInSeconds);
+      this.setState({ videoPlayerAccessibilitySeekbarValue: currentVideoProgress / this.state.videoDurationInSeconds });
       // const videoVolume = this.state.videoPlayer.getVolume();
 
       if (this.currentClip && this.currentClip.playbackType === 'inline') {
@@ -426,7 +432,7 @@ class VideoPage extends Component {
               <Spinner />
               <div id="playerVP" />
               <div id="video-controls">
-                <VideoPlayerAccessibleSeekbar updateState={this.updateState} getState={this.getState} />
+                <VideoPlayerAccessibleSeekbar updateState={this.updateState} {...this.state} />
                 <div id="play-button" onClick={this.playVideo} accessKey="p"><i className="fa fa-play" aria-hidden="true"></i></div>
                 <div id="pause-button" onClick={this.pauseVideo} accessKey="s"><i className="fa fa-pause" aria-hidden="true"></i></div>
                 <VolumeBalancer updateState={this.updateState} />
