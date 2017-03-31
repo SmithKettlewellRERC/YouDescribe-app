@@ -42,12 +42,12 @@ height: 0;
 .volume-balancer {
   position: relative;
   top: 17px;
-  left: 50px;
+  left: 60px;
   font-size: 11px;
-  width: 640px;
+  width: 100%;
   margin: auto 0px;
   color: #fff;
-  padding-left: 28px;
+  // padding-left: 28px;
   @media screen and (min-width: 601px) {
     padding-left: 16px;
   }
