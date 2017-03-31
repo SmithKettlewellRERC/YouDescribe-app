@@ -11,9 +11,10 @@
   }
 }
 .seekbar-slider-thumb:focus{
-  border: 1px solid #000;
+  border: 1px solid #00CCCC;
   border-radius: 50%;
   background-color: #00CCCC;
+  outline: none;
 }
 
 .seekbar-slider-thumb {

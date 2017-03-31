@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
-
-import Spinner2 from '../../components/spinner2/Spinner2.jsx';
+import Spinner from '../../components/spinner/Spinner.jsx';
 import {
   ourFetch,
   convertTimeToCardFormat,
@@ -106,7 +105,7 @@ class Home extends Component {
 
 
   closeSpinner() {
-    const spinner = document.getElementsByClassName('spinner2')[0];
+    const spinner = document.getElementsByClassName('spinner')[0];
     spinner.style.display = 'none';
   }
 
@@ -119,7 +118,7 @@ class Home extends Component {
           <h2>Popular described videos</h2>
         </header>
 
-        <Spinner2 />
+        <Spinner />
 
         <main role="main" className="w3-row">
           {this.state.videos}

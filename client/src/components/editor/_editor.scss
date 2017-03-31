@@ -23,6 +23,12 @@
 
   #timeline {
     padding: 4px 0px;
+    .w3-left {
+      padding-left: 4px;
+    }
+    .w3-right {
+      padding-right: 4px;
+    }
   }
 
   #timeline, #video-audio-sinewave, #track-sinewave, #add-track-space {

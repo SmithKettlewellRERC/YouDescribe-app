@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
-import Spinner2 from '../../components/spinner2/Spinner2.jsx';
+import Spinner from '../../components/spinner/Spinner.jsx';
 import {
   ourFetch,
   convertTimeToCardFormat,
@@ -206,22 +206,22 @@ class SearchPage extends Component {
   }
 
   closeSpinnerAtTop() {
-    const spinner = document.getElementsByClassName('spinner2')[0];
+    const spinner = document.getElementsByClassName('spinner')[0];
     spinner.style.display = 'none';
   }
 
   openSpinnerAtTop() {
-    const spinner = document.getElementsByClassName('spinner2')[0];
+    const spinner = document.getElementsByClassName('spinner')[0];
     spinner.style.display = 'block';
   }
 
   closeSpinnerAtBottom() {
-    const spinner = document.getElementsByClassName('spinner2')[1];
+    const spinner = document.getElementsByClassName('spinner')[1];
     spinner.style.display = 'none';
   }
 
   openSpinnerAtBottom() {
-    const spinner = document.getElementsByClassName('spinner2')[1];
+    const spinner = document.getElementsByClassName('spinner')[1];
     spinner.style.display = 'block';
   }
 
@@ -235,7 +235,7 @@ class SearchPage extends Component {
           <h2>Described videos</h2>
         </div>
 
-        <Spinner2 />
+        <Spinner />
 
         <main>
           <div id="on-yd" className="w3-row">
@@ -251,7 +251,7 @@ class SearchPage extends Component {
           <h2>Non-described videos</h2>
         </div>
 
-        <Spinner2 />
+        <Spinner />
 
         <main>
           <div className="w3-row">
