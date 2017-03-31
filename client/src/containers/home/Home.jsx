@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
-import Spinner from '../../components/spinner/Spinner.jsx';
 import Spinner2 from '../../components/spinner2/Spinner2.jsx';
 import {
   ourFetch,
@@ -105,7 +104,7 @@ class Home extends Component {
   }
 
   closeSpinner() {
-    const spinner = document.getElementsByClassName('spinner')[0];
+    const spinner = document.getElementsByClassName('spinner2')[0];
     spinner.style.display = 'none';
   }
 

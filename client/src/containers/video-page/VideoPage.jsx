@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Howl } from 'howler';
 import Slider from '../../components/slider/Slider.jsx';
 import Spinner from '../../components/spinner/Spinner.jsx';
-import Spinner2 from '../../components/spinner2/Spinner2.jsx';
+// import Spinner2 from '../../components/spinner2/Spinner2.jsx';
 import AudioDescriptionSelector from '../../components/audio-description-selector/AudioDescriptionSelector.jsx';
 import { ourFetch } from '../../shared/helperFunctions';
 
@@ -350,7 +350,7 @@ class VideoPage extends Component {
   }
 
   closeSpinner() {
-    const spinner = document.getElementById('spinner');
+    const spinner = document.getElementsByClassName('spinner')[0];
     spinner.style.display = 'none';
   }
 
