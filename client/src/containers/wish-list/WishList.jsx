@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
-import Spinner2 from '../../components/spinner2/Spinner2.jsx';
+import Spinner from '../../components/spinner/Spinner.jsx';
 import {
   ourFetch,
   convertTimeToCardFormat,
@@ -100,7 +100,7 @@ class WishList extends Component {
   }
 
   closeSpinner() {
-    const spinner = document.getElementsByClassName('spinner2')[0];
+    const spinner = document.getElementsByClassName('spinner')[0];
     spinner.style.display = 'none';
   }
 
@@ -110,7 +110,7 @@ class WishList extends Component {
         <div className="w3-container w3-indigo">
           <h2>Most requested</h2>
         </div>
-        <Spinner2 />
+        <Spinner />
         <main className="w3-row-padding">
           {this.state.videos}
         </main>

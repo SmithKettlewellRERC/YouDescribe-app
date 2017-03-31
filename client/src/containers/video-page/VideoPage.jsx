@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
 import Spinner from '../../components/spinner/Spinner.jsx';
-// import Spinner2 from '../../components/spinner2/Spinner2.jsx';
 import VolumeBalancer from '../../components/volume-balancer/VolumeBalancer.jsx';
 import VideoPlayerAccessibleSeekbar from '../../components/video-player-accessible-seekbar/VideoPlayerAccessibleSeekbar.jsx';
 import AudioDescriptionSelector from '../../components/audio-description-selector/AudioDescriptionSelector.jsx';

@@ -6,6 +6,7 @@
     width: 100%;
     @media screen and (min-width: 601px) {
       margin: 0 auto;
+      padding-top: 120px;
     }
   }
   background-color: #000;
@@ -29,7 +30,7 @@
     // margin-bottom: 0px;
     @media screen and (min-width: 601px) {
       width: 640px;
-      height: 550px;
+      height: 414px;
       margin: 0 auto;
     }
   }
@@ -54,7 +55,7 @@
         font-size: 18px;
         position: absolute;
         margin-left: 29px;
-        top: 451px;
+        top: 571px;
       }
     }
     #play-button {

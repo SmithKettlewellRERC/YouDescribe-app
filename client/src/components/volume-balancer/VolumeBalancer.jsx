@@ -251,7 +251,7 @@ class Slider extends Component {
         <span className="floatLeft">
           Description
         </span>
-        <div id="volume-balancer-header">Volume balancer</div>
+        {/* <div id="volume-balancer-header">Volume balancer</div> */}
       </div>
     );
   }

@@ -20,7 +20,7 @@ module.exports = () => {
   const seekToPositionDelayFix = 0.100; // Seconds
 
   // User Interface Setup
-  const trackSinewaveAreaWidth = 755;
+  const trackSinewaveAreaWidth = 756;
 
   return {
     apiUrl,
