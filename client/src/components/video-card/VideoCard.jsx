@@ -74,7 +74,7 @@ class VideoCard extends Component {
     } else if (this.props.buttons === 'edit') {
       buttons = (
         <div>
-          <Button title="Edit the audio description for this video" text="Edit" color="w3-indigo w3-block" onClick={this.editThisVideo} />
+          <Button title="Edit the audio description for this video" text="Edit" color="w3-indigo w3-block" onClick={this.describeThisVideo} />
         </div>
       );
     }
