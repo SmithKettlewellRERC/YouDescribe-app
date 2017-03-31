@@ -262,8 +262,6 @@ class VideoPage extends Component {
         videoDescription: data.items[0].snippet.description,
         videoDurationInSeconds: this.videoDurationInSeconds,
         videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
-      }, () => {
-        self.loadExistingTracks();
       });
     }).catch((err) => {
       console.log('Unable to load the video you are trying to edit.', err);
@@ -281,10 +279,8 @@ class VideoPage extends Component {
     }
 
     this.watcher = setInterval(() => {
-      console.log('###seekbar value', this.state.videoPlayerAccessibilitySeekbarValue);
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
-      console.log(currentVideoProgress);
-      console.log('### Duration in seconds', this.state.videoDurationInSeconds);
+
       this.setState({ videoPlayerAccessibilitySeekbarValue: currentVideoProgress / this.state.videoDurationInSeconds });
       // const videoVolume = this.state.videoPlayer.getVolume();
 
