@@ -2,12 +2,12 @@ module.exports = () => {
   const href = window.location.href;
   const apiVersion = 'v1';
   const env = 'prd';
-  let apiUrl = `http://192.168.0.62:8080/${apiVersion}`;
-  let audioClipsUploadsPath = 'http://192.168.0.62:8080/uploads';
+  let apiUrl = `http://localhost:8080/${apiVersion}`;
+  let audioClipsUploadsPath = 'http://localhost:8080/uploads';
 
   if (href.indexOf('localhost') != -1 || href.indexOf('dev') != -1) {
-    apiUrl = `http://192.168.0.62:8080/${apiVersion}`;
-    audioClipsUploadsPath = 'http://192.168.0.62:8080/uploads';
+    apiUrl = `http://localhost:8080/${apiVersion}`;
+    audioClipsUploadsPath = 'http://localhost:8080/uploads';
   }
 
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';
