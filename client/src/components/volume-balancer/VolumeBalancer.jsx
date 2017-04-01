@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Slider extends Component {
+class VolumeBalancer extends Component {
   constructor(props) {
     super(props);
     // globals
@@ -257,4 +257,4 @@ class Slider extends Component {
   }
 }
 
-export default Slider;
+export default VolumeBalancer;
