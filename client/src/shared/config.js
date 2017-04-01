@@ -8,7 +8,7 @@ module.exports = () => {
 
   if (href.indexOf('localhost') != -1) {
     apiUrl = `http://localhost:8080/${apiVersion}`;
-    audioClipsUploadsPath = 'http://localhost:8080/uploads';
+    audioClipsUploadsPath = 'http://localhost:8080/audio-descriptions-files';
   }
 
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';
