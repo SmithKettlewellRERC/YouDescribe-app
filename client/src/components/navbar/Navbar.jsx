@@ -58,7 +58,7 @@ class Navbar extends Component {
                 <img
                   alt="YouDescribe logo"
                   height="100%"
-                  src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_full.png')}
+                  src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_full(indigo_grey).png')}
                 />
               </Link>
 
