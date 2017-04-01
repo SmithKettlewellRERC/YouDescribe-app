@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
+import Spinner from '../../components/spinner/Spinner.jsx';
 import {
   ourFetch,
   convertTimeToCardFormat,
@@ -75,12 +76,19 @@ class WishList extends Component {
         />,
       );
     }
+
     this.setState({ videoCardsComponents });
+    this.closeSpinner();
   }
 
   loadMoreResults() {
     this.currentPageNumber += 1;
     this.loadWishListVideos();
+  }
+
+  closeSpinner() {
+    const spinner = document.getElementsByClassName('spinner')[0];
+    spinner.style.display = 'none';
   }
 
   render() {
@@ -89,6 +97,7 @@ class WishList extends Component {
         <div className="w3-container w3-indigo">
           <h2>Most requested</h2>
         </div>
+        <Spinner />
         <main className="w3-row-padding">
           {this.state.videoCardsComponents}
         </main>

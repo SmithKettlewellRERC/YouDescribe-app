@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
+import Spinner from '../../components/spinner/Spinner.jsx';
 import VolumeBalancer from '../../components/volume-balancer/VolumeBalancer.jsx';
 import VideoPlayerAccessibleSeekbar from '../../components/video-player-accessible-seekbar/VideoPlayerAccessibleSeekbar.jsx';
 import AudioDescriptionSelector from '../../components/audio-description-selector/AudioDescriptionSelector.jsx';
@@ -43,6 +44,7 @@ class VideoPage extends Component {
     this.setAudioDescriptionActive = this.setAudioDescriptionActive.bind(this);
     this.playVideo = this.playVideo.bind(this);
     this.pauseVideo = this.pauseVideo.bind(this);
+    this.closeSpinner = this.closeSpinner.bind(this);
   }
 
   componentDidMount() {
@@ -175,6 +177,8 @@ class VideoPage extends Component {
     }
 
     function onVideoPlayerReady() {
+      console.log('replacing current div with the video')
+      self.closeSpinner();
       self.audioClipsCopy = self.getAudioClips().slice();
       self.getVideoDuration();
     }
@@ -227,7 +231,6 @@ class VideoPage extends Component {
     }
 
     function startVideo() {
-      console.log('replacing current div with the video');
 
       if (self.state.videoPlayer === null) {
         self.setState({
@@ -262,8 +265,6 @@ class VideoPage extends Component {
         videoDescription: data.items[0].snippet.description,
         videoDurationInSeconds: this.videoDurationInSeconds,
         videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
-      }, () => {
-        self.loadExistingTracks();
       });
     }).catch((err) => {
       console.log('Unable to load the video you are trying to edit.', err);
@@ -281,10 +282,8 @@ class VideoPage extends Component {
     }
 
     this.watcher = setInterval(() => {
-      console.log('###seekbar value', this.state.videoPlayerAccessibilitySeekbarValue);
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
-      console.log(currentVideoProgress);
-      console.log('### Duration in seconds', this.state.videoDurationInSeconds);
+
       this.setState({ videoPlayerAccessibilitySeekbarValue: currentVideoProgress / this.state.videoDurationInSeconds });
       // const videoVolume = this.state.videoPlayer.getVolume();
 
@@ -379,6 +378,12 @@ class VideoPage extends Component {
     this.setState(newState, callback);
   }
 
+
+  closeSpinner() {
+    const spinner = document.getElementsByClassName('spinner')[0];
+    spinner.style.display = 'none';
+  }
+
   playVideo() {
     const play = document.getElementById('play-button');
     const pause = document.getElementById('pause-button');
@@ -386,6 +391,7 @@ class VideoPage extends Component {
     play.style.display = 'none';
     pause.style.display = 'block';
     this.state.videoPlayer.playVideo();
+
   }
 
   pauseVideo() {
@@ -418,6 +424,7 @@ class VideoPage extends Component {
           <div className="">
 
             <div id="video" className="w3-card-2">
+              <Spinner />
               <div id="playerVP" />
               <div id="video-controls">
                 <VideoPlayerAccessibleSeekbar updateState={this.updateState} {...this.state} />

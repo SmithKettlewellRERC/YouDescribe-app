@@ -103,7 +103,7 @@ class AuthoringTool extends Component {
         });
       } else {
         self.parseYDVideoData();
-      }      
+      }
     })
     .catch(err => {
       self.parseYDVideoData();
@@ -213,7 +213,7 @@ class AuthoringTool extends Component {
           />);
       });
     }
-    const playheadTailHeight = audioClipsLength !== 7 ? audioClipsLength * 27 : 189;
+    const playheadTailHeight = audioClipsLength <= 7 ? audioClipsLength * 27 : 189;
     this.setState({
       tracksComponents,
       playheadTailHeight,
@@ -239,6 +239,7 @@ class AuthoringTool extends Component {
       const audioClips = self.state.audioDescriptionAudioClips;
       self.audioClipsCopy = Object.values(audioClips);
       initAudioRecorder();
+      self.videoProgressWatcher();
     }
 
     function onPlayerStateChange(event) {
@@ -248,17 +249,17 @@ class AuthoringTool extends Component {
         switch (event.data) {
           // ended
           case 0:
-            if (self.watcher) {
-              clearInterval(self.watcher);
-              self.watcher = null;
-            }
+            // if (self.watcher) {
+            //   clearInterval(self.watcher);
+            //   self.watcher = null;
+            // }
             break;
           // playing
           case 1:
             if (self.currentClip && self.currentClip.playbackType === 'extended') {
               self.currentClip.stop();
             }
-            self.videoProgressWatcher();
+            // self.videoProgressWatcher();
             break;
           // paused
           case 2:
@@ -266,10 +267,10 @@ class AuthoringTool extends Component {
             if (self.currentClip && self.currentClip.playbackType === 'inline') {
               self.currentClip.pause();
             }
-            if (self.watcher) {
-              clearInterval(self.watcher);
-              self.watcher = null;
-            }
+            // if (self.watcher) {
+            //   clearInterval(self.watcher);
+            //   self.watcher = null;
+            // }
             break;
           // buffering
           case 3:
@@ -279,10 +280,10 @@ class AuthoringTool extends Component {
             }
             break;
           default:
-            if (self.watcher) {
-              clearInterval(self.watcher);
-              self.watcher = null;
-            }
+            // if (self.watcher) {
+            //   clearInterval(self.watcher);
+            //   self.watcher = null;
+            // }
         }
       });
     }
@@ -317,7 +318,7 @@ class AuthoringTool extends Component {
   videoProgressWatcher() {
     console.log('8 -> videoProgressWatcher')
 
-    const interval = 50;
+    const interval = 90;
 
     if (this.watcher) {
       clearInterval(this.watcher);
@@ -327,7 +328,7 @@ class AuthoringTool extends Component {
     this.watcher = setInterval(() => {
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
       const videoVolume = this.state.videoPlayer.getVolume();
-      const playheadPosition = 755 * (currentVideoProgress / this.videoDurationInSeconds);
+      const playheadPosition = 756 * (currentVideoProgress / this.videoDurationInSeconds);
 
       this.setState({
         currentVideoProgress,
@@ -523,7 +524,10 @@ class AuthoringTool extends Component {
       this.state.videoPlayer.unMute();
       this.state.videoPlayer.pauseVideo();
 
-      this.setState({ currentTimeInVideo: seekToValue });
+      this.setState({
+        currentTimeInVideo: seekToValue,
+        playheadPosition: 740 * seekToValue / this.state.videoDurationInSeconds,
+      });
     } else {
       console.log('?');
     }

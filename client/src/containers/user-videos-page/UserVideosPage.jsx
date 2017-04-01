@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import VideoCard from '../../components/video-card/VideoCard.jsx';
 import Button from '../../components/button/Button.jsx';
+import Spinner from '../../components/spinner/Spinner.jsx';
 
 import {
   ourFetch,
@@ -24,6 +25,7 @@ class UserVideosPage extends Component {
       videoComponents: [],
       userName: '',
     };
+    this.closeSpinner = this.closeSpinner.bind(this);
   }
 
   componentDidMount() {
@@ -94,7 +96,13 @@ class UserVideosPage extends Component {
         />
       );
     }
+    this.closeSpinner();
     this.setState({ videoComponents });
+  }
+
+  closeSpinner() {
+    const spinner = document.getElementsByClassName('spinner')[0];
+    spinner.style.display = 'none';
   }
 
   render() {
@@ -104,6 +112,8 @@ class UserVideosPage extends Component {
         <header role="banner" className="w3-container w3-indigo">
           <h2>Described videos by {this.state.userName}</h2>
         </header>
+
+        <Spinner />
 
         <main role="main" className="w3-row">
           {this.state.videoComponents}

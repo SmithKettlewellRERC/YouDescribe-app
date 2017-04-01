@@ -115,10 +115,12 @@ class Slider extends Component {
   }
 
   handleRailMouseDown(event) {
+    console.log(event, window.event);
   	event = event || window.event;
   	let target = event.target || event.srcElement;
+    console.log('VOLUME TARGET ###', target);
   	let thumb = this.$(target.id.replace(/Rail/, 'Thumb'));
-  	let newPos = event.clientX - this.getHOffset(target)+ this.getHScrollOffset() - (thumb.clientWidth / 2);
+  	let newPos = event.clientX - this.getHOffset(target) + this.getHScrollOffset() - (thumb.clientWidth / 2);
   	this.changeValue(thumb, this.mapPositionToValue(thumb, newPos));
   	if (!document.activeElement || !document.activeElement !== thumb) {
   		thumb.focus();
@@ -177,9 +179,12 @@ class Slider extends Component {
   }
 
   changeValue(target, value) {
+    console.log('VOL TARGET', target);
   	let ratio = this.calibrate(target);
+    console.log(target.getAttribute('aria-valuemin'), target.getAttribute('aria-valuemax'));
   	let min = parseInt(target.getAttribute('aria-valuemin'));
   	let max = parseInt(target.getAttribute('aria-valuemax'));
+    console.log(min, max);
   	let newValue = Math.min(Math.max(value, min), max);
   	let newPos = Math.round(newValue * ratio);
   	target.style.left = newPos + "px";
@@ -200,7 +205,7 @@ class Slider extends Component {
   	slider.onmousedown 	= this.handleThumbMouseDown;
   	slider.onkeydown 	= this.handleKeyDown;
 
-  	slider.parentNode.onfocus = function(event) { //temp IE fix
+  	slider.parentNode.onfocus = function(event) { // temp IE fix
   		event = event || window.event;
   		let target = event.target || event.srcElement;
   		let thumb = this.$(target.id.replace(/Rail/, 'Thumb'));
@@ -231,12 +236,22 @@ class Slider extends Component {
       <div className="volume-balancer">
         <span id="sliderLabel" className="floatLeft">Video</span>
         <div id="sliderRail1" className="sliderRail floatLeft">
-          <button className="sliderThumb" id="sliderThumb1" role="slider" aria-labelledby="sliderLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50%" accessKey="v"></button>
+          <button
+            className="sliderThumb"
+            id="sliderThumb1"
+            role="slider"
+            aria-labelledby="sliderLabel"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="50"
+            aria-valuetext="50%"
+            accessKey="v"
+          />
         </div>
         <span className="floatLeft">
           Description
         </span>
-        <div id="volume-balancer-header">Volume balancer</div>
+        {/* <div id="volume-balancer-header">Volume balancer</div> */}
       </div>
     );
   }

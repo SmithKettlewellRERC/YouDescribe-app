@@ -49,6 +49,8 @@ const Editor = (props) => {
 
               {/* This is moving line that show the time */}
               <Playhead
+                videoDurationInSeconds={props.videoDurationInSeconds}
+                currentVideoProgress={props.currentVideoProgress}
                 playheadPosition={props.playheadPosition}
                 playheadTailHeight={props.playheadTailHeight}
               />
