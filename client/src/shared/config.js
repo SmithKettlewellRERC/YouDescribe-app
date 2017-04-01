@@ -1,11 +1,12 @@
 module.exports = () => {
   const href = window.location.href;
   const apiVersion = 'v1';
-  const env = 'prd';
-  let apiUrl = `http://localhost:8080/${apiVersion}`;
-  let audioClipsUploadsPath = 'http://localhost:8080/uploads';
 
-  if (href.indexOf('localhost') != -1 || href.indexOf('dev') != -1) {
+  // IF YOU CHANGE THIS URL's, DOES NOT COMMIT.
+  let apiUrl = `http://api.youdescribe.org/${apiVersion}`;
+  let audioClipsUploadsPath = 'http://api.youdescribe.org/audio-descriptions-files';
+
+  if (href.indexOf('localhost') != -1) {
     apiUrl = `http://localhost:8080/${apiVersion}`;
     audioClipsUploadsPath = 'http://localhost:8080/uploads';
   }
