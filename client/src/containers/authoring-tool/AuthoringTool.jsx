@@ -473,6 +473,10 @@ class AuthoringTool extends Component {
     return;
   }
 
+  deleteTrack() {
+    console.log('Delete');
+  }
+
   recordAudioClip(e, trackId) {
     if (!this.props.getAppState().isSignedIn) {
       alert('You need to be logged in in order to record audio clips');

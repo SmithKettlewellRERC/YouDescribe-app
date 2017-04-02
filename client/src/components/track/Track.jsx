@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ActionIcon from '../action-icon/ActionIcon.jsx';
+import DeleteTrack from '../delete-track/DeleteTrack.jsx';
 import AlertBox from '../alert-box/AlertBox.jsx';
 const conf = require('../../shared/config');
 
@@ -43,6 +44,7 @@ class Track extends Component {
             </div>
             <div id="track-action" className="w3-right">
               <ActionIcon {...this.props} />
+              <DeleteTrack {...this.props} />
             </div>
           </div>
         </div>
