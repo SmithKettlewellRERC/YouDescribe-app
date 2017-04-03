@@ -123,6 +123,7 @@ class AuthoringTool extends Component {
 
     if (videoData && videoData.audio_descriptions && videoData.audio_descriptions.length > 0) {
       // This looping won't be necessary when the API just delivery the owned AD for the current user.
+      console.log(videoData.audio_descriptions);
       for (let i = 0; i < videoData.audio_descriptions.length; i += 1) {
         const ad = videoData.audio_descriptions[i];
         if (ad.user._id === this.props.getUserInfo().userId) {
@@ -132,6 +133,7 @@ class AuthoringTool extends Component {
           if (ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
               audioClip.url = `${conf.audioClipsUploadsPath}${audioClip.file_path}/${audioClip.file_name}`;
+              console.log(audioClip.url);
               audioDescriptionAudioClips[audioClip['_id']] = audioClip;
             });
           }
@@ -159,6 +161,7 @@ class AuthoringTool extends Component {
     if (audioClips.length > 0) {
       const promises = [];
       audioClips.forEach((audioObj, idx) => {
+        console.log(audioObj.url);
         promises.push(ourFetch(audioObj.url, false));
       });
       Promise.all(promises).then(function() {
