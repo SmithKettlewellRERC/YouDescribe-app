@@ -74,6 +74,7 @@ class AuthoringTool extends Component {
     this.alertBoxOpen = this.alertBoxOpen.bind(this);
     this.alertBoxClose = this.alertBoxClose.bind(this);
     this.updateNotes = this.updateNotes.bind(this);
+    this.deleteTrack = this.deleteTrack.bind(this);
   }
 
   componentWillMount() {
@@ -210,6 +211,7 @@ class AuthoringTool extends Component {
             recordAudioClip={this.recordAudioClip}
             updateTrackLabel={this.updateTrackLabel}
             setSelectedTrack={this.setSelectedTrack}
+            deleteTrack={this.deleteTrack}
           />);
       });
     }
@@ -428,6 +430,7 @@ class AuthoringTool extends Component {
     const newTrackId = this.state.tracksComponents.length;
 
     const audioClip = {
+      id: newTrackId,
       label: '',
       playback_type: playbackType,
       start_time: 0,
@@ -444,6 +447,7 @@ class AuthoringTool extends Component {
         recordAudioClip={this.recordAudioClip}
         updateTrackLabel={this.updateTrackLabel}
         setSelectedTrack={this.setSelectedTrack}
+        deleteTrack={this.deleteTrack}
       />,
     );
 
@@ -473,8 +477,10 @@ class AuthoringTool extends Component {
     return;
   }
 
-  deleteTrack(e, id) {
-    console.log('Delete', id);
+  deleteTrack(e, id, data) {
+    console.log('Delete', id, data);
+    const tc = this.state.tracksComponents.slice();
+    
   }
 
   recordAudioClip(e, trackId) {
@@ -558,6 +564,7 @@ class AuthoringTool extends Component {
             recordAudioClip={this.recordAudioClip}
             updateTrackLabel={this.updateTrackLabel}
             setSelectedTrack={this.setSelectedTrack}
+            deleteTrack={this.deleteTrack}
           />
         );
       }
@@ -753,6 +760,7 @@ class AuthoringTool extends Component {
               alertBoxClose={this.alertBoxClose}
               addAudioClipTrack={this.addAudioClipTrack}
               recordAudioClip={this.recordAudioClip}
+              deleteTrack={this.deleteTrack}
               {...this.state}
             />
           </div>
