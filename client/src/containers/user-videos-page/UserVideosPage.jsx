@@ -84,7 +84,7 @@ class UserVideosPage extends Component {
       videoComponents.push(
         <VideoCard
           key={youTubeId}
-          id={youTubeId}
+          youTubeId={youTubeId}
           thumbnailMediumUrl={thumbnail.url}
           duration={duration}
           title={title}
@@ -92,7 +92,6 @@ class UserVideosPage extends Component {
           views={views}
           time={time}
           buttons="edit"
-          isSignedIn={this.props.isSignedIn}
           getAppState={this.props.getAppState}
         />
       );

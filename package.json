@@ -4,10 +4,8 @@
   "description": "You Describe Application",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "NODE_ENV=dev nodemon server",
-    "dev": "NODE_ENV=dev nodemon server",
-    "prd": "NODE_ENV=prd node server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "NODE_ENV=dev nodemon server/index-dev.js",
+    "prd": "NODE_ENV=prd node server/index-prd.js"
   },
   "repository": {
     "type": "git",
@@ -35,11 +33,6 @@
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-react": "^6.23.0",
     "css-loader": "^0.26.2",
-    "eslint": "^3.16.1",
-    "eslint-config-airbnb": "^14.1.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-react": "^6.10.0",
     "extract-text-webpack-plugin": "^2.0.0",
     "node-sass": "^4.5.0",
     "nodemon": "^1.11.0",

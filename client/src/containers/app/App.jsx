@@ -43,20 +43,20 @@ class App extends Component {
 
   googleSignInSuccess() {
     const googleUser = this.state.auth2.currentUser.get();
-    const userToken = googleUser.getAuthResponse().id_token;
+    const googleToken = googleUser.getAuthResponse().id_token;
     ourFetch(`${conf.apiUrl}/auth`, true, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userToken }),
+      body: JSON.stringify({ googleToken }),
     })
     .then((res) => {
       this.setState({
         isSignedIn: true,
         userName: res.result.name,
         userId: res.result._id,
-        userToken,
+        userToken: res.result.token,
         userPicture: res.result.picture,
       }, () => {
         this.setCookie();
@@ -93,7 +93,7 @@ class App extends Component {
         const userToken = this.getCookie('userToken');
         const userName = this.getCookie('userName');
         const userPicture = this.getCookie('userPicture');
-        if (userId && userToken && userName) {
+        if (userId && userToken && userName && userPicture) {
           self.setState({
             isSignedIn: true,
             userName: userName,
@@ -123,7 +123,7 @@ class App extends Component {
     const userToken = this.getCookie('userToken');
     const userName = this.getCookie('userName');
     const userPicture = this.getCookie('userPicture');
-    if (userId && userToken && userName) {
+    if (userId && userToken && userName && userPicture) {
       return {
         userId,
         userName,
@@ -149,18 +149,23 @@ class App extends Component {
   }
 
   setCookie() {
-    let exp = new Date();
     // Our cookie must expire before Google Auth Cookie!
-    exp.setTime(exp.getTime()+(1000));
-    exp = exp.toGMTString();
-    document.cookie = `userId=${this.state.userId};path=/`;
-    document.cookie = `userToken=${this.state.userToken};path=/`;
-    document.cookie = `userName=${this.state.userName};path=/`;
-    document.cookie = `userPicture=${this.state.userPicture};path=/`;
+    // 50 minutes as Google lasts for 60 mins.
+    const now = new Date();
+    let time = now.getTime();
+    // 50 mins
+    // time += 3000 * 1000;
+    time += 20 * 1000;
+    now.setTime(time);
+    const exp = now.toUTCString();
     // document.cookie = `userId=${this.state.userId};expires=${exp};path=/`;
     // document.cookie = `userToken=${this.state.userToken};expires=${exp};path=/`;
     // document.cookie = `userName=${this.state.userName};expires=${exp};path=/`;
     // document.cookie = `userPicture=${this.state.userPicture};expires=${exp};path=/`;
+    document.cookie = `userId=${this.state.userId};path=/`;
+    document.cookie = `userToken=${this.state.userToken};path=/`;
+    document.cookie = `userName=${this.state.userName};path=/`;
+    document.cookie = `userPicture=${this.state.userPicture};path=/`;
   }
 
   resetCookie() {
@@ -203,13 +208,11 @@ class App extends Component {
       <div>
         <Navbar
           getAppState={this.getAppState}
-          isSignedIn={this.state.isSignedIn}
           signOut={this.signOut}
           updateSearch={searchValue => this.clickHandler(searchValue)}
         />
         {React.cloneElement(this.props.children, {
           getAppState: this.getAppState,
-          isSignedIn: this.state.isSignedIn,
           getVideoProgress: this.getVideoProgress,
           getUserInfo: this.getUserInfo,
         })}

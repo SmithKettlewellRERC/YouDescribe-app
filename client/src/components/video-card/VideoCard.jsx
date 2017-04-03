@@ -14,18 +14,22 @@ class VideoCard extends Component {
 
   upVote() {
     if (!this.props.getAppState().isSignedIn) {
-      alert('You have to be legged in in order to up vote');
+      alert('You have to be logged in in order to up vote');
     } else {
-      const url = `${conf.apiUrl}/wishlist?token=${this.props.getAppState().userToken}`;
+      const url = `${conf.apiUrl}/wishlist`;
       ourFetch(url, true, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: this.props.id }),
+        body: JSON.stringify({
+          youTubeId: this.props.youTubeId,
+          userId: this.props.getAppState().userId,
+          userToken: this.props.getAppState().userToken,
+        }),
       })
       .then((res) => {
-        console.log(res.status);
+        console.log('Success upVote');
       })
       .catch(err => {
         console.log(err);
@@ -34,19 +38,11 @@ class VideoCard extends Component {
     }
   }
 
-    // upVoteClick(e, i, id, description, thumbnailHigh, title, author, views, time, voteCount) {
-    // if (e.target.className === 'w3-btn w3-white w3-text-indigo w3-left' ||
-    //   e.target.className === 'fa fa-heart') {
-    //   if (e.target.className === 'fa fa-heart') e.target.parentElement.className = 'w3-btn w3-white w3-text-red w3-left';
-    //   else e.target.className = 'w3-btn w3-white w3-text-red w3-left';
-    //   console.log('heart activated and video request added to wishlist or incremented by 1');
-    // }
-
   describeThisVideo() {
     if (this.props.getAppState().isSignedIn) {
-      browserHistory.push('/authoring-tool/' + this.props.id);
+      browserHistory.push('/authoring-tool/' + this.props.youTubeId);
     } else {
-      alert('You have to be legged in in order to describe this video');
+      alert('You have to be logged in in order to describe this video');
     }
   }
 
@@ -83,13 +79,13 @@ class VideoCard extends Component {
       <div id="video-card" className="w3-margin-top w3-left" title="">
         <div className="w3-card-2 w3-hover-shadow">
           <div id="card-thumbnail">
-            <Link role="link" to={'/video/' + this.props.id}><img alt="" src={this.props.thumbnailMediumUrl} width="100%" /></Link>
+            <Link role="link" to={'/video/' + this.props.youTubeId}><img alt="" src={this.props.thumbnailMediumUrl} width="100%" /></Link>
             <div id="card-duration">{this.props.duration}</div>
           </div>
           <div className="w3-container w3-padding-bottom">
             <div id="card-title-container">
               <div id="card-title">
-                <h3><Link role="link" to={'/video/' + this.props.id}>{this.props.title}</Link></h3>
+                <h3><Link role="link" to={'/video/' + this.props.youTubeId}>{this.props.title}</Link></h3>
               </div>
               <div id="card-author">
                 <h4>{this.props.author}</h4>

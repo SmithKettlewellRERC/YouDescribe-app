@@ -40,7 +40,7 @@ class Navbar extends Component {
   }
 
   render() {
-    const isSignedIn = this.props.isSignedIn;
+    const isSignedIn = this.props.getAppState().isSignedIn;
     let signInComponent = null;
     if (isSignedIn) {
       signInComponent = <UserAvatar signOut={this.props.signOut} userMenuToggle={this.userMenuToggle} getAppState={this.props.getAppState} />;

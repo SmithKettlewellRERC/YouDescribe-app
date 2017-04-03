@@ -27,7 +27,6 @@ class VolumeBalancer extends Component {
   }
 
   componentDidMount() {
-    console.log('INIT', this.init());
     this.init();
   }
 

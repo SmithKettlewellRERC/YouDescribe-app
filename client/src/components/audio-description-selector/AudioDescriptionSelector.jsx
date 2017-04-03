@@ -41,7 +41,6 @@ class AudioDescriptionSelector extends Component {
         <select onChange={this.handleChange} value={selectedAudioDescriptionId} accessKey="d">
           {options}
         </select>
-        {/* <div id="audio-description-selector-header">Describer</div> */}
         <span>{this.props.currentVideoDescriber}</span>
       </div>
     );

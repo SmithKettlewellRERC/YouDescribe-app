@@ -74,10 +74,11 @@ class AuthoringTool extends Component {
     this.alertBoxOpen = this.alertBoxOpen.bind(this);
     this.alertBoxClose = this.alertBoxClose.bind(this);
     this.updateNotes = this.updateNotes.bind(this);
+    this.deleteTrack = this.deleteTrack.bind(this);
   }
 
   componentWillMount() {
-    const isSignedIn = this.props.getAppState().isSignedIn;
+    // const isSignedIn = this.props.getAppState().isSignedIn;
     // if (isSignedIn === false) {
     //   alert('You have to be logged in to describe a video')
     //   browserHistory.goBack();
@@ -158,6 +159,7 @@ class AuthoringTool extends Component {
     if (audioClips.length > 0) {
       const promises = [];
       audioClips.forEach((audioObj, idx) => {
+        console.log(audioObj.url);
         promises.push(ourFetch(audioObj.url, false));
       });
       Promise.all(promises).then(function() {
@@ -210,6 +212,7 @@ class AuthoringTool extends Component {
             recordAudioClip={this.recordAudioClip}
             updateTrackLabel={this.updateTrackLabel}
             setSelectedTrack={this.setSelectedTrack}
+            deleteTrack={this.deleteTrack}
           />);
       });
     }
@@ -239,7 +242,7 @@ class AuthoringTool extends Component {
       const audioClips = self.state.audioDescriptionAudioClips;
       self.audioClipsCopy = Object.values(audioClips);
       initAudioRecorder();
-      self.videoProgressWatcher();
+      ////////////////////////////////// self.videoProgressWatcher();
     }
 
     function onPlayerStateChange(event) {
@@ -401,6 +404,11 @@ class AuthoringTool extends Component {
   }
 
   addAudioClipTrack(playbackType) {
+    if (!this.props.getAppState().isSignedIn) {
+      alert('You have to be logged in in order to describe this video');
+      return;
+    }
+
     // Current tracks components.
     const tracks = this.state.tracksComponents.slice();
 
@@ -423,6 +431,7 @@ class AuthoringTool extends Component {
     const newTrackId = this.state.tracksComponents.length;
 
     const audioClip = {
+      id: newTrackId,
       label: '',
       playback_type: playbackType,
       start_time: 0,
@@ -439,6 +448,7 @@ class AuthoringTool extends Component {
         recordAudioClip={this.recordAudioClip}
         updateTrackLabel={this.updateTrackLabel}
         setSelectedTrack={this.setSelectedTrack}
+        deleteTrack={this.deleteTrack}
       />,
     );
 
@@ -466,6 +476,59 @@ class AuthoringTool extends Component {
       }
     }
     return;
+  }
+
+  deleteTrack(e, id, data) {
+    // It is an existing recorder audio track.
+    if (data._id) {
+      const resConfirm = confirm('Are you sure you want to remove this track? This action cannot be undone!');
+      if (resConfirm) {
+        const url = `${conf.apiUrl}/audioclips/${data._id}`;
+        ourFetch(url, true, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: this.props.getAppState().userId,
+            userToken: this.props.getAppState().userToken,
+          }),
+        })
+        .then((response) => {
+          const videoData = response.result;
+          // console.log('##############', videoData, id, data)
+          const tc = this.state.tracksComponents.slice();
+          // console.log(tc)
+          const newTracks = tc.filter(t => t.props.id !== id);
+          this.setState({
+            videoData: videoData,
+          }, () => {
+            this.resetSelectedTrack();
+            this.parseYDVideoData();
+          });
+        });
+      }
+    } else {
+      // We just need to remove from the UI.
+      const tc = this.state.tracksComponents.slice();
+      const newTracks = tc.filter(t => t.props.id !== id);
+      this.setState({
+        tracksComponents: newTracks,
+      }, this.resetSelectedTrack());
+    }
+  }
+
+  resetSelectedTrack() {
+    this.setState({
+      selectedTrackComponentId: null,
+      selectedTrackComponentPlaybackType: null,
+      selectedTrackComponentStatus: null,
+      selectedTrackComponentAudioClipStartTime: 0,
+      selectedTrackComponentAudioClipSEndTime: -1,
+      selectedTrackComponentAudioClipDuration: -1,
+      selectedTrackComponentLabel: '',
+      selectedTrackComponentUrl: null,
+    });
   }
 
   recordAudioClip(e, trackId) {
@@ -549,6 +612,7 @@ class AuthoringTool extends Component {
             recordAudioClip={this.recordAudioClip}
             updateTrackLabel={this.updateTrackLabel}
             setSelectedTrack={this.setSelectedTrack}
+            deleteTrack={this.deleteTrack}
           />
         );
       }
@@ -559,6 +623,9 @@ class AuthoringTool extends Component {
   uploadAudioRecorded(args) {
     const self = this;
     const formData = new FormData();
+    formData.append('wavfile', args.audioBlob);
+    formData.append('userId', this.props.getAppState().userId);
+    formData.append('userToken', this.props.getAppState().userToken);
     formData.append('title', this.state.videoTitle);
     formData.append('description', this.state.videoDescription);
     formData.append('notes', this.state.notes);
@@ -573,12 +640,11 @@ class AuthoringTool extends Component {
       formData.append('endTime', this.state.selectedTrackComponentAudioClipStartTime + args.duration);
     }
     formData.append('duration', args.duration);
-    formData.append('wavfile', args.audioBlob);
-    const url = `${conf.apiUrl}/audioclips/${this.state.videoId}?token=${this.props.getAppState().userToken}`;
+    const url = `${conf.apiUrl}/audioclips/${this.state.videoId}`;
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function () {
-      console.log(JSON.parse(this.responseText).result);
+      // console.log(JSON.parse(this.responseText).result);
       self.setState({
         videoData: JSON.parse(this.responseText).result,
       }, () => {
@@ -619,9 +685,16 @@ class AuthoringTool extends Component {
     const self = this;
     const resultConfirm = confirm('Are you sure you wanna publish this audio description?');
     if (resultConfirm) {
-      const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=publish&token=${this.props.getAppState().userToken}`;
+      const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=publish`;
       ourFetch(url, true, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: this.props.getAppState().userId,
+          userToken: this.props.getAppState().userToken,
+        }),
       })
       .then(response => {
         const result = response.result;
@@ -735,6 +808,7 @@ class AuthoringTool extends Component {
               alertBoxClose={this.alertBoxClose}
               addAudioClipTrack={this.addAudioClipTrack}
               recordAudioClip={this.recordAudioClip}
+              deleteTrack={this.deleteTrack}
               {...this.state}
             />
           </div>

@@ -56,19 +56,19 @@ class Home extends Component {
     for (let i = 0; i < data.items.length; i += 1) {
       const item = data.items[i];
       const _id = youDescribeVideosIds[i];
-      const id = item.id;
+      const youTubeId = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
       const duration = convertSecondsToCardFormat(convertISO8601ToSeconds(item.contentDetails.duration));
       const title = item.snippet.title;
       const description = item.snippet.description;
       const author = item.snippet.channelTitle;
-      let describer;
       const views = convertViewsToCardFormat(Number(item.statistics.viewCount));
       const publishedAt = new Date(item.snippet.publishedAt);
 
-      this.dbResultArray.forEach((elem) => {
-        if (elem._id === id) describer = `${elem.audio_descriptions[1].legacy_author_name} (describer)`;
-      });
+      // let describer;
+      // this.dbResultArray.forEach((elem) => {
+      //   if (elem._id === id) describer = `${elem.audio_descriptions[1].legacy_author_name} (describer)`;
+      // });
 
       const now = Date.now();
       const time = convertTimeToCardFormat(Number(now - publishedAt));
@@ -76,17 +76,15 @@ class Home extends Component {
       videos.push(
         <VideoCard
           key={_id}
-          id={id}
+          youTubeId={youTubeId}
           description={description}
           thumbnailMediumUrl={thumbnailMedium.url}
           duration={duration}
           title={title}
           author={author}
-          describer={describer}
           views={views}
           time={time}
           buttons="none"
-          isSignedIn={this.props.isSignedIn}
         />);
     }
 
