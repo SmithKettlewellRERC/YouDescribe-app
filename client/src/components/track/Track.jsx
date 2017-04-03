@@ -43,8 +43,12 @@ class Track extends Component {
               {label}
             </div>
             <div id="track-action" className="w3-right">
-              <ActionIcon {...this.props} />
-              <DeleteTrack {...this.props} />
+              <div className="w3-right">
+                <DeleteTrack {...this.props} />
+              </div>
+              <div className="w3-right" style={{ paddingRight: '8px' }}>
+                <ActionIcon {...this.props} />
+              </div>
             </div>
           </div>
         </div>
@@ -53,7 +57,7 @@ class Track extends Component {
             id="sinewave"
             className={this.styleButton}
             style={{
-              left: `${755 * (this.props.data.start_time / this.props.getATState().videoDurationInSeconds)}px`,
+              left: `${756 * (this.props.data.start_time / this.props.getATState().videoDurationInSeconds)}px`,
               width: `${Math.abs((755 * ((this.props.data.end_time - this.props.data.start_time) / this.props.getATState().videoDurationInSeconds)) - 1)}px`,
               height: '27px',
             }}
