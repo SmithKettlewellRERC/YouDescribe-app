@@ -2,7 +2,7 @@ import React from 'react';
 
 const DeleteTrack = (props) => {
   return (
-    <div class="deleteTrack">
+    <div className="deleteTrack">
       <i className="fa fa-trash-o" aria-hidden="true"></i>
     </div>
   )
