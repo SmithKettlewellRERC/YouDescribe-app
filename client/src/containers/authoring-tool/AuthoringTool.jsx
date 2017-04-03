@@ -476,8 +476,8 @@ class AuthoringTool extends Component {
     return;
   }
 
-  deleteTrack() {
-    console.log('Delete');
+  deleteTrack(e, id) {
+    console.log('Delete', id);
   }
 
   recordAudioClip(e, trackId) {
