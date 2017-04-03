@@ -123,7 +123,6 @@ class AuthoringTool extends Component {
 
     if (videoData && videoData.audio_descriptions && videoData.audio_descriptions.length > 0) {
       // This looping won't be necessary when the API just delivery the owned AD for the current user.
-      console.log(videoData.audio_descriptions);
       for (let i = 0; i < videoData.audio_descriptions.length; i += 1) {
         const ad = videoData.audio_descriptions[i];
         if (ad.user._id === this.props.getUserInfo().userId) {
@@ -133,7 +132,6 @@ class AuthoringTool extends Component {
           if (ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
               audioClip.url = `${conf.audioClipsUploadsPath}${audioClip.file_path}/${audioClip.file_name}`;
-              console.log(audioClip.url);
               audioDescriptionAudioClips[audioClip['_id']] = audioClip;
             });
           }
@@ -244,7 +242,7 @@ class AuthoringTool extends Component {
       const audioClips = self.state.audioDescriptionAudioClips;
       self.audioClipsCopy = Object.values(audioClips);
       initAudioRecorder();
-      self.videoProgressWatcher();
+      ////////////////////////////////// self.videoProgressWatcher();
     }
 
     function onPlayerStateChange(event) {
@@ -481,9 +479,56 @@ class AuthoringTool extends Component {
   }
 
   deleteTrack(e, id, data) {
-    console.log('Delete', id, data);
-    const tc = this.state.tracksComponents.slice();
-    
+    // It is an existing recorder audio track.
+    if (data._id) {
+      const resConfirm = confirm('Are you sure you want to remove this track? This action cannot be undone!');
+      if (resConfirm) {
+        const url = `${conf.apiUrl}/audioclips/${data._id}`;
+        ourFetch(url, true, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: this.props.getAppState().userId,
+            userToken: this.props.getAppState().userToken,
+          }),
+        })
+        .then((response) => {
+          const videoData = response.result;
+          // console.log('##############', videoData, id, data)
+          const tc = this.state.tracksComponents.slice();
+          // console.log(tc)
+          const newTracks = tc.filter(t => t.props.id !== id);
+          this.setState({
+            videoData: videoData,
+          }, () => {
+            this.resetSelectedTrack();
+            this.parseYDVideoData();
+          });
+        });
+      }
+    } else {
+      // We just need to remove from the UI.
+      const tc = this.state.tracksComponents.slice();
+      const newTracks = tc.filter(t => t.props.id !== id);
+      this.setState({
+        tracksComponents: newTracks,
+      }, this.resetSelectedTrack());
+    }
+  }
+
+  resetSelectedTrack() {
+    this.setState({
+      selectedTrackComponentId: null,
+      selectedTrackComponentPlaybackType: null,
+      selectedTrackComponentStatus: null,
+      selectedTrackComponentAudioClipStartTime: 0,
+      selectedTrackComponentAudioClipSEndTime: -1,
+      selectedTrackComponentAudioClipDuration: -1,
+      selectedTrackComponentLabel: '',
+      selectedTrackComponentUrl: null,
+    });
   }
 
   recordAudioClip(e, trackId) {
