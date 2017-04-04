@@ -242,7 +242,7 @@ class AuthoringTool extends Component {
       const audioClips = self.state.audioDescriptionAudioClips;
       self.audioClipsCopy = Object.values(audioClips);
       initAudioRecorder();
-      ////////////////////////////////// self.videoProgressWatcher();
+      self.videoProgressWatcher();
     }
 
     function onPlayerStateChange(event) {
@@ -496,12 +496,18 @@ class AuthoringTool extends Component {
         })
         .then((response) => {
           const videoData = response.result;
-          // console.log('##############', videoData, id, data)
           const tc = this.state.tracksComponents.slice();
-          // console.log(tc)
           const newTracks = tc.filter(t => t.props.id !== id);
           this.setState({
             videoData: videoData,
+          }, () => {
+            this.resetSelectedTrack();
+            this.parseYDVideoData();
+          });
+        })
+        .catch((err) => {
+          this.setState({
+            videoData: {},
           }, () => {
             this.resetSelectedTrack();
             this.parseYDVideoData();
@@ -681,7 +687,6 @@ class AuthoringTool extends Component {
   }
 
   publishAudioDescription() {
-    console.log('publishAudioDescription');
     const self = this;
     const resultConfirm = confirm('Are you sure you wanna publish this audio description?');
     if (resultConfirm) {
@@ -698,7 +703,6 @@ class AuthoringTool extends Component {
       })
       .then(response => {
         const result = response.result;
-        // console.log(result)
         if (result._id) {
           self.setState({
             videoData: result,
@@ -713,13 +717,19 @@ class AuthoringTool extends Component {
   }
 
   unpublishAudioDescription() {
-   console.log('unpublishAudioDescription');
     const self = this;
     const resultConfirm = confirm('Are you sure you wanna unpublish this audio description?');
     if (resultConfirm) {
-      const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=unpublish&token=${this.props.getAppState().userToken}`;
+      const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=unpublish`;
       ourFetch(url, true, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: this.props.getAppState().userId,
+          userToken: this.props.getAppState().userToken,
+        }),
       })
       .then(response => {
         const result = response.result;
