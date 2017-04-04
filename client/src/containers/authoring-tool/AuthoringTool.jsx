@@ -555,6 +555,7 @@ class AuthoringTool extends Component {
 
     if (e.target.className === 'fa fa-circle') {
       // RECORD.
+      console.log(this.state.currentVideoProgress);
       this.setState({
         selectedTrackComponentAudioClipStartTime: this.state.currentVideoProgress,
         selectedTrackComponentId: trackId,
