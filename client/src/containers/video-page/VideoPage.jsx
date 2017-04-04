@@ -289,7 +289,7 @@ class VideoPage extends Component {
 
       if (this.currentClip && this.currentClip.playbackType === 'inline') {
         this.currentClip.volume(this.state.balancerValue / 100);
-        this.state.videoPlayer.setVolume((100 - this.state.balancerValue) * 0.1);
+        this.state.videoPlayer.setVolume((100 - this.state.balancerValue) * 0.4);
       } else {
         this.state.videoPlayer.setVolume(100 - this.state.balancerValue);
       }

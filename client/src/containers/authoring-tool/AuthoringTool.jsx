@@ -242,7 +242,7 @@ class AuthoringTool extends Component {
       const audioClips = self.state.audioDescriptionAudioClips;
       self.audioClipsCopy = Object.values(audioClips);
       initAudioRecorder();
-      ////////////////////////////////// self.videoProgressWatcher();
+      self.videoProgressWatcher();
     }
 
     function onPlayerStateChange(event) {
@@ -549,6 +549,7 @@ class AuthoringTool extends Component {
 
     if (e.target.className === 'fa fa-circle') {
       // RECORD.
+      console.log(this.state.currentVideoProgress);
       this.setState({
         selectedTrackComponentAudioClipStartTime: this.state.currentVideoProgress,
         selectedTrackComponentId: trackId,
