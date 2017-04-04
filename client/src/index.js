@@ -14,7 +14,7 @@ import UserVideosPage from './containers/user-videos-page/UserVideosPage.jsx';
 import Disclaimer from './containers/disclaimer/Disclaimer.jsx';
 
 ReactDOM.render((
-  <Router history={browserHistory}>
+  <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Home} />
       <Route path="/authoring-tool/:videoId" component={AuthoringTool} />
