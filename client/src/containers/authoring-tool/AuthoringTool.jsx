@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
+import Spinner from '../../components/spinner/Spinner.jsx';
 import Notes from '../../components/notes/Notes.jsx';
 import Editor from '../../components/editor/Editor.jsx';
 import Track from '../../components/track/Track.jsx';
@@ -75,6 +76,7 @@ class AuthoringTool extends Component {
     this.alertBoxClose = this.alertBoxClose.bind(this);
     this.updateNotes = this.updateNotes.bind(this);
     this.deleteTrack = this.deleteTrack.bind(this);
+    this.closeSpinner = this.closeSpinner.bind(this);
   }
 
   componentWillMount() {
@@ -239,10 +241,11 @@ class AuthoringTool extends Component {
     }
 
     function onVideoPlayerReady() {
+      self.closeSpinner();
       const audioClips = self.state.audioDescriptionAudioClips;
       self.audioClipsCopy = Object.values(audioClips);
       initAudioRecorder();
-      self.videoProgressWatcher();
+      // self.videoProgressWatcher();
     }
 
     function onPlayerStateChange(event) {
@@ -250,22 +253,22 @@ class AuthoringTool extends Component {
       const audioClips = Object.values(self.state.audioDescriptionAudioClips);
       self.setState({ videoState: event.data }, () => {
         switch (event.data) {
-          // ended
           case 0:
+            // ended
             // if (self.watcher) {
             //   clearInterval(self.watcher);
             //   self.watcher = null;
             // }
             break;
-          // playing
           case 1:
+            // playing
             if (self.currentClip && self.currentClip.playbackType === 'extended') {
               self.currentClip.stop();
             }
-            // self.videoProgressWatcher();
+            self.videoProgressWatcher();
             break;
-          // paused
           case 2:
+            // paused
             self.audioClipsCopy = audioClips.slice();
             if (self.currentClip && self.currentClip.playbackType === 'inline') {
               self.currentClip.pause();
@@ -275,8 +278,8 @@ class AuthoringTool extends Component {
             //   self.watcher = null;
             // }
             break;
-          // buffering
           case 3:
+            // buffering
             self.audioClipsCopy = audioClips.slice();
             if (self.currentClip && self.currentClip.playbackType === 'inline') {
               self.currentClip.pause();
@@ -320,7 +323,6 @@ class AuthoringTool extends Component {
   // 8
   videoProgressWatcher() {
     console.log('8 -> videoProgressWatcher')
-
     const interval = 90;
 
     if (this.watcher) {
@@ -329,6 +331,9 @@ class AuthoringTool extends Component {
     }
 
     this.watcher = setInterval(() => {
+      // console.log(this.state.videoPlayer.getCurrentTime());
+      // console.log(document.querySelector('.ytp-time-current').innerHTML);
+      // console.log(document.getElementById('playerAT').contentDocument.documentElement);
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
       const videoVolume = this.state.videoPlayer.getVolume();
       const playheadPosition = 756 * (currentVideoProgress / this.videoDurationInSeconds);
@@ -340,10 +345,20 @@ class AuthoringTool extends Component {
         videoVolume,
       });
 
+      if (this.currentClip && this.currentClip.playbackType === 'inline') {
+        console.log(this.state.videoPlayer.getVolume());
+        // this.currentClip.volume(this.state.videoPlayer.getVolume());
+        this.state.videoPlayer.setVolume(40);
+      } else {
+        this.state.videoPlayer.setVolume(100);
+      }
+
       for (let i = 0; i < this.audioClipsCopy.length; i += 1) {
         switch (this.audioClipsCopy[i].playback_type) {
           case 'inline':
-            if (currentVideoProgress >= +this.audioClipsCopy[i].start_time && currentVideoProgress < +this.audioClipsCopy[i].end_time) {
+            if (currentVideoProgress >= +this.audioClipsCopy[i].start_time &&
+              currentVideoProgress < +this.audioClipsCopy[i].end_time) {
+              console.log('## INLINE');
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
                 html5: false,
@@ -796,6 +811,11 @@ class AuthoringTool extends Component {
     });
   }
 
+  closeSpinner() {
+    const spinner = document.getElementsByClassName('spinner')[0];
+    spinner.style.display = 'none';
+  }
+
   // 1
   render() {
     // console.log('1 -> render authoring tool')
@@ -803,6 +823,7 @@ class AuthoringTool extends Component {
       <main id="authoring-tool">
         <div className="w3-row">
           <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
+            <Spinner />
             <div id="playerAT" />
           </div>
           <div id="notes-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">

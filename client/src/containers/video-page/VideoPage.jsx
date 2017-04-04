@@ -284,8 +284,9 @@ class VideoPage extends Component {
     this.watcher = setInterval(() => {
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
 
-      this.setState({ videoPlayerAccessibilitySeekbarValue: currentVideoProgress / this.state.videoDurationInSeconds });
-      // const videoVolume = this.state.videoPlayer.getVolume();
+      this.setState({
+        videoPlayerAccessibilitySeekbarValue: currentVideoProgress / this.state.videoDurationInSeconds,
+      });
 
       if (this.currentClip && this.currentClip.playbackType === 'inline') {
         this.currentClip.volume(this.state.balancerValue / 100);
@@ -297,7 +298,6 @@ class VideoPage extends Component {
       for (let i = 0; i < this.audioClipsCopy.length; i += 1) {
         switch (this.audioClipsCopy[i].playback_type) {
           case 'inline':
-        // console.log(this.audioClipsCopy[i].playback_type)
             if (currentVideoProgress >= +this.audioClipsCopy[i].start_time &&
               currentVideoProgress < +this.audioClipsCopy[i].end_time) {
               console.log('## INLINE');
@@ -377,7 +377,6 @@ class VideoPage extends Component {
   updateState(newState, callback) {
     this.setState(newState, callback);
   }
-
 
   closeSpinner() {
     const spinner = document.getElementsByClassName('spinner')[0];
