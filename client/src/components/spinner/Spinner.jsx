@@ -8,6 +8,7 @@ const Spinner = () => (
       width="10px"
       alt="Loading video"
     />
+  <div className="loading-text">Loading...</div>
   </div>
 );
 
