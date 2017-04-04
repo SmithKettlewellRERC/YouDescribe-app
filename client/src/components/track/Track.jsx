@@ -58,7 +58,7 @@ class Track extends Component {
             className={this.styleButton}
             style={{
               left: `${756 * (this.props.data.start_time / this.props.getATState().videoDurationInSeconds)}px`,
-              width: `${Math.abs((755 * ((this.props.data.end_time - this.props.data.start_time) / this.props.getATState().videoDurationInSeconds)) - 1)}px`,
+              width: `${Math.abs((756 * ((this.props.data.end_time - this.props.data.start_time) / this.props.getATState().videoDurationInSeconds)) - 1)}px`,
               height: '27px',
             }}
           >
