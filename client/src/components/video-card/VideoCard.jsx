@@ -93,9 +93,9 @@ class VideoCard extends Component {
                 {/* <a href="#">{this.props.describer}</a> */}
               </div>
             </div>
-            <div id="card-stats">
+            {/*<div id="card-stats">
               <h4><div className="w3-left">{this.props.views}</div><div className="w3-right">{this.props.time}</div></h4>
-            </div>
+            </div>*/}
             <div id="card-buttons">
               {buttons}
             </div>
