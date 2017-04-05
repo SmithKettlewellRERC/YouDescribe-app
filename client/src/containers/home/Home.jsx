@@ -113,7 +113,7 @@ class Home extends Component {
       <div id="home" title="YouDescribe home page">
 
         <header role="banner" className="w3-container w3-indigo">
-          <h2>Popular described videos</h2>
+          <h2>POPULAR DESCRIBED VIDEOS</h2>
         </header>
 
         <Spinner />

@@ -95,7 +95,7 @@ class WishList extends Component {
     return (
       <div id="wish-list" title="YouDescribe wish list page">
         <div className="w3-container w3-indigo">
-          <h2>Most requested</h2>
+          <h2>WISH LIST</h2>
         </div>
         <Spinner />
         <main className="w3-row-padding">
