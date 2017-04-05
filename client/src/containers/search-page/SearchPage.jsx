@@ -228,11 +228,18 @@ class SearchPage extends Component {
   render() {
     // const searchTerm = `"${this.props.location.query.q}"`;
     // <h2>Described videos matching {searchTerm}</h2>
+    console.log(this.state.videoAlreadyOnYD.length);
+    let noVideos;
+
+    if (!this.state.videoAlreadyOnYD.length) {
+      noVideos = <div className="w3-center no-videos">There are no described videos that match your search</div>;
+    }
+
     return (
       <div id="search-page" title="YouDescribe search results page">
 
         <div className="w3-container w3-indigo">
-          <h2>Described videos</h2>
+          <h2>DESCRIBED VIDEOS</h2>
         </div>
 
         <Spinner />
@@ -240,15 +247,17 @@ class SearchPage extends Component {
         <main>
           <div id="on-yd" className="w3-row">
             {this.state.videoAlreadyOnYD}
+            {noVideos}
           </div>
         </main>
 
-          <div id="load-more" className="w3-margin-top w3-center">
-            <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYD} />
-          </div>
+        <div className="w3-margin-top w3-center load-more">
+          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYD} />
+        </div>
+
 
         <div className="w3-container w3-indigo">
-          <h2>Non-described videos</h2>
+          <h2>NON-DESCRIBED VIDEOS</h2>
         </div>
 
         <Spinner />
@@ -259,8 +268,8 @@ class SearchPage extends Component {
           </div>
         </main>
 
-        <div id="load-more" className="w3-margin-top w3-center">
-          {/*<Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYT} />*/}
+        <div className="w3-margin-top w3-center load-more">
+          {/* <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYT} /> */}
         </div>
       </div>
     );

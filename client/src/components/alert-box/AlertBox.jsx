@@ -13,7 +13,7 @@ const AlertBox = props => (
               text={props.text}
               color={props.buttonColor}
               onClick={props.alertBoxClose}
-              />
+            />
           </div>
         </div>
       </div>
