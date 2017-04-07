@@ -47,7 +47,9 @@ class Home extends Component {
       .then(() => {
         const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
         ourFetch(url)
-        .then(data => this.parseFetchedData(data, youDescribeVideosIds));
+        .then(data => {
+          this.parseFetchedData(data, youDescribeVideosIds)
+        });
       });
   }
 
@@ -55,6 +57,9 @@ class Home extends Component {
     const videos = this.state.videos.slice();
     for (let i = 0; i < data.items.length; i += 1) {
       const item = data.items[i];
+      if (!item.statistics || !item.snippet) {
+        continue;
+      }
       const _id = youDescribeVideosIds[i];
       const youTubeId = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
