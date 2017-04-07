@@ -50,6 +50,9 @@ class WishList extends Component {
     const videoCardsComponents = this.state.videoCardsComponents.slice();
     for (let i = 0; i < youTubeResponse.items.length; i += 1) {
       const item = youTubeResponse.items[i];
+      if (!item.statistics || !item.snippet) {
+        continue;
+      }
       const _id = this.youDescribeIds[i];
       const youTubeId = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;

@@ -132,6 +132,9 @@ class SearchPage extends Component {
     const videoAlreadyOnYD = this.state.videoAlreadyOnYD.slice();
     for (let i = 0; i < videoFromYDdatabase.length; i += 1) {
       const item = videoFromYDdatabase[i];
+      if (!item.statistics || !item.snippet) {
+        continue;
+      }
       const _id = dbResponse[i]._id;
       const youTubeId = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
@@ -169,6 +172,9 @@ class SearchPage extends Component {
     const videoNotOnYD = this.state.videoNotOnYD.slice();
     for (let i = 0; i < videoFromYoutube.length; i += 1) {
       const item = videoFromYoutube[i];
+      if (!item.statistics || !item.snippet) {
+        continue;
+      }
       const youTubeId = item.id;
       const thumbnailMedium = item.snippet.thumbnails.medium;
       const duration = convertSecondsToCardFormat(convertISO8601ToSeconds(item.contentDetails.duration));
@@ -228,7 +234,6 @@ class SearchPage extends Component {
   render() {
     // const searchTerm = `"${this.props.location.query.q}"`;
     // <h2>Described videos matching {searchTerm}</h2>
-    console.log(this.state.videoAlreadyOnYD.length);
     let noVideos;
 
     if (!this.state.videoAlreadyOnYD.length) {
