@@ -235,48 +235,68 @@ class SearchPage extends Component {
     // const searchTerm = `"${this.props.location.query.q}"`;
     // <h2>Described videos matching {searchTerm}</h2>
     let noVideos;
+    let YDloadMoreButton = (
+      <div className="w3-margin-top w3-center load-more w3-hide">
+        <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYD} />
+      </div>
+    );
+    let YTloadMoreButton = (
+      <div className="w3-margin-top w3-center load-more w3-hide">
+        <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYT} />
+      </div>
+    );
 
     if (!this.state.videoAlreadyOnYD.length) {
       noVideos = <div className="w3-center no-videos">There are no described videos that match your search</div>;
     }
-
-    return (
-      <div id="search-page" title="YouDescribe search results page">
-
-        <div className="w3-container w3-indigo">
-          <h2>DESCRIBED VIDEOS</h2>
-        </div>
-
-        <Spinner />
-
-        <main>
-          <div id="on-yd" className="w3-row">
-            {this.state.videoAlreadyOnYD}
-            {noVideos}
-          </div>
-        </main>
-
+    if (this.state.videoNotOnYD.length > 20) {
+      YDloadMoreButton = (
         <div className="w3-margin-top w3-center load-more">
           <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYD} />
         </div>
-
-
-        <div className="w3-container w3-indigo">
-          <h2>NON-DESCRIBED VIDEOS</h2>
+      );
+    }
+    if (this.state.videoNotOnYD.length > 20) {
+      YTloadMoreButton = (
+        <div className="w3-margin-top w3-center load-more">
+          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYT} />
         </div>
+      );
+    }
 
-        <Spinner />
+    return (
+      <main id="search-page" title="YouDescribe search results page">
 
-        <main>
-          <div className="w3-row">
+        <section>
+          <div className="w3-container w3-indigo">
+            <h2>DESCRIBED VIDEOS</h2>
+          </div>
+
+          <Spinner />
+
+          <div id="on-yd" className="w3-row video-card-container">
+            {this.state.videoAlreadyOnYD}
+            {noVideos}
+          </div>
+
+          {YDloadMoreButton}
+        </section>
+
+        <section>
+          <div className="w3-container w3-indigo">
+            <h2>NON-DESCRIBED VIDEOS</h2>
+          </div>
+
+          <Spinner />
+
+          <div className="w3-row video-card-container">
             {this.state.videoNotOnYD}
           </div>
-        </main>
 
-        <div className="w3-margin-top w3-center load-more">
-          {/* <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYT} /> */}
-        </div>
-      </div>
+          {YTloadMoreButton}
+        </section>
+
+      </main>
     );
   }
 }

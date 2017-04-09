@@ -365,3 +365,25 @@ input[type=checkbox].w3-check:disabled+.w3-validate,input[type=radio].w3-radio:d
   position: absolute;
   left: -10000px;
 }
+.video-card-container {
+  width: 376px;
+  padding: 0px 8px 50px 8px;
+  margin: 0px auto;
+  @media (min-width:601px){
+    width: 582px;
+    padding: 0 0 50px 0;
+  }
+  @media screen and (min-width: 993px) {
+    width: 970px;
+  }
+}
+.load-more {
+  padding-top: 10px;
+  padding-bottom: 30px;
+}
+.no-videos {
+  display: block;
+  position: relative;
+  top: 50px;
+  padding-bottom: 50px;
+}

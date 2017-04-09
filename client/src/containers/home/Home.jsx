@@ -114,8 +114,22 @@ class Home extends Component {
 
   // displayed on page
   render() {
+    let YDloadMoreButton = (
+      <div className="w3-margin-top w3-center load-more w3-hide">
+        <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+      </div>
+    );
+
+    if (this.state.videos.length > 20) {
+      YDloadMoreButton = (
+        <div className="w3-margin-top w3-center load-more">
+          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+        </div>
+      );
+    }
+
     return (
-      <div id="home" title="YouDescribe home page">
+      <main role="main" id="home" title="YouDescribe home page">
 
         <header role="banner" className="w3-container w3-indigo">
           <h2>POPULAR DESCRIBED VIDEOS</h2>
@@ -123,15 +137,13 @@ class Home extends Component {
 
         <Spinner />
 
-        <main role="main" className="w3-row">
+        <div className="w3-row video-card-container">
           {this.state.videos}
-        </main>
-
-        <div id="load-more" className="w3-margin-top w3-center w3-padding-32">
-          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
         </div>
 
-      </div>
+        {YDloadMoreButton}
+
+      </main>
     );
   }
 }
