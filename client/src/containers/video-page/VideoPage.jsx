@@ -127,7 +127,6 @@ class VideoPage extends Component {
     this.setState({
       selectedAudioDescriptionId,
     }, () => {
-      console.log('Selected audio description ID', selectedAudioDescriptionId);
       this.preLoadAudioClips();
     });
   }
@@ -146,7 +145,7 @@ class VideoPage extends Component {
         promises.push(ourFetch(audioObj.url, false));
       });
       Promise.all(promises).then(function () {
-        console.log('All audios loaded.');
+        // console.log('All audios loaded.');
         self.initVideoPlayer();
       })
       .catch(function (errorAllAudios) {
@@ -177,7 +176,6 @@ class VideoPage extends Component {
     }
 
     function onVideoPlayerReady() {
-      console.log('replacing current div with the video')
       self.closeSpinner();
       self.audioClipsCopy = self.getAudioClips().slice();
       self.getVideoDuration();
@@ -231,7 +229,6 @@ class VideoPage extends Component {
     }
 
     function startVideo() {
-
       if (self.state.videoPlayer === null) {
         self.setState({
           videoPlayer: new YT.Player('playerVP', {
@@ -300,14 +297,13 @@ class VideoPage extends Component {
           case 'inline':
             if (currentVideoProgress >= +this.audioClipsCopy[i].start_time &&
               currentVideoProgress < +this.audioClipsCopy[i].end_time) {
-              console.log('## INLINE');
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
                 html5: false,
                 volume: this.state.balancerValue / 100,
                 onload: () => {
                   this.currentClip.playbackType = 'inline';
-                  const temp = +this.audioClipsCopy[i]
+                  const temp = +this.audioClipsCopy[i];
                   this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
                   this.currentClip.seek(currentVideoProgress - temp.start_time, this.currentClip.play());
                 },
@@ -315,7 +311,7 @@ class VideoPage extends Component {
                   console.log('Impossible to load', errToLoad);
                 },
                 onplay: () => {
-                  console.log('## INLINE PLAYING');
+                  console.log('INLINE PLAYING...');
                   // this.previousVideoVolume = videoVolume;
                 },
                 onend: () => {
@@ -326,10 +322,8 @@ class VideoPage extends Component {
             }
             break;
           case 'extended':
-        // console.log(this.audioClipsCopy[i].playback_type)
             if (Math.abs(+this.audioClipsCopy[i].start_time - currentVideoProgress) <= interval / 2000 ||
             (+this.audioClipsCopy[i].start_time < 0.5 && currentVideoProgress <= interval / 500)) {
-              console.log('## EXTENDED ##');
               this.currentClip = new Howl({
                 src: [this.audioClipsCopy[i].url],
                 html5: false,
@@ -343,7 +337,7 @@ class VideoPage extends Component {
                   console.log('Impossible to load', errToLoad)
                 },
                 onplay: () => {
-                  console.log('EXTENDED PLAYING');
+                  console.log('EXTENDED PLAYING...');
                   this.state.videoPlayer.pauseVideo();
                 },
                 onend: () => {
