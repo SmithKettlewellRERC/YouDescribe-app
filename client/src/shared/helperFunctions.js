@@ -85,12 +85,12 @@ function convertSecondsToEditorFormat(timeInSeconds) {
 
 // fetch function that work accross platform
 function ourFetch(url, JSONparsing = true, optionObj = { method: 'GET' }) {
-  return new Promise( (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const req = new XMLHttpRequest();
     req.open(optionObj.method, url);
     if (optionObj.headers) {
       for (let key in optionObj.headers) {
-        req.setRequestHeader(key,optionObj.headers[key]);
+        req.setRequestHeader(key, optionObj.headers[key]);
       }
     }
     req.onload = () => {

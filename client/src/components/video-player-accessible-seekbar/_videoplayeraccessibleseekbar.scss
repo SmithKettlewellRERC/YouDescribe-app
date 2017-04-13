@@ -1,13 +1,27 @@
 .seekbar-slider-rail {
-  width: 95%;
+  /* Firefox */
+  width: -moz-calc(100% - 24px);
+  /* WebKit */
+  width: -webkit-calc(100% - 24px);
+  /* Opera */
+  width: -o-calc(100% - 24px);
+  /* Standard */
+  width: calc(100% - 24px);
   height: 4px;
   // border: 1px solid #999999;
   background-color: #333;
   position: relative;
-  margin: 0px 12px;
-  top: 8px;
+  margin: 0px 12px 0px;
+  bottom: 10px;
   @media screen and (min-width: 601px) {
-    width: 616px;
+    // /* Firefox */
+    // width: -moz-calc(100% - 24px);
+    // /* WebKit */
+    // width: -webkit-calc(100% - 24px);
+    // /* Opera */
+    // width: -o-calc(100% - 24px);
+    // /* Standard */
+    // width: calc(100% - 24px);
   }
 }
 .seekbar-slider-thumb:focus{
@@ -27,7 +41,7 @@
   border: 1px solid #999999;
   position: absolute;
   top: -4px;
-  left: 0px;
+  left: 6px;
 }
 
 .floatLeft {

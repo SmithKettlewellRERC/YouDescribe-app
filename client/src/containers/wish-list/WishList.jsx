@@ -95,19 +95,31 @@ class WishList extends Component {
   }
 
   render() {
+    let loadMoreButton = (
+      <div className="w3-margin-top w3-center load-more w3-hide">
+        <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+      </div>
+    );
+
+    if (this.state.videoCardsComponents.length > 20) {
+      loadMoreButton = (
+        <div className="w3-margin-top w3-center load-more">
+          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+        </div>
+      );
+    }
+
     return (
-      <div id="wish-list" title="YouDescribe wish list page">
+      <main id="wish-list" title="YouDescribe wish list page">
         <div className="w3-container w3-indigo">
           <h2>WISH LIST</h2>
         </div>
         <Spinner />
-        <main className="w3-row-padding">
+        <div className="w3-row-padding video-card-container">
           {this.state.videoCardsComponents}
-        </main>
-        <div id="load-more" className="w3-margin-top w3-center">
-          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
         </div>
-      </div>
+        {loadMoreButton}
+      </main>
     );
   }
 }

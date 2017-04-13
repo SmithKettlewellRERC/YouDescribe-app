@@ -235,7 +235,7 @@ class Slider extends Component {
   render() {
     return (
       <div className="seekbar">
-        <div id="seekbar-slider-rail" className="seekbar-slider-rail floatLeft">
+        <div className="seekbar-slider-rail floatLeft">
           <button
             className="seekbar-slider-thumb"
             id="seekbar-slider-thumb1"
@@ -246,7 +246,7 @@ class Slider extends Component {
             aria-valuenow="0"
             aria-valuetext="0%"
             accessKey="j"
-            style={{ left: `${this.props.videoPlayerAccessibilitySeekbarValue * 100}%` }}
+            style={{ left: `calc(${this.props.videoPlayerAccessibilitySeekbarValue * 100}% - 60px)` }}
           />
         </div>
       </div>

@@ -820,32 +820,35 @@ class AuthoringTool extends Component {
   render() {
     // console.log('1 -> render authoring tool')
     return (
-      <main id="authoring-tool">
-        <div className="w3-row">
-          <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
-            <Spinner />
-            <div id="playerAT" />
+      <div id="authoring-tool">
+        <main role="main">
+          <div className="w3-row">
+            <div className="w3-hide-large">Authoring is not available on this screen size. Please use a larger screen to add a description.</div>
+            <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
+              <Spinner />
+              <div id="playerAT" />
+            </div>
+            <div id="notes-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
+              <Notes updateNotes={this.updateNotes} getATState={this.getATState} />
+            </div>
           </div>
-          <div id="notes-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
-            <Notes updateNotes={this.updateNotes} getATState={this.getATState} />
+          <div className="w3-row w3-margin-top w3-hide-small w3-hide-medium">
+            <div className="w3-col w3-margin-bottom">
+              <Editor
+                getATState={this.getATState}
+                updateState={this.updateState}
+                publishAudioDescription={this.publishAudioDescription}
+                unpublishAudioDescription={this.unpublishAudioDescription}
+                alertBoxClose={this.alertBoxClose}
+                addAudioClipTrack={this.addAudioClipTrack}
+                recordAudioClip={this.recordAudioClip}
+                deleteTrack={this.deleteTrack}
+                {...this.state}
+              />
+            </div>
           </div>
-        </div>
-        <div className="w3-row w3-margin-top w3-hide-small w3-hide-medium">
-          <div className="w3-col w3-margin-bottom">
-            <Editor
-              getATState={this.getATState}
-              updateState={this.updateState}
-              publishAudioDescription={this.publishAudioDescription}
-              unpublishAudioDescription={this.unpublishAudioDescription}
-              alertBoxClose={this.alertBoxClose}
-              addAudioClipTrack={this.addAudioClipTrack}
-              recordAudioClip={this.recordAudioClip}
-              deleteTrack={this.deleteTrack}
-              {...this.state}
-            />
-          </div>
-        </div>
-      </main>
+        </main>
+      </div>
     );
   }
 }

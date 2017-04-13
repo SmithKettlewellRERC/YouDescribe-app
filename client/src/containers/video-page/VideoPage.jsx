@@ -384,21 +384,20 @@ class VideoPage extends Component {
   }
 
   playVideo() {
-    const play = document.getElementById('play-button');
-    const pause = document.getElementById('pause-button');
-
-    play.style.display = 'none';
-    pause.style.display = 'block';
+    // const play = document.getElementById('play-button');
+    // const pause = document.getElementById('pause-button');
+    //
+    // play.style.display = 'none';
+    // pause.style.display = 'block';
     this.state.videoPlayer.playVideo();
-
   }
 
   pauseVideo() {
-    const play = document.getElementById('play-button');
-    const pause = document.getElementById('pause-button');
-
-    pause.style.display = 'none';
-    play.style.display = 'block';
+    // const play = document.getElementById('play-button');
+    // const pause = document.getElementById('pause-button');
+    //
+    // pause.style.display = 'none';
+    // play.style.display = 'block';
     this.state.videoPlayer.pauseVideo();
   }
 
@@ -417,19 +416,49 @@ class VideoPage extends Component {
   // 1
   render() {
     // console.log('1 -> Render');
+
+    // <button id="play-button" onClick={this.playVideo} accessKey="p">
+    //   <i className="fa fa-play" aria-hidden="true"></i>
+    // </button>
+    // <button id="pause-button" onClick={this.pauseVideo} accessKey="s">
+    //   <i className="fa fa-pause" aria-hidden="true"></i>
+    // </button>
+
+    console.log(this.videoState);
+    let playPauseButton = (
+      <button id="play-button" onClick={this.playVideo} accessKey="p">
+        <i className="fa fa-play" aria-hidden="true"></i>
+      </button>
+    );
+
+    if (this.videoState === 1) {
+      console.log('PLAYING!');
+      playPauseButton = (
+        <button id="pause-button" onClick={this.pauseVideo} accessKey="s">
+          <i className="fa fa-pause" aria-hidden="true"></i>
+        </button>
+      );
+    }
+
     return (
       <div id="video-player">
-        <main role="application" title="Video player">
-          <div className="">
+
+        <main role="main" title="Video player">
+
+          <section>
 
             <div id="video" className="w3-card-2">
               <Spinner />
+
               <div id="playerVP" />
+
               <div id="video-controls">
                 <VideoPlayerAccessibleSeekbar updateState={this.updateState} {...this.state} />
-                <div id="play-button" onClick={this.playVideo} accessKey="p"><i className="fa fa-play" aria-hidden="true"></i></div>
-                <div id="pause-button" onClick={this.pauseVideo} accessKey="s"><i className="fa fa-pause" aria-hidden="true"></i></div>
+
+                {playPauseButton}
+
                 <VolumeBalancer updateState={this.updateState} />
+
                 <AudioDescriptionSelector
                   updateState={this.updateState}
                   audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
@@ -439,9 +468,13 @@ class VideoPage extends Component {
                   getAppState={this.props.getAppState}
                 />
               </div>
+
             </div>
-          </div>
+
+          </section>
+
         </main>
+
       </div>
     );
   }

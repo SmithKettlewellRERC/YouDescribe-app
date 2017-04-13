@@ -1,17 +1,14 @@
 #disclaimer {
   background-color: #fff;
-  min-height: 100vh;
-  // .vid-card {
-  //   width: 194px;
-  //   padding: 0 8px;
-  //   .w3-card-2 {
-  //     .vid-title {
-  //       overflow-x: hidden;
-  //       height: 110px;
-  //     }
-  //     background-color: #fff;
-  //   }
-  // }
+  // min-height: 100vh;
+  /* Firefox */
+  min-height: -moz-calc(100vh - 54px);
+  /* WebKit */
+  min-height: -webkit-calc(100vh - 54px);
+  /* Opera */
+  min-height: -o-calc(100vh - 54px);
+  /* Standard */
+  min-height: calc(100vh - 54px);
   main {
     width: 416px;
     padding: 0px 8px;
@@ -22,8 +19,5 @@
     @media screen and (min-width: 993px) {
       width: 993px;
     }
-  }
-  p {
-
   }
 }

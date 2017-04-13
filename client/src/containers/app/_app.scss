@@ -367,11 +367,11 @@ input[type=checkbox].w3-check:disabled+.w3-validate,input[type=radio].w3-radio:d
 }
 .video-card-container {
   width: 376px;
-  padding: 0px 8px 50px 8px;
+  padding: 0px 8px 16px 8px;
   margin: 0px auto;
   @media (min-width:601px){
     width: 582px;
-    padding: 0 0 50px 0;
+    padding: 0 0 16px 0;
   }
   @media screen and (min-width: 993px) {
     width: 970px;
@@ -384,6 +384,6 @@ input[type=checkbox].w3-check:disabled+.w3-validate,input[type=radio].w3-radio:d
 .no-videos {
   display: block;
   position: relative;
-  top: 50px;
+  top: 30px;
   padding-bottom: 50px;
 }

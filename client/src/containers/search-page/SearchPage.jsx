@@ -125,7 +125,7 @@ class SearchPage extends Component {
   }
 
   loadMoreVideosFromYT() {
-    alert('Working in progress...');
+    alert('Under development');
   }
 
   renderVideosFromYD(dbResponse, videoFromYDdatabase) {
@@ -249,7 +249,7 @@ class SearchPage extends Component {
     if (!this.state.videoAlreadyOnYD.length) {
       noVideos = <div className="w3-center no-videos">There are no described videos that match your search</div>;
     }
-    if (this.state.videoNotOnYD.length > 20) {
+    if (this.state.videoAlreadyOnYD.length > 20) {
       YDloadMoreButton = (
         <div className="w3-margin-top w3-center load-more">
           <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYD} />
@@ -265,38 +265,42 @@ class SearchPage extends Component {
     }
 
     return (
-      <main id="search-page" title="YouDescribe search results page">
+      <div id="search-page" title="YouDescribe search results page">
 
-        <section>
-          <div className="w3-container w3-indigo">
-            <h2>DESCRIBED VIDEOS</h2>
-          </div>
+        <main role="main">
 
-          <Spinner />
+          <section>
+            <header className="w3-container w3-indigo">
+              <h2>DESCRIBED VIDEOS</h2>
+            </header>
 
-          <div id="on-yd" className="w3-row video-card-container">
-            {this.state.videoAlreadyOnYD}
-            {noVideos}
-          </div>
+            <Spinner />
 
-          {YDloadMoreButton}
-        </section>
+            <div id="on-yd" className="w3-row video-card-container">
+              {this.state.videoAlreadyOnYD}
+              {noVideos}
+            </div>
 
-        <section>
-          <div className="w3-container w3-indigo">
-            <h2>NON-DESCRIBED VIDEOS</h2>
-          </div>
+            {YDloadMoreButton}
+          </section>
 
-          <Spinner />
+          <section>
+            <header className="w3-container w3-indigo">
+              <h2>NON-DESCRIBED VIDEOS</h2>
+            </header>
 
-          <div className="w3-row video-card-container">
-            {this.state.videoNotOnYD}
-          </div>
+            <Spinner />
 
-          {YTloadMoreButton}
-        </section>
+            <div className="w3-row video-card-container">
+              {this.state.videoNotOnYD}
+            </div>
 
-      </main>
+            {YTloadMoreButton}
+          </section>
+
+        </main>
+
+      </div>
     );
   }
 }

@@ -1,30 +1,34 @@
-// body,h1,h2,h3,h4,h5,h6 {font-family: "open sans"}
-
-body {
-  background-color: #383838;
-}
 #authoring-tool {
+  background-color: #383838;
+  color: #fff;
+  // min-height: 100vh;
+  /* Firefox */
+  min-height: -moz-calc(100vh - 54px);
+  /* WebKit */
+  min-height: -webkit-calc(100vh - 54px);
+  /* Opera */
+  min-height: -o-calc(100vh - 54px);
+  /* Standard */
+  min-height: calc(100vh - 54px);
   main {
     width: 400px;
-    padding: 0px 8px;
-    margin: 100px auto;
+    padding: 30% 8px 0 8px;
+    margin: 0 auto;
+    text-align: center;
     @media screen and (min-width: 993px) {
       margin: 0 auto;
       width: 1024px;
     }
-  }
-  background-color: #383838;
-  color: #fff;
-  min-height: 100vh;
-  #video-section {
-    background-color: #000;
-    width: 640px;
-    height: 342px;
-  }
-  #notes-section {
-    background-color: #000;
-    margin-left: 16px;
-    width: 352px;
-    height: 342px;
+    #video-section {
+      background-color: #000;
+      width: 640px;
+      height: 342px;
+    }
+    #notes-section {
+      background-color: #000;
+      margin-left: 16px;
+      width: 352px;
+      height: 342px;
+    }
   }
 }
