@@ -7,7 +7,7 @@ const app = express();
 console.log('DEVELOPMENT MODE');
 console.log('WILL HOT RELOAD CHANGES');
 const webpack = require('webpack');
-const webpackConfig = require('../webpack.config');
+const webpackConfig = require('../webpack.config.dev');
 const compiler = webpack(webpackConfig);
 app.use(require('webpack-dev-middleware')(compiler, {
   hot: true,

@@ -64,7 +64,6 @@ class VideoPage extends Component {
     const self = this;
     ourFetch(this.state.videoUrl)
     .then((response) => {
-      console.log('RESPONSE')
       if (response.result) {
         self.setState({
           videoData: response.result,
