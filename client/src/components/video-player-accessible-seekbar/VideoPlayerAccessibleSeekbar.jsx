@@ -27,7 +27,7 @@ class Slider extends Component {
   }
 
   componentDidMount() {
-    console.log('INIT', this.init());
+    // console.log('INIT', this.init());
     this.init();
   }
 
