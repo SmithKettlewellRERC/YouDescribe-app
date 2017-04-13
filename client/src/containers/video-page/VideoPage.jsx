@@ -158,7 +158,7 @@ class VideoPage extends Component {
   // 6
   initVideoPlayer() {
     const self = this;
-    console.log('6 -> initVideoPlayer', this.state.videoId);
+    console.log('6 -> initVideoPlayer');
     if (YT.loaded) {
       // If the video is playing, we need to change the state.
       if (this.state.videoPlayer) {
