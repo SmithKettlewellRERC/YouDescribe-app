@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
 import Spinner from '../../components/spinner/Spinner.jsx';
-import VolumeBalancer from '../../components/volume-balancer/VolumeBalancer.jsx';
-import VideoPlayerAccessibleSeekbar from '../../components/video-player-accessible-seekbar/VideoPlayerAccessibleSeekbar.jsx';
-import AudioDescriptionSelector from '../../components/audio-description-selector/AudioDescriptionSelector.jsx';
+// import VolumeBalancer from '../../components/volume-balancer/VolumeBalancer.jsx';
+// import VideoPlayerAccessibleSeekbar from '../../components/video-player-accessible-seekbar/VideoPlayerAccessibleSeekbar.jsx';
+// import AudioDescriptionSelector from '../../components/audio-description-selector/AudioDescriptionSelector.jsx';
+import VideoPlayerControls from '../../components/video-player-controls/VideoPlayerControls.jsx';
 import { ourFetch } from '../../shared/helperFunctions';
 import { convertISO8601ToSeconds, convertSecondsToEditorFormat } from '../../shared/helperFunctions';
 
@@ -42,8 +43,8 @@ class VideoPage extends Component {
     this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
     this.setAudioDescriptionActive = this.setAudioDescriptionActive.bind(this);
-    this.playVideo = this.playVideo.bind(this);
-    this.pauseVideo = this.pauseVideo.bind(this);
+    // this.playVideo = this.playVideo.bind(this);
+    // this.pauseVideo = this.pauseVideo.bind(this);
     this.closeSpinner = this.closeSpinner.bind(this);
   }
 
@@ -193,7 +194,7 @@ class VideoPage extends Component {
             break;
           case 1:
             // playing
-            self.playVideo();
+            self.state.videoPlayer.playVideo();
             if (self.currentClip && self.currentClip.playbackType === 'extended') {
               self.currentClip.stop();
             }
@@ -201,7 +202,7 @@ class VideoPage extends Component {
             break;
           case 2:
             // paused
-            self.pauseVideo();
+            self.state.videoPlayer.pauseVideo();
             self.audioClipsCopy = self.getAudioClips().slice();
             if (self.currentClip && self.currentClip.playbackType === 'inline') {
               self.currentClip.pause();
@@ -376,23 +377,23 @@ class VideoPage extends Component {
     spinner.style.display = 'none';
   }
 
-  playVideo() {
-    // const play = document.getElementById('play-button');
-    // const pause = document.getElementById('pause-button');
-    //
-    // play.style.display = 'none';
-    // pause.style.display = 'block';
-    this.state.videoPlayer.playVideo();
-  }
-
-  pauseVideo() {
-    // const play = document.getElementById('play-button');
-    // const pause = document.getElementById('pause-button');
-    //
-    // pause.style.display = 'none';
-    // play.style.display = 'block';
-    this.state.videoPlayer.pauseVideo();
-  }
+  // playVideo() {
+  //   // const play = document.getElementById('play-button');
+  //   // const pause = document.getElementById('pause-button');
+  //   //
+  //   // play.style.display = 'none';
+  //   // pause.style.display = 'block';
+  //   this.state.videoPlayer.playVideo();
+  // }
+  //
+  // pauseVideo() {
+  //   // const play = document.getElementById('play-button');
+  //   // const pause = document.getElementById('pause-button');
+  //   //
+  //   // pause.style.display = 'none';
+  //   // play.style.display = 'block';
+  //   this.state.videoPlayer.pauseVideo();
+  // }
 
   // playPauseToggle() {
   //   const play = document.getElementById('play-button');
@@ -417,21 +418,21 @@ class VideoPage extends Component {
     //   <i className="fa fa-pause" aria-hidden="true"></i>
     // </button>
 
-    console.log(this.videoState);
-    let playPauseButton = (
-      <button id="play-button" onClick={this.playVideo} accessKey="p">
-        <i className="fa fa-play" aria-hidden="true"></i>
-      </button>
-    );
-
-    if (this.videoState === 1) {
-      console.log('PLAYING!');
-      playPauseButton = (
-        <button id="pause-button" onClick={this.pauseVideo} accessKey="s">
-          <i className="fa fa-pause" aria-hidden="true"></i>
-        </button>
-      );
-    }
+    // console.log(this.videoState);
+    // let playPauseButton = (
+    //   <button id="play-button" onClick={this.playVideo} accessKey="p">
+    //     <i className="fa fa-play" aria-hidden="true"></i>
+    //   </button>
+    // );
+    //
+    // if (this.videoState === 1) {
+    //   console.log('PLAYING!');
+    //   playPauseButton = (
+    //     <button id="pause-button" onClick={this.pauseVideo} accessKey="s">
+    //       <i className="fa fa-pause" aria-hidden="true"></i>
+    //     </button>
+    //   );
+    // }
 
     return (
       <div id="video-player">
@@ -445,22 +446,12 @@ class VideoPage extends Component {
 
               <div id="playerVP" />
 
-              <div id="video-controls">
-                <VideoPlayerAccessibleSeekbar updateState={this.updateState} {...this.state} />
-
-                {playPauseButton}
-
-                <VolumeBalancer updateState={this.updateState} />
-
-                <AudioDescriptionSelector
-                  updateState={this.updateState}
-                  audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
-                  selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
-                  setAudioDescriptionActive={this.setAudioDescriptionActive}
-                  videoId={this.state.videoId}
-                  getAppState={this.props.getAppState}
-                />
-              </div>
+              <VideoPlayerControls
+                getAppState={this.props.getAppState}
+                updateState={this.updateState}
+                setAudioDescriptionActive={this.setAudioDescriptionActive}
+                {...this.state}
+              />
 
             </div>
 

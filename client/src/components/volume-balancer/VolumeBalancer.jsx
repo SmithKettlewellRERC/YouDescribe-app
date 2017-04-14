@@ -114,10 +114,8 @@ class VolumeBalancer extends Component {
   }
 
   handleRailMouseDown(event) {
-    console.log(event, window.event);
   	event = event || window.event;
   	let target = event.target || event.srcElement;
-    console.log('VOLUME TARGET ###', target);
   	let thumb = this.$(target.id.replace(/Rail/, 'Thumb'));
   	let newPos = event.clientX - this.getHOffset(target) + this.getHScrollOffset() - (thumb.clientWidth / 2);
   	this.changeValue(thumb, this.mapPositionToValue(thumb, newPos));
@@ -250,7 +248,6 @@ class VolumeBalancer extends Component {
         <span className="floatLeft">
           Description
         </span>
-        {/* <div id="volume-balancer-header">Volume balancer</div> */}
       </div>
     );
   }
