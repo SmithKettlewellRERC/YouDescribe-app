@@ -38,7 +38,7 @@ class VolumeBalancer extends Component {
   calibrate(target) {
   	let rail = target.parentNode;
   	let sliderLength = rail.clientWidth - target.clientWidth;
-  	let max = parseInt(target.getAttribute('aria-valuemax'));
+  	let max = parseInt(target.getAttribute('aria-valuemax')) + 10;
   	return sliderLength / max;
   }
 
@@ -93,11 +93,11 @@ class VolumeBalancer extends Component {
   			passThrough = false;
   		break;
   		case 36: // home
-  			this.changeValue(target, 0);
+  			this.changeValue(target, 10);
   			passThrough = false;
   		break;
   		case 35: // end
-  			this.changeValue(target, 100);
+  			this.changeValue(target, 90);
   			passThrough = false;
   		break;
   		case 27: // escape
@@ -165,25 +165,23 @@ class VolumeBalancer extends Component {
 
   increment(target, byChunk) {
 
-      let newValue = parseInt(target.getAttribute('aria-valuenow')) + (byChunk ? 10 : 1);
+      let newValue = parseInt(target.getAttribute('aria-valuenow')) + (byChunk ? 8 : 1);
 
       this.changeValue(target, newValue);
   }
 
   decrement(target, byChunk) {
-  	let newValue = parseInt(target.getAttribute('aria-valuenow')) - (byChunk ? 10 : 1);
+  	let newValue = parseInt(target.getAttribute('aria-valuenow')) - (byChunk ? 8 : 1);
   	this.changeValue(target, newValue);
   }
 
   changeValue(target, value) {
-    console.log('VOL TARGET', target);
   	let ratio = this.calibrate(target);
-    console.log(target.getAttribute('aria-valuemin'), target.getAttribute('aria-valuemax'));
   	let min = parseInt(target.getAttribute('aria-valuemin'));
   	let max = parseInt(target.getAttribute('aria-valuemax'));
-    console.log(min, max);
   	let newValue = Math.min(Math.max(value, min), max);
   	let newPos = Math.round(newValue * ratio);
+    console.log(newPos);
   	target.style.left = newPos + "px";
 
   	target.setAttribute('aria-valuenow', newValue);
@@ -238,10 +236,9 @@ class VolumeBalancer extends Component {
             id="sliderThumb1"
             role="slider"
             aria-labelledby="sliderLabel"
-            aria-valuemin="0"
-            aria-valuemax="100"
+            aria-valuemin="10"
+            aria-valuemax="90"
             aria-valuenow="50"
-            aria-valuetext="50%"
             accessKey="v"
           />
         </div>
