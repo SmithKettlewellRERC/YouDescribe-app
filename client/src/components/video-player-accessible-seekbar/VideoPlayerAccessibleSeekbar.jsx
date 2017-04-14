@@ -234,7 +234,7 @@ class Slider extends Component {
   render() {
     return (
       <div className="seekbar">
-        <div className="seekbar-slider-rail floatLeft">
+        <div id="seekbar-slider-rail" className="seekbar-slider-rail floatLeft">
           <button
             className="seekbar-slider-thumb"
             id="seekbar-slider-thumb1"
