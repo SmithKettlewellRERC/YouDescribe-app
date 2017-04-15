@@ -11,7 +11,6 @@ class VideoPage extends Component {
   constructor(props) {
     super(props);
     this.watcher = null;
-    this.videoState = -1;
     this.previousVideoVolume = 0;
     this.audioClipsPlayed = {};
 
@@ -37,6 +36,7 @@ class VideoPage extends Component {
     this.closeSpinner = this.closeSpinner.bind(this);
     this.resetPlayedAudioClips = this.resetPlayedAudioClips.bind(this);
     this.changeAudioDescription = this.changeAudioDescription.bind(this);
+    this.pauseAudioClips = this.pauseAudioClips.bind(this);
   }
 
   componentDidMount() {
@@ -203,39 +203,43 @@ class VideoPage extends Component {
     }
 
     function onPlayerStateChange(event) {
-      switch (event.data) {
-        case 0: // ended
-          self.stopProgressWatcher();
-          break;
-        case 1: // playing
+      self.setState({
+        videoState: event.data,
+      }, () => {
+        switch (event.data) {
+          case 0: // ended
+            self.stopProgressWatcher();
+            break;
+          case 1: // playing
 
-          // Just changing the button display.
-          self.changePlayPauseButtonToPaused();
-          
-          // Starting the watcher.
-          self.startProgressWatcher();
+            // Just changing the button display.
+            // self.changePlayPauseButtonToPaused();
+            
+            // Starting the watcher.
+            self.startProgressWatcher();
 
-          break;
-        case 2: // paused
-          
-          // Pausing the watcher.
-          self.stopProgressWatcher();
-          
-          // Just changing the button display.
-          self.changePlayPauseButtonToPlay();
-          
-          break;
-        case 3: // buffering
-          break;
-        case 5: // video cued
-          
-          // Starting the watcher.
-          self.state.videoPlayer.playVideo();
-          self.startProgressWatcher();
-          break;
-        default:
-          // self.stopProgressWatcher();
-      }
+            break;
+          case 2: // paused
+            
+            // Pausing the watcher.
+            self.stopProgressWatcher();
+            
+            // Just changing the button display.
+            // self.changePlayPauseButtonToPlay();
+            
+            break;
+          case 3: // buffering
+            break;
+          case 5: // video cued
+            
+            // Starting the watcher.
+            self.state.videoPlayer.playVideo();
+            self.startProgressWatcher();
+            break;
+          default:
+            // self.stopProgressWatcher();
+        }
+      });
     }
   }
 
@@ -253,15 +257,15 @@ class VideoPage extends Component {
     this.watcher = setInterval(() => {
       const currentVideoProgress = self.state.videoPlayer.getCurrentTime();
       // console.log(currentVideoProgress);
-
       this.setState({
         videoPlayerAccessibilitySeekbarValue: currentVideoProgress / this.state.videoDurationInSeconds,
       });
 
       const currentVideoProgressFloor = Math.floor(currentVideoProgress);
-
       for (let i = 0; i < audioClips.length; i += 1) {
         const audioClip = audioClips[i];
+
+        // We will always try to play the clip. The playAudioClip is in charge of control!
         if (Math.floor(audioClip.start_time) === currentVideoProgressFloor) {
           self.playAudioClip(audioClip);
         }
@@ -299,6 +303,7 @@ class VideoPage extends Component {
       
       console.log('Let\'s play', playbackType, audioClip.start_time);
 
+      // Audio ducking.
       if (playbackType === 'inline') {
         self.audioClipsPlayed[audioClipId].volume(self.state.balancerValue / 100);
         self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4);
@@ -319,9 +324,9 @@ class VideoPage extends Component {
   }
 
   pauseAudioClips() {
-    const audioClipsIds = Object.keys(this.audioClipsPlayed);
-    audioClipsIds.forEach(id => {
-      this.audioClipsPlayed[id].stop();
+    const audioClipsObjs = Object.values(this.audioClipsPlayed);
+    audioClipsObjs.forEach(howler => {
+      howler.stop();
     });
   }
 
@@ -353,29 +358,6 @@ class VideoPage extends Component {
     spinner.style.display = 'none';
   }
 
-  changePlayPauseButtonToPaused() {
-    const play = document.getElementById('play-button');
-    const pause = document.getElementById('pause-button');
-    play.style.display = 'none';
-    pause.style.display = 'block';    
-  }
-
-  changePlayPauseButtonToPlay() {
-    const play = document.getElementById('play-button');
-    const pause = document.getElementById('pause-button');
-    play.style.display = 'block';
-    pause.style.display = 'none';
-  }
-
-  playVideo() {
-    this.state.videoPlayer.playVideo();
-  }
-
-  pauseVideo() {
-    this.pauseAudioClips();
-    this.state.videoPlayer.pauseVideo();
-  }
-
   // 1
   render() {
     // console.log('1 -> Render');
@@ -394,6 +376,7 @@ class VideoPage extends Component {
                 audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
                 selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
                 videoId={this.state.videoId}
+                pauseAudioClips={this.pauseAudioClips}
                 {...this.state}
               />
             </div>
