@@ -1,22 +1,22 @@
 #audio-description-selector {
-  width: 300px;
-  margin: 16px auto 0px;
-  position: relative;
-  top: 40px;
-  left: 32px;
+  position: absolute;
+  // width: 300px;
+  // margin: 16px auto 0px;
+  // top: 40px;
+  right: 16px;
   color: #fff;
   // float: right;
   @media screen and (min-width: 601px) {
-    top: -19px;
-    left: 261px;
+    bottom: 13px;
+    right: 30px;
   }
-  #audio-description-selector-header {
-    position: relative;
-    left: 90px;
-    top: 4px;
-    font-size: 11px;
-    padding-bottom: 8px;
-  }
+  // #audio-description-selector-header {
+  //   position: relative;
+  //   left: 90px;
+  //   top: 4px;
+  //   font-size: 11px;
+  //   padding-bottom: 8px;
+  // }
   select {
     text-align-last:center;
     color: white;
@@ -24,6 +24,10 @@
     border: 0;
     outline: 1px solid #CCC;
     font-size: 11px;
+    width: calc(100vw - 32px);
+    @media screen and (min-width: 601px) {
+      width: auto;
+    }
   }
   select:focus {
     outline-color: #00CCCC;

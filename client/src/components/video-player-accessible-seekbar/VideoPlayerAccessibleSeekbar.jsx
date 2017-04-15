@@ -117,7 +117,6 @@ class Slider extends Component {
   handleRailMouseDown(event) {
   	event = event || window.event;
   	let target = event.target || event.srcElement;
-    console.log('SEEKBAR TARGET ###', target);
   	let thumb = this.$(target.id.replace(/rail/, 'thumb1'));
   	let newPos = event.clientX - this.getHOffset(target) + this.getHScrollOffset() - (thumb.clientWidth / 2);
   	this.changeValue(thumb, this.mapPositionToValue(thumb, newPos));
@@ -246,7 +245,7 @@ class Slider extends Component {
             aria-valuenow="0"
             aria-valuetext="0%"
             accessKey="j"
-            style={{ left: `${this.props.videoPlayerAccessibilitySeekbarValue * 100}%` }}
+            style={{ left: `calc(${this.props.videoPlayerAccessibilitySeekbarValue * 100}% - 6px)` }}
           />
         </div>
       </div>

@@ -1,83 +1,65 @@
 #video-player {
+  background-color: #000;
   color: #fff;
+  // min-height: 100vh;
+  /* Firefox */
+  min-height: -moz-calc(100vh - 54px);
+  /* WebKit */
+  min-height: -webkit-calc(100vh - 54px);
+  /* Opera */
+  min-height: -o-calc(100vh - 54px);
+  /* Standard */
+  min-height: calc(100vh - 54px);
+  @media screen and (min-width: 601px) {
+    padding-top: 16px;
+    background-color: #3B3B3B;
+  }
   main {
     margin: 0;
     padding: 0;
     width: 100%;
     @media screen and (min-width: 601px) {
       margin: 0 auto;
-      padding-top: 120px;
+      padding: 10vh 0;
     }
-  }
-  background-color: #000;
-  // width: 100%;
-  min-height: 100vh;
-  // padding-top: 0px;
-  // margin-top: -108px;
-  @media screen and (min-width: 601px) {
-    padding-top: 16px;
-    background-color: #3B3B3B;
-  }
-  #video {
-    background-color: #000;
-    overflow: hidden;
-    // margin: 0 auto;
-    width: 100%;
-    height: 650px;
-    // height: 141px;
-    // padding-top: 50px;
-    // padding-right: 20px;
-    // margin-bottom: 0px;
-    @media screen and (min-width: 601px) {
-      width: 640px;
-      height: 414px;
-      margin: 0 auto;
-    }
-  }
-  #video-controls {
-    background-color: #000;
-    width: 100%;
-    height: 132px;
-    margin: 0 auto;
-    // padding-top: 0px;
-    // margin-top: 0px;
-    @media screen and (min-width: 601px) {
-      width: 640px;
-      margin: 0 auto;
-      height: 68px;
-    }
-    #play-button, #pause-button {
-      font-size: 18px;
-      position: absolute;
-      margin-left: 29px;
-      top: 435px;
+    #video {
+      position: relative;
+      background-color: #000;
+      overflow: hidden;
+      width: 100%;
+      height: 440px;
       @media screen and (min-width: 601px) {
-        font-size: 18px;
-        position: absolute;
-        margin-left: 29px;
-        top: 571px;
+        width: 640px;
+        height: 414px;
+        margin: 0 auto;
       }
     }
-    #play-button {
-      display: block;
-    }
-    #pause-button {
-      display: none;
+    #video-controls {
+      position: absolute;
+      bottom: 0px;
+      background-color: red;
+      // background-color: #000;
+      width: 100%;
+      height: 88px;
+      margin: 0 auto;
+      @media screen and (min-width: 601px) {
+        width: 640px;
+        height: 68px;
+      }
+      #play-button, #pause-button {
+        // position: relative;
+        // top: 0px;
+        display: block;
+        border: none;
+        outline: none;
+        background-color: rgba(0, 0, 0, 0);
+        color: white;
+        font-size: 18px;
+        margin-left: 23px;
+        @media screen and (min-width: 601px) {
+          // top: 569px;
+        }
+      }
     }
   }
-
-  #playerVP{
-
-  }
-
-
-  // @-webkit-keyframes spin {
-  //   0% { -webkit-transform: rotate(0deg); }
-  //   100% { -webkit-transform: rotate(360deg); }
-  // }
-
-  // @keyframes spin {
-  //   0% { transform: rotate(0deg); }
-  //   100% { transform: rotate(360deg); }
-  // }
 }

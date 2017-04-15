@@ -1,0 +1,22 @@
+#not-found {
+  /* Firefox */
+  min-height: -moz-calc(100vh - 54px);
+  /* WebKit */
+  min-height: -webkit-calc(100vh - 54px);
+  /* Opera */
+  min-height: -o-calc(100vh - 54px);
+  /* Standard */
+  min-height: calc(100vh - 54px);
+  h2 {
+    position: relative;
+    margin: 0;
+    /* Firefox */
+    top: -moz-calc(50vh - 69px);
+    /* WebKit */
+    top: -webkit-calc(50vh - 69px);
+    /* Opera */
+    top: -o-calc(50vh - 69px);
+    /* Standard */
+    top: calc(50vh - 69px);
+  }
+}

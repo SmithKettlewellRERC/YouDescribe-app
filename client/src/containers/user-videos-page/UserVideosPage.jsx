@@ -106,22 +106,45 @@ class UserVideosPage extends Component {
   }
 
   render() {
+    let loadMoreButton = (
+      <div className="w3-margin-top w3-center load-more w3-hide">
+        <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+      </div>
+    );
+
+    if (this.state.videoComponents.length > 20) {
+      loadMoreButton = (
+        <div className="w3-margin-top w3-center load-more">
+          <Button
+            title="Load more videos"
+            color="w3-indigo"
+            text="Load more"
+            onClick={this.loadMoreResults}
+          />
+        </div>
+      );
+    }
+
     return (
       <div id="user-videos-page" title="User described videos page">
 
-        <header role="banner" className="w3-container w3-indigo">
-          <h2>Described videos by {this.state.userName}</h2>
-        </header>
+        <main role="main">
 
-        <Spinner />
+          <section>
+            <header className="w3-container w3-indigo">
+              <h2>MY DESCRIBED VIDEOS</h2>
+            </header>
 
-        <main role="main" className="w3-row">
-          {this.state.videoComponents}
+            <Spinner />
+
+            <div className="w3-row video-card-container">
+              {this.state.videoComponents}
+            </div>
+
+            {loadMoreButton}
+          </section>
+
         </main>
-
-        <div id="load-more" className="w3-margin-top w3-center w3-padding-32">
-          {/*<Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />*/}
-        </div>
 
       </div>
     );

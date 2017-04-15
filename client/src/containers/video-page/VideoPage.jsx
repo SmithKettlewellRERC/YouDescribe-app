@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
 import Spinner from '../../components/spinner/Spinner.jsx';
-import VolumeBalancer from '../../components/volume-balancer/VolumeBalancer.jsx';
-import VideoPlayerAccessibleSeekbar from '../../components/video-player-accessible-seekbar/VideoPlayerAccessibleSeekbar.jsx';
-import AudioDescriptionSelector from '../../components/audio-description-selector/AudioDescriptionSelector.jsx';
+import VideoPlayerControls from '../../components/video-player-controls/VideoPlayerControls.jsx';
 import { ourFetch } from '../../shared/helperFunctions';
 import { convertISO8601ToSeconds, convertSecondsToEditorFormat } from '../../shared/helperFunctions';
-
 
 const conf = require('../../shared/config')();
 
@@ -37,8 +34,6 @@ class VideoPage extends Component {
     };
     this.updateState = this.updateState.bind(this);
     this.setAudioDescriptionActive = this.setAudioDescriptionActive.bind(this);
-    this.playVideo = this.playVideo.bind(this);
-    this.pauseVideo = this.pauseVideo.bind(this);
     this.closeSpinner = this.closeSpinner.bind(this);
     this.resetPlayedAudioClips = this.resetPlayedAudioClips.bind(this);
     this.changeAudioDescription = this.changeAudioDescription.bind(this);
@@ -304,7 +299,6 @@ class VideoPage extends Component {
       
       console.log('Let\'s play', playbackType, audioClip.start_time);
 
-      // Audio ducking.
       if (playbackType === 'inline') {
         self.audioClipsPlayed[audioClipId].volume(self.state.balancerValue / 100);
         self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4);
@@ -387,26 +381,23 @@ class VideoPage extends Component {
     // console.log('1 -> Render');
     return (
       <div id="video-player">
-        <main role="application" title="Video player">
-          <div className="">
+        <main role="main" title="Video player">
+          <section>
             <div id="video" className="w3-card-2">
               <Spinner />
               <div id="playerVP" />
-              <div id="video-controls">
-                <VideoPlayerAccessibleSeekbar updateState={this.updateState} resetPlayedAudioClips={this.resetPlayedAudioClips} {...this.state} />
-                <div id="play-button" onClick={this.playVideo} accessKey="p"><i className="fa fa-play" aria-hidden="true"></i></div>
-                <div id="pause-button" onClick={this.pauseVideo} accessKey="s"><i className="fa fa-pause" aria-hidden="true"></i></div>
-                <VolumeBalancer updateState={this.updateState} />
-                <AudioDescriptionSelector
-                  audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
-                  selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
-                  changeAudioDescription={this.changeAudioDescription}
-                  videoId={this.state.videoId}
-                  getAppState={this.props.getAppState}
-                />
-              </div>
+              <VideoPlayerControls
+                getAppState={this.props.getAppState}
+                updateState={this.updateState}
+                changeAudioDescription={this.changeAudioDescription}
+                resetPlayedAudioClips={this.resetPlayedAudioClips}
+                audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
+                selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
+                videoId={this.state.videoId}
+                {...this.state}
+              />
             </div>
-          </div>
+          </section>
         </main>
       </div>
     );
