@@ -16,11 +16,7 @@ class AudioDescriptionSelector extends Component {
         alert('You have to be legged in in order to up vote');
       }
     } else {
-      this.props.updateState({
-        selectedAudioDescriptionId: selectedAudioDescriptionId,
-      }, () => {
-        this.props.setAudioDescriptionActive();
-      });
+      this.props.changeAudioDescription(selectedAudioDescriptionId);
     }
   }
 

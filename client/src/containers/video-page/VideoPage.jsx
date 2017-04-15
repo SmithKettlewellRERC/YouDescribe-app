@@ -15,21 +15,17 @@ class VideoPage extends Component {
     super(props);
     this.watcher = null;
     this.videoState = -1;
-    this.currentClip = null;
-    this.audioClipsCopy = {};
     this.previousVideoVolume = 0;
+    this.audioClipsPlayed = {};
 
     this.state = {
       videoId: props.params.videoId,
-      videoUrl: `${conf.apiUrl}/videos/${props.params.videoId}`,
 
       // Audio descriptions.
       audioDescriptionsIds: [],
       audioDescriptionsIdsUsers: {},
       audioDescriptionsIdsAudioClips: {},
       selectedAudioDescriptionId: null,
-
-      currentClipVolume: 0.5,
 
       // Video controls and data.
       videoData: {},
@@ -39,12 +35,13 @@ class VideoPage extends Component {
       videoVolume: 0,
       balancerValue: 50,
     };
-    this.getState = this.getState.bind(this);
     this.updateState = this.updateState.bind(this);
     this.setAudioDescriptionActive = this.setAudioDescriptionActive.bind(this);
     this.playVideo = this.playVideo.bind(this);
     this.pauseVideo = this.pauseVideo.bind(this);
     this.closeSpinner = this.closeSpinner.bind(this);
+    this.resetPlayedAudioClips = this.resetPlayedAudioClips.bind(this);
+    this.changeAudioDescription = this.changeAudioDescription.bind(this);
   }
 
   componentDidMount() {
@@ -62,7 +59,8 @@ class VideoPage extends Component {
   fetchVideoData() {
     console.log('2 -> fetchingVideoData');
     const self = this;
-    ourFetch(this.state.videoUrl)
+    const url = `${conf.apiUrl}/videos/${this.props.params.videoId}`;
+    ourFetch(url)
     .then((response) => {
       if (response.result) {
         self.setState({
@@ -115,14 +113,12 @@ class VideoPage extends Component {
   // 4.
   setAudioDescriptionActive() {
     console.log('4 -> setAudioDescriptionActive');
-
     let selectedAudioDescriptionId = null;
     if (this.state.selectedAudioDescriptionId !== null) {
       selectedAudioDescriptionId = this.state.selectedAudioDescriptionId;
     } else {
       selectedAudioDescriptionId = this.state.audioDescriptionsIds[0];
     }
-
     this.setState({
       selectedAudioDescriptionId,
     }, () => {
@@ -134,39 +130,49 @@ class VideoPage extends Component {
   preLoadAudioClips() {
     console.log('5 -> preLoadAudioClips');
     const self = this;
-
     const audioClips = this.getAudioClips();
-
     if (audioClips.length > 0) {
       const promises = [];
       audioClips.forEach((audioObj, idx) => {
-        console.log(idx + 1, audioObj.url);
+        console.log(audioObj.url, audioObj.start_time, audioObj.end_time, audioObj.duration, audioObj.playback_type);
         promises.push(ourFetch(audioObj.url, false));
       });
       Promise.all(promises).then(function () {
-        // console.log('All audios loaded.');
-        self.initVideoPlayer();
+        self.getVideoDuration();
       })
       .catch(function (errorAllAudios) {
         console.log('ERROR LOADING AUDIOS -> ', errorAllAudios);
       });
     } else {
-      self.initVideoPlayer();
+      self.getVideoDuration();
     }
   }
 
   // 6
+  getVideoDuration() {
+    console.log('6 -> getVideoDuration');
+    const self = this;
+    const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet&key=${conf.youTubeApiKey}`;
+    ourFetch(url).then((data) => {
+      this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
+      this.setState({
+        videoTitle: data.items[0].snippet.title,
+        videoDescription: data.items[0].snippet.description,
+        videoDurationInSeconds: this.videoDurationInSeconds,
+        videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
+      }, () => {
+        self.initVideoPlayer();
+      });
+    }).catch((err) => {
+      console.log('Unable to load the video you are trying to edit.', err);
+    });
+  }
+
+  // 7
   initVideoPlayer() {
     const self = this;
-    console.log('6 -> initVideoPlayer');
+    console.log('7 -> initVideoPlayer');
     if (YT.loaded) {
-      // If the video is playing, we need to change the state.
-      if (this.state.videoPlayer) {
-        const r = confirm("By changing the video describer, we have to restart the video. Are you sure you want to change?");
-        if (r == true) {
-          this.state.videoPlayer.stopVideo();
-        }
-      }
       startVideo();
     } else {
       window.onYouTubeIframeAPIReady = () => {
@@ -174,60 +180,8 @@ class VideoPage extends Component {
       };
     }
 
-    function onVideoPlayerReady() {
-      self.closeSpinner();
-      self.audioClipsCopy = self.getAudioClips().slice();
-      self.getVideoDuration();
-    }
-
-    function onPlayerStateChange(event) {
-      self.videoState = event.data;
-      self.setState({ videoState: event.data }, () => {
-        switch (event.data) {
-          case 0:
-            // ended
-            if (self.watcher) {
-              clearInterval(self.watcher);
-              self.watcher = null;
-            }
-            break;
-          case 1:
-            // playing
-            self.playVideo();
-            if (self.currentClip && self.currentClip.playbackType === 'extended') {
-              self.currentClip.stop();
-            }
-            self.videoProgressWatcher();
-            break;
-          case 2:
-            // paused
-            self.pauseVideo();
-            self.audioClipsCopy = self.getAudioClips().slice();
-            if (self.currentClip && self.currentClip.playbackType === 'inline') {
-              self.currentClip.pause();
-            }
-            if (self.watcher) {
-              clearInterval(self.watcher);
-              self.watcher = null;
-            }
-            break;
-          case 3:
-            // buffering
-            self.audioClipsCopy = self.getAudioClips().slice();
-            if (self.currentClip && self.currentClip.playbackType === 'inline') {
-              self.currentClip.pause();
-            }
-            break;
-          default:
-            if (self.watcher) {
-              clearInterval(self.watcher);
-              self.watcher = null;
-            }
-        }
-      });
-    }
-
     function startVideo() {
+      console.log('8 -> startVideo');
       if (self.state.videoPlayer === null) {
         self.setState({
           videoPlayer: new YT.Player('playerVP', {
@@ -247,124 +201,153 @@ class VideoPage extends Component {
         });
       }
     }
+
+    function onVideoPlayerReady() {
+      console.log('9 -> onVideoPlayerReady');
+      self.closeSpinner();
+    }
+
+    function onPlayerStateChange(event) {
+      switch (event.data) {
+        case 0: // ended
+          self.stopProgressWatcher();
+          break;
+        case 1: // playing
+
+          // Just changing the button display.
+          self.changePlayPauseButtonToPaused();
+          
+          // Starting the watcher.
+          self.startProgressWatcher();
+
+          break;
+        case 2: // paused
+          
+          // Pausing the watcher.
+          self.stopProgressWatcher();
+          
+          // Just changing the button display.
+          self.changePlayPauseButtonToPlay();
+          
+          break;
+        case 3: // buffering
+          break;
+        case 5: // video cued
+          
+          // Starting the watcher.
+          self.state.videoPlayer.playVideo();
+          self.startProgressWatcher();
+          break;
+        default:
+          // self.stopProgressWatcher();
+      }
+    }
   }
 
-  // 7
-  getVideoDuration() {
-    console.log('7 -> getVideoDuration');
+  // 10
+  startProgressWatcher() {
+    console.log('10 -> startProgressWatcher')
     const self = this;
-    const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet&key=${conf.youTubeApiKey}`;
-    ourFetch(url).then((data) => {
-      this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
-      this.setState({
-        videoTitle: data.items[0].snippet.title,
-        videoDescription: data.items[0].snippet.description,
-        videoDurationInSeconds: this.videoDurationInSeconds,
-        videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
-      });
-    }).catch((err) => {
-      console.log('Unable to load the video you are trying to edit.', err);
-    });
-  }
-
-  // 8
-  videoProgressWatcher() {
-    console.log('8 -> videoProgressWatcher')
-    const interval = 100;
+    const audioClips = this.getAudioClips();
+    const interval = 250;
 
     if (this.watcher) {
-      clearInterval(this.watcher);
-      this.watcher = null;
+      this.stopProgressWatcher();
     }
 
     this.watcher = setInterval(() => {
-      const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
+      const currentVideoProgress = self.state.videoPlayer.getCurrentTime();
+      // console.log(currentVideoProgress);
 
       this.setState({
         videoPlayerAccessibilitySeekbarValue: currentVideoProgress / this.state.videoDurationInSeconds,
       });
 
-      if (this.currentClip && this.currentClip.playbackType === 'inline') {
-        this.currentClip.volume(this.state.balancerValue / 100);
-        this.state.videoPlayer.setVolume((100 - this.state.balancerValue) * 0.4);
-      } else {
-        this.state.videoPlayer.setVolume(100 - this.state.balancerValue);
-      }
+      const currentVideoProgressFloor = Math.floor(currentVideoProgress);
 
-      for (let i = 0; i < this.audioClipsCopy.length; i += 1) {
-        switch (this.audioClipsCopy[i].playback_type) {
-          case 'inline':
-            if (currentVideoProgress >= +this.audioClipsCopy[i].start_time &&
-              currentVideoProgress < +this.audioClipsCopy[i].end_time) {
-              this.currentClip = new Howl({
-                src: [this.audioClipsCopy[i].url],
-                html5: false,
-                volume: this.state.balancerValue / 100,
-                onload: () => {
-                  this.currentClip.playbackType = 'inline';
-                  const temp = +this.audioClipsCopy[i];
-                  this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
-                  this.currentClip.seek(currentVideoProgress - temp.start_time, this.currentClip.play());
-                },
-                onloaderror: (errToLoad) => {
-                  console.log('Impossible to load', errToLoad);
-                },
-                onplay: () => {
-                  console.log('INLINE PLAYING...');
-                  // this.previousVideoVolume = videoVolume;
-                },
-                onend: () => {
-                  this.currentClip = null;
-                  // this.state.videoPlayer.setVolume(this.previousVideoVolume);
-                },
-              });
-            }
-            break;
-          case 'extended':
-            if (Math.abs(+this.audioClipsCopy[i].start_time - currentVideoProgress) <= interval / 2000 ||
-            (+this.audioClipsCopy[i].start_time < 0.5 && currentVideoProgress <= interval / 500)) {
-              this.currentClip = new Howl({
-                src: [this.audioClipsCopy[i].url],
-                html5: false,
-                volume: this.state.balancerValue / 100,
-                onload: () => {
-                  this.currentClip.playbackType = 'extended';
-                  this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
-                  this.currentClip.play();
-                },
-                onloaderror: (errToLoad) => {
-                  console.log('Impossible to load', errToLoad)
-                },
-                onplay: () => {
-                  console.log('EXTENDED PLAYING...');
-                  this.state.videoPlayer.pauseVideo();
-                },
-                onend: () => {
-                  this.currentClip = null;
-                  this.state.videoPlayer.playVideo();
-                },
-              });
-            }
-            break;
-          default:
-            console.log('Audio clip format not labelled or incorrect');
+      for (let i = 0; i < audioClips.length; i += 1) {
+        const audioClip = audioClips[i];
+        if (Math.floor(audioClip.start_time) === currentVideoProgressFloor) {
+          self.playAudioClip(audioClip);
         }
       }
     }, interval);
   }
 
-  componentWillUnmount() {
-    clearInterval(this.watcher);
-    this.watcher = null;
-    if (this.currentClip && this.currentClip.stop) this.currentClip.stop();
-    this.currentClip = null;
-    // if (this.watcher) {
-    // }
-    // this.watcher = null;
+  stopProgressWatcher() {
+    console.log('stopProgressWatcher');
+    if (this.watcher) {
+      clearInterval(this.watcher);
+      this.watcher = null;
+    }
   }
 
-  getState() {
-    return this.state;
+  playAudioClip(audioClip) {
+    const self = this;
+    const audioClipId = audioClip._id;
+    const playbackType = audioClip.playback_type;
+    
+    if (!this.audioClipsPlayed.hasOwnProperty(audioClipId)) {
+      this.audioClipsPlayed[audioClipId] = new Howl({
+        src: [audioClip.url],
+        html5: false,
+        volume: self.state.balancerValue / 100,
+        onplay: () => {
+          if (playbackType === 'extended') {
+            self.state.videoPlayer.pauseVideo();
+          }
+        },
+        onend: () => {
+          self.state.videoPlayer.playVideo();
+        },
+      });
+      
+      console.log('Let\'s play', playbackType, audioClip.start_time);
+
+      // Audio ducking.
+      if (playbackType === 'inline') {
+        self.audioClipsPlayed[audioClipId].volume(self.state.balancerValue / 100);
+        self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4);
+      } else {
+        self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
+      }
+
+      this.audioClipsPlayed[audioClipId].play();
+    }
+  }
+
+  resetPlayedAudioClips() {
+    const audioClipsIds = Object.keys(this.audioClipsPlayed);
+    audioClipsIds.forEach(id => {
+      this.audioClipsPlayed[id].stop();
+    });
+    this.audioClipsPlayed = {};
+  }
+
+  pauseAudioClips() {
+    const audioClipsIds = Object.keys(this.audioClipsPlayed);
+    audioClipsIds.forEach(id => {
+      this.audioClipsPlayed[id].stop();
+    });
+  }
+
+  changeAudioDescription(selectedAudioDescriptionId) {
+    const r = confirm("By changing the video describer, we have to restart the video. Are you sure you want to change?");
+    if (r == true) {
+      this.state.videoPlayer.stopVideo();
+      this.resetPlayedAudioClips();
+      this.setState({
+        selectedAudioDescriptionId: selectedAudioDescriptionId,
+      }, () => {
+        this.setAudioDescriptionActive();
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    this.state.videoPlayer.stopVideo();
+    this.resetPlayedAudioClips();
+    this.stopProgressWatcher();
   }
 
   updateState(newState, callback) {
@@ -376,36 +359,28 @@ class VideoPage extends Component {
     spinner.style.display = 'none';
   }
 
-  playVideo() {
+  changePlayPauseButtonToPaused() {
     const play = document.getElementById('play-button');
     const pause = document.getElementById('pause-button');
-
     play.style.display = 'none';
-    pause.style.display = 'block';
-    this.state.videoPlayer.playVideo();
+    pause.style.display = 'block';    
+  }
 
+  changePlayPauseButtonToPlay() {
+    const play = document.getElementById('play-button');
+    const pause = document.getElementById('pause-button');
+    play.style.display = 'block';
+    pause.style.display = 'none';
+  }
+
+  playVideo() {
+    this.state.videoPlayer.playVideo();
   }
 
   pauseVideo() {
-    const play = document.getElementById('play-button');
-    const pause = document.getElementById('pause-button');
-
-    pause.style.display = 'none';
-    play.style.display = 'block';
+    this.pauseAudioClips();
     this.state.videoPlayer.pauseVideo();
   }
-
-  // playPauseToggle() {
-  //   const play = document.getElementById('play-button');
-  //   const pause = document.getElementById('pause-button');
-  //   if (play.style.display === 'block') {
-  //     play.style.display = 'none';
-  //     pause.style.display = 'block';
-  //   } else {
-  //     pause.style.display = 'none';
-  //     play.style.display = 'block';
-  //   }
-  // }
 
   // 1
   render() {
@@ -414,20 +389,18 @@ class VideoPage extends Component {
       <div id="video-player">
         <main role="application" title="Video player">
           <div className="">
-
             <div id="video" className="w3-card-2">
               <Spinner />
               <div id="playerVP" />
               <div id="video-controls">
-                <VideoPlayerAccessibleSeekbar updateState={this.updateState} {...this.state} />
+                <VideoPlayerAccessibleSeekbar updateState={this.updateState} resetPlayedAudioClips={this.resetPlayedAudioClips} {...this.state} />
                 <div id="play-button" onClick={this.playVideo} accessKey="p"><i className="fa fa-play" aria-hidden="true"></i></div>
                 <div id="pause-button" onClick={this.pauseVideo} accessKey="s"><i className="fa fa-pause" aria-hidden="true"></i></div>
                 <VolumeBalancer updateState={this.updateState} />
                 <AudioDescriptionSelector
-                  updateState={this.updateState}
                   audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
                   selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
-                  setAudioDescriptionActive={this.setAudioDescriptionActive}
+                  changeAudioDescription={this.changeAudioDescription}
                   videoId={this.state.videoId}
                   getAppState={this.props.getAppState}
                 />

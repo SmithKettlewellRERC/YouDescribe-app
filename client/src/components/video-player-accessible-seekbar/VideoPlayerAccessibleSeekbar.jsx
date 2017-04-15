@@ -178,14 +178,13 @@ class Slider extends Component {
   }
 
   changeValue(target, value) {
-    console.log('SEEKBAR TARGET', target);
+    // console.log('SEEKBAR TARGET', target);
   	const ratio = this.calibrate(target);
-    console.log(target.getAttribute('aria-valuemin'), target.getAttribute('aria-valuemax'));
+    // console.log(target.getAttribute('aria-valuemin'), target.getAttribute('aria-valuemax'));
   	const min = parseInt(target.getAttribute('aria-valuemin'));
   	const max = parseInt(target.getAttribute('aria-valuemax'));
-    console.log(min, max);
+    // console.log(min, max);
   	const newValue = Math.min(Math.max(value, min), max);
-  	// const newPos = Math.round(newValue * ratio);
   	const newPos = Math.round(newValue * ratio);
   	target.style.left = newPos + "px";
 
@@ -193,6 +192,7 @@ class Slider extends Component {
   	target.setAttribute('aria-valuetext', newValue + "%");
   	// this.updateValueIndicator(target.id.replace(/Thumb/, 'Value'), newValue + "%");
     // this.setState({ videoPlayerAccessibilitySeekbarValue: newValue })
+		this.props.resetPlayedAudioClips();
     this.props.videoPlayer.seekTo((newValue / 100) * this.props.videoDurationInSeconds);
   }
 
