@@ -1,4 +1,10 @@
 #user-avatar {
+  button {
+    border: none;
+    background: none;
+    // outline: none;
+    padding: 0;
+  }
   img {
     border-radius: 50%;
     cursor: pointer;
