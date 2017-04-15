@@ -5,10 +5,11 @@ module.exports = () => {
   // DON'T CHANGE THIS URLS!
   let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
   let audioClipsUploadsPath = 'https://api.youdescribe.org/audio-descriptions-files';
+  const host = 'localhost';
 
-  if (href.indexOf('localhost') != -1) {
-    apiUrl = `http://localhost:8080/${apiVersion}`;
-    audioClipsUploadsPath = 'http://localhost:8080/audio-descriptions-files';
+  if (href.indexOf(host) !== -1) {
+    apiUrl = `http://${host}:8080/${apiVersion}`;
+    audioClipsUploadsPath = `http://${host}:8080/audio-descriptions-files`;
   }
 
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';

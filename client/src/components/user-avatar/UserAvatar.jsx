@@ -8,9 +8,12 @@ class UserAvatar extends Component {
   }
 
   render() {
+    // document.getElementById('user-avatar').onKeypress = () => this.props.userMenuToggle();
     return (
       <div id="user-avatar">
-        <img src={this.props.getAppState().userPicture} height="33px" onClick={this.props.userMenuToggle} />
+        <button onKeyPress={this.props.userMenuToggle}>
+          <img alt="user avatar" src={this.props.getAppState().userPicture} height="33px" onClick={this.props.userMenuToggle} />
+        </button>
         <UserMenu getAppState={this.props.getAppState} signOut={this.props.signOut} userMenuToggle={this.props.userMenuToggle} />
       </div>
     );
