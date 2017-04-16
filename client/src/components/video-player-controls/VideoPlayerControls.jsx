@@ -6,10 +6,12 @@ import AudioDescriptionSelector from '../audio-description-selector/AudioDescrip
 const VideoPlayerControls = (props) => {
   function playVideo() {
     props.videoPlayer.playVideo();
+    props.pauseAudioClips();
   }
 
   function pauseVideo() {
     props.videoPlayer.pauseVideo();
+    props.pauseAudioClips();
   }
 
   let playPauseButton = (
@@ -36,10 +38,10 @@ const VideoPlayerControls = (props) => {
         </div>
         <div className="w3-col l6 m6">
           <AudioDescriptionSelector
-            updateState={props.updateState}
             audioDescriptionsIdsUsers={props.audioDescriptionsIdsUsers}
             selectedAudioDescriptionId={props.selectedAudioDescriptionId}
             setAudioDescriptionActive={props.setAudioDescriptionActive}
+            changeAudioDescription={props.changeAudioDescription}
             videoId={props.videoId}
             getAppState={props.getAppState}
           />

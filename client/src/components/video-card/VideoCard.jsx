@@ -80,12 +80,12 @@ class VideoCard extends Component {
       <div id="video-card" className="w3-margin-top w3-left" title="">
         <div className="w3-card-2 w3-hover-shadow">
           <div id="card-thumbnail">
-            <Link role="link" to={'/video/' + this.props.youTubeId}><img alt="" src={this.props.thumbnailMediumUrl} width="100%" /></Link>
+            <Link role="link" to={'/video/' + this.props.youTubeId}><img alt={this.props.title} src={this.props.thumbnailMediumUrl} width="100%" /></Link>
             <div id="card-duration">{this.props.duration}</div>
           </div>
           <div className="w3-container w3-padding-bottom">
             <div id="card-title-container">
-              <div id="card-title">
+              <div id="card-title" aria-hidden="true" >
                 <h3><Link role="link" to={'/video/' + this.props.youTubeId}>{this.props.title}</Link></h3>
               </div>
               <div id="card-author">
