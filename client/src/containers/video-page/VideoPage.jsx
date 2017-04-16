@@ -18,6 +18,7 @@ class VideoPage extends Component {
       videoId: props.params.videoId,
 
       // Audio descriptions.
+      inlineClipsCurrentlyPlaying: [],
       audioDescriptionsIds: [],
       audioDescriptionsIdsUsers: {},
       audioDescriptionsIdsAudioClips: {},
@@ -214,24 +215,24 @@ class VideoPage extends Component {
 
             // Just changing the button display.
             // self.changePlayPauseButtonToPaused();
-            
+
             // Starting the watcher.
             self.startProgressWatcher();
 
             break;
           case 2: // paused
-            
+
             // Pausing the watcher.
             self.stopProgressWatcher();
-            
+
             // Just changing the button display.
             // self.changePlayPauseButtonToPlay();
-            
+
             break;
           case 3: // buffering
             break;
           case 5: // video cued
-            
+
             // Starting the watcher.
             self.state.videoPlayer.playVideo();
             self.startProgressWatcher();
@@ -256,7 +257,9 @@ class VideoPage extends Component {
 
     this.watcher = setInterval(() => {
       const currentVideoProgress = self.state.videoPlayer.getCurrentTime();
-      // console.log(currentVideoProgress);
+
+      console.log(self.state.currentClip);
+
       this.setState({
         videoPlayerAccessibilitySeekbarValue: currentVideoProgress / this.state.videoDurationInSeconds,
       });
@@ -285,7 +288,7 @@ class VideoPage extends Component {
     const self = this;
     const audioClipId = audioClip._id;
     const playbackType = audioClip.playback_type;
-    
+
     if (!this.audioClipsPlayed.hasOwnProperty(audioClipId)) {
       this.audioClipsPlayed[audioClipId] = new Howl({
         src: [audioClip.url],
@@ -295,14 +298,33 @@ class VideoPage extends Component {
           if (playbackType === 'extended') {
             self.state.videoPlayer.pauseVideo();
           }
+          if (playbackType === 'inline') {
+            const inlineClipsCurrentlyPlaying = self.state.inlineClipsCurrentlyPlaying;
+
+            inlineClipsCurrentlyPlaying.push(audioClipId);
+            self.setState({ inlineClipsCurrentlyPlaying });
+            self.state.videoPlayer.setVolume(20);
+          }
         },
         onend: () => {
-          self.state.videoPlayer.playVideo();
+          if (playbackType === 'extended') {
+            self.state.videoPlayer.playVideo();
+          }
+          if (playbackType === 'inline') {
+            const inlineClipsCurrentlyPlaying = self.state.inlineClipsCurrentlyPlaying;
+
+            inlineClipsCurrentlyPlaying.pop();
+            if (!inlineClipsCurrentlyPlaying.length) {
+              self.state.videoPlayer.setVolume(100);
+            }
+            self.setState({ inlineClipsCurrentlyPlaying });
+          }
         },
       });
-      
-      console.log('Let\'s play', playbackType, audioClip.start_time);
 
+      console.log('Let\'s play', playbackType, audioClip.start_time);
+// console.log(self.state.videoPlayer.setVolume(0));
+// console.log(self.state.videoPlayer.getVolume());
       // Audio ducking.
       if (playbackType === 'inline') {
         self.audioClipsPlayed[audioClipId].volume(self.state.balancerValue / 100);
@@ -336,7 +358,7 @@ class VideoPage extends Component {
       this.state.videoPlayer.stopVideo();
       this.resetPlayedAudioClips();
       this.setState({
-        selectedAudioDescriptionId: selectedAudioDescriptionId,
+        selectedAudioDescriptionId,
       }, () => {
         this.setAudioDescriptionActive();
       });
