@@ -17,12 +17,7 @@ module.exports = () => {
   const googleClientId = '1056671841574-e1r4soednlur8hl2sl0ooumpvftt1s2k.apps.googleusercontent.com';
 
   // Video Player Setup
-  const videoPlayerWathcerInterval = 50; // Miliseconds
-  const videoPlayerWathcerDelay = 0.01; // Seconds
   const seekToPositionDelayFix = 0.100; // Seconds
-
-  // User Interface Setup
-  const trackSinewaveAreaWidth = 756;
 
   return {
     apiUrl,
@@ -30,10 +25,7 @@ module.exports = () => {
     audioClipsUploadsPath,
     youTubeApiUrl,
     youTubeApiKey,
-    videoPlayerWathcerInterval,
-    videoPlayerWathcerDelay,
     seekToPositionDelayFix,
-    trackSinewaveAreaWidth,
     googleClientId,
   };
 };

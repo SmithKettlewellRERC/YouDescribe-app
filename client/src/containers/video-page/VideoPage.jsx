@@ -133,19 +133,19 @@ class VideoPage extends Component {
         promises.push(ourFetch(audioObj.url, false));
       });
       Promise.all(promises).then(function () {
-        self.getVideoDuration();
+        self.getYTVideoInfo();
       })
       .catch(function (errorAllAudios) {
         console.log('ERROR LOADING AUDIOS -> ', errorAllAudios);
       });
     } else {
-      self.getVideoDuration();
+      self.getYTVideoInfo();
     }
   }
 
   // 6
-  getVideoDuration() {
-    console.log('6 -> getVideoDuration');
+  getYTVideoInfo() {
+    console.log('6 -> getYTVideoInfo');
     const self = this;
     const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet&key=${conf.youTubeApiKey}`;
     ourFetch(url).then((data) => {
@@ -203,41 +203,28 @@ class VideoPage extends Component {
     }
 
     function onPlayerStateChange(event) {
-      self.setState({
-        videoState: event.data,
-      }, () => {
+      self.setState({ videoState: event.data }, () => {
         switch (event.data) {
           case 0: // ended
             self.stopProgressWatcher();
             break;
           case 1: // playing
-
-            // Just changing the button display.
-            // self.changePlayPauseButtonToPaused();
-            
             // Starting the watcher.
             self.startProgressWatcher();
-
             break;
           case 2: // paused
             
             // Pausing the watcher.
             self.stopProgressWatcher();
             
-            // Just changing the button display.
-            // self.changePlayPauseButtonToPlay();
-            
             break;
           case 3: // buffering
             break;
           case 5: // video cued
-            
-            // Starting the watcher.
             self.state.videoPlayer.playVideo();
             self.startProgressWatcher();
             break;
           default:
-            // self.stopProgressWatcher();
         }
       });
     }
@@ -245,7 +232,7 @@ class VideoPage extends Component {
 
   // 10
   startProgressWatcher() {
-    console.log('10 -> startProgressWatcher')
+    console.log('10 -> startProgressWatcher');
     const self = this;
     const audioClips = this.getAudioClips();
     const interval = 250;
