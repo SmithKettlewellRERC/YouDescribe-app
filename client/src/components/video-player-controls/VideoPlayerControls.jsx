@@ -50,6 +50,6 @@ const VideoPlayerControls = (props) => {
 
     </div>
   );
-}
+};
 
 export default VideoPlayerControls;
