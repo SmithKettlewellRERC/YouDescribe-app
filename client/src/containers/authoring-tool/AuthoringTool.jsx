@@ -14,15 +14,12 @@ class AuthoringTool extends Component {
   constructor(props) {
     super(props);
     this.watcher = null;
-    this.videoState = -1;
-    this.currentClip = null;
-    this.audioClipsCopy = {};
     this.videoDurationInSeconds = -1;
+    this.audioClipsPlayed = {};
 
     this.state = {
       // Video main info.
       videoId: props.params.videoId,
-      videoUrl: `${conf.apiUrl}/videos/${props.params.videoId}`,
 
       // Video controls and data.
       videoData: {},
@@ -79,14 +76,6 @@ class AuthoringTool extends Component {
     this.closeSpinner = this.closeSpinner.bind(this);
   }
 
-  componentWillMount() {
-    // const isSignedIn = this.props.getAppState().isSignedIn;
-    // if (isSignedIn === false) {
-    //   alert('You have to be logged in to describe a video')
-    //   browserHistory.goBack();
-    // }
-  }
-
   componentDidMount() {
     this.getYDVideoData();
     this.scrollingFix();
@@ -96,7 +85,8 @@ class AuthoringTool extends Component {
   getYDVideoData() {
     console.log('2 -> getYDVideoData');
     const self = this;
-    ourFetch(this.state.videoUrl)
+    const url = `${conf.apiUrl}/videos/${this.props.params.videoId}`;
+    ourFetch(url)
     .then(response => {
       if (response.result) {
         self.setState({
@@ -141,6 +131,7 @@ class AuthoringTool extends Component {
         }
       }
     }
+
     this.setState({
       videoData,
       audioDescriptionId,
@@ -161,7 +152,7 @@ class AuthoringTool extends Component {
     if (audioClips.length > 0) {
       const promises = [];
       audioClips.forEach((audioObj, idx) => {
-        console.log(audioObj.url);
+        console.log(audioObj.url, audioObj.start_time, audioObj.end_time, audioObj.duration, audioObj.playback_type);
         promises.push(ourFetch(audioObj.url, false));
       });
       Promise.all(promises).then(function() {
@@ -240,68 +231,14 @@ class AuthoringTool extends Component {
       };
     }
 
-    function onVideoPlayerReady() {
-      self.closeSpinner();
-      const audioClips = self.state.audioDescriptionAudioClips;
-      self.audioClipsCopy = Object.values(audioClips);
-      initAudioRecorder();
-      // self.videoProgressWatcher();
-    }
-
-    function onPlayerStateChange(event) {
-      self.videoState = event.data;
-      const audioClips = Object.values(self.state.audioDescriptionAudioClips);
-      self.setState({ videoState: event.data }, () => {
-        switch (event.data) {
-          case 0:
-            // ended
-            // if (self.watcher) {
-            //   clearInterval(self.watcher);
-            //   self.watcher = null;
-            // }
-            break;
-          case 1:
-            // playing
-            if (self.currentClip && self.currentClip.playbackType === 'extended') {
-              self.currentClip.stop();
-            }
-            self.videoProgressWatcher();
-            break;
-          case 2:
-            // paused
-            self.audioClipsCopy = audioClips.slice();
-            if (self.currentClip && self.currentClip.playbackType === 'inline') {
-              self.currentClip.pause();
-            }
-            // if (self.watcher) {
-            //   clearInterval(self.watcher);
-            //   self.watcher = null;
-            // }
-            break;
-          case 3:
-            // buffering
-            self.audioClipsCopy = audioClips.slice();
-            if (self.currentClip && self.currentClip.playbackType === 'inline') {
-              self.currentClip.pause();
-            }
-            break;
-          default:
-            // if (self.watcher) {
-            //   clearInterval(self.watcher);
-            //   self.watcher = null;
-            // }
-        }
-      });
-    }
-
     function startVideo() {
+      console.log('8 -> startVideo');
       if (self.state.videoPlayer === null) {
         self.setState({
           videoPlayer: new YT.Player('playerAT', {
             height: '100%',
             videoId: self.state.videoId,
             playerVars: {
-              // 'controls': 1,
               modestbranding: 1,
               fs: 0,
               rel: 0,
@@ -309,7 +246,6 @@ class AuthoringTool extends Component {
               cc_load_policy: 0,
               iv_load_policy: 3,
             },
-            // enablejsapi: true,
             events: {
               onReady: onVideoPlayerReady,
               onStateChange: onPlayerStateChange,
@@ -318,22 +254,60 @@ class AuthoringTool extends Component {
         });
       }
     }
+
+    function onVideoPlayerReady() {
+      console.log('9 -> onVideoPlayerReady');
+      self.closeSpinner();
+      initAudioRecorder();
+    }
+
+    function onPlayerStateChange(event) {
+      console.log('playerStateChange', event.data)
+      self.setState({ videoState: event.data }, () => {
+        switch (event.data) {
+          case -1: // unstarted
+            self.stopProgressWatcher();
+            break;
+          case 0: // ended
+            self.stopProgressWatcher();
+            // self.resetPlayedAudioClips();
+            break;
+          case 1: // playing
+            self.pauseAudioClips();
+            self.startProgressWatcher();
+            break;
+          case 2: // paused
+            // self.pauseAudioClips();
+            self.stopProgressWatcher();
+            break;
+          case 3: // buffering
+            // buffering
+            self.resetPlayedAudioClips();
+            self.stopProgressWatcher();
+            break;
+          case 5: // video cued
+            // Starting the watcher.
+            self.state.videoPlayer.playVideo();
+            self.startProgressWatcher();
+            break;
+          default:
+        }
+      });
+    }
   }
 
   // 8
-  videoProgressWatcher() {
-    console.log('8 -> videoProgressWatcher')
-    const interval = 90;
+  startProgressWatcher() {
+    console.log('10 -> startProgressWatcher');
+    const self = this;
+    const audioClips = Object.values(this.state.audioDescriptionAudioClips);
+    const interval = 100;
 
     if (this.watcher) {
-      clearInterval(this.watcher);
-      this.watcher = null;
+      this.stopProgressWatcher();
     }
 
     this.watcher = setInterval(() => {
-      // console.log(this.state.videoPlayer.getCurrentTime());
-      // console.log(document.querySelector('.ytp-time-current').innerHTML);
-      // console.log(document.getElementById('playerAT').contentDocument.documentElement);
       const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
       const videoVolume = this.state.videoPlayer.getVolume();
       const playheadPosition = 756 * (currentVideoProgress / this.videoDurationInSeconds);
@@ -345,77 +319,83 @@ class AuthoringTool extends Component {
         videoVolume,
       });
 
-      if (this.currentClip && this.currentClip.playbackType === 'inline') {
-        console.log(this.state.videoPlayer.getVolume());
-        // this.currentClip.volume(this.state.videoPlayer.getVolume());
-        this.state.videoPlayer.setVolume(40);
-      } else {
-        this.state.videoPlayer.setVolume(100);
-      }
+      // if (this.currentClip && this.currentClip.playbackType === 'inline') {
+      //   console.log(this.state.videoPlayer.getVolume());
+      //   this.state.videoPlayer.setVolume(40);
+      // } else {
+      //   this.state.videoPlayer.setVolume(100);
+      // }
 
-      for (let i = 0; i < this.audioClipsCopy.length; i += 1) {
-        switch (this.audioClipsCopy[i].playback_type) {
-          case 'inline':
-            if (currentVideoProgress >= +this.audioClipsCopy[i].start_time &&
-              currentVideoProgress < +this.audioClipsCopy[i].end_time) {
-              console.log('## INLINE');
-              this.currentClip = new Howl({
-                src: [this.audioClipsCopy[i].url],
-                html5: false,
-                onload: () => {
-                  this.currentClip.playbackType = 'inline',
-                  this.currentClip.seek(currentVideoProgress - +this.audioClipsCopy[i].start_time, this.currentClip.play());
-                  this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
-                },
-                onloaderror: (errToLoad) => {
-                  console.log('Impossible to load', errToLoad)
-                },
-                onplay: () => {
-                  this.previousVideoVolume = videoVolume;
-                },
-                onend: () => {
-                  this.currentClip = null;
-                  this.state.videoPlayer.setVolume(this.previousVideoVolume);
-                },
-              });
-            }
-            break;
-          case 'extended':
-            if (Math.abs(+this.audioClipsCopy[i].start_time - currentVideoProgress) <= interval / 1000 ||
-            (+this.audioClipsCopy[i].start_time < 0.5 && currentVideoProgress <= interval / 500)) {
-              this.currentClip = new Howl({
-                src: [this.audioClipsCopy[i].url],
-                html5: false,
-                onload: () => {
-                  this.currentClip.playbackType = 'extended';
-                  this.audioClipsCopy = this.audioClipsCopy.slice(i + 1);
-                  this.currentClip.play();
-                },
-                onloaderror: (errToLoad) => {
-                  console.log('Impossible to load current audio', errToLoad)
-                },
-                onplay: () => {
-                  this.state.videoPlayer.pauseVideo();
-                },
-                onend: () => {
-                  this.currentClip = null;
-                  this.state.videoPlayer.playVideo();
-                },
-              });
-            }
-            break;
-          default:
-            console.log('Audio clip format not labelled or incorrect');
-          }
+      const currentVideoProgressFloor = Math.floor(currentVideoProgress);
+      for (let i = 0; i < audioClips.length; i += 1) {
+        const audioClip = audioClips[i];
+        if (Math.floor(audioClip.start_time) === currentVideoProgressFloor) {
+          self.playAudioClip(audioClip);
         }
+      }
     }, interval);
   }
 
-  componentWillUnmount() {
+  stopProgressWatcher() {
+    console.log('stopProgressWatcher');
     if (this.watcher) {
       clearInterval(this.watcher);
       this.watcher = null;
     }
+  }
+
+  playAudioClip(audioClip) {
+    const self = this;
+    const audioClipId = audioClip._id;
+    const playbackType = audioClip.playback_type;
+    
+    if (!this.audioClipsPlayed.hasOwnProperty(audioClipId)) {
+      this.audioClipsPlayed[audioClipId] = new Howl({
+        src: [audioClip.url],
+        html5: false,
+        onplay: () => {
+          if (playbackType === 'extended') {
+            self.state.videoPlayer.pauseVideo();
+          }
+        },
+        onend: () => {
+          self.state.videoPlayer.playVideo();
+        },
+      });
+      
+      console.log('Let\'s play', playbackType, 'at', audioClip.start_time);
+
+      // Audio ducking.
+      // if (playbackType === 'inline') {
+      //   self.audioClipsPlayed[audioClipId].volume(self.state.balancerValue / 100);
+      //   self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4);
+      // } else {
+      //   self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
+      // }
+
+      this.audioClipsPlayed[audioClipId].play();
+    }
+  }
+
+  resetPlayedAudioClips() {
+    const audioClipsIds = Object.keys(this.audioClipsPlayed);
+    audioClipsIds.forEach(id => {
+      this.audioClipsPlayed[id].stop();
+    });
+    this.audioClipsPlayed = {};
+  }
+
+  pauseAudioClips() {
+    const audioClipsObjs = Object.values(this.audioClipsPlayed);
+    audioClipsObjs.forEach(howler => {
+      howler.stop();
+    });
+  }
+
+  componentWillUnmount() {
+    this.state.videoPlayer.stopVideo();
+    this.resetPlayedAudioClips();
+    this.stopProgressWatcher();
   }
 
   addAudioClipTrack(playbackType) {
@@ -570,7 +550,7 @@ class AuthoringTool extends Component {
 
     if (e.target.className === 'fa fa-circle') {
       // RECORD.
-      console.log(this.state.currentVideoProgress);
+      // console.log(this.state.currentVideoProgress);
       this.setState({
         selectedTrackComponentAudioClipStartTime: this.state.currentVideoProgress,
         selectedTrackComponentId: trackId,
@@ -666,7 +646,6 @@ class AuthoringTool extends Component {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function () {
-      // console.log(JSON.parse(this.responseText).result);
       self.setState({
         videoData: JSON.parse(this.responseText).result,
       }, () => {
