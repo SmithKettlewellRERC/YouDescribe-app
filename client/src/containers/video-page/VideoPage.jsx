@@ -244,10 +244,14 @@ class VideoPage extends Component {
     this.watcher = setInterval(() => {
       const currentVideoProgress = self.state.videoPlayer.getCurrentTime();
 
-      this.state.videoPlayer.setVolume(100 - this.state.balancerValue);
+      console.log(self.state.inlineClipsCurrentlyPlaying.length);
+      console.log(self.state.videoPlayer.getVolume());
+      self.state.inlineClipsCurrentlyPlaying.length ?
+        self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4) :
+        self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
 
       for (const clip in this.audioClipsPlayed) {
-        this.audioClipsPlayed[clip].volume(this.state.balancerValue / 100);
+        this.audioClipsPlayed[clip].volume(self.state.balancerValue / 100);
       }
 
       this.setState({
@@ -294,7 +298,7 @@ class VideoPage extends Component {
 
             inlineClipsCurrentlyPlaying.push(audioClipId);
             self.setState({ inlineClipsCurrentlyPlaying });
-            self.state.videoPlayer.setVolume(20);
+            // self.state.videoPlayer.setVolume(20);
           }
         },
         onend: () => {
@@ -315,12 +319,12 @@ class VideoPage extends Component {
 
       console.log('Let\'s play', playbackType, audioClip.start_time);
       // Audio ducking.
-      if (playbackType === 'inline') {
-        self.audioClipsPlayed[audioClipId].volume(self.state.balancerValue / 100);
-        self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4);
-      } else {
-        self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
-      }
+      // if (playbackType === 'inline') {
+      //   self.audioClipsPlayed[audioClipId].volume(self.state.balancerValue / 100);
+      //   self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4);
+      // } else {
+      //   self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
+      // }
 
       this.audioClipsPlayed[audioClipId].play();
     }
