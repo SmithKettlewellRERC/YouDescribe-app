@@ -2,7 +2,7 @@ module.exports = () => {
   const href = window.location.href;
   const apiVersion = 'v1';
 
-  // DON'T CHANGE THIS URLS!
+  // DON'T CHANGE THESE URLS!
   let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
   let audioClipsUploadsPath = 'https://api.youdescribe.org/audio-descriptions-files';
   const host = 'localhost';

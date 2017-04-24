@@ -85,7 +85,7 @@ class VideoCard extends Component {
           </div>
           <div className="w3-container w3-padding-bottom">
             <div id="card-title-container">
-              <div id="card-title" aria-hidden="true" >
+              <div id="card-title">
                 <h3><Link role="link" to={'/video/' + this.props.youTubeId}>{this.props.title}</Link></h3>
               </div>
               <div id="card-author">

@@ -228,7 +228,7 @@ class VolumeBalancer extends Component {
 
   render() {
     return (
-      <div className="volume-balancer">
+      <div className="volume-balancer" title="volume balancer">
         <span id="sliderLabel" className="floatLeft">Video</span>
         <div id="sliderRail1" className="sliderRail floatLeft">
           <button

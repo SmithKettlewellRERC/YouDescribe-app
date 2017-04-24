@@ -14,26 +14,26 @@ const VideoPlayerControls = (props) => {
     props.pauseAudioClips();
   }
 
-  let playPauseButton = (
-    <button id="play-button" onClick={playVideo} accessKey="p">
-      <i className="fa fa-play" aria-hidden="true"></i>
-    </button>
-  );
+  const PlayPauseButton = () => {
+    const id = props.videoState === 1 ? 'pause-button' : 'play-button';
+    const onClick = props.videoState === 1 ? pauseVideo : playVideo;
+    const title = props.videoState === 1 ? 'pause button' : 'play button';
+    const action = props.videoState === 1 ? 'pause' : 'play';
 
-  if (props.videoState === 1) {
-    playPauseButton = (
-      <button id="pause-button" onClick={pauseVideo} accessKey="s">
-        <i className="fa fa-pause" aria-hidden="true"></i>
+    return (
+      <button id={id} onClick={onClick} title={title} accessKey="p">
+        <i className={`fa fa-${action}`} aria-hidden="true"></i>
       </button>
     );
-  }
+  };
+
   return (
     <div id="video-player-controls">
       <VideoPlayerAccessibleSeekbar updateState={props.updateState} {...props} />
 
       <div className="w3-row">
         <div className="w3-col l6 m6">
-          {playPauseButton}
+          <PlayPauseButton />
           <VolumeBalancer updateState={props.updateState} />
         </div>
         <div className="w3-col l6 m6">
