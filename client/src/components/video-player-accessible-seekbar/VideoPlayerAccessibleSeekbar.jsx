@@ -37,9 +37,9 @@ class Slider extends Component {
 
   // get the ratio between the slider length and the slider's value maximum
   calibrate(target) {
-    let rail = target.parentNode;
-    let sliderLength = rail.clientWidth - target.clientWidth;
-    let max = parseInt(target.getAttribute('aria-valuemax'));
+    const rail = target.parentNode;
+    const sliderLength = rail.clientWidth - target.clientWidth;
+    const max = parseInt(target.getAttribute('aria-valuemax'));
     return sliderLength / max;
   }
 
@@ -68,10 +68,9 @@ class Slider extends Component {
     return scrollOffset;
   }
 
-  handleKeyDown(event) {
-    var event = event || window.event;
-    let keyCode = event.keyCode || event.charCode;
-    let target = event.target || event.srcElement;
+  handleKeyDown(event = window.event) {
+    const keyCode = event.keyCode || event.charCode;
+    const target = event.target || event.srcElement;
     let passThrough = true;
     switch (keyCode) {
       case 37: // left arrow
@@ -112,11 +111,10 @@ class Slider extends Component {
     }
   }
 
-  handleRailMouseDown(event) {
-    event = event || window.event;
-    let target = event.target || event.srcElement;
-    let thumb = this.$(target.id.replace(/rail/, 'thumb1'));
-    let newPos = event.clientX - this.getHOffset(target) + this.getHScrollOffset() - (thumb.clientWidth / 2);
+  handleRailMouseDown(event = window.event) {
+    const target = event.target || event.srcElement;
+    const thumb = this.$(target.id.replace(/rail/, 'thumb1'));
+    const newPos = event.clientX - this.getHOffset(target) + this.getHScrollOffset() - (thumb.clientWidth / 2);
     this.changeValue(thumb, this.mapPositionToValue(thumb, newPos));
     if (!document.activeElement || !document.activeElement !== thumb) {
       thumb.focus();
@@ -124,9 +122,8 @@ class Slider extends Component {
     return false;
   }
 
-  handleThumbMouseDown(event) {
-    event = event || window.event;
-    let target = event.target || event.srcElement;
+  handleThumbMouseDown(event = window.event) {
+    const target = event.target || event.srcElement;
     this.gDragging = target.id;
     this.gDragOffset = event.clientX - this.getHOffset(target.parentNode) - target.offsetLeft + this.getHScrollOffset();
     document.onmousemove = this.handleDrag;
@@ -138,19 +135,18 @@ class Slider extends Component {
     return false;
   }
 
-  handleDrag(event) {
-    event = event || window.event;
-    if (this.gDragging === "") {
+  handleDrag(event = window.event) {
+    if (this.gDragging === '') {
       return;
     } else {
-      let target = this.$(this.gDragging);
-      let newPos = event.clientX - this.getHOffset(target.parentNode) + this.getHScrollOffset() - this.gDragOffset;
+      const target = this.$(this.gDragging);
+      const newPos = event.clientX - this.getHOffset(target.parentNode) + this.getHScrollOffset() - this.gDragOffset;
       this.changeValue(target, this.mapPositionToValue(target, newPos));
     }
   }
 
   stopDrag(event) {
-    this.gDragging = "";
+    this.gDragging = '';
     this.gDragOffset = 0;
 
     document.onmousemove = null;
@@ -162,7 +158,6 @@ class Slider extends Component {
   }
 
   increment(target, byChunk) {
-
     let newValue = parseInt(target.getAttribute('aria-valuenow')) + (byChunk
       ? 10
       : 1);
@@ -186,7 +181,7 @@ class Slider extends Component {
     // console.log(min, max);
     const newValue = Math.min(Math.max(value, min), max);
     const newPos = Math.round(newValue * ratio);
-    target.style.left = newPos + "px";
+    target.style.left = newPos - 6 + "px";
 
     target.setAttribute('aria-valuenow', newValue);
     target.setAttribute('aria-valuetext', newValue + "%");
@@ -206,14 +201,13 @@ class Slider extends Component {
     slider.onmousedown = this.handleThumbMouseDown;
     slider.onkeydown = this.handleKeyDown;
 
-    slider.parentNode.onfocus = function(event) { // temp IE fix
+    slider.parentNode.onfocus = function (event) { // temp IE fix
       event = event || window.event;
-      let target = event.target || event.srcElement;
-      let thumb = this.$(target.id.replace(/Rail/, 'Thumb'));
-      if (thumb)
-        thumb.focus();
-      }
-    }
+      const target = event.target || event.srcElement;
+      const thumb = this.$(target.id.replace(/Rail/, 'Thumb'));
+      if (thumb) thumb.focus();
+    };
+  }
 
   cancelEvent(event) {
     if (typeof event.stopPropagation === "function") {

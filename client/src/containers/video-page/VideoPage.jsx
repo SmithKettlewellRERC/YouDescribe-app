@@ -235,7 +235,6 @@ class VideoPage extends Component {
     console.log('10 -> startProgressWatcher');
     const self = this;
     const audioClips = this.getAudioClips();
-    console.log(audioClips);
     const interval = 250;
 
     if (this.watcher) {
