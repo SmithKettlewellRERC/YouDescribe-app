@@ -207,16 +207,29 @@ class VideoPage extends Component {
       self.setState({ videoState: event.data }, () => {
         switch (event.data) {
           case 0: // ended
+            // stops the watcher
             self.stopProgressWatcher();
+
             break;
           case 1: // playing
-            // Starting the watcher.
+            // starts the watcher
             self.startProgressWatcher();
+
             break;
           case 2: // paused
+            // stops all inline clip instances
+            for (const clip in self.audioClipsPlayed) {
+              if (self.audioClipsPlayed[clip].playbackType === 'inline') {
+                self.audioClipsPlayed[clip].stop();
+              }
+            }
 
-            // Pausing the watcher.
+            // clears out the inline clips array so audio no longer ducked
+            self.setState({ inlineClipsCurrentlyPlaying: [] });
+
+            // stops the watcher
             self.stopProgressWatcher();
+
             break;
           case 3: // buffering
             break;
@@ -225,6 +238,7 @@ class VideoPage extends Component {
             self.startProgressWatcher();
             break;
           default:
+            self.stopProgressWatcher();
         }
       });
     }
@@ -244,6 +258,8 @@ class VideoPage extends Component {
     this.watcher = setInterval(() => {
       const currentVideoProgress = self.state.videoPlayer.getCurrentTime();
 
+      console.log(self.state.videoPlayer.getVolume());
+      // audio ducking
       self.state.inlineClipsCurrentlyPlaying.length ?
         self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4) :
         self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
@@ -296,7 +312,6 @@ class VideoPage extends Component {
 
             inlineClipsCurrentlyPlaying.push(audioClipId);
             self.setState({ inlineClipsCurrentlyPlaying });
-            // self.state.videoPlayer.setVolume(20);
           }
         },
         onend: () => {
@@ -316,15 +331,9 @@ class VideoPage extends Component {
       });
 
       console.log('Let\'s play', playbackType, audioClip.start_time);
-      // Audio ducking.
-      // if (playbackType === 'inline') {
-      //   self.audioClipsPlayed[audioClipId].volume(self.state.balancerValue / 100);
-      //   self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4);
-      // } else {
-      //   self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
-      // }
-
+      this.audioClipsPlayed[audioClipId].playbackType = playbackType;
       this.audioClipsPlayed[audioClipId].play();
+      console.log(this.audioClipsPlayed[audioClipId].seek());
     }
   }
 
