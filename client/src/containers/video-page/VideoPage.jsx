@@ -244,8 +244,6 @@ class VideoPage extends Component {
     this.watcher = setInterval(() => {
       const currentVideoProgress = self.state.videoPlayer.getCurrentTime();
 
-      console.log(self.state.inlineClipsCurrentlyPlaying.length);
-      console.log(self.state.videoPlayer.getVolume());
       self.state.inlineClipsCurrentlyPlaying.length ?
         self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4) :
         self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
