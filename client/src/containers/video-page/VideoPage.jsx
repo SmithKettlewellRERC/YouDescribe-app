@@ -235,6 +235,7 @@ class VideoPage extends Component {
     console.log('10 -> startProgressWatcher');
     const self = this;
     const audioClips = this.getAudioClips();
+    console.log(audioClips);
     const interval = 250;
 
     if (this.watcher) {
@@ -244,13 +245,18 @@ class VideoPage extends Component {
     this.watcher = setInterval(() => {
       const currentVideoProgress = self.state.videoPlayer.getCurrentTime();
 
-      console.log(self.state.currentClip);
+      this.state.videoPlayer.setVolume(100 - this.state.balancerValue);
+
+      for (const clip in this.audioClipsPlayed) {
+        this.audioClipsPlayed[clip].volume(this.state.balancerValue / 100);
+      }
 
       this.setState({
         videoPlayerAccessibilitySeekbarValue: currentVideoProgress / this.state.videoDurationInSeconds,
       });
 
       const currentVideoProgressFloor = Math.floor(currentVideoProgress);
+
       for (let i = 0; i < audioClips.length; i += 1) {
         const audioClip = audioClips[i];
 
@@ -301,7 +307,7 @@ class VideoPage extends Component {
 
             inlineClipsCurrentlyPlaying.pop();
             if (!inlineClipsCurrentlyPlaying.length) {
-              self.state.videoPlayer.setVolume(100);
+              self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
             }
             self.setState({ inlineClipsCurrentlyPlaying });
           }
