@@ -76,12 +76,12 @@ class Navbar extends Component {
             </div>
 
             {/* Right-sided navbar links */}
-            <nav role="navigation" className="w3-right w3-hide-small w3-hide-medium">
+            <div role="navigation" className="w3-right w3-hide-small w3-hide-medium">
               <Link to="/wishlist" className="w3-bar-item" style={{ position: 'relative', top: '8px' }}><i className="fa fa-heart">&nbsp;&nbsp;</i>WISH LIST</Link>
               <div className="w3-bar-item" style={{ position: 'relative', top: '2px' }}>
                 {signInComponent}
               </div>
-            </nav>
+            </div>
 
             {/* Hide right-floated links on small screens and replace them with a menu icon */}
             <a href="javascript:void(0)" className="w3-bar-item w3-right w3-hide-large" style={{ position: 'relative', top: '8px' }} onClick={this.navMenuOpen}>
@@ -91,11 +91,11 @@ class Navbar extends Component {
         </div>
 
         {/* Sidenav on small screens when clicking the menu icon */}
-        <nav id="mySidenav" className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-large" style={{ display: 'none' }}>
+        <div id="mySidenav" className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-large" style={{ display: 'none' }}>
           <a href="javascript:void(0)" onClick={this.navMenuClose} className="w3-large w3-padding-16">Close ×</a>
           <Link to="/wishlist" className="w3-bar-item w3-button"><i className="fa fa-heart"></i> WISH LIST</Link>
           {signInComponent}
-        </nav>
+        </div>
       </header>
     );
   }
