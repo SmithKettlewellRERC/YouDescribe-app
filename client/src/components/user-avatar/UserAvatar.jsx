@@ -12,7 +12,7 @@ class UserAvatar extends Component {
     return (
       <div id="user-avatar">
         <button onKeyPress={this.props.userMenuToggle}>
-          <img alt="user avatar" src={this.props.getAppState().userPicture} height="33px" onClick={this.props.userMenuToggle} />
+          <img alt="User avatar - you are current logged in" src={this.props.getAppState().userPicture} height="33px" onClick={this.props.userMenuToggle} />
         </button>
         <UserMenu getAppState={this.props.getAppState} signOut={this.props.signOut} userMenuToggle={this.props.userMenuToggle} />
       </div>
