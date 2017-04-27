@@ -13,7 +13,7 @@ class AudioDescriptionSelector extends Component {
       if (this.props.getAppState().isSignedIn) {
         browserHistory.push('/authoring-tool/' + this.props.videoId);
       } else {
-        alert('You have to be legged in in order to up vote');
+        alert('You have to be logged in in order to up vote');
       }
     } else {
       this.props.changeAudioDescription(selectedAudioDescriptionId);
