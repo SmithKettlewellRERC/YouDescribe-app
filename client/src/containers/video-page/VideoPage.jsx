@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Howl } from 'howler';
 import Spinner from '../../components/spinner/Spinner.jsx';
 import VideoPlayerControls from '../../components/video-player-controls/VideoPlayerControls.jsx';
+import ShareBar from '../../components/share-bar/ShareBar.jsx';
 import { ourFetch } from '../../shared/helperFunctions';
 import { convertISO8601ToSeconds, convertSecondsToEditorFormat } from '../../shared/helperFunctions';
 
@@ -25,6 +26,8 @@ class VideoPage extends Component {
       selectedAudioDescriptionId: null,
 
       // Video controls and data.
+      videoTitle: '',
+      videoDescription: '',
       videoData: {},
       videoPlayer: null,
       videoState: -1,
@@ -157,6 +160,7 @@ class VideoPage extends Component {
         videoDurationInSeconds: this.videoDurationInSeconds,
         videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
       }, () => {
+        document.title = `YouDescribe - ${this.state.videoTitle}`;
         self.initVideoPlayer();
       });
     }).catch((err) => {
@@ -404,6 +408,7 @@ class VideoPage extends Component {
             </div>
           </section>
         </main>
+        <ShareBar />
       </div>
     );
   }
