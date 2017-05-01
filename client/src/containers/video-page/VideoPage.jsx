@@ -408,7 +408,7 @@ class VideoPage extends Component {
             </div>
           </section>
         </main>
-        <ShareBar />
+        <ShareBar videoTitle={this.state.videoTitle} />
       </div>
     );
   }
