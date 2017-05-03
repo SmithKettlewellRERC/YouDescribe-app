@@ -262,7 +262,7 @@ class VideoPage extends Component {
     this.watcher = setInterval(() => {
       const currentVideoProgress = self.state.videoPlayer.getCurrentTime();
 
-      console.log(self.state.videoPlayer.getVolume());
+      // console.log(self.state.videoPlayer.getVolume());
       // audio ducking
       self.state.inlineClipsCurrentlyPlaying.length ?
         self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4) :
