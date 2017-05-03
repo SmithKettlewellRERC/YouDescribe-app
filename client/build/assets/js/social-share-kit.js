@@ -55,7 +55,6 @@ var SocialShareKit = (function () {
             });
 
             function onClick(e) {
-                e.preventDefault();
                 var target = preventDefault(e),
                     match = elSupportsShare(target),
                     network = match[0],
