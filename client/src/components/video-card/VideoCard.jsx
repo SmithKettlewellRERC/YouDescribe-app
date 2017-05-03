@@ -79,7 +79,7 @@ class VideoCard extends Component {
     return (
       <div id="video-card" className="w3-margin-top w3-left" title="">
         <div className="w3-card-2 w3-hover-shadow">
-          <div id="card-thumbnail">
+          <div id="card-thumbnail" aria-hidden="true">
             <Link role="link" to={'/video/' + this.props.youTubeId}><img alt={this.props.title} src={this.props.thumbnailMediumUrl} width="100%" /></Link>
             <div id="card-duration">{this.props.duration}</div>
           </div>

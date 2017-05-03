@@ -8,6 +8,7 @@ import {
   convertISO8601ToSeconds,
   convertSecondsToEditorFormat,
 } from '../../shared/helperFunctions';
+import ShareBar from '../../components/share-bar/ShareBar.jsx';
 
 const conf = require('../../shared/config')();
 
@@ -30,6 +31,8 @@ class VideoPage extends Component {
       selectedAudioDescriptionId: null,
 
       // Video controls and data
+      videoTitle: '',
+      videoDescription: '',
       videoData: {},
       videoPlayer: null,
       videoState: -1,
@@ -171,6 +174,7 @@ class VideoPage extends Component {
         videoDurationInSeconds: this.videoDurationInSeconds,
         videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
       }, () => {
+        document.title = `YouDescribe - ${this.state.videoTitle}`;
         self.initVideoPlayer();
       });
     }).catch((err) => {
@@ -413,6 +417,7 @@ class VideoPage extends Component {
             </div>
           </section>
         </main>
+        <ShareBar videoTitle={this.state.videoTitle} />
       </div>
     );
   }

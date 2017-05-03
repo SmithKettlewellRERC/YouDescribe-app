@@ -15642,7 +15642,7 @@ var AudioDescriptionSelector = function (_Component) {
         if (this.props.getAppState().isSignedIn) {
           _reactRouter.browserHistory.push('/authoring-tool/' + this.props.videoId);
         } else {
-          alert('You have to be legged in in order to up vote');
+          alert('You have to be logged in in order to up vote');
         }
       } else {
         this.props.updateState({
