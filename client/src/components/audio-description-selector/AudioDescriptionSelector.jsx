@@ -13,7 +13,7 @@ class AudioDescriptionSelector extends Component {
       if (this.props.getAppState().isSignedIn) {
         browserHistory.push('/authoring-tool/' + this.props.videoId);
       } else {
-        alert('You have to be legged in in order to up vote');
+        alert('You must sign in to perform this action');
       }
     } else {
       this.props.changeAudioDescription(selectedAudioDescriptionId);
@@ -34,7 +34,7 @@ class AudioDescriptionSelector extends Component {
     }
     return (
       <div id="audio-description-selector">
-        <select onChange={this.handleChange} value={selectedAudioDescriptionId} accessKey="d">
+        <select aria-label="describer selector" onChange={this.handleChange} value={selectedAudioDescriptionId} accessKey="d">
           {options}
         </select>
         <span>{this.props.currentVideoDescriber}</span>

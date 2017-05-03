@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { IndexLink, Link } from 'react-router';
+import { Link } from 'react-router';
 import path from 'path';
-import NavLink from '../nav-link/NavLink.jsx';
-import SearchBar from '../search-bar/SearchBar.jsx'
+import SearchBar from '../search-bar/SearchBar.jsx';
 import SignInButton from '../sign-in-button/SignInButton.jsx';
 // import SignOutButton from '../sign-out-button/SignOutButton.jsx';
 import UserAvatar from '../user-avatar/UserAvatar.jsx';
@@ -76,7 +75,7 @@ class Navbar extends Component {
             </div>
 
             {/* Right-sided navbar links */}
-            <div role="navigation" className="w3-right w3-hide-small w3-hide-medium">
+            <div className="w3-right w3-hide-small w3-hide-medium">
               <Link to="/wishlist" className="w3-bar-item" style={{ position: 'relative', top: '8px' }}><i className="fa fa-heart">&nbsp;&nbsp;</i>WISH LIST</Link>
               <div className="w3-bar-item" style={{ position: 'relative', top: '2px' }}>
                 {signInComponent}

@@ -19,7 +19,7 @@ const PlayPauseButton = (props) => {
 
   return (
     <div id="play-pause-button">
-      <button autoFocus id={id} onClick={onClick} title={title} accessKey="p">
+      <button aria-label="play/pause button" autoFocus id={id} onClick={onClick} title={title} accessKey="p">
         <i className={`fa fa-${action}`} aria-hidden="true" />
       </button>
     </div>
