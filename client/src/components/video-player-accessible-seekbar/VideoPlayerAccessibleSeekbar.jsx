@@ -233,6 +233,7 @@ class Slider extends Component {
             className="seekbar-slider-thumb"
             id="seekbar-slider-thumb1"
             role="slider"
+            aria-label="seekbar slider"
             aria-labelledby="sliderLabel"
             aria-valuemin="0"
             aria-valuemax="100"
