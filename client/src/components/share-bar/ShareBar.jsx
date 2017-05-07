@@ -12,7 +12,7 @@ class ShareBar extends Component {
 
     const emailText = `Watch this video with audio description on YouDescribe:\n\n${this.props.videoTitle}\n${window.location.href}\n\nTo learn more about accessible video with audio description,\nfollow YouDescribe on Twitter or Facebook:\n\nhttp://twitter.com/SKERI_YD\nhttp://facebook.com/YouDescribe`;
 
-    return (<div className="ssk-sticky ssk-left ssk-center ssk-lg">
+    return (<div className="ssk-sticky ssk-left ssk-center ssk-lg" style={{ position: 'relative' }}>
         <a href="#" className="ssk ssk-facebook" aria-label="Share this video on Facebook"></a>
         <a href="#" className="ssk ssk-twitter" aria-label="Share this video on Twitter" data-text={twitterText}></a>
         <a href="#" className="ssk ssk-email" aria-label="Share this video by e-mail" data-text={emailText}></a>

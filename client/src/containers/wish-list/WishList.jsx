@@ -115,7 +115,7 @@ class WishList extends Component {
           <h2>WISH LIST</h2>
         </div>
         <Spinner />
-        <div className="w3-row-padding video-card-container">
+        <div className="w3-row-padding container">
           {this.state.videoCardsComponents}
         </div>
         {loadMoreButton}

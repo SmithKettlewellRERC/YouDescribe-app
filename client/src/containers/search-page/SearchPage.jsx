@@ -276,7 +276,7 @@ class SearchPage extends Component {
 
             <Spinner />
 
-            <div id="on-yd" className="w3-row video-card-container">
+            <div id="on-yd" className="w3-row container">
               {this.state.videoAlreadyOnYD}
               {noVideos}
             </div>
@@ -291,7 +291,7 @@ class SearchPage extends Component {
 
             <Spinner />
 
-            <div className="w3-row video-card-container">
+            <div className="w3-row container">
               {this.state.videoNotOnYD}
             </div>
 

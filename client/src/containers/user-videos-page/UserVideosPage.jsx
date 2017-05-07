@@ -137,7 +137,7 @@ class UserVideosPage extends Component {
 
             <Spinner />
 
-            <div className="w3-row video-card-container">
+            <div className="w3-row container">
               {this.state.videoComponents}
             </div>
 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Howl } from 'howler';
 import Spinner from '../../components/spinner/Spinner.jsx';
 import VideoPlayerControls from '../../components/video-player-controls/VideoPlayerControls.jsx';
+import DescriberCard from '../../components/describer-card/DescriberCard.jsx';
 import {
   ourFetch,
   convertISO8601ToSeconds,
@@ -99,6 +100,9 @@ class VideoPage extends Component {
         if (ad.status === 'published') {
           audioDescriptionsIds.push(ad._id);
           audioDescriptionsIdsUsers[ad._id] = ad.user;
+          audioDescriptionsIdsUsers.overall_rating_votes_counter = ad.overall_rating_votes_counter;
+          audioDescriptionsIdsUsers.overall_rating_average = ad.overall_rating_average;
+          audioDescriptionsIdsUsers.overall_rating_votes_sum = ad.overall_rating_votes_sum;
           audioDescriptionsIdsAudioClips[ad._id] = [];
           if (ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
@@ -396,11 +400,21 @@ class VideoPage extends Component {
   // 1
   render() {
     console.log('1 -> Render');
+    const describerCards = [];
+    const describers = Object.values(this.state.audioDescriptionsIdsUsers);
+
+    console.log(describers);
+
+    describers.forEach((describerInfo) => {
+      describerCards.push(<DescriberCard key={describerInfo._id} {...describerInfo} />)
+    });
+
     return (
       <div id="video-player">
         <main role="main" title="Video player">
-          <section>
-            <div id="video" className="w3-card-2">
+          <section id="video-area">
+            <ShareBar videoTitle={this.state.videoTitle} />
+            <div id="video">
               <Spinner />
               <div id="playerVP" />
               <VideoPlayerControls
@@ -416,8 +430,20 @@ class VideoPage extends Component {
               />
             </div>
           </section>
+          <section id="video-info" className="container">
+            <div id="yt-info">
+              {/*<YTInfoCard />*/}
+              {describerCards}
+            </div>
+            <div id="yd-info">
+              {/*<YDInfoCard />*/}
+              {describerCards}
+            </div>
+            <div id="describers">
+              {describerCards}
+            </div>
+          </section>
         </main>
-        <ShareBar videoTitle={this.state.videoTitle} />
       </div>
     );
   }
