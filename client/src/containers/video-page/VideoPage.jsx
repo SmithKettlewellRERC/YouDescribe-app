@@ -49,6 +49,7 @@ class VideoPage extends Component {
     this.resetPlayedAudioClips = this.resetPlayedAudioClips.bind(this);
     this.changeAudioDescription = this.changeAudioDescription.bind(this);
     this.pauseAudioClips = this.pauseAudioClips.bind(this);
+    this.overallRatingVote = this.overallRatingVote.bind(this);
   }
 
   componentDidMount() {
@@ -393,8 +394,33 @@ class VideoPage extends Component {
 
   closeSpinner() {
     const spinner = document.getElementsByClassName('spinner')[0];
-
     spinner.style.display = 'none';
+  }
+
+  overallRatingVote(e) {
+    if (!this.props.getAppState().isSignedIn) {
+      alert('You have to be logged in in order to vote');
+    } else {
+      const url = `${conf.apiUrl}/overallRatings/${this.state.selectedAudioDescriptionId}`;
+      ourFetch(url, true, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: this.props.getAppState().userId,
+          userToken: this.props.getAppState().userToken,
+          rating: '4',
+        }),
+      })
+      .then((res) => {
+        console.log('Success', res);
+      })
+      .catch(err => {
+        console.log(err);
+        alert('It was impossible to vote. Maybe your session has expired. Try to logout and login again.');
+      });
+    }
   }
 
   // 1
