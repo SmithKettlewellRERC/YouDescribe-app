@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 const path = require('path');
 const port = process.env.PORT || 3000;
 const app = express();
@@ -18,14 +17,16 @@ app.use(require('webpack-dev-middleware')(compiler, {
 
 app.use(require('webpack-hot-middleware')(compiler));
 
+// Legacy URLs handler.
 const legacyUrlsController = require('./controllers/legacyUrlsController');
+app.get(`/player.php`, (req, res) => {
+  legacyUrlsController.redirect(req, res);
+});
 
-// const legacyUrls = router.get('/:videoId', legacyUrlsController.redirect);
-
-// app.use(`/index.php`, legacyUrls);
-
+// The main folder.
 app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 
+// The drain.
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
 });
