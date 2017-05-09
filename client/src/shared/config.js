@@ -5,8 +5,8 @@ module.exports = () => {
   // DON'T CHANGE THESE URLS!
   let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
   let audioClipsUploadsPath = 'https://api.youdescribe.org/audio-descriptions-files';
-  // const host = '192.168.1.33';
-  const host = 'localhost';
+  // const host = 'localhost';
+  const host = '192.168.1.33';
 
   if (href.indexOf(host) !== -1) {
     apiUrl = `http://${host}:8080/${apiVersion}`;

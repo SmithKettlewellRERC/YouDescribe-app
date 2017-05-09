@@ -239,12 +239,11 @@ class VolumeBalancer extends Component {
             className="sliderThumb"
             id="sliderThumb1"
             role="slider"
-            aria-label="volume balancer"
+            aria-label="Volume balancer control"
             aria-labelledby="sliderLabel"
             aria-valuemin="10"
             aria-valuemax="90"
             aria-valuenow="50"
-            accessKey="v"
           />
         </div>
         <span className="floatLeft">

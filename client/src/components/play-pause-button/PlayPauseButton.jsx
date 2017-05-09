@@ -13,13 +13,13 @@ const PlayPauseButton = (props) => {
 
   const id = props.videoState === 1 ? 'pause-button' : 'play-button';
   const onClick = props.videoState === 1 ? pauseVideo : playVideo;
-  const title = props.videoState === 1 ? 'pause button' : 'play button';
+  const title = props.videoState === 1 ? 'Press space bar to pause the video' : 'Press space bar to play the video';
   const action = props.videoState === 1 ? 'pause' : 'play';
 
 
   return (
     <div id="play-pause-button">
-      <button aria-label="play/pause button" autoFocus id={id} onClick={onClick} title={title} accessKey="p">
+      <button aria-label="Play Pause control" autoFocus id={id} onClick={onClick} title={title}>
         <i className={`fa fa-${action}`} aria-hidden="true" />
       </button>
     </div>
