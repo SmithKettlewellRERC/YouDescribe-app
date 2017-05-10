@@ -101,9 +101,9 @@ class VideoPage extends Component {
         if (ad.status === 'published') {
           audioDescriptionsIds.push(ad._id);
           audioDescriptionsIdsUsers[ad._id] = ad.user;
-          audioDescriptionsIdsUsers.overall_rating_votes_counter = ad.overall_rating_votes_counter;
-          audioDescriptionsIdsUsers.overall_rating_average = ad.overall_rating_average;
-          audioDescriptionsIdsUsers.overall_rating_votes_sum = ad.overall_rating_votes_sum;
+          audioDescriptionsIdsUsers[ad._id].overall_rating_votes_counter = ad.overall_rating_votes_counter;
+          audioDescriptionsIdsUsers[ad._id].overall_rating_average = ad.overall_rating_average;
+          audioDescriptionsIdsUsers[ad._id].overall_rating_votes_sum = ad.overall_rating_votes_sum;
           audioDescriptionsIdsAudioClips[ad._id] = [];
           if (ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
@@ -431,8 +431,9 @@ class VideoPage extends Component {
 
     console.log(describers);
 
-    describers.forEach((describerInfo) => {
-      describerCards.push(<DescriberCard key={describerInfo._id} {...describerInfo} />)
+    describers.forEach((describerInfo, i) => {
+      console.log('describerInfo', describerInfo);
+      describerCards.push(<DescriberCard key={i} {...describerInfo} />)
     });
 
     return (
