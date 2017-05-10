@@ -200,6 +200,10 @@ class VideoPage extends Component {
               rel: 0,
               controls: 0,
               disablekb: 1,
+              fs: 0,
+              iv_load_policy: 3,
+              modestbranding: 1,
+              showinfo: 0,
               autoplay: true,
             },
             events: {
@@ -366,16 +370,13 @@ class VideoPage extends Component {
   }
 
   changeAudioDescription(selectedAudioDescriptionId) {
-    const r = confirm('Changing the describer will restart the video. Are you sure you want to make the change?');
-    if (r === true) {
-      this.state.videoPlayer.stopVideo();
-      this.resetPlayedAudioClips();
-      this.setState({
-        selectedAudioDescriptionId,
-      }, () => {
-        this.setAudioDescriptionActive();
-      });
-    }
+    this.state.videoPlayer.stopVideo();
+    this.resetPlayedAudioClips();
+    this.setState({
+      selectedAudioDescriptionId,
+    }, () => {
+      this.setAudioDescriptionActive();
+    });
   }
 
   componentWillUnmount() {
@@ -397,7 +398,7 @@ class VideoPage extends Component {
     if (!this.props.getAppState().isSignedIn) {
       alert('You have to be logged in in order to vote');
     } else {
-      const url = `${conf.apiUrl}/overallRatings/${this.state.selectedAudioDescriptionId}`;
+      const url = `${conf.apiUrl}/overallratings/${this.state.selectedAudioDescriptionId}`;
       ourFetch(url, true, {
         method: 'POST',
         headers: {
