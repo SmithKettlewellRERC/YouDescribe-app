@@ -50,33 +50,33 @@
 
 
 /* video-player-accessible-seekbar */
-.video-player-accessible-seekbar:after {
-content: ".";
-display: block;
-clear: both;
-visibility: hidden;
-line-height: 0;
-height: 0;
-}
+// .video-player-accessible-seekbar:after {
+// content: ".";
+// display: block;
+// clear: both;
+// visibility: hidden;
+// line-height: 0;
+// height: 0;
+// }
 
-.video-player-accessible-seekbar {
-  width: 640px;
-  margin: auto 0px;
-  position: relative;
-  color: #fff;
-  padding-left: 28px;
-  @media screen and (min-width: 601px) {
-    padding-left: 16px;
-  }
-  #video-player-accessible-seekbar-header {
-    position: relative;
-    left: 102px;
-    padding-bottom: 8px;
-    @media screen and (min-width: 601px) {
-      left: 80px;
-    }
-  }
-}
+// .video-player-accessible-seekbar {
+//   width: 640px;
+//   margin: auto 0px;
+//   // position: relative;
+//   color: #fff;
+//   padding-left: 28px;
+//   @media screen and (min-width: 601px) {
+//     padding-left: 16px;
+//   }
+//   #video-player-accessible-seekbar-header {
+//     position: relative;
+//     left: 102px;
+//     padding-bottom: 8px;
+//     @media screen and (min-width: 601px) {
+//       left: 80px;
+//     }
+//   }
+// }
 
 #keyboard-controls {
   position: relative;

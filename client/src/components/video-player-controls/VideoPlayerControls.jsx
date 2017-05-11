@@ -8,7 +8,9 @@ import VideoTimer from '../video-timer/VideoTimer.jsx';
 const VideoPlayerControls = (props) => {
   return (
     <div id="video-player-controls">
-      <VideoPlayerAccessibleSeekbar updateState={props.updateState} {...props} />
+      <div className="w3-row">
+        <VideoPlayerAccessibleSeekbar updateState={props.updateState} {...props} />
+      </div>
 
       <div className="w3-row">
         <div>

@@ -227,8 +227,8 @@ class Slider extends Component {
 
   render() {
     return (
-      <div className="seekbar" title="video seekbar">
-        <div id="seekbar-slider-rail" className="seekbar-slider-rail floatLeft">
+      <div className="seekbar">
+        <div id="seekbar-slider-rail" className="seekbar-slider-rail">
           <button
             className="seekbar-slider-thumb"
             id="seekbar-slider-thumb1"
