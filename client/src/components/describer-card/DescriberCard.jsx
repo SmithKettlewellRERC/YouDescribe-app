@@ -1,6 +1,7 @@
 import React from 'react';
 
 const DescriberCard = (props) => {
+  
   // console.log(props);
   return (
     <div id="describer-card">

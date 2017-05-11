@@ -233,7 +233,7 @@ class VolumeBalancer extends Component {
   render() {
     return (
       <div className="volume-balancer" title="volume balancer">
-        <span id="sliderLabel" className="floatLeft" aria-hidden="true">Video</span>
+        <span id="sliderLabel" className="floatLeft" aria-hidden="true">V</span>
         <div id="sliderRail1" className="sliderRail floatLeft">
           <button
             className="sliderThumb"
@@ -242,12 +242,9 @@ class VolumeBalancer extends Component {
             aria-valuemin="10"
             aria-valuemax="90"
             aria-valuenow="50"
-            accessKey="v"
           />
         </div>
-        <span className="floatLeft" aria-hidden="true">
-          Description
-        </span>
+        <span className="floatLeft" aria-hidden="true">D</span>
       </div>
     );
   }

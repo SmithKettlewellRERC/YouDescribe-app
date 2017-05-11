@@ -4,6 +4,8 @@ import { Howl } from 'howler';
 import Spinner from '../../components/spinner/Spinner.jsx';
 import VideoPlayerControls from '../../components/video-player-controls/VideoPlayerControls.jsx';
 import DescriberCard from '../../components/describer-card/DescriberCard.jsx';
+import YTInfoCard from '../../components/yt-info-card/YTInfoCard.jsx';
+import YDInfoCard from '../../components/yd-info-card/YDInfoCard.jsx';
 import {
   ourFetch,
   convertISO8601ToSeconds,
@@ -40,6 +42,8 @@ class VideoPage extends Component {
       videoPlayerAccessibilitySeekbarValue: 0,
       videoVolume: 0,
       balancerValue: 50,
+      currentVideoProgress: '00:00:00:00',
+      videoDurationToDisplay: '00:00:00:00',
     };
 
     // method bindings
@@ -50,6 +54,7 @@ class VideoPage extends Component {
     this.changeAudioDescription = this.changeAudioDescription.bind(this);
     this.pauseAudioClips = this.pauseAudioClips.bind(this);
     this.overallRatingVote = this.overallRatingVote.bind(this);
+    this.handleDescriberChange = this.handleDescriberChange.bind(this);
   }
 
   componentDidMount() {
@@ -168,10 +173,11 @@ class VideoPage extends Component {
   getYTVideoInfo() {
     console.log('6 -> getYTVideoInfo');
     const self = this;
-    const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet&key=${conf.youTubeApiKey}`;
+    const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
 
     // Use custom fetch for cross-browser compatability
     ourFetch(url).then((data) => {
+      console.log("data", data);
       this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
       this.setState({
         videoTitle: data.items[0].snippet.title,
@@ -204,6 +210,10 @@ class VideoPage extends Component {
               rel: 0,
               controls: 0,
               disablekb: 1,
+              fs: 0,
+              iv_load_policy: 3,
+              modestbranding: 1,
+              showinfo: 0,
               autoplay: true,
             },
             events: {
@@ -292,6 +302,7 @@ class VideoPage extends Component {
 
       this.setState({
         videoPlayerAccessibilitySeekbarValue: currentVideoProgress / this.state.videoDurationInSeconds,
+        currentVideoProgress: convertSecondsToEditorFormat(Math.floor(currentVideoProgress)),
       });
 
       const currentVideoProgressFloor = Math.floor(currentVideoProgress);
@@ -370,16 +381,19 @@ class VideoPage extends Component {
   }
 
   changeAudioDescription(selectedAudioDescriptionId) {
-    const r = confirm('Changing the describer will restart the video. Are you sure you want to make the change?');
-    if (r === true) {
-      this.state.videoPlayer.stopVideo();
-      this.resetPlayedAudioClips();
-      this.setState({
-        selectedAudioDescriptionId,
-      }, () => {
-        this.setAudioDescriptionActive();
-      });
-    }
+    this.state.videoPlayer.stopVideo();
+    this.resetPlayedAudioClips();
+    this.setState({
+      selectedAudioDescriptionId,
+    }, () => {
+      this.setAudioDescriptionActive();
+    });
+  }
+
+  handleDescriberChange(e) {
+    const selectedAudioDescriptionId = e.target.value;
+
+    this.changeAudioDescription(selectedAudioDescriptionId);
   }
 
   componentWillUnmount() {
@@ -401,7 +415,7 @@ class VideoPage extends Component {
     if (!this.props.getAppState().isSignedIn) {
       alert('You have to be logged in in order to vote');
     } else {
-      const url = `${conf.apiUrl}/overallRatings/${this.state.selectedAudioDescriptionId}`;
+      const url = `${conf.apiUrl}/overallratings/${this.state.selectedAudioDescriptionId}`;
       ourFetch(url, true, {
         method: 'POST',
         headers: {
@@ -426,14 +440,18 @@ class VideoPage extends Component {
   // 1
   render() {
     console.log('1 -> Render');
+    console.log(this.state.videoData);
     const describerCards = [];
     const describers = Object.values(this.state.audioDescriptionsIdsUsers);
 
-    console.log(describers);
-
     describers.forEach((describerInfo, i) => {
-      console.log('describerInfo', describerInfo);
-      describerCards.push(<DescriberCard key={i} {...describerInfo} />)
+      describerCards.push(
+        <DescriberCard
+          key={i}
+          handleDescriberChange={this.handleDescriberChange}
+          {...describerInfo}
+        />
+      )
     });
 
     return (
@@ -457,16 +475,14 @@ class VideoPage extends Component {
               />
             </div>
           </section>
-          <section id="video-info" className="container">
-            <div id="yt-info">
-              {/*<YTInfoCard />*/}
-              {describerCards}
+          <section id="video-info" className="container w3-row">
+            <div id="yt-info-card" className="w3-col l4 m4">
+              <YTInfoCard {...this.state.videoData}/>
             </div>
-            <div id="yd-info">
-              {/*<YDInfoCard />*/}
-              {describerCards}
+            <div id="yd-info-card" className="w3-col l4 m4">
+              <YDInfoCard />
             </div>
-            <div id="describers">
+            <div id="describers" className="w3-col l4 m4">
               {describerCards}
             </div>
           </section>

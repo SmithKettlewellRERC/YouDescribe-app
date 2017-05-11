@@ -237,7 +237,6 @@ class Slider extends Component {
             aria-valuemax="100"
             aria-valuenow="0"
             aria-valuetext="0%"
-            accessKey="j"
             style={{ left: `calc(${this.props.videoPlayerAccessibilitySeekbarValue * 100}% - 6px)` }}
           />
         </div>
