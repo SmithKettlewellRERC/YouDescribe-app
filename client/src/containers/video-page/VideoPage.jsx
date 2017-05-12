@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { Howl } from 'howler';
 import Spinner from '../../components/spinner/Spinner.jsx';
@@ -6,6 +7,8 @@ import VideoPlayerControls from '../../components/video-player-controls/VideoPla
 import DescriberCard from '../../components/describer-card/DescriberCard.jsx';
 import YTInfoCard from '../../components/yt-info-card/YTInfoCard.jsx';
 import YDInfoCard from '../../components/yd-info-card/YDInfoCard.jsx';
+import Button from '../../components/button/Button.jsx';
+
 import {
   ourFetch,
   convertISO8601ToSeconds,
@@ -59,6 +62,7 @@ class VideoPage extends Component {
     this.pauseAudioClips = this.pauseAudioClips.bind(this);
     this.overallRatingVote = this.overallRatingVote.bind(this);
     this.handleDescriberChange = this.handleDescriberChange.bind(this);
+    this.handleAddDescription = this.handleAddDescription.bind(this);
   }
 
   componentDidMount() {
@@ -399,10 +403,16 @@ class VideoPage extends Component {
     });
   }
 
-  handleDescriberChange(e) {
-    const selectedAudioDescriptionId = e.target.value;
+  handleDescriberChange(id) {
+    this.changeAudioDescription(id);
+  }
 
-    this.changeAudioDescription(selectedAudioDescriptionId);
+  handleAddDescription() {
+    if (this.props.getAppState().isSignedIn) {
+      browserHistory.push('/authoring-tool/' + this.state.videoId);
+    } else {
+      alert('You must sign in to perform this action');
+    }
   }
 
   componentWillUnmount() {
@@ -495,7 +505,16 @@ class VideoPage extends Component {
               <YDInfoCard {...this.state.videoData} />
             </div>*/}
             <div id="describers" className="w3-col l4 m4">
-              {describerCards}
+              <div className="w3-card-2">
+                <h3>Describers</h3>
+                {describerCards}
+                <Button
+                  title="Add a new description for this video"
+                  text="Add description"
+                  color="w3-indigo w3-block"
+                  onClick={() => this.handleAddDescription()}
+                />
+              </div>
             </div>
           </section>
         </main>

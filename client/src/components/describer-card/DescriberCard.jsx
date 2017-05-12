@@ -20,6 +20,7 @@ const DescriberCard = (props) => {
         title="Select this describer's audio description"
         text="Use description"
         color="w3-indigo w3-block"
+        onClick={() => props.handleDescriberChange(props.describerId)}
       />
     )
   }
@@ -27,10 +28,10 @@ const DescriberCard = (props) => {
     <div id="describer-card">
       <div className="w3-card-2">
         <div className="w3-row">
-          <div className="w3-col l3 m4 s3">
+          <div className="w3-col l3 m5 s3">
             <img src={props.picture} />
           </div>
-          <div className="w3-col l9 m8 s9">
+          <div className="w3-col l9 m7 s9">
             {props.name}
             <div className="rating">
               <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
