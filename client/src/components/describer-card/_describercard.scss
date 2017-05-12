@@ -1,5 +1,36 @@
 #describer-card {
+  img {
+    width: 50px;
+    border-radius: 50%;
+  }
   @media screen and (min-width: 601px) {
     // top: 569px;
+  }
+  /*
+  	Ratings Stars
+  	(with as little code as possible)
+  */
+  .rating {
+    // unicode-bidi: bidi-override;
+    width: 83px;
+    direction: rtl;
+    // text-align: center;
+  }
+  .rating > span {
+    display: inline-block;
+    position: relative;
+    padding-right: 1px;
+    width: 1.1em;
+  }
+  .rating > span:hover,
+  .rating > span:hover ~ span {
+    color: transparent;
+  }
+  .rating > span:hover:before,
+  .rating > span:hover ~ span:before {
+     content: "\2605";
+    //  position: absolute;
+    //  left: 0;
+     color: gold;
   }
 }

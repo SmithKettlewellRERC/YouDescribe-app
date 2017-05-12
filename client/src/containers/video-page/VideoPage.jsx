@@ -442,14 +442,17 @@ class VideoPage extends Component {
     console.log('1 -> Render');
     console.log(this.state.videoData);
     const describerCards = [];
-    const describers = Object.values(this.state.audioDescriptionsIdsUsers);
+    const describers = Object.keys(this.state.audioDescriptionsIdsUsers);
 
-    describers.forEach((describerInfo, i) => {
+    describers.forEach((describerId, i) => {
+      console.log(this.state.audioDescriptionsIdsUsers[describerId]);
       describerCards.push(
         <DescriberCard
           key={i}
           handleDescriberChange={this.handleDescriberChange}
-          {...describerInfo}
+          describerId={describerId}
+          selectedDescriberId={this.state.selectedAudioDescriptionId}
+          {...this.state.audioDescriptionsIdsUsers[describerId]}
         />
       )
     });
@@ -476,12 +479,12 @@ class VideoPage extends Component {
             </div>
           </section>
           <section id="video-info" className="container w3-row">
-            <div id="yt-info-card" className="w3-col l4 m4">
-              <YTInfoCard {...this.state.videoData}/>
+            <div id="yt-info-card" className="w3-col l8 m8">
+              <YTInfoCard {...this.state.videoData} />
             </div>
-            <div id="yd-info-card" className="w3-col l4 m4">
-              <YDInfoCard />
-            </div>
+            {/*<div id="yd-info-card" className="w3-col l4 m4">
+              <YDInfoCard {...this.state.videoData} />
+            </div>*/}
             <div id="describers" className="w3-col l4 m4">
               {describerCards}
             </div>

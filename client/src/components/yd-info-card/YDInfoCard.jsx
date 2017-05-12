@@ -6,6 +6,7 @@ const YDInfoCard = (props) => {
   return (
     <div id="yd-info-card">
       <div className="w3-card-2">
+        {props.title}
       </div>
     </div>
   );

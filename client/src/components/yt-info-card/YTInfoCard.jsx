@@ -2,7 +2,7 @@ import React from 'react';
 
 const YTInfoCard = (props) => {
 
-  // console.log(props);
+  console.log('props', props);
   return (
     <div id="yt-info-card">
       <div className="w3-card-2">
