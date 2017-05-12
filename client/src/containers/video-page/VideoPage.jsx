@@ -9,7 +9,11 @@ import YDInfoCard from '../../components/yd-info-card/YDInfoCard.jsx';
 import {
   ourFetch,
   convertISO8601ToSeconds,
+  convertISO8601ToDate,
   convertSecondsToEditorFormat,
+  convertTimeToCardFormat,
+  convertViewsToCardFormat,
+  convertLikesToCardFormat,
 } from '../../shared/helperFunctions';
 import ShareBar from '../../components/share-bar/ShareBar.jsx';
 
@@ -173,7 +177,7 @@ class VideoPage extends Component {
   getYTVideoInfo() {
     console.log('6 -> getYTVideoInfo');
     const self = this;
-    const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
+    const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet,statistics&forUsername=iamOTHER&key=${conf.youTubeApiKey}`;
 
     // Use custom fetch for cross-browser compatability
     ourFetch(url).then((data) => {
@@ -181,7 +185,12 @@ class VideoPage extends Component {
       this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
       this.setState({
         videoTitle: data.items[0].snippet.title,
+        videoAuthor: data.items[0].snippet.channelTitle,
+        videoPublishedAt: convertISO8601ToDate(data.items[0].snippet.publishedAt),
         videoDescription: data.items[0].snippet.description,
+        videoViews: convertViewsToCardFormat(data.items[0].statistics.viewCount),
+        videoLikes: convertLikesToCardFormat(data.items[0].statistics.likeCount),
+        videoDislikes: convertLikesToCardFormat(data.items[0].statistics.dislikeCount),
         videoDurationInSeconds: this.videoDurationInSeconds,
         videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
       }, () => {
@@ -440,12 +449,12 @@ class VideoPage extends Component {
   // 1
   render() {
     console.log('1 -> Render');
-    console.log(this.state.videoData);
+    // console.log(this.state.videoData);
     const describerCards = [];
     const describers = Object.keys(this.state.audioDescriptionsIdsUsers);
 
     describers.forEach((describerId, i) => {
-      console.log(this.state.audioDescriptionsIdsUsers[describerId]);
+      // console.log(this.state.audioDescriptionsIdsUsers[describerId]);
       describerCards.push(
         <DescriberCard
           key={i}
@@ -480,7 +489,7 @@ class VideoPage extends Component {
           </section>
           <section id="video-info" className="container w3-row">
             <div id="yt-info-card" className="w3-col l8 m8">
-              <YTInfoCard {...this.state.videoData} />
+              <YTInfoCard {...this.state} />
             </div>
             {/*<div id="yd-info-card" className="w3-col l4 m4">
               <YDInfoCard {...this.state.videoData} />

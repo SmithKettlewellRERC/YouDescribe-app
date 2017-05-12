@@ -6,7 +6,17 @@ const YTInfoCard = (props) => {
   return (
     <div id="yt-info-card">
       <div className="w3-card-2">
-        {props.title}
+        <h2>{props.videoTitle}</h2>
+        <span>{props.videoAuthor}</span><span style={{ float: 'right' }}>{props.videoViews}</span>
+        <hr style={{ marginTop: 0 }}/>
+        <div id="time-and-likes-container">
+          <div id="publish-time">Published on {props.videoPublishedAt}</div>
+          <div id="video-likes">
+            <span style={{ paddingRight: '16px' }}><i className="fa fa-thumbs-o-up" aria-hidden="true" /> {props.videoLikes}</span>
+            <span><i className="fa fa-thumbs-o-down" aria-hidden="true" /> {props.videoDislikes}</span>
+          </div>
+
+        </div>
       </div>
     </div>
   );

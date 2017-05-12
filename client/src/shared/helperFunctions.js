@@ -35,6 +35,16 @@ function convertViewsToCardFormat(views) {
   return views;
 }
 
+function convertLikesToCardFormat(likes) {
+  if (likes >= 1000000000) likes = `${(likes / 1000000000).toFixed(1)}B`;
+  else if (likes >= 1000000) likes = `${(likes / 1000000).toFixed(1)}M`;
+  else if (likes >= 1000) likes = `${(likes / 1000).toFixed(0)}K`;
+  else if (likes === 1) likes = `${likes}`;
+  else likes = `${likes}`;
+
+  return likes;
+}
+
 function convertISO8601ToSeconds(input) {
   const reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
   let hours = 0;
@@ -49,6 +59,13 @@ function convertISO8601ToSeconds(input) {
     totalseconds = (hours * 3600) + (minutes * 60) + seconds;
   }
   return (totalseconds);
+}
+
+function convertISO8601ToDate(input) {
+  let d = new Date(input);
+  d = String(d).split(' ').slice(1, 4);
+  d[1] += ',';
+  return d.join(' ');
 }
 
 function convertSecondsToCardFormat(timeInSeconds) {
@@ -111,7 +128,9 @@ function ourFetch(url, JSONparsing = true, optionObj = { method: 'GET' }) {
 export {
   convertTimeToCardFormat,
   convertViewsToCardFormat,
+  convertLikesToCardFormat,
   convertISO8601ToSeconds,
+  convertISO8601ToDate,
   convertSecondsToCardFormat,
   convertSecondsToEditorFormat,
   ourFetch,
