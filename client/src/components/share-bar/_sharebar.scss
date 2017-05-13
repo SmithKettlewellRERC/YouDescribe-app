@@ -1,0 +1,12 @@
+#share-bar {
+  position: absolute;
+  top: 200px;
+  button {
+    outline: none;
+    border: none;
+  }
+  @media (max-width: 767px) {
+    position: relative;
+    top: auto;
+  }
+}
