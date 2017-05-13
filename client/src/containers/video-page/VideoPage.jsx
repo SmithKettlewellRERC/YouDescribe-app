@@ -60,7 +60,7 @@ class VideoPage extends Component {
     this.resetPlayedAudioClips = this.resetPlayedAudioClips.bind(this);
     this.changeAudioDescription = this.changeAudioDescription.bind(this);
     this.pauseAudioClips = this.pauseAudioClips.bind(this);
-    this.overallRatingVote = this.overallRatingVote.bind(this);
+    this.audioDescriptionRating = this.audioDescriptionRating.bind(this);
     this.handleDescriberChange = this.handleDescriberChange.bind(this);
     this.handleAddDescription = this.handleAddDescription.bind(this);
   }
