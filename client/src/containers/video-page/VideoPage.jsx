@@ -506,17 +506,20 @@ class VideoPage extends Component {
             <div id="yt-info-card" className="w3-col l8 m8">
               <YTInfoCard {...this.state} />
             </div>
-            {/*<div id="yd-info-card" className="w3-col l4 m4">
+            {/* <div id="yd-info-card" className="w3-col l4 m4">
               <YDInfoCard {...this.state.videoData} />
-            </div>*/}
+            </div> */}
             <div id="describers" className="w3-col l4 m4">
               <div className="w3-card-2">
-                <h3>Describers</h3>
-                {describerCards}
+                <h3>Selected description</h3>
+                {describerCards[0]}
+                <hr />
+                <h3>Other descriptions</h3>
+                {describerCards.slice(1)}
                 <Button
                   title="Add a new description for this video"
                   text="Add description"
-                  color="w3-indigo w3-block"
+                  color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleAddDescription()}
                 />
               </div>

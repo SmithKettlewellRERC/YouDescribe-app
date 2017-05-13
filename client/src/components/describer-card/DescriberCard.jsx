@@ -1,6 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Button from '../button/Button.jsx';
-import SignInButton from '../sign-in-button/SignInButton.jsx';
 
 const DescriberCard = (props) => {
   // console.log('props', props);
@@ -13,7 +13,7 @@ const DescriberCard = (props) => {
         text="Rate description"
         color="w3-indigo w3-block"
       />
-    )
+    );
   } else {
     button = (
       <Button
@@ -43,6 +43,10 @@ const DescriberCard = (props) => {
       </div>
     </div>
   );
-}
+};
+
+DescriberCard.PropTypes = {
+  describerId: PropTypes.string.isRequired,
+};
 
 export default DescriberCard;
