@@ -1,0 +1,38 @@
+#rating-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /*
+  	Ratings Stars
+  	(with as little code as possible)
+  */
+  .rating {
+    // unicode-bidi: bidi-override;
+    width: 83px;
+    direction: rtl;
+    // text-align: center;
+  }
+  .rating > button {
+    color: grey;
+    display: inline-block;
+    position: relative;
+    padding-right: 1px;
+    width: 1.1em;
+    // margin: 0;
+    background-color: white;
+    border: none;
+    outline: none;
+  }
+  .rating > button:hover,
+  .rating > button:hover ~ button {
+    color: transparent;
+  }
+  .rating > button:hover:before,
+  .rating > button:hover ~ button:before {
+     content: "\2605";
+    //  position: absolute;
+    //  left: 0;
+     color: gold;
+  }
+}

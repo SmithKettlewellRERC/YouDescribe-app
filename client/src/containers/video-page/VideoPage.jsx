@@ -8,6 +8,7 @@ import DescriberCard from '../../components/describer-card/DescriberCard.jsx';
 import YTInfoCard from '../../components/yt-info-card/YTInfoCard.jsx';
 import YDInfoCard from '../../components/yd-info-card/YDInfoCard.jsx';
 import Button from '../../components/button/Button.jsx';
+import RatingPopup from '../../components/rating-popup/RatingPopup.jsx';
 
 import {
   ourFetch,
@@ -63,6 +64,7 @@ class VideoPage extends Component {
     this.audioDescriptionRating = this.audioDescriptionRating.bind(this);
     this.handleDescriberChange = this.handleDescriberChange.bind(this);
     this.handleAddDescription = this.handleAddDescription.bind(this);
+    this.handleRatingPopup = this.handleRatingPopup.bind(this);
   }
 
   componentDidMount() {
@@ -430,7 +432,7 @@ class VideoPage extends Component {
     spinner.style.display = 'none';
   }
 
-  audioDescriptionRating(e) {
+  audioDescriptionRating(rating) {
     if (!this.props.getAppState().isSignedIn) {
       alert('You have to be logged in in order to vote');
     } else {
@@ -443,17 +445,23 @@ class VideoPage extends Component {
         body: JSON.stringify({
           userId: this.props.getAppState().userId,
           userToken: this.props.getAppState().userToken,
-          rating: '4',
+          rating,
         }),
       })
       .then((res) => {
         console.log('Success', res);
+        alert(`You have successfully given this description a rating of ${res.result.rating}`)
+        document.getElementById('rating-popup').style.display = 'none';
       })
       .catch(err => {
         console.log(err);
         alert('It was impossible to vote. Maybe your session has expired. Try to logout and login again.');
       });
     }
+  }
+
+  handleRatingPopup() {
+    document.getElementById('rating-popup').style.display = 'block';
   }
 
   // 1
@@ -474,6 +482,7 @@ class VideoPage extends Component {
         <DescriberCard
           key={i}
           handleDescriberChange={this.handleDescriberChange}
+          handleRatingPopup={this.handleRatingPopup}
           describerId={describerId}
           selectedDescriberId={selectedId}
           {...describers[describerId]}
@@ -503,6 +512,7 @@ class VideoPage extends Component {
             </div>
           </section>
           <section id="video-info" className="container w3-row">
+            <RatingPopup handleRating={this.audioDescriptionRating} />
             <div id="yt-info-card" className="w3-col l8 m8">
               <YTInfoCard {...this.state} />
             </div>

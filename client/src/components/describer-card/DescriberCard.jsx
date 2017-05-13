@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import Button from '../button/Button.jsx';
 
 const DescriberCard = (props) => {
-  // console.log('props', props);
+  console.log('props', props);
+  console.log('rating avg', props.overall_rating_average);
   let button;
 
   if (props.describerId === props.selectedDescriberId) {
@@ -12,6 +13,7 @@ const DescriberCard = (props) => {
         title="Rate this describer's audio description"
         text="Rate description"
         color="w3-indigo w3-block"
+        onClick={() => props.handleRatingPopup()}
       />
     );
   } else {
@@ -22,8 +24,17 @@ const DescriberCard = (props) => {
         color="w3-indigo w3-block"
         onClick={() => props.handleDescriberChange(props.describerId)}
       />
-    )
+    );
   }
+
+  const stars = [];
+
+  for (let i = 0; i < 5; i += 1) {
+    i < props.overall_rating_average ?
+      stars.push(<button style={{ color: 'gold' }} onClick={() => props.handleRating(5 - i)}>★</button>) :
+      stars.push(<button onClick={() => props.handleRating(5 - i)}>★</button>)
+  }
+
   return (
     <div id="describer-card">
       <div className="w3-card-2">
@@ -34,7 +45,7 @@ const DescriberCard = (props) => {
           <div className="w3-col l9 m7 s9">
             {props.name}
             <div className="rating">
-              <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+              {stars}
             </div>
           </div>
         </div>
