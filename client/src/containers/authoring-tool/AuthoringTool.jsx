@@ -686,6 +686,7 @@ class AuthoringTool extends Component {
     const resultConfirm = confirm('Are you sure you wanna publish this audio description?');
     if (resultConfirm) {
       const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=publish`;
+      console.log('Publish to', url)
       ourFetch(url, true, {
         method: 'POST',
         headers: {

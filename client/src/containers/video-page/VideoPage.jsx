@@ -430,11 +430,11 @@ class VideoPage extends Component {
     spinner.style.display = 'none';
   }
 
-  overallRatingVote(e) {
+  audioDescriptionRating(e) {
     if (!this.props.getAppState().isSignedIn) {
       alert('You have to be logged in in order to vote');
     } else {
-      const url = `${conf.apiUrl}/overallratings/${this.state.selectedAudioDescriptionId}`;
+      const url = `${conf.apiUrl}/audiodescriptionsrating/${this.state.selectedAudioDescriptionId}`;
       ourFetch(url, true, {
         method: 'POST',
         headers: {
