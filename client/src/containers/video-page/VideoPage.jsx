@@ -460,18 +460,29 @@ class VideoPage extends Component {
   render() {
     console.log('1 -> Render');
     // console.log(this.state.videoData);
+    const selectedId = this.state.selectedAudioDescriptionId;
+    const describers = this.state.audioDescriptionsIdsUsers;
     const describerCards = [];
-    const describers = Object.keys(this.state.audioDescriptionsIdsUsers);
+    let describerIds = Object.keys(describers);
 
-    describers.forEach((describerId, i) => {
-      // console.log(this.state.audioDescriptionsIdsUsers[describerId]);
+    console.log('describerIds', describerIds);
+    console.log('currnet describer', selectedId);
+
+    if (describerIds.length && describerIds[0] !== selectedId) {
+      console.log('WRONG ORDER!!!');
+      const selectedIdIndex = describerIds.indexOf(selectedId);
+      describerIds = describerIds.splice(selectedIdIndex, 1).concat(describerIds);
+    }
+
+    describerIds.forEach((describerId, i) => {
+      // console.log(describers[describerId]);
       describerCards.push(
         <DescriberCard
           key={i}
           handleDescriberChange={this.handleDescriberChange}
           describerId={describerId}
-          selectedDescriberId={this.state.selectedAudioDescriptionId}
-          {...this.state.audioDescriptionsIdsUsers[describerId]}
+          selectedDescriberId={selectedId}
+          {...describers[describerId]}
         />
       )
     });
