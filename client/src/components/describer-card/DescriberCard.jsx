@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import Button from '../button/Button.jsx';
 
 const DescriberCard = (props) => {
-  console.log('props', props);
-  console.log('rating avg', props.overall_rating_average);
   let button;
 
   if (props.describerId === props.selectedDescriberId) {

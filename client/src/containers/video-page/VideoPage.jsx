@@ -65,6 +65,7 @@ class VideoPage extends Component {
     this.handleDescriberChange = this.handleDescriberChange.bind(this);
     this.handleAddDescription = this.handleAddDescription.bind(this);
     this.handleRatingPopup = this.handleRatingPopup.bind(this);
+    this.handlePopupClose = this.handlePopupClose.bind(this);
   }
 
   componentDidMount() {
@@ -80,7 +81,7 @@ class VideoPage extends Component {
 
   // 2
   fetchVideoData() {
-    console.log('2 -> fetchingVideoData');
+    // console.log('2 -> fetchingVideoData');
     const self = this;
     const url = `${conf.apiUrl}/videos/${this.props.params.videoId}`;
 
@@ -105,7 +106,7 @@ class VideoPage extends Component {
 
   // 3
   parseVideoData() {
-    console.log('3 -> parseVideoData');
+    // console.log('3 -> parseVideoData');
     const videoData = Object.assign({}, this.state.videoData);
     const audioDescriptionsIds = [];
     const audioDescriptionsIdsUsers = {};
@@ -141,7 +142,7 @@ class VideoPage extends Component {
 
   // 4
   setAudioDescriptionActive() {
-    console.log('4 -> setAudioDescriptionActive');
+    // console.log('4 -> setAudioDescriptionActive');
     let selectedAudioDescriptionId = null;
 
     if (this.state.selectedAudioDescriptionId !== null) {
@@ -158,7 +159,7 @@ class VideoPage extends Component {
 
   // 5
   preLoadAudioClips() {
-    console.log('5 -> preLoadAudioClips');
+    // console.log('5 -> preLoadAudioClips');
     const self = this;
     const audioClips = this.getAudioClips();
 
@@ -181,13 +182,12 @@ class VideoPage extends Component {
 
   // 6
   getYTVideoInfo() {
-    console.log('6 -> getYTVideoInfo');
+    // console.log('6 -> getYTVideoInfo');
     const self = this;
     const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet,statistics&forUsername=iamOTHER&key=${conf.youTubeApiKey}`;
 
     // Use custom fetch for cross-browser compatability
     ourFetch(url).then((data) => {
-      console.log("data", data);
       this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
       this.setState({
         videoTitle: data.items[0].snippet.title,
@@ -210,12 +210,12 @@ class VideoPage extends Component {
 
   // 7
   initVideoPlayer() {
-    console.log('7 -> initVideoPlayer');
+    // console.log('7 -> initVideoPlayer');
     const self = this;
 
     // 8
     function startVideo() {
-      console.log('8 -> startVideo');
+      // console.log('8 -> startVideo');
       if (self.state.videoPlayer === null) {
         self.setState({
           videoPlayer: new YT.Player('playerVP', {
@@ -250,7 +250,7 @@ class VideoPage extends Component {
 
     // 9
     function onVideoPlayerReady() {
-      console.log('9 -> onVideoPlayerReady');
+      // console.log('9 -> onVideoPlayerReady');
       self.closeSpinner();
     }
 
@@ -292,7 +292,7 @@ class VideoPage extends Component {
 
   // 10
   startProgressWatcher() {
-    console.log('10 -> startProgressWatcher');
+    // console.log('10 -> startProgressWatcher');
     const self = this;
     const audioClips = this.getAudioClips();
 
@@ -334,7 +334,7 @@ class VideoPage extends Component {
   }
 
   stopProgressWatcher() {
-    console.log('stopProgressWatcher');
+    // console.log('stopProgressWatcher');
     if (this.watcher) {
       clearInterval(this.watcher);
       this.watcher = null;
@@ -433,7 +433,6 @@ class VideoPage extends Component {
   }
 
   audioDescriptionRating(rating) {
-    console.log('rating', rating);
     if (!this.props.getAppState().isSignedIn) {
       alert('You have to be logged in in order to vote');
     } else {
@@ -468,7 +467,7 @@ class VideoPage extends Component {
         alert(`You have successfully given this description a rating of ${rating}`);
         document.getElementById('rating-popup').style.display = 'none';
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         alert('It was impossible to vote. Maybe your session has expired. Try to logout and login again.');
       });
@@ -476,12 +475,20 @@ class VideoPage extends Component {
   }
 
   handleRatingPopup() {
-    document.getElementById('rating-popup').style.display = 'block';
+    if (!this.props.getAppState().isSignedIn) {
+      alert('You have to be logged in in order to vote');
+    } else {
+      document.getElementById('rating-popup').style.display = 'block';
+    }
+  }
+
+  handlePopupClose() {
+    document.getElementById('rating-popup').style.display = 'none';
   }
 
   // 1
   render() {
-    console.log('1 -> Render');
+    // console.log('1 -> Render');
     const selectedId = this.state.selectedAudioDescriptionId;
     const describers = this.state.audioDescriptionsIdsUsers;
     const describerCards = [];
@@ -527,7 +534,10 @@ class VideoPage extends Component {
             </div>
           </section>
           <section id="video-info" className="container w3-row">
-            <RatingPopup handleRating={this.audioDescriptionRating} />
+            <RatingPopup
+              handleRating={this.audioDescriptionRating}
+              handlePopupClose={this.handlePopupClose}
+            />
             <div id="yt-info-card" className="w3-col l8 m8">
               <YTInfoCard {...this.state} />
             </div>
