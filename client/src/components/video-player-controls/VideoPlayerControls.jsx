@@ -4,6 +4,7 @@ import VolumeBalancer from '../volume-balancer/VolumeBalancer.jsx';
 import AudioDescriptionSelector from '../audio-description-selector/AudioDescriptionSelector.jsx';
 import PlayPauseButton from '../play-pause-button/PlayPauseButton.jsx';
 import VideoTimer from '../video-timer/VideoTimer.jsx';
+import FullscreenButton from '../fullscreen-button/FullscreenButton.jsx';
 
 const VideoPlayerControls = (props) => {
   return (
@@ -16,6 +17,7 @@ const VideoPlayerControls = (props) => {
         <div>
           <PlayPauseButton {...props} />
           <VolumeBalancer updateState={props.updateState} />
+          <FullscreenButton playFullscreen={props.playFullscreen} />
           <VideoTimer {...props} />
         </div>
       </div>
