@@ -433,6 +433,7 @@ class VideoPage extends Component {
   }
 
   audioDescriptionRating(rating) {
+    console.log('rating', rating);
     if (!this.props.getAppState().isSignedIn) {
       alert('You have to be logged in in order to vote');
     } else {
@@ -449,8 +450,22 @@ class VideoPage extends Component {
         }),
       })
       .then((res) => {
-        console.log('Success', res);
-        alert(`You have successfully given this description a rating of ${res.result.rating}`)
+        console.log('success', res);
+        const describers = { ...this.state.audioDescriptionsIdsUsers };
+        const selectedId = this.state.selectedAudioDescriptionId;
+
+        describers[selectedId].overall_rating_votes_sum += rating;
+        describers[selectedId].overall_rating_votes_counter += 1;
+        describers[selectedId].overall_rating_average = (
+          describers[selectedId].overall_rating_votes_sum /
+          describers[selectedId].overall_rating_votes_counter
+        );
+
+        this.setState({
+          audioDescriptionsIdsUsers: describers,
+        });
+
+        alert(`You have successfully given this description a rating of ${rating}`);
         document.getElementById('rating-popup').style.display = 'none';
       })
       .catch(err => {

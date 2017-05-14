@@ -30,9 +30,11 @@ const DescriberCard = (props) => {
   const stars = [];
 
   for (let i = 0; i < 5; i += 1) {
-    i < props.overall_rating_average ?
-      stars.push(<button style={{ color: 'gold' }} onClick={() => props.handleRating(5 - i)}>★</button>) :
-      stars.push(<button onClick={() => props.handleRating(5 - i)}>★</button>)
+    if (i < props.overall_rating_average) {
+      stars.push(<button key={i} style={{ color: 'gold' }} onClick={() => props.handleRating(5 - i)}>★</button>);
+    } else {
+      stars.push(<button key={i} onClick={() => props.handleRating(5 - i)}>★</button>);
+    }
   }
 
   return (
@@ -57,7 +59,13 @@ const DescriberCard = (props) => {
 };
 
 DescriberCard.PropTypes = {
+  picture: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   describerId: PropTypes.string.isRequired,
+  selectedDescriberId: PropTypes.string.isRequired,
+  overall_rating_average: PropTypes.number.isRequired,
+  handleDescriberChange: PropTypes.func.isRequired,
+  handleRating: PropTypes.func.isRequired,
 };
 
 export default DescriberCard;
