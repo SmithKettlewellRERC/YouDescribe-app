@@ -18,18 +18,6 @@ const VideoPlayerControls = (props) => {
           <VolumeBalancer updateState={props.updateState} />
           <VideoTimer {...props} />
         </div>
-
-        {/*<div className="w3-col l6 m6">
-          <AudioDescriptionSelector
-            audioDescriptionsIdsUsers={props.audioDescriptionsIdsUsers}
-            selectedAudioDescriptionId={props.selectedAudioDescriptionId}
-            setAudioDescriptionActive={props.setAudioDescriptionActive}
-            changeAudioDescription={props.changeAudioDescription}
-            videoId={props.videoId}
-            getAppState={props.getAppState}
-          />
-        </div>*/}
-
       </div>
 
     </div>
