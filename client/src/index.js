@@ -11,7 +11,9 @@ import VideoPage from './containers/video-page/VideoPage.jsx';
 import NotFound from './containers/not-found/NotFound.jsx';
 import WishList from './containers/wish-list/WishList.jsx';
 import UserVideosPage from './containers/user-videos-page/UserVideosPage.jsx';
-import Disclaimer from './containers/disclaimer/Disclaimer.jsx';
+import Credits from './containers/credits/Credits.jsx';
+import Contact from './containers/contact/Contact.jsx';
+import Support from './containers/support/Support.jsx';
 
 ReactDOM.render((
   <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
@@ -22,7 +24,9 @@ ReactDOM.render((
       <Route path="/video/:videoId" component={VideoPage} />
       <Route path="/wishlist" component={WishList} />
       <Route path="/videos/user/:userId" component={UserVideosPage} />
-      <Route path="/disclaimer" component={Disclaimer} />
+      <Route path="/credits" component={Credits} />
+      <Route path="/contact" component={Contact} />
+      <Route path="/support" component={Support} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>

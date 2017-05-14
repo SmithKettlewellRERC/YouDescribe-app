@@ -35,10 +35,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    const searchValue = this.props.location.query.q;
-    this.setState({
-      searchValue,
-    });
+    this.setState({ searchValue: this.props.location.query.q });
   }
 
   googleSignInSuccess() {
@@ -60,6 +57,7 @@ class App extends Component {
         userPicture: res.result.picture,
       }, () => {
         this.setCookie();
+        location.reload(true);
       });
     });
   }
@@ -144,6 +142,7 @@ class App extends Component {
       }, () => {
         this.resetCookie();
         this.initGoogleAuth();
+        location.href = '/';
       });
     });
   }

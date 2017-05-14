@@ -2,8 +2,11 @@ footer {
   h5,h6,a {
     color: #ccc;
   }
-  h5 {
+  h5, div a {
     font-size: 14px;
+  }
+  div a {
+    margin: 0 10px 0 10px;
   }
   h6 {
     font-size: 11px;

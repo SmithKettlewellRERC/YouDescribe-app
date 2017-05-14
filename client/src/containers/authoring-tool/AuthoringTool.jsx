@@ -77,6 +77,9 @@ class AuthoringTool extends Component {
   }
 
   componentDidMount() {
+    if (!this.props.getAppState().isSignedIn) {
+      location.href = '/';
+    }
     this.getYDVideoData();
     this.scrollingFix();
   }
