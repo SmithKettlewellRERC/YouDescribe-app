@@ -66,6 +66,7 @@ class VideoPage extends Component {
     this.handleAddDescription = this.handleAddDescription.bind(this);
     this.handleRatingPopup = this.handleRatingPopup.bind(this);
     this.handlePopupClose = this.handlePopupClose.bind(this);
+    this.playFullscreen = this.playFullscreen.bind(this);
   }
 
   componentDidMount() {
@@ -486,6 +487,20 @@ class VideoPage extends Component {
     document.getElementById('rating-popup').style.display = 'none';
   }
 
+  playFullscreen (){
+    var $ = document.querySelector.bind(document);
+    var iframe = $('#playerVP');
+
+    console.log(iframe);
+
+    this.state.videoPlayer.playVideo();//won't work on mobile
+
+    var requestFullScreen = iframe.requestFullScreen || iframe.mozRequestFullScreen || iframe.webkitRequestFullScreen;
+    if (requestFullScreen) {
+      requestFullScreen.bind(iframe)();
+    }
+  }
+
   // 1
   render() {
     // console.log('1 -> Render');
@@ -525,6 +540,7 @@ class VideoPage extends Component {
                 updateState={this.updateState}
                 changeAudioDescription={this.changeAudioDescription}
                 resetPlayedAudioClips={this.resetPlayedAudioClips}
+                playFullscreen={this.playFullscreen}
                 audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
                 selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
                 videoId={this.state.videoId}
