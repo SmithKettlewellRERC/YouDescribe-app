@@ -454,6 +454,16 @@ class VideoPage extends Component {
         const describers = { ...this.state.audioDescriptionsIdsUsers };
         const selectedId = this.state.selectedAudioDescriptionId;
 
+        if (!describers[selectedId].overall_rating_votes_sum) {
+          describers[selectedId].overall_rating_votes_sum = 0;
+        }
+        if (!describers[selectedId].overall_rating_votes_counter) {
+          describers[selectedId].overall_rating_votes_counter = 0;
+        }
+        if (!describers[selectedId].overall_rating_average) {
+          describers[selectedId].overall_rating_average = 0;
+        }
+
         describers[selectedId].overall_rating_votes_sum += rating;
         describers[selectedId].overall_rating_votes_counter += 1;
         describers[selectedId].overall_rating_average = (
@@ -463,7 +473,7 @@ class VideoPage extends Component {
 
         this.setState({
           audioDescriptionsIdsUsers: describers,
-        });
+        }, console.log(this.state.audioDescriptionsIdsUsers));
 
         alert(`You have successfully given this description a rating of ${rating}`);
         document.getElementById('rating-popup').style.display = 'none';
@@ -487,15 +497,15 @@ class VideoPage extends Component {
     document.getElementById('rating-popup').style.display = 'none';
   }
 
-  playFullscreen (){
-    var $ = document.querySelector.bind(document);
-    var iframe = $('#playerVP');
+  playFullscreen() {
+    const $ = document.querySelector.bind(document);
+    const iframe = $('#playerVP');
 
-    console.log(iframe);
+    this.state.videoPlayer.playVideo(); // won't work on mobile
 
-    this.state.videoPlayer.playVideo();//won't work on mobile
-
-    var requestFullScreen = iframe.requestFullScreen || iframe.mozRequestFullScreen || iframe.webkitRequestFullScreen;
+    const requestFullScreen = iframe.requestFullScreen ||
+      iframe.mozRequestFullScreen ||
+      iframe.webkitRequestFullScreen;
     if (requestFullScreen) {
       requestFullScreen.bind(iframe)();
     }

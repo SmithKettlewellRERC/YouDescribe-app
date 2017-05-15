@@ -28,7 +28,7 @@ const DescriberCard = (props) => {
   const stars = [];
 
   for (let i = 0; i < 5; i += 1) {
-    if (i < props.overall_rating_average) {
+    if (i + 1 <= Math.round(props.overall_rating_average)) {
       stars.push(<button key={i} style={{ color: 'gold' }} onClick={() => props.handleRating(5 - i)}>★</button>);
     } else {
       stars.push(<button key={i} onClick={() => props.handleRating(5 - i)}>★</button>);
