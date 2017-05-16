@@ -57,7 +57,7 @@ class App extends Component {
         userPicture: res.result.picture,
       }, () => {
         this.setCookie();
-        location.reload(true);
+        // location.reload(true);
       });
     });
   }
