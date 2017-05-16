@@ -2,7 +2,7 @@ import React from 'react';
 
 const Button = props => (
   <div id="button">
-    <button role="button" id={props.id} title={props.title} className={`w3-btn ${props.color}`} onClick={props.onClick}>
+    <button aria-label={props.ariaLable} id={props.id} title={props.title} className={`w3-btn ${props.color}`} onClick={props.onClick}>
       {props.text}
     </button>
   </div>
