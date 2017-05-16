@@ -9,6 +9,7 @@ import YTInfoCard from '../../components/yt-info-card/YTInfoCard.jsx';
 import YDInfoCard from '../../components/yd-info-card/YDInfoCard.jsx';
 import Button from '../../components/button/Button.jsx';
 import RatingPopup from '../../components/rating-popup/RatingPopup.jsx';
+import FeedbackPopup from '../../components/feedback-popup/FeedbackPopup.jsx';
 
 import {
   ourFetch,
@@ -40,6 +41,7 @@ class VideoPage extends Component {
       audioDescriptionsIdsUsers: {},
       audioDescriptionsIdsAudioClips: {},
       selectedAudioDescriptionId: null,
+      feedback: [],
 
       // Video controls and data
       videoTitle: '',
@@ -65,8 +67,12 @@ class VideoPage extends Component {
     this.handleDescriberChange = this.handleDescriberChange.bind(this);
     this.handleAddDescription = this.handleAddDescription.bind(this);
     this.handleRatingPopup = this.handleRatingPopup.bind(this);
-    this.handlePopupClose = this.handlePopupClose.bind(this);
+    this.handleRatingPopupClose = this.handleRatingPopupClose.bind(this);
+    this.handleFeedbackPopup = this.handleFeedbackPopup.bind(this);
+    this.handleFeedbackPopupClose = this.handleFeedbackPopupClose.bind(this);
     this.playFullscreen = this.playFullscreen.bind(this);
+    this.handleFeedbackChange = this.handleFeedbackChange.bind(this);
+    this.handleFeedbackSubmit = this.handleFeedbackSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -438,6 +444,10 @@ class VideoPage extends Component {
       alert('You have to be logged in in order to vote');
     } else {
       const url = `${conf.apiUrl}/audiodescriptionsrating/${this.state.selectedAudioDescriptionId}`;
+
+      if (rating < 5) {
+        this.handleFeedbackPopup();
+      }
       ourFetch(url, true, {
         method: 'POST',
         headers: {
@@ -473,7 +483,7 @@ class VideoPage extends Component {
 
         this.setState({
           audioDescriptionsIdsUsers: describers,
-        }, console.log(this.state.audioDescriptionsIdsUsers));
+        });
 
         alert(`You have successfully given this description a rating of ${rating}`);
         document.getElementById('rating-popup').style.display = 'none';
@@ -485,6 +495,34 @@ class VideoPage extends Component {
     }
   }
 
+  handleFeedbackSubmit(event) {
+    console.log(event);
+    const url = `${conf.apiUrl}/audiodescriptionsfeedback/${this.state.selectedAudioDescriptionId}`;
+
+    event.preventDefault();
+    ourFetch(url, true, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: this.props.getAppState().userId,
+        userToken: this.props.getAppState().userToken,
+        feedback: this.state.feedback,
+      }),
+    })
+    .then((res) => {
+      console.log('success', res);
+
+      alert('Thanks for your feedback!');
+      document.getElementById('feedback-popup').style.display = 'none';
+    })
+    .catch((err) => {
+      console.log(err);
+      alert('It was impossible to vote. Maybe your session has expired. Try to logout and login again.');
+    });
+  }
+
   handleRatingPopup() {
     if (!this.props.getAppState().isSignedIn) {
       alert('You have to be logged in in order to vote');
@@ -493,19 +531,32 @@ class VideoPage extends Component {
     }
   }
 
-  handlePopupClose() {
+  handleRatingPopupClose() {
     document.getElementById('rating-popup').style.display = 'none';
+  }
+
+  handleFeedbackPopup() {
+    document.getElementById('feedback-popup').style.display = 'block';
+  }
+
+  handleFeedbackPopupClose() {
+    document.getElementById('feedback-popup').style.display = 'none';
+  }
+
+  handleFeedbackChange(event) {
+    console.log(event.target.value);
+    const feedback = [...this.state.feedback, event.target.value];
+
+    this.setState({ feedback }, console.log(this.state.feedback));
   }
 
   playFullscreen() {
     const $ = document.querySelector.bind(document);
     const iframe = $('#playerVP');
-
-    this.state.videoPlayer.playVideo(); // won't work on mobile
-
     const requestFullScreen = iframe.requestFullScreen ||
       iframe.mozRequestFullScreen ||
       iframe.webkitRequestFullScreen;
+
     if (requestFullScreen) {
       requestFullScreen.bind(iframe)();
     }
@@ -562,7 +613,12 @@ class VideoPage extends Component {
           <section id="video-info" className="container w3-row">
             <RatingPopup
               handleRating={this.audioDescriptionRating}
-              handlePopupClose={this.handlePopupClose}
+              handleRatingPopupClose={this.handleRatingPopupClose}
+            />
+            <FeedbackPopup
+              handleFeedbackPopupClose={this.handleFeedbackPopupClose}
+              handleFeedbackChange={this.handleFeedbackChange}
+              handleFeedbackSubmit={this.handleFeedbackSubmit}
             />
             <div id="yt-info-card" className="w3-col l8 m8">
               <YTInfoCard {...this.state} />

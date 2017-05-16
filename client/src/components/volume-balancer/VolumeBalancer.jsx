@@ -242,6 +242,7 @@ class VolumeBalancer extends Component {
             aria-valuemin="10"
             aria-valuemax="90"
             aria-valuenow="50"
+            accessKey="v"
           />
         </div>
         <span className="floatLeft" aria-hidden="true">D</span>
