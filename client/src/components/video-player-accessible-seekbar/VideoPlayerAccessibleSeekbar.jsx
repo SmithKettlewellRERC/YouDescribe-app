@@ -20,14 +20,12 @@ class Slider extends Component {
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);
     this.changeValue = this.changeValue.bind(this);
-    // this.updateValueIndicator = this.updateValueIndicator.bind(this);
     this.setHandlers = this.setHandlers.bind(this);
     this.cancelEvent = this.cancelEvent.bind(this);
     this.init = this.init.bind(this);
   }
 
   componentDidMount() {
-    // console.log('INIT', this.init());
     this.init();
   }
 
@@ -173,28 +171,18 @@ class Slider extends Component {
   }
 
   changeValue(target, value) {
-    // console.log('SEEKBAR TARGET', target);
     const ratio = this.calibrate(target);
-    // console.log(target.getAttribute('aria-valuemin'), target.getAttribute('aria-valuemax'));
     const min = parseInt(target.getAttribute('aria-valuemin'));
     const max = parseInt(target.getAttribute('aria-valuemax'));
-    // console.log(min, max);
     const newValue = Math.min(Math.max(value, min), max);
     const newPos = Math.round(newValue * ratio);
     target.style.left = newPos - 6 + "px";
 
     target.setAttribute('aria-valuenow', newValue);
     target.setAttribute('aria-valuetext', newValue + "%");
-    // this.updateValueIndicator(target.id.replace(/Thumb/, 'Value'), newValue + "%");
-    // this.setState({ videoPlayerAccessibilitySeekbarValue: newValue })
     this.props.resetPlayedAudioClips();
     this.props.videoPlayer.seekTo((newValue / 100) * this.props.videoDurationInSeconds);
   }
-
-  // updateValueIndicator(id, value) {
-  // 	let elem = this.$(id);
-  // 	elem.replaceChild(document.createTextNode(value), elem.firstChild);
-  // }
 
   setHandlers(slider) {
     slider.parentNode.onmousedown = this.handleRailMouseDown;
@@ -238,6 +226,7 @@ class Slider extends Component {
             aria-valuenow="0"
             aria-valuetext="0%"
             style={{ left: `calc(${this.props.videoPlayerAccessibilitySeekbarValue * 100}% - 6px)` }}
+            accessKey="s"
           />
         </div>
       </div>

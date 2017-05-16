@@ -12,7 +12,7 @@ class UserMenu extends Component {
   render() {
     const myVideosUrl = `/videos/user/${this.props.getAppState().userId}`;
     return (
-      <div id="user-menu">
+      <div id="user-menu" tabIndex="-1">
         <div className="arrow-up"></div>
         <div className="w3-card-4">
           <div className="user-menu-header"><h3>{this.props.getAppState().userName}</h3></div>

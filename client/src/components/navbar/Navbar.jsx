@@ -35,6 +35,7 @@ class Navbar extends Component {
       userMenu.style.display = 'none';
     } else {
       userMenu.style.display = 'block';
+      document.getElementById('user-menu').focus();
     }
   }
 
