@@ -444,7 +444,10 @@ class VideoPage extends Component {
     spinner.style.display = 'none';
   }
 
-  audioDescriptionRating(rating) {
+  audioDescriptionRating(rating, feedback) {
+    if (!feedback) {
+      feedback = [];
+    }
     if (!this.props.getAppState().isSignedIn) {
       alert('You have to be logged in in order to vote');
     } else {
@@ -462,6 +465,7 @@ class VideoPage extends Component {
           userId: this.props.getAppState().userId,
           userToken: this.props.getAppState().userToken,
           rating,
+          feedback,
         }),
       })
       .then((res) => {
@@ -637,6 +641,7 @@ class VideoPage extends Component {
             />
             <FeedbackPopup
               handleFeedbackPopupClose={this.handleFeedbackPopupClose}
+              handleRating={this.audioDescriptionRating}
               handleFeedbackChange={this.handleFeedbackChange}
               handleFeedbackSubmit={this.handleFeedbackSubmit}
             />
