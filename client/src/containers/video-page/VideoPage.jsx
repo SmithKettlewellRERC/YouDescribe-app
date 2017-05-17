@@ -31,6 +31,7 @@ class VideoPage extends Component {
     this.watcher = null;
     this.previousVideoVolume = 0;
     this.audioClipsPlayed = {};
+    this.rating = 0;
 
     this.state = {
       videoId: props.params.videoId,
@@ -444,10 +445,7 @@ class VideoPage extends Component {
     spinner.style.display = 'none';
   }
 
-  audioDescriptionRating(rating, feedback) {
-    if (!feedback) {
-      feedback = [];
-    }
+  audioDescriptionRating(rating) {
     if (!this.props.getAppState().isSignedIn) {
       alert('You have to be logged in in order to vote');
     } else {
@@ -465,11 +463,9 @@ class VideoPage extends Component {
           userId: this.props.getAppState().userId,
           userToken: this.props.getAppState().userToken,
           rating,
-          feedback,
         }),
       })
       .then((res) => {
-        console.log('success', res);
         const describers = { ...this.state.audioDescriptionsIdsUsers };
         const selectedId = this.state.selectedAudioDescriptionId;
 
