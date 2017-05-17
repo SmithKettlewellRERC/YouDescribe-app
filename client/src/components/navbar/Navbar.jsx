@@ -47,7 +47,7 @@ class Navbar extends Component {
       signInComponent = <SignInButton />;
     }
     return (
-      <header role="banner" id="navbar" tabIndex="-1">
+      <nav id="navbar">
         {/* Navbar (sit on top) */}
         <div className="w3-top">
           <div className="w3-bar w3-white w3-card-2 w3-text-indigo">
@@ -68,7 +68,7 @@ class Navbar extends Component {
               />
             </Link>
 
-            <div role="search" className="w3-left">
+            <div className="w3-left">
               <SearchBar updateSearch={searchValue => this.props.updateSearch(searchValue)} />
             </div>
 
@@ -126,7 +126,7 @@ class Navbar extends Component {
           </Link>
           {signInComponent}
         </div>
-      </header>
+      </nav>
     );
   }
 }
