@@ -48,28 +48,30 @@ class Navbar extends Component {
       signInComponent = <SignInButton />;
     }
     return (
-      <header role="banner" id="navbar">
-        <div className="skip"><a href="#main" title="Skip to main content">main</a></div>
+      <header role="navigation" id="navbar">
         {/* Navbar (sit on top) */}
         <div className="w3-top">
           <div className="w3-bar w3-white w3-card-2 w3-text-indigo">
-            <logo title="YouDescribe home">
-              <Link to="/" title="YouDescribe home" id="logo" className="w3-bar-item w3-hide-small w3-hide-medium">
-                <img
-                  alt="YouDescribe home"
-                  height="100%"
-                  src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_full_(indigo_and_grey).png')}
-                />
-              </Link>
+            <Link
+              to="/"
+              title="YouDescribe home"
+              id="logo"
+              className="w3-bar-item w3-hide-small w3-hide-medium"
+            >
+              <img
+                alt="YouDescribe home"
+                height="100%"
+                src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_full_(indigo_and_grey).png')}
+              />
+            </Link>
 
-              <Link to="/" id="logo" className="w3-bar-item w3-hide-large">
-                <img
-                  alt="YouDescribe home"
-                  height="100%"
-                  src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_small_(indigo_and_grey).png')}
-                />
-              </Link>
-            </logo>
+            <Link to="/" id="logo" className="w3-bar-item w3-hide-large">
+              <img
+                alt="YouDescribe home"
+                height="100%"
+                src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_small_(indigo_and_grey).png')}
+              />
+            </Link>
 
             <div role="search" className="w3-left">
               <SearchBar updateSearch={searchValue => this.props.updateSearch(searchValue)} />
@@ -88,6 +90,7 @@ class Navbar extends Component {
                 to="/wishlist"
                 className="w3-bar-item"
                 style={{ position: 'relative', top: '8px' }}
+                onClick={() => document.getElementById('test4').focus()}
               >
                 <i className="fa fa-heart" aria-hidden="true">&nbsp;&nbsp;</i>WISH LIST
               </Link>

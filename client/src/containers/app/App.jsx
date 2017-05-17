@@ -204,7 +204,7 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <div id="test4" tabIndex="-2">
         <Navbar
           getAppState={this.getAppState}
           signOut={this.signOut}

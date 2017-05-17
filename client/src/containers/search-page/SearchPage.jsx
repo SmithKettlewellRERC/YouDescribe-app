@@ -38,6 +38,7 @@ class SearchPage extends Component {
   }
 
   componentDidMount() {
+    document.getElementById('search-page').focus();
     this.getSearchResultsFromYdAndYt();
   }
 
@@ -265,7 +266,7 @@ class SearchPage extends Component {
     }
 
     return (
-      <div id="search-page" title="YouDescribe search results page">
+      <div id="search-page" tabIndex="-1" title="YouDescribe search results page">
 
         <main role="main">
 

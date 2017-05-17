@@ -76,6 +76,7 @@ class VideoPage extends Component {
   }
 
   componentDidMount() {
+    document.getElementById('video-page').focus();
     this.fetchVideoData();
   }
 
@@ -589,8 +590,8 @@ class VideoPage extends Component {
     });
 
     return (
-      <div id="video-player">
-        <main role="main" title="Video player">
+      <div id="video-page" tabIndex="-1">
+        <main role="main" title="Video page">
           <section id="video-area">
             <ShareBar videoTitle={this.state.videoTitle} />
             <div id="video">
