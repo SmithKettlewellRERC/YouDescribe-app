@@ -73,7 +73,6 @@ class VideoCard extends Component {
           <span id="vote-count">{voteCount}</span>
           <Button
             ariaLable="Create an audio description for this video"
-            title="Create an audio description for this video"
             text="Describe"
             color="w3-indigo w3-right"
             onClick={this.describeThisVideo}
@@ -85,7 +84,6 @@ class VideoCard extends Component {
         <div>
           <Button
             ariaLabel="Edit the audio description for this video"
-            title="Edit the audio description for this video"
             text="Edit"
             color="w3-indigo w3-block"
             onClick={this.describeThisVideo}
