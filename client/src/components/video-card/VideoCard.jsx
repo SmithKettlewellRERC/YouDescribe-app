@@ -30,7 +30,7 @@ class VideoCard extends Component {
         }),
       })
       .then((res) => {
-        console.log('Success upVote');
+        // console.log('Success upVote');
       })
       .catch(err => {
         console.log(err);

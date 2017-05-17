@@ -26,6 +26,7 @@ class WishList extends Component {
   }
 
   componentDidMount() {
+    document.getElementById('wish-list').focus();
     this.loadWishListVideos();
   }
 
