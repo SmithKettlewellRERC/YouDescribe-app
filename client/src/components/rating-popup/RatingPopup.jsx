@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const RatingPopup = props => (
-  <div id="rating-popup">
+  <div id="rating-popup" tabIndex="-1">
     <div id="rating-popup-contents">
       <i className="fa fa-window-close" aria-hidden="true" onClick={props.handleRatingPopupClose} />
       <h2>Rate description</h2>

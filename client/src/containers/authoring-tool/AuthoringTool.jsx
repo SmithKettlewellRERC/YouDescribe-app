@@ -81,7 +81,7 @@ class AuthoringTool extends Component {
       location.href = '/';
     }
     this.getYDVideoData();
-    this.scrollingFix();
+    // this.scrollingFix();
   }
 
   // 2
@@ -351,7 +351,7 @@ class AuthoringTool extends Component {
     const self = this;
     const audioClipId = audioClip._id;
     const playbackType = audioClip.playback_type;
-    
+
     if (!this.audioClipsPlayed.hasOwnProperty(audioClipId)) {
       this.audioClipsPlayed[audioClipId] = new Howl({
         src: [audioClip.url],
@@ -365,7 +365,7 @@ class AuthoringTool extends Component {
           self.state.videoPlayer.playVideo();
         },
       });
-      
+
       console.log('Let\'s play', playbackType, 'at', audioClip.start_time);
 
       // Audio ducking.

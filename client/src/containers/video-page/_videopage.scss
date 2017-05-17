@@ -1,4 +1,4 @@
-#video-player {
+#video-page {
   background-color: #eee;
   color: #fff;
   // min-height: 100vh;
@@ -68,6 +68,9 @@
           position: relative;
           left: 3px;
         }
+      }
+      #descriptions-off {
+        display: none;
       }
     }
   }

@@ -29,6 +29,7 @@ class UserVideosPage extends Component {
   }
 
   componentDidMount() {
+    document.getElementById('user-videos-page').focus();
     this.getUserInfo();
     this.getVideos();
   }
@@ -128,7 +129,7 @@ class UserVideosPage extends Component {
     return (
       <div id="user-videos-page" title="User described videos page">
 
-        <main role="main">
+        <main>
 
           <section>
             <header className="w3-container w3-indigo">
