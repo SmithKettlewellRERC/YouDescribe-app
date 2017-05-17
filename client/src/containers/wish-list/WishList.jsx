@@ -26,7 +26,6 @@ class WishList extends Component {
   }
 
   componentDidMount() {
-    document.getElementById('navbar').focus();
     this.loadWishListVideos();
   }
 
@@ -113,7 +112,7 @@ class WishList extends Component {
     return (
       <main id="wish-list" title="Wish list page">
         <div className="w3-container w3-indigo">
-          <h2>WISH LIST</h2>
+          <h2 id="wish-list-heading" tabIndex="-1">WISH LIST</h2>
         </div>
         <Spinner />
         <div className="w3-row-padding container">

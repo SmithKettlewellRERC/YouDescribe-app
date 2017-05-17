@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '../button/Button.jsx';
 
 const FeedbackPopup = props => (
-  <div id="feedback-popup">
+  <div id="feedback-popup" tabIndex="-1">
     <div id="feedback-popup-contents">
       <i className="fa fa-window-close" aria-hidden="true" onClick={props.handleFeedbackPopupClose} />
       <h2>Optional feedback</h2>
@@ -19,8 +19,14 @@ const FeedbackPopup = props => (
         <input type="checkbox" value="6" onChange={props.handleFeedbackChange} /> Needs more description<br />
         <input type="checkbox" value="7" onChange={props.handleFeedbackChange} /> Description does not match video tone<br />
         <input type="checkbox" value="8" onChange={props.handleFeedbackChange} /> Description has innappropriate content<br />
-        <br />
-        <center><input type="submit" value="Submit"/></center>
+
+        <center>
+          <Button
+            text="Submit"
+            title="Submit feedback"
+            color="w3-indigo w3-margin-top w3-center"
+          />
+        </center>
       </form>
     </div>
   </div>

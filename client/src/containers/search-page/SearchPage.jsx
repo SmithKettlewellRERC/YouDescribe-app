@@ -266,13 +266,13 @@ class SearchPage extends Component {
     }
 
     return (
-      <div id="search-page" tabIndex="-1" title="YouDescribe search results page">
+      <div id="search-page" title="YouDescribe search results page">
 
-        <main role="main">
+        <main>
 
           <section>
             <header className="w3-container w3-indigo">
-              <h2>DESCRIBED VIDEOS</h2>
+              <h2 id="search-page-heading" tabIndex="-1">DESCRIBED VIDEOS</h2>
             </header>
 
             <Spinner />

@@ -8,7 +8,7 @@ const YTInfoCard = (props) => {
       <div className="w3-card-2">
         <h2>{props.videoTitle}</h2>
         <span>{props.videoAuthor}</span><span style={{ float: 'right' }}>{props.videoViews}</span>
-        <hr style={{ marginTop: 0 }}/>
+        <hr style={{ marginTop: 0 }} aria-hidden="true" />
         <div id="time-and-likes-container">
           <div id="publish-time">Published on {props.videoPublishedAt}</div>
           <div id="video-likes">

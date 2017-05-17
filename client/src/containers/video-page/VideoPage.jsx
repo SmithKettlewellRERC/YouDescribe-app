@@ -73,6 +73,8 @@ class VideoPage extends Component {
     this.playFullscreen = this.playFullscreen.bind(this);
     this.handleFeedbackChange = this.handleFeedbackChange.bind(this);
     this.handleFeedbackSubmit = this.handleFeedbackSubmit.bind(this);
+    this.handleTurnOffDescriptions = this.handleTurnOffDescriptions.bind(this);
+    this.handleTurnOnDescriptions = this.handleTurnOnDescriptions.bind(this);
   }
 
   componentDidMount() {
@@ -415,6 +417,8 @@ class VideoPage extends Component {
 
   handleDescriberChange(id) {
     this.changeAudioDescription(id);
+    document.getElementById('play-pause-button').style.outline = 'none';
+    document.getElementById('play-pause-button').focus();
   }
 
   handleAddDescription() {
@@ -529,6 +533,7 @@ class VideoPage extends Component {
       alert('You have to be logged in in order to vote');
     } else {
       document.getElementById('rating-popup').style.display = 'block';
+      document.getElementById('rating-popup').focus();
     }
   }
 
@@ -538,6 +543,7 @@ class VideoPage extends Component {
 
   handleFeedbackPopup() {
     document.getElementById('feedback-popup').style.display = 'block';
+    document.getElementById('feedback-popup').focus();
   }
 
   handleFeedbackPopupClose() {
@@ -563,17 +569,30 @@ class VideoPage extends Component {
     }
   }
 
+  handleTurnOffDescriptions() {
+    document.getElementById('describers').style.display = 'none';
+    document.getElementById('descriptions-off').style.display = 'block';
+  }
+
+  handleTurnOnDescriptions() {
+    document.getElementById('descriptions-off').style.display = 'none';
+    document.getElementById('describers').style.display = 'block';
+  }
+
   // 1
   render() {
     // console.log('1 -> Render');
     const selectedId = this.state.selectedAudioDescriptionId;
     const describers = this.state.audioDescriptionsIdsUsers;
+    // console.log(describers);
+    // describers[0] = { name: 'Descriptions off' }
     const describerCards = [];
     let describerIds = Object.keys(describers);
-
+    // console.log('describerIds', describerIds);
     if (describerIds.length && describerIds[0] !== selectedId) {
       const selectedIdIndex = describerIds.indexOf(selectedId);
       describerIds = describerIds.splice(selectedIdIndex, 1).concat(describerIds);
+      // describerIds = describerIds[0].concat(describerIds.splice(selectedIdIndex, 1)).concat(describerIds.slice(1));
     }
 
     describerIds.forEach((describerId, i) => {
@@ -586,7 +605,7 @@ class VideoPage extends Component {
           selectedDescriberId={selectedId}
           {...describers[describerId]}
         />
-      )
+      );
     });
 
     return (
@@ -631,14 +650,31 @@ class VideoPage extends Component {
               <div className="w3-card-2">
                 <h3>Selected description</h3>
                 {describerCards[0]}
-                <hr />
-                <h3>Other descriptions</h3>
+                <hr aria-hidden="true" />
+                <h3>Other description options</h3>
                 {describerCards.slice(1)}
+                <Button
+                  title="Turn off descriptions for this video"
+                  text="Turn off descriptions"
+                  color="w3-indigo w3-block w3-margin-top"
+                  onClick={() => this.handleTurnOffDescriptions()}
+                />
                 <Button
                   title="Add a new description for this video"
                   text="Add description"
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleAddDescription()}
+                />
+              </div>
+            </div>
+            <div id="descriptions-off" className="w3-col l4 m4">
+              <div className="w3-card-2">
+                <h3>Descriptions off</h3>
+                <Button
+                  title="Turn on descriptions for this video"
+                  text="Turn on descriptions"
+                  color="w3-indigo w3-block w3-margin-top"
+                  onClick={() => this.handleTurnOnDescriptions()}
                 />
               </div>
             </div>

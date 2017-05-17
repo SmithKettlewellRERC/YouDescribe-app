@@ -54,7 +54,7 @@ class Navbar extends Component {
 
             <Link to="/" id="logo" className="w3-bar-item w3-hide-small w3-hide-medium">
               <img
-                alt="YouDescribe logo - link to homepage"
+                alt="YouDescribe home"
                 height="100%"
                 src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_full_(indigo_and_grey).png')}
               />
@@ -62,7 +62,7 @@ class Navbar extends Component {
 
             <Link to="/" id="logo" className="w3-bar-item w3-hide-large">
               <img
-                alt="YouDescribe logo - link to homepage"
+                alt="YouDescribe home"
                 height="100%"
                 src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_small_(indigo_and_grey).png')}
               />
@@ -85,7 +85,6 @@ class Navbar extends Component {
                 to="/wishlist"
                 className="w3-bar-item"
                 style={{ position: 'relative', top: '8px' }}
-                onClick={() => document.getElementById('test4').focus()}
               >
                 <i className="fa fa-heart" aria-hidden="true">&nbsp;&nbsp;</i>WISH LIST
               </Link>
@@ -116,12 +115,14 @@ class Navbar extends Component {
           <Link
             to="/"
             className="w3-bar-item w3-button"
+            onClick={() => document.getElementById('home-heading').focus()}
           >
             <i className="fa fa-home" aria-hidden="true" /> HOME
           </Link>
           <Link
             to="/wishlist"
             className="w3-bar-item w3-button"
+            onClick={() => document.getElementById('wish-list-heading').focus()}
           >
             <i className="fa fa-heart" aria-hidden="true" /> WISH LIST
           </Link>

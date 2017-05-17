@@ -29,9 +29,22 @@ const DescriberCard = (props) => {
 
   for (let i = 0; i < 5; i += 1) {
     if (i + 1 <= Math.round(props.overall_rating_average)) {
-      stars.push(<button key={i} style={{ color: 'gold' }} onClick={() => props.handleRating(5 - i)}>★</button>);
+      stars.push(
+        <button
+          key={i}
+          style={{ color: 'gold' }}
+          onClick={() => props.handleRating(5 - i)}
+          aria-hidden="true"
+        >★</button>
+      );
     } else {
-      stars.push(<button key={i} onClick={() => props.handleRating(5 - i)}>★</button>);
+      stars.push(
+        <button
+          key={i}
+          onClick={() => props.handleRating(5 - i)}
+          aria-hidden="true"
+        >★</button>
+      );
     }
   }
 
@@ -47,9 +60,12 @@ const DescriberCard = (props) => {
             <div className="rating">
               {stars}
             </div>
+            <div className="skip">
+              {`${Math.round(props.overall_rating_average)} star description`}
+            </div>
           </div>
         </div>
-        <hr />
+        <hr aria-hidden="true" />
         {button}
       </div>
     </div>
