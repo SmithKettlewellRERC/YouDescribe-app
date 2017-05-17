@@ -63,15 +63,33 @@ class VideoCard extends Component {
     if (this.props.buttons === 'upvote-describe') {
       buttons = (
         <div>
-          <Button title="Request an audio description for this video" text={<i className="fa fa-heart"></i>} color="w3-white w3-text-indigo w3-left" onClick={this.upVote} />
+          <Button
+            ariaLabel="Request an audio description for this video"
+            title="Request an audio description for this video"
+            text={<i className="fa fa-heart" />}
+            color="w3-white w3-text-indigo w3-left"
+            onClick={this.upVote}
+          />
           <span id="vote-count">{voteCount}</span>
-          <Button title="Create an audio description for this video" text="Describe" color="w3-indigo w3-right" onClick={this.describeThisVideo} />
+          <Button
+            ariaLable="Create an audio description for this video"
+            title="Create an audio description for this video"
+            text="Describe"
+            color="w3-indigo w3-right"
+            onClick={this.describeThisVideo}
+          />
         </div>
       );
     } else if (this.props.buttons === 'edit') {
       buttons = (
         <div>
-          <Button title="Edit the audio description for this video" text="Edit" color="w3-indigo w3-block" onClick={this.describeThisVideo} />
+          <Button
+            ariaLabel="Edit the audio description for this video"
+            title="Edit the audio description for this video"
+            text="Edit"
+            color="w3-indigo w3-block"
+            onClick={this.describeThisVideo}
+          />
         </div>
       );
     }
