@@ -12,9 +12,9 @@ class FeedbackPopup extends Component {
     e.preventDefault();
     let feedback = [];
     const checkboxes = document.getElementsByName('feedback-input');
-    for (let i=0; i < checkboxes.length; i++) {
+    for (let i = 0; i < checkboxes.length; i += 1) {
       if (checkboxes[i].checked) {
-        feedback.push(parseInt(checkboxes[i].value));
+        feedback.push(+checkboxes[i].value);
       }
     }
     this.props.handleFeedbackSubmit(feedback);

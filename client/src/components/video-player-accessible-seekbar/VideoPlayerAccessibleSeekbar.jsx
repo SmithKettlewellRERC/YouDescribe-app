@@ -218,6 +218,7 @@ class Slider extends Component {
       <div className="seekbar">
         <div id="seekbar-slider-rail" className="seekbar-slider-rail">
           <button
+            role="slider"
             className="seekbar-slider-thumb"
             id="seekbar-slider-thumb1"
             aria-label="video seek slider"

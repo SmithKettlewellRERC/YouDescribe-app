@@ -236,6 +236,7 @@ class VolumeBalancer extends Component {
         <span id="sliderLabel" className="floatLeft" aria-hidden="true">V</span>
         <div id="sliderRail1" className="sliderRail floatLeft">
           <button
+            role="slider"
             className="sliderThumb"
             id="sliderThumb1"
             aria-label="video description balance"

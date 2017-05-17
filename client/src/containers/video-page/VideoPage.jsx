@@ -577,9 +577,13 @@ class VideoPage extends Component {
     // console.log('1 -> Render');
     const selectedId = this.state.selectedAudioDescriptionId;
     const describers = this.state.audioDescriptionsIdsUsers;
-
     const describerCards = [];
     let describerIds = Object.keys(describers);
+
+    if (describerIds.length) {
+      document.getElementById('no-descriptions').style.display = 'none';
+      document.getElementById('describers').style.display = 'block';
+    }
 
     if (describerIds.length && describerIds[0] !== selectedId) {
       const selectedIdIndex = describerIds.indexOf(selectedId);
@@ -600,7 +604,7 @@ class VideoPage extends Component {
     });
 
     return (
-      <div id="video-page" tabIndex="-1">
+      <div id="video-page">
         <main role="main" title="Video page">
           <section id="video-area">
             <ShareBar videoTitle={this.state.videoTitle} />
@@ -665,6 +669,17 @@ class VideoPage extends Component {
                   text="Turn on descriptions"
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleTurnOnDescriptions()}
+                />
+              </div>
+            </div>
+            <div id="no-descriptions" className="w3-col l4 m4">
+              <div className="w3-card-2">
+                <h3>No descriptions available</h3>
+                <Button
+                  title="Add a new description for this video"
+                  text="Add description"
+                  color="w3-indigo w3-block w3-margin-top"
+                  onClick={() => this.handleAddDescription()}
                 />
               </div>
             </div>
