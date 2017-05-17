@@ -446,7 +446,8 @@ class VideoPage extends Component {
   }
 
   audioDescriptionRating(rating) {
-    if (!this.props.getAppState().isSignedIn) {
+    if (rating === 0) alert('You must select a rating');
+    else if (!this.props.getAppState().isSignedIn) {
       alert('You have to be logged in in order to vote');
     } else {
       const url = `${conf.apiUrl}/audiodescriptionsrating/${this.state.selectedAudioDescriptionId}`;
