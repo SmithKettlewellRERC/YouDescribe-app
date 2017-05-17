@@ -27,7 +27,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    document.getElementById('home').focus();
+    document.getElementById('navbar').focus();
     this.fetchingVideosToHome();
   }
 
@@ -129,7 +129,7 @@ class Home extends Component {
     }
 
     return (
-      <main id="home" tabIndex="-1" title="YouDescribe home page">
+      <main id="home" title="YouDescribe home page">
 
         <header role="banner" className="w3-container w3-indigo">
           <h2>POPULAR DESCRIBED VIDEOS</h2>
