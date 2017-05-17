@@ -65,7 +65,6 @@ class VideoCard extends Component {
         <div>
           <Button
             ariaLabel="Request an audio description for this video"
-            title="Request an audio description for this video"
             text={<i className="fa fa-heart" />}
             color="w3-white w3-text-indigo w3-left"
             onClick={this.upVote}
