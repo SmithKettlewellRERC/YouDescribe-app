@@ -42,7 +42,6 @@ class VideoPage extends Component {
       audioDescriptionsIdsUsers: {},
       audioDescriptionsIdsAudioClips: {},
       selectedAudioDescriptionId: null,
-      feedback: [],
 
       // Video controls and data
       videoTitle: '',
@@ -64,7 +63,7 @@ class VideoPage extends Component {
     this.resetPlayedAudioClips = this.resetPlayedAudioClips.bind(this);
     this.changeAudioDescription = this.changeAudioDescription.bind(this);
     this.pauseAudioClips = this.pauseAudioClips.bind(this);
-    this.audioDescriptionRating = this.audioDescriptionRating.bind(this);
+    this.handleRatingSubmit = this.handleRatingSubmit.bind(this);
     this.handleDescriberChange = this.handleDescriberChange.bind(this);
     this.handleAddDescription = this.handleAddDescription.bind(this);
     this.handleRatingPopup = this.handleRatingPopup.bind(this);
@@ -72,7 +71,6 @@ class VideoPage extends Component {
     this.handleFeedbackPopup = this.handleFeedbackPopup.bind(this);
     this.handleFeedbackPopupClose = this.handleFeedbackPopupClose.bind(this);
     this.playFullscreen = this.playFullscreen.bind(this);
-    this.handleFeedbackChange = this.handleFeedbackChange.bind(this);
     this.handleFeedbackSubmit = this.handleFeedbackSubmit.bind(this);
     this.handleTurnOffDescriptions = this.handleTurnOffDescriptions.bind(this);
     this.handleTurnOnDescriptions = this.handleTurnOnDescriptions.bind(this);
@@ -445,16 +443,14 @@ class VideoPage extends Component {
     spinner.style.display = 'none';
   }
 
-  audioDescriptionRating(rating) {
+  handleRatingSubmit(rating) {
     if (rating === 0) alert('You must select a rating');
     else if (!this.props.getAppState().isSignedIn) {
       alert('You have to be logged in in order to vote');
     } else {
+      this.rating = rating;
       const url = `${conf.apiUrl}/audiodescriptionsrating/${this.state.selectedAudioDescriptionId}`;
 
-      if (rating < 5) {
-        this.handleFeedbackPopup();
-      }
       ourFetch(url, true, {
         method: 'POST',
         headers: {
@@ -467,6 +463,11 @@ class VideoPage extends Component {
         }),
       })
       .then((res) => {
+
+        // Just show the feedback dialog if the rating is less than 5 and after the rating vote was processed.
+        if (rating < 5) {
+          this.handleFeedbackPopup();
+        }
         const describers = { ...this.state.audioDescriptionsIdsUsers };
         const selectedId = this.state.selectedAudioDescriptionId;
 
@@ -501,9 +502,8 @@ class VideoPage extends Component {
     }
   }
 
-  handleFeedbackSubmit(event) {
-    console.log(event);
-    const url = `${conf.apiUrl}/audiodescriptionsfeedback/${this.state.selectedAudioDescriptionId}`;
+  handleFeedbackSubmit(feedback) {
+    const url = `${conf.apiUrl}/audiodescriptionsrating/${this.state.selectedAudioDescriptionId}`;
 
     event.preventDefault();
     ourFetch(url, true, {
@@ -514,12 +514,11 @@ class VideoPage extends Component {
       body: JSON.stringify({
         userId: this.props.getAppState().userId,
         userToken: this.props.getAppState().userToken,
-        feedback: this.state.feedback,
+        rating: this.rating,
+        feedback: feedback,
       }),
     })
     .then((res) => {
-      console.log('success', res);
-
       alert('Thanks for your feedback!');
       document.getElementById('feedback-popup').style.display = 'none';
     })
@@ -551,13 +550,6 @@ class VideoPage extends Component {
     document.getElementById('feedback-popup').style.display = 'none';
   }
 
-  handleFeedbackChange(event) {
-    console.log(event.target.value);
-    const feedback = [...this.state.feedback, event.target.value];
-
-    this.setState({ feedback }, console.log(this.state.feedback));
-  }
-
   playFullscreen() {
     const $ = document.querySelector.bind(document);
     const iframe = $('#playerVP');
@@ -585,15 +577,13 @@ class VideoPage extends Component {
     // console.log('1 -> Render');
     const selectedId = this.state.selectedAudioDescriptionId;
     const describers = this.state.audioDescriptionsIdsUsers;
-    // console.log(describers);
-    // describers[0] = { name: 'Descriptions off' }
+
     const describerCards = [];
     let describerIds = Object.keys(describers);
-    // console.log('describerIds', describerIds);
+
     if (describerIds.length && describerIds[0] !== selectedId) {
       const selectedIdIndex = describerIds.indexOf(selectedId);
       describerIds = describerIds.splice(selectedIdIndex, 1).concat(describerIds);
-      // describerIds = describerIds[0].concat(describerIds.splice(selectedIdIndex, 1)).concat(describerIds.slice(1));
     }
 
     describerIds.forEach((describerId, i) => {
@@ -633,14 +623,12 @@ class VideoPage extends Component {
           </section>
           <section id="video-info" className="container w3-row">
             <RatingPopup
-              handleRating={this.audioDescriptionRating}
+              handleRatingSubmit={this.handleRatingSubmit}
               handleRatingPopupClose={this.handleRatingPopupClose}
             />
             <FeedbackPopup
-              handleFeedbackPopupClose={this.handleFeedbackPopupClose}
-              handleRating={this.audioDescriptionRating}
-              handleFeedbackChange={this.handleFeedbackChange}
               handleFeedbackSubmit={this.handleFeedbackSubmit}
+              handleFeedbackPopupClose={this.handleFeedbackPopupClose}
             />
             <div id="yt-info-card" className="w3-col l8 m8">
               <YTInfoCard {...this.state} />

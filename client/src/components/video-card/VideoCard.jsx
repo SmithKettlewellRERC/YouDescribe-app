@@ -71,7 +71,7 @@ class VideoCard extends Component {
           />
           <span id="vote-count">{voteCount}</span>
           <Button
-            ariaLable="Create an audio description for this video"
+            ariaLabel="Create an audio description for this video"
             text="Describe"
             color="w3-indigo w3-right"
             onClick={this.describeThisVideo}
@@ -82,7 +82,7 @@ class VideoCard extends Component {
       buttons = (
         <div>
           <Button
-            ariaLabel="Edit the audio description for this video"
+            arialabel="Edit the audio description for this video"
             text="Edit"
             color="w3-indigo w3-block"
             onClick={this.describeThisVideo}
@@ -104,7 +104,7 @@ class VideoCard extends Component {
                 <h3><Link role="link" to={'/video/' + this.props.youTubeId}>{this.props.title}</Link></h3>
               </div>
               <div id="card-author">
-                <h4>{this.props.author}</h4>
+                <span>Author: {this.props.author}</span>
                 {/* <a href="#">{this.props.describer}</a> */}
               </div>
             </div>

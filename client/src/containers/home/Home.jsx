@@ -71,11 +71,6 @@ class Home extends Component {
       const views = convertViewsToCardFormat(Number(item.statistics.viewCount));
       const publishedAt = new Date(item.snippet.publishedAt);
 
-      // let describer;
-      // this.dbResultArray.forEach((elem) => {
-      //   if (elem._id === id) describer = `${elem.audio_descriptions[1].legacy_author_name} (describer)`;
-      // });
-
       const now = Date.now();
       const time = convertTimeToCardFormat(Number(now - publishedAt));
 
@@ -132,7 +127,7 @@ class Home extends Component {
       <main id="home" title="YouDescribe home page">
 
         <header role="banner" className="w3-container w3-indigo">
-          <h2 id="home-heading" tabIndex="-1">POPULAR DESCRIBED VIDEOS</h2>
+          <h2 id="home-heading" tabIndex="-1">RECENT DESCRIPTIONS</h2>
         </header>
 
         <Spinner />

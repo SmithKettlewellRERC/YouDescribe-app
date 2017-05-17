@@ -79,7 +79,7 @@ class Navbar extends Component {
                 className="w3-bar-item"
                 style={{ position: 'relative', top: '8px' }}
               >
-                <i className="fa fa-home" aria-hidden="true">&nbsp;&nbsp;</i>HOME
+                <i className="fa fa-home" aria-hidden="true">&nbsp;&nbsp;</i>RECENT DESCRIPTIONS
               </Link>
               <Link
                 to="/wishlist"
