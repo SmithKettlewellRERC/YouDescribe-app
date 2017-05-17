@@ -68,7 +68,7 @@ class Navbar extends Component {
               />
             </Link>
 
-            <div role="search" className="w3-left">
+            <div className="w3-left">
               <SearchBar updateSearch={searchValue => this.props.updateSearch(searchValue)} />
             </div>
 

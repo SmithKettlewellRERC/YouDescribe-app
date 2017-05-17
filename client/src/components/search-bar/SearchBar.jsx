@@ -12,7 +12,7 @@ const SearchBar = (props) => {
 
   return (
     <div id="search-bar">
-      <form className="w3-row" onSubmit={e => updateSearch(e)}>
+      <form className="w3-row" role="search" onSubmit={e => updateSearch(e)}>
         <div className="w3-left">
           <input
             id="search-input"
