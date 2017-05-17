@@ -15,7 +15,7 @@ class UserMenu extends Component {
       <div id="user-menu" tabIndex="-1">
         <div className="arrow-up"></div>
         <div className="w3-card-4">
-          <div className="user-menu-header"><h3>{this.props.getAppState().userName}</h3></div>
+          <div className="user-menu-header"><span aria-hidden="true">{this.props.getAppState().userName}</span></div>
           <div className="my-described-videos-button">
             <Link to={myVideosUrl} title="View my described videos" onClick={this.props.userMenuToggle}><i className="fa fa-audio-description" aria-hidden="true">&nbsp;</i><span>My descriptions</span></Link>
           </div>
