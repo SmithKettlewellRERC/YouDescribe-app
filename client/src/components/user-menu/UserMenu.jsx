@@ -21,7 +21,7 @@ class UserMenu extends Component {
           </div>
           <hr />
           <div className="sign-out-button">
-            <Button title="Sign out" color="w3-indigo" text="Sign out" onClick={this.props.signOut} />
+            <Button color="w3-indigo" text="Sign out" onClick={this.props.signOut} />
           </div>
         </div>
       </div>

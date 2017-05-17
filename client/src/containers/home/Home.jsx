@@ -27,6 +27,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    document.getElementById('navbar').focus();
     this.fetchingVideosToHome();
   }
 
@@ -106,7 +107,6 @@ class Home extends Component {
     this.fetchingVideosToHome();
   }
 
-
   closeSpinner() {
     const spinner = document.getElementsByClassName('spinner')[0];
     spinner.style.display = 'none';
@@ -129,7 +129,7 @@ class Home extends Component {
     }
 
     return (
-      <main role="main" id="home" title="YouDescribe home page">
+      <main id="home" title="YouDescribe home page">
 
         <header role="banner" className="w3-container w3-indigo">
           <h2>POPULAR DESCRIBED VIDEOS</h2>

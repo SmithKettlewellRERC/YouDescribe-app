@@ -30,7 +30,7 @@ class VideoCard extends Component {
         }),
       })
       .then((res) => {
-        console.log('Success upVote');
+        // console.log('Success upVote');
       })
       .catch(err => {
         console.log(err);
@@ -98,7 +98,7 @@ class VideoCard extends Component {
       <div id="video-card" className="w3-margin-top w3-left" title="">
         <div className="w3-card-2 w3-hover-shadow">
           <div id="card-thumbnail" aria-hidden="true">
-            <Link role="link" to={'/video/' + this.props.youTubeId}><img alt={this.props.title} src={this.props.thumbnailMediumUrl} width="100%" /></Link>
+            <Link role="link" aria-hidden="true" to={'/video/' + this.props.youTubeId}><img alt={this.props.title} src={this.props.thumbnailMediumUrl} width="100%" /></Link>
             <div id="card-duration">{this.props.duration}</div>
           </div>
           <div className="w3-container w3-padding-bottom">
