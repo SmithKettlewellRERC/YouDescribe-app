@@ -21,7 +21,7 @@ const SearchBar = (props) => {
           />
         </div>
         <div className="w3-left">
-          <Button title="Submit search input" text="Search" color="w3-indigo" />
+          <Button text="Search" color="w3-indigo" />
         </div>
       </form>
     </div>
