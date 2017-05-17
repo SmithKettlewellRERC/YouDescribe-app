@@ -77,6 +77,7 @@ class AuthoringTool extends Component {
   }
 
   componentDidMount() {
+    document.title = `YouDescribe - Authoring Tool`;
     if (!this.props.getAppState().isSignedIn) {
       location.href = '/';
     }
