@@ -17,7 +17,7 @@ const RatingPopup = (props) => {
           <button onClick={() => props.handleRating(2)}>★</button>
           <button onClick={() => props.handleRating(1)}>★</button>
         </div>
-        <form onSubmit={(event) => { event.preventDefault(); props.handleRating(rating); }}>
+        <form className="skip" onSubmit={(event) => { event.preventDefault(); props.handleRating(rating); }}>
           <input type="radio" name="rating" value="1 star" onChange={() => rating = 1} /> 1 star
           <input type="radio" name="rating" value="2 stars" onChange={() => rating = 2} /> 2 stars
           <input type="radio" name="rating" value="3 stars" onChange={() => rating = 3} /> 3 stars
