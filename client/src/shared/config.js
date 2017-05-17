@@ -7,6 +7,7 @@ module.exports = () => {
   let audioClipsUploadsPath = 'https://api.youdescribe.org/audio-descriptions-files';
 
   const host = 'localhost';
+  // const host = 'beta.youdescribe.org';
 
   if (href.indexOf(host) !== -1 || (href.indexOf() !== -1)) {
     apiUrl = `http://${host}:8080/${apiVersion}`;

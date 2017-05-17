@@ -61,12 +61,13 @@
     margin: 8px 0 0 0;
     cursor: pointer;
   }
-  h4, h4 a {
+  span, span a {
     color: grey;
     line-height: 11px;
     margin: 4px 0 0 0;
+    font-size: 11px;
   }
-  h4 a:hover {
+  span a:hover {
     color: #337ab7;
   }
 }

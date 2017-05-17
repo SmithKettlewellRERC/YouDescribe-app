@@ -6,23 +6,23 @@ const ShareBar = (props) => {
 
   return (
     <div id="share-bar" className="ssk-sticky ssk-left ssk-center ssk-lg">
-      <button
+      <a
         href="#"
         className="ssk ssk-facebook"
         aria-label="Share this video on Facebook"
-      />
-      <button
+      ></a>
+      <a
         href="#"
         className="ssk ssk-twitter"
         aria-label="Share this video on Twitter"
         data-text={twitterText}
-      />
-      <button
+      ></a>
+      <a
         href="#"
         className="ssk ssk-email"
         aria-label="Share this video by e-mail"
         data-text={emailText}
-      />
+      ></a>
     </div>
   );
 };
