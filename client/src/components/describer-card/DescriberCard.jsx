@@ -34,7 +34,7 @@ const DescriberCard = (props) => {
           key={i}
           style={{ color: 'gold' }}
           onClick={() => props.handleRating(5 - i)}
-          aria-hidden="true"
+          tabIndex="-1"
         >★</button>
       );
     } else {
@@ -42,7 +42,7 @@ const DescriberCard = (props) => {
         <button
           key={i}
           onClick={() => props.handleRating(5 - i)}
-          aria-hidden="true"
+          tabIndex="-1"
         >★</button>
       );
     }
@@ -57,7 +57,7 @@ const DescriberCard = (props) => {
           </div>
           <div className="w3-col l9 m7 s9">
             {props.name}
-            <div className="rating">
+            <div className="rating" aria-hidden="true">
               {stars}
             </div>
             <div className="skip">

@@ -16,11 +16,11 @@ class RatingPopup extends Component {
           <h2>Rate description</h2>
           <p>Please rate this description with 1 star being unusable and 5 stars being perfect</p>
           <div className="rating" aria-hidden="true">
-            <button onClick={() => this.props.handleRatingSubmit(5)}>★</button>
-            <button onClick={() => this.props.handleRatingSubmit(4)}>★</button>
-            <button onClick={() => this.props.handleRatingSubmit(3)}>★</button>
-            <button onClick={() => this.props.handleRatingSubmit(2)}>★</button>
-            <button onClick={() => this.props.handleRatingSubmit(1)}>★</button>
+            <button onClick={() => this.props.handleRatingSubmit(5)} tabIndex="-1">★</button>
+            <button onClick={() => this.props.handleRatingSubmit(4)} tabIndex="-1">★</button>
+            <button onClick={() => this.props.handleRatingSubmit(3)} tabIndex="-1">★</button>
+            <button onClick={() => this.props.handleRatingSubmit(2)} tabIndex="-1">★</button>
+            <button onClick={() => this.props.handleRatingSubmit(1)} tabIndex="-1">★</button>
           </div>
           <form className="skip" onSubmit={(event) => { event.preventDefault(); this.props.handleRatingSubmit(this.rating); }}>
             <input id="rating-1" type="radio" name="rating" value="1" onChange={() => this.rating = 1} />
