@@ -28,6 +28,7 @@ class Home extends Component {
 
   componentDidMount() {
     document.getElementById('navbar').focus();
+    document.title = `YouDescribe - Audio Description for YouTube Videos`;
     this.fetchingVideosToHome();
   }
 

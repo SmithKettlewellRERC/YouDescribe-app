@@ -9,8 +9,12 @@ const Contact = () => (
 
     <main className="w3-row">
       <p>
-        Comming soon.
+        YouDescribe is a project of:<br />
+        The Smith-Kettlewell Eye Research Institute<br />
+        2318 Fillmore St<br />
+        San Francisco, CA 94115<br />
       </p>
+      <p>Email questions, comments, bug reports, and feature requests to: <a href="mailto:info@youdescribe.org?subject=[YouDescribe Feedback]">info@youdescribe.org</a></p>
     </main>
 
   </div>

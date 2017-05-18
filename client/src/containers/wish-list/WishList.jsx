@@ -26,6 +26,7 @@ class WishList extends Component {
   }
 
   componentDidMount() {
+    document.title = `YouDescribe - Wish List`;
     this.loadWishListVideos();
   }
 

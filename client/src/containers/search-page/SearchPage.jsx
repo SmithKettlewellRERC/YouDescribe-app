@@ -38,6 +38,7 @@ class SearchPage extends Component {
   }
 
   componentDidMount() {
+    document.title = `YouDescribe - Search Page`;
     document.getElementById('search-page').focus();
     this.getSearchResultsFromYdAndYt();
   }
