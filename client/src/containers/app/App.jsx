@@ -38,6 +38,7 @@ class App extends Component {
     this.setState({ searchValue: this.props.location.query.q });
   }
 
+  // Call back from Google authentication process.
   googleSignInSuccess() {
     const googleUser = this.state.auth2.currentUser.get();
     const googleToken = googleUser.getAuthResponse().id_token;
@@ -57,16 +58,17 @@ class App extends Component {
         userPicture: res.result.picture,
       }, () => {
         this.setCookie();
-        // location.reload(true);
       });
     });
   }
 
+  // Call back from Google authentication process.
   googleSignInFailure() {
     console.log('sign in failure');
   }
 
   initGoogleAuth() {
+    console.log('initGoogleAuth')
     const self = this;
     gapi.load('auth2', function() {
       const auth2 = gapi.auth2.init({
@@ -84,9 +86,12 @@ class App extends Component {
   }
 
   refreshUserInfo() {
+    console.log('refresh user info')
     const self = this;
     this.state.auth2.then(() => {
+      console.log('this.state.auth2')
       if (this.state.auth2.isSignedIn.get()) {
+        console.log('this.state.auth2.isSignedIn')
         const userId = this.getCookie('userId');
         const userToken = this.getCookie('userToken');
         const userName = this.getCookie('userName');
@@ -112,6 +117,8 @@ class App extends Component {
             self.resetCookie();
           });
         }
+      } else {
+        console.log('not')
       }
     });
   }
