@@ -582,7 +582,7 @@ class VideoPage extends Component {
         previousSelectedAudioDescriptionId: currentSelected,
         selectedAudioDescriptionId: null,
       }, () => {
-        this.setAudioDescriptionActive();
+        this.initVideoPlayer();
       });
     })
   }
