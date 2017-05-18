@@ -42,7 +42,7 @@ class FeedbackPopup extends Component {
             <label htmlFor="feedback-input-4"> Needs more extended descriptions</label><br />
 
             <input id="feedback-input-5" name="feedback-input" type="checkbox" value="5" />
-            <label htmlFor="feedback-input-5"> Needs less description</label><br />
+            <label htmlFor="feedback-input-5"> Do not step on the dialogue</label><br />
 
             <input id="feedback-input-6" name="feedback-input" type="checkbox" value="6" />
             <label htmlFor="feedback-input-6"> Needs less description</label><br />
