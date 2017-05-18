@@ -24,7 +24,7 @@ class FeedbackPopup extends Component {
     return (
       <div id="feedback-popup" tabIndex="-1">
         <div id="feedback-popup-contents">
-          <i className="fa fa-window-close" aria-hidden="true" onClick={this.props.handleFeedbackPopupClose} />
+          <a href="#" onClick={this.props.handleFeedbackPopupClose}><i className="fa fa-window-close" /></a>
           <h2>Optional feedback</h2>
           <p>Please give additional feedback to help describers make adjustments</p>
           <p>Check all that apply</p>

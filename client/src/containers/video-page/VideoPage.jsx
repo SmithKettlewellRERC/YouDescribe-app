@@ -497,6 +497,8 @@ class VideoPage extends Component {
           audioDescriptionsIdsUsers: describers,
         });
 
+        // close rating popup
+        document.getElementById('rating-popup').style.display = 'none';
       })
       .catch((err) => {
         console.log(err);
@@ -505,13 +507,9 @@ class VideoPage extends Component {
     }
   }
 
-  handleFeedbackSubmit(feedback) {
+  handleFeedbackSubmit(event, feedback) {
     const url = `${conf.apiUrl}/audiodescriptionsrating/${this.state.selectedAudioDescriptionId}`;
 
-    // close rating popup
-    document.getElementById('rating-popup').style.display = 'none';
-
-    event.preventDefault();
     ourFetch(url, true, {
       method: 'POST',
       headers: {
@@ -525,6 +523,7 @@ class VideoPage extends Component {
       }),
     })
     .then((res) => {
+      console.log('got there');
       document.getElementById('feedback-popup').style.display = 'none';
       document.getElementById('feedback-success').style.display = 'block';
       document.getElementById('feedback-success').focus();
