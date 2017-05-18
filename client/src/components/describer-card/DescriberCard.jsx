@@ -61,7 +61,7 @@ const DescriberCard = (props) => {
               {stars}
             </div>
             <div className="skip">
-              {`${Math.round(props.overall_rating_average)} star description`}
+              {Number.isNaN(Math.round(props.overall_rating_average)) ? 'no ratings' : `${Math.round(props.overall_rating_average)} star rating`}
             </div>
           </div>
         </div>

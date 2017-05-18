@@ -45,13 +45,17 @@ class FeedbackPopup extends Component {
             <label htmlFor="feedback-input-5"> Needs less description</label><br />
 
             <input id="feedback-input-6" name="feedback-input" type="checkbox" value="6" />
-            <label htmlFor="feedback-input-6"> Needs more description</label><br />
+            <label htmlFor="feedback-input-6"> Needs less description</label><br />
 
             <input id="feedback-input-7" name="feedback-input" type="checkbox" value="7" />
-            <label htmlFor="feedback-input-7"> Description does not match video tone</label><br />
+            <label htmlFor="feedback-input-7"> Needs more description</label><br />
 
             <input id="feedback-input-8" name="feedback-input" type="checkbox" value="8" />
-            <label htmlFor="feedback-input-8"> Description has innappropriate content</label><br />
+            <label htmlFor="feedback-input-8"> Description does not match video tone</label><br />
+
+            <input id="feedback-input-9" name="feedback-input" type="checkbox" value="9" />
+            <label htmlFor="feedback-input-9"> Description has innappropriate content</label><br />
+
             <center>
               <Button
                 text="Submit"

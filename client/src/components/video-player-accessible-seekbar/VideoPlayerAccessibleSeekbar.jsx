@@ -221,7 +221,7 @@ class Slider extends Component {
             role="slider"
             className="seekbar-slider-thumb"
             id="seekbar-slider-thumb1"
-            aria-label="video seek slider"
+            aria-label="video seeker"
             aria-valuemin="0"
             aria-valuemax="100"
             aria-valuenow="0"

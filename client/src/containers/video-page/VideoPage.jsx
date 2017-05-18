@@ -463,9 +463,13 @@ class VideoPage extends Component {
         }),
       })
       .then((res) => {
-
-        // Just show the feedback dialog if the rating is less than 5 and after the rating vote was processed.
-        if (rating < 5) {
+        if (rating === 5) {
+          // alert(`You have successfully given this description a rating of ${rating}`);
+          document.getElementById('rating-popup').style.display = 'none';
+          document.getElementById('rating-success').style.display = 'block';
+          document.getElementById('rating-success').focus();
+          setTimeout(() => document.getElementById('rating-success').style.display = 'none', 1000)
+        } else {
           this.handleFeedbackPopup();
         }
         const describers = { ...this.state.audioDescriptionsIdsUsers };
@@ -492,8 +496,6 @@ class VideoPage extends Component {
           audioDescriptionsIdsUsers: describers,
         });
 
-        alert(`You have successfully given this description a rating of ${rating}`);
-        document.getElementById('rating-popup').style.display = 'none';
       })
       .catch((err) => {
         console.log(err);
@@ -504,6 +506,9 @@ class VideoPage extends Component {
 
   handleFeedbackSubmit(feedback) {
     const url = `${conf.apiUrl}/audiodescriptionsrating/${this.state.selectedAudioDescriptionId}`;
+
+    // close rating popup
+    document.getElementById('rating-popup').style.display = 'none';
 
     event.preventDefault();
     ourFetch(url, true, {
@@ -519,8 +524,11 @@ class VideoPage extends Component {
       }),
     })
     .then((res) => {
-      alert('Thanks for your feedback!');
       document.getElementById('feedback-popup').style.display = 'none';
+      document.getElementById('feedback-success').style.display = 'block';
+      document.getElementById('feedback-success').focus();
+      setTimeout(() => document.getElementById('feedback-success').style.display = 'none', 1000)
+      // alert('Thanks for your feedback!');
     })
     .catch((err) => {
       console.log(err);
@@ -630,10 +638,12 @@ class VideoPage extends Component {
               handleRatingSubmit={this.handleRatingSubmit}
               handleRatingPopupClose={this.handleRatingPopupClose}
             />
+            <div id="rating-success" tabIndex="-1">Thanks for rating this description!</div>
             <FeedbackPopup
               handleFeedbackSubmit={this.handleFeedbackSubmit}
               handleFeedbackPopupClose={this.handleFeedbackPopupClose}
             />
+            <div id="feedback-success" tabIndex="-1">Thank you for your feedback!</div>
             <div id="yt-info-card" className="w3-col l8 m8">
               <YTInfoCard {...this.state} />
             </div>
