@@ -6,12 +6,12 @@ module.exports = () => {
   let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
   let audioClipsUploadsPath = 'https://api.youdescribe.org/audio-descriptions-files';
 
-  // const host = 'localhost';
-  const host = 'beta.youdescribe.org';
+  const devHost = 'localhost';
+  // const devHost = 'beta.youdescribe.org';
 
-  if (href.indexOf(host) !== -1 || (href.indexOf() !== -1)) {
-    apiUrl = `http://${host}:8080/${apiVersion}`;
-    audioClipsUploadsPath = `http://${host}:8080/audio-descriptions-files`;
+  if (href.indexOf(devHost) !== -1) {
+    apiUrl = `http://${devHost}:8080/${apiVersion}`;
+    audioClipsUploadsPath = `http://${devHost}:8080/audio-descriptions-files`;
   }
 
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';

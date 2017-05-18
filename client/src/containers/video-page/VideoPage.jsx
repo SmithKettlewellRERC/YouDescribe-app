@@ -42,6 +42,8 @@ class VideoPage extends Component {
       audioDescriptionsIdsUsers: {},
       audioDescriptionsIdsAudioClips: {},
       selectedAudioDescriptionId: null,
+      previousSelectedAudioDescriptionId: null,
+      showDescribersList: true,
 
       // Video controls and data
       videoTitle: '',
@@ -153,7 +155,6 @@ class VideoPage extends Component {
   setAudioDescriptionActive() {
     // console.log('4 -> setAudioDescriptionActive');
     let selectedAudioDescriptionId = null;
-
     if (this.state.selectedAudioDescriptionId !== null) {
       selectedAudioDescriptionId = this.state.selectedAudioDescriptionId;
     } else {
@@ -571,13 +572,35 @@ class VideoPage extends Component {
   }
 
   handleTurnOffDescriptions() {
-    document.getElementById('describers').style.display = 'none';
-    document.getElementById('descriptions-off').style.display = 'block';
+    this.setState({ showDescribersList: false }, () => {
+      document.getElementById('describers').style.display = 'none';
+      document.getElementById('descriptions-off').style.display = 'block';
+      const currentSelected = this.state.selectedAudioDescriptionId;
+      this.state.videoPlayer.stopVideo();
+      this.resetPlayedAudioClips();
+      this.setState({
+        previousSelectedAudioDescriptionId: currentSelected,
+        selectedAudioDescriptionId: null,
+      }, () => {
+        this.initVideoPlayer();
+      });
+    })
   }
 
-  handleTurnOnDescriptions() {
-    document.getElementById('descriptions-off').style.display = 'none';
-    document.getElementById('describers').style.display = 'block';
+  handleTurnOnDescriptions(selectedAudioDescriptionId) {
+    this.setState({ showDescribersList: true }, () => {
+      document.getElementById('describers').style.display = 'block';
+      document.getElementById('descriptions-off').style.display = 'none';
+      const previousSelected = this.state.previousSelectedAudioDescriptionId;
+      this.state.videoPlayer.stopVideo();
+      this.resetPlayedAudioClips();
+      this.setState({
+        previousSelectedAudioDescriptionId: null,
+        selectedAudioDescriptionId: previousSelected,
+      }, () => {
+        this.setAudioDescriptionActive();
+      });
+    })
   }
 
   // 1
@@ -590,7 +613,9 @@ class VideoPage extends Component {
 
     if (describerIds.length) {
       document.getElementById('no-descriptions').style.display = 'none';
-      document.getElementById('describers').style.display = 'block';
+      if (this.state.showDescribersList) {
+        document.getElementById('describers').style.display = 'block';
+      }
     }
 
     if (describerIds.length && describerIds[0] !== selectedId) {
