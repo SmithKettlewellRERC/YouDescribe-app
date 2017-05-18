@@ -68,7 +68,6 @@ class App extends Component {
   }
 
   initGoogleAuth() {
-    console.log('initGoogleAuth')
     const self = this;
     gapi.load('auth2', function() {
       const auth2 = gapi.auth2.init({
@@ -86,12 +85,9 @@ class App extends Component {
   }
 
   refreshUserInfo() {
-    console.log('refresh user info')
     const self = this;
     this.state.auth2.then(() => {
-      console.log('this.state.auth2')
       if (this.state.auth2.isSignedIn.get()) {
-        console.log('this.state.auth2.isSignedIn')
         const userId = this.getCookie('userId');
         const userToken = this.getCookie('userToken');
         const userName = this.getCookie('userName');
@@ -117,8 +113,6 @@ class App extends Component {
             self.resetCookie();
           });
         }
-      } else {
-        console.log('not')
       }
     });
   }
@@ -156,11 +150,9 @@ class App extends Component {
 
   setCookie() {
     // Our cookie must expire before Google Auth Cookie!
-    // 50 minutes as Google lasts for 60 mins.
+    // Google lasts for 60 mins.
     const now = new Date();
     let time = now.getTime();
-    // 50 mins
-    // time += 3000 * 1000;
     time += 20 * 1000;
     now.setTime(time);
     const exp = now.toUTCString();
