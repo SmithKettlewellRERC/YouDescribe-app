@@ -79,6 +79,7 @@ class VideoPage extends Component {
   }
 
   componentDidMount() {
+    SocialShareKit.init();
     document.getElementById('video-page').focus();
     this.fetchVideoData();
   }
