@@ -814,9 +814,9 @@ class AuthoringTool extends Component {
     const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}`;
     ourFetch(url, true, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      // headers: {
+      //   'Content-Type': 'application/json',
+      // },
       body: JSON.stringify({
         userId: this.props.getAppState().userId,
         userToken: this.props.getAppState().userToken,
@@ -834,9 +834,9 @@ class AuthoringTool extends Component {
       const url = `${conf.apiUrl}/audioclips/${acId}`;
       ourFetch(url, true, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // },
         body: JSON.stringify({
           userId: this.props.getAppState().userId,
           userToken: this.props.getAppState().userToken,
