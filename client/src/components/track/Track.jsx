@@ -18,13 +18,14 @@ class Track extends Component {
     let label;
     if (this.props.data._id) {
       if (this.props.data.label === '') {
-        label = <input type="text" value="No label for this track" readOnly />;
+        label = <input type="text" data-id={this.props.data._id} onChange={this.props.updateTrackLabel} placeholder="No label for this track" />;
       } else {
-        label = <input type="text" value={this.props.data.label} readOnly />;
+        label = <input type="text" data-id={this.props.data._id} onChange={this.props.updateTrackLabel} value={this.props.data.label} />;
       }
     } else {
       label = <input
         type="text"
+        data-id=""
         placeholder={'Enter some label for this track'}
         onChange={this.props.updateTrackLabel}
         onKeyPress={evt => {

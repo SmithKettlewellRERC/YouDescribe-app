@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Howl } from 'howler';
-import Spinner from '../../components/spinner/Spinner.jsx';
+import SpinnerGlobal from '../../components/spinner-global/SpinnerGlobal.jsx';
 import Notes from '../../components/notes/Notes.jsx';
 import Editor from '../../components/editor/Editor.jsx';
 import Track from '../../components/track/Track.jsx';
@@ -73,14 +73,16 @@ class AuthoringTool extends Component {
     this.alertBoxClose = this.alertBoxClose.bind(this);
     this.updateNotes = this.updateNotes.bind(this);
     this.deleteTrack = this.deleteTrack.bind(this);
-    this.closeSpinner = this.closeSpinner.bind(this);
+    this.saveLabelsAndNotes = this.saveLabelsAndNotes.bind(this);
   }
 
   componentDidMount() {
+    console.log('componentDidMount')
+    this.refs.spinner.on();
     document.title = `YouDescribe - Authoring Tool`;
-    if (!this.props.getAppState().isSignedIn) {
-      location.href = '/';
-    }
+    // if (!this.props.getAppState().isSignedIn) {
+    //   location.href = '/';
+    // }
     this.getYDVideoData();
     // this.scrollingFix();
   }
@@ -255,13 +257,14 @@ class AuthoringTool extends Component {
               onStateChange: onPlayerStateChange,
             },
           }),
+        }, () => {
+          self.refs.spinner.off();
         });
       }
     }
 
     function onVideoPlayerReady() {
       console.log('9 -> onVideoPlayerReady');
-      self.closeSpinner();
       initAudioRecorder();
     }
 
@@ -537,6 +540,7 @@ class AuthoringTool extends Component {
   }
 
   recordAudioClip(e, trackId) {
+    const self = this;
     if (!this.props.getAppState().isSignedIn) {
       alert('You need to be logged in in order to record audio clips');
       return;
@@ -578,6 +582,7 @@ class AuthoringTool extends Component {
         this.updateTrackComponent('fa-step-forward');
         this.state.videoPlayer.unMute();
         this.state.videoPlayer.pauseVideo();
+        self.refs.spinner.on();
         stopRecordingAndSave(this.uploadAudioRecorded);
       });
     } else if (e.target.className === 'fa fa-step-forward') {
@@ -654,13 +659,13 @@ class AuthoringTool extends Component {
         videoData: JSON.parse(this.responseText).result,
       }, () => {
         self.parseYDVideoData();
+        self.refs.spinner.off();
       });
     }
     xhr.send(formData);
   }
 
   alertBoxOpen(id) {
-    console.log('alert box id', id);
     const alertBox = document.getElementById(id);
 
     // // set parameters for the alert box
@@ -690,7 +695,6 @@ class AuthoringTool extends Component {
     const resultConfirm = confirm('Are you sure you wanna publish this audio description?');
     if (resultConfirm) {
       const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=publish`;
-      console.log('Publish to', url)
       ourFetch(url, true, {
         method: 'POST',
         headers: {
@@ -784,8 +788,18 @@ class AuthoringTool extends Component {
   }
 
   updateTrackLabel(e) {
+    const audioClipId = e.target.dataset['id'];
+    const label = e.target.value;
+    const audioClipsUpdated = Object.assign({}, this.state.audioDescriptionAudioClips);
+    if (audioClipId) {
+      audioClipsUpdated[audioClipId].label = label;
+    }
+
     this.setState({
-      selectedTrackComponentLabel: e.target.value,
+      selectedTrackComponentLabel: label,
+      audioDescriptionAudioClips: audioClipsUpdated,
+    }, () => {
+      this.loadExistingTracks();
     });
   }
 
@@ -795,9 +809,44 @@ class AuthoringTool extends Component {
     });
   }
 
-  closeSpinner() {
-    const spinner = document.getElementsByClassName('spinner')[0];
-    spinner.style.display = 'none';
+  saveLabelsAndNotes() {
+    // Update notes.
+    const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}`;
+    ourFetch(url, true, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: this.props.getAppState().userId,
+        userToken: this.props.getAppState().userToken,
+        notes: this.state.audioDescriptionNotes,
+      }),
+    })
+    .then(response => {
+      // console.log('Notes updated', response.result)
+    });
+
+    // Update labels.
+    const audioClips = this.state.audioDescriptionAudioClips;
+    Object.keys(audioClips).forEach((acId) => {
+      const ac = this.state.audioDescriptionAudioClips[acId];
+      const url = `${conf.apiUrl}/audioclips/${acId}`;
+      ourFetch(url, true, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: this.props.getAppState().userId,
+          userToken: this.props.getAppState().userToken,
+          label: ac.label,
+        }),
+      })
+      .then(response => {
+        // console.log('Label updated', response.result);
+      });
+    });
   }
 
   // 1
@@ -805,11 +854,11 @@ class AuthoringTool extends Component {
     // console.log('1 -> render authoring tool')
     return (
       <div id="authoring-tool">
+        <SpinnerGlobal ref="spinner" />
         <main role="main">
           <div className="w3-row">
             <div className="w3-hide-large">Authoring is not available on this screen size. Please use a larger screen to add a description.</div>
             <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
-              <Spinner />
               <div id="playerAT" />
             </div>
             <div id="notes-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
@@ -827,6 +876,7 @@ class AuthoringTool extends Component {
                 addAudioClipTrack={this.addAudioClipTrack}
                 recordAudioClip={this.recordAudioClip}
                 deleteTrack={this.deleteTrack}
+                saveLabelsAndNotes={this.saveLabelsAndNotes}
                 {...this.state}
               />
             </div>

@@ -52,6 +52,11 @@
     border-top: 1px solid #151515;
   }
 
+  .w3-right-align #button {
+    display: inline-block;
+    margin-left: 20px;
+  }
+
   #tracks {
     max-height: 189px;
     overflow: scroll;

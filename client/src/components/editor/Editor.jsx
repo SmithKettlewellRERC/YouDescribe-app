@@ -14,6 +14,7 @@ const Editor = (props) => {
   const audioDescriptionId = props.getATState().audioDescriptionId;
   const audioDescriptionStatus = props.getATState().audioDescriptionStatus;
   let publishButton = null;
+  let saveButton = null;
   if (audioDescriptionStatus === 'draft') {
     publishButton = <Button
       title="Publish the video along with all audio description tracks"
@@ -28,6 +29,15 @@ const Editor = (props) => {
       text="Unpublish"
       color="w3-indigo"
       onClick={props.unpublishAudioDescription}
+    />
+  }
+  // Just show save button after the audio description has at least one audio clip.
+  if (audioDescriptionId) {
+    saveButton = <Button
+      title="Save notes and labels anytime"
+      text="Save"
+      color="w3-indigo"
+      onClick={props.saveLabelsAndNotes}
     />
   }
   return (
@@ -104,6 +114,7 @@ const Editor = (props) => {
         </div>
       </div>
       <div className="w3-right-align w3-border-top w3-border-black w3-padding">
+        {saveButton}
         {publishButton}
         <AlertBox
           id="publish-button"

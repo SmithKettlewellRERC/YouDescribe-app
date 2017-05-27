@@ -75,13 +75,20 @@ class App extends Component {
         fetch_basic_profile: true,
         scope: 'email profile openid'
       });
-      self.setState({
-        auth2,
-      }, () => {
-        self.state.auth2.attachClickHandler('btn-sign-in', {}, self.googleSignInSuccess, self.googleSignInFailure);
-        self.refreshUserInfo();
+      auth2.isSignedIn.listen(self.signinChanged);
+      auth2.then(() => {
+        self.setState({
+          auth2,
+        }, () => {
+          self.state.auth2.attachClickHandler('btn-sign-in', {}, self.googleSignInSuccess, self.googleSignInFailure);
+          self.refreshUserInfo();
+        });
       });
     })
+  }
+
+  signinChanged(val) {
+      console.log('Signin state changed to ', val);
   }
 
   refreshUserInfo() {
