@@ -77,7 +77,6 @@ class AuthoringTool extends Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount')
     this.refs.spinner.on();
     document.title = `YouDescribe - Authoring Tool`;
     // if (!this.props.getAppState().isSignedIn) {
@@ -812,6 +811,7 @@ class AuthoringTool extends Component {
   saveLabelsAndNotes() {
     // Update notes.
     const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}`;
+    this.refs.spinner.on();
     ourFetch(url, true, {
       method: 'PUT',
       headers: {
@@ -825,10 +825,12 @@ class AuthoringTool extends Component {
     })
     .then(response => {
       // console.log('Notes updated', response.result)
+      this.refs.spinner.off();
     });
 
     // Update labels.
     const audioClips = this.state.audioDescriptionAudioClips;
+    this.refs.spinner.on();
     Object.keys(audioClips).forEach((acId) => {
       const ac = this.state.audioDescriptionAudioClips[acId];
       const url = `${conf.apiUrl}/audioclips/${acId}`;
@@ -844,6 +846,7 @@ class AuthoringTool extends Component {
         }),
       })
       .then(response => {
+        this.refs.spinner.off();
         // console.log('Label updated', response.result);
       });
     });
