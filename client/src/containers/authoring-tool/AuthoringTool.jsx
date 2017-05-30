@@ -792,14 +792,17 @@ class AuthoringTool extends Component {
     const audioClipsUpdated = Object.assign({}, this.state.audioDescriptionAudioClips);
     if (audioClipId) {
       audioClipsUpdated[audioClipId].label = label;
+      this.setState({
+        selectedTrackComponentLabel: label,
+        audioDescriptionAudioClips: audioClipsUpdated,
+      }, () => {
+        this.loadExistingTracks();
+      });
+    } else {
+      this.setState({
+        selectedTrackComponentLabel: label,
+      });
     }
-
-    this.setState({
-      selectedTrackComponentLabel: label,
-      audioDescriptionAudioClips: audioClipsUpdated,
-    }, () => {
-      this.loadExistingTracks();
-    });
   }
 
   updateNotes(e) {

@@ -26,7 +26,7 @@ class Track extends Component {
       label = <input
         type="text"
         data-id=""
-        placeholder={'Enter some label for this track'}
+        placeholder={'Label for this track'}
         onChange={this.props.updateTrackLabel}
         onKeyPress={evt => {
           this.props.setSelectedTrack(evt, this.props.id)
