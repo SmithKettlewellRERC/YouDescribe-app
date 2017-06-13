@@ -74,6 +74,8 @@ class AuthoringTool extends Component {
     this.updateNotes = this.updateNotes.bind(this);
     this.deleteTrack = this.deleteTrack.bind(this);
     this.saveLabelsAndNotes = this.saveLabelsAndNotes.bind(this);
+    this.nudgeTrackLeft = this.nudgeTrackLeft.bind(this);
+    this.nudgeTrackRight = this.nudgeTrackRight.bind(this);
   }
 
   componentDidMount() {
@@ -211,6 +213,8 @@ class AuthoringTool extends Component {
             updateTrackLabel={this.updateTrackLabel}
             setSelectedTrack={this.setSelectedTrack}
             deleteTrack={this.deleteTrack}
+            nudgeTrackLeft={this.nudgeTrackLeft}
+            nudgeTrackRight={this.nudgeTrackRight}
           />);
       });
     }
@@ -523,6 +527,49 @@ class AuthoringTool extends Component {
         tracksComponents: newTracks,
       }, this.resetSelectedTrack());
     }
+  }
+
+  nudgeTrackLeft(e, id, data) {
+    console.log('e', e);
+    console.log('id', id);
+    console.log('data', data);
+    const url = `${conf.apiUrl}/audioclips/${data._id}`;
+
+    ourFetch(url, true, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: this.props.getAppState().userId,
+        userToken: this.props.getAppState().userToken,
+      }),
+    })
+    .then((response) => {
+      const videoData = response.result;
+      const tc = this.state.tracksComponents.slice();
+      const newTracks = tc.filter(t => t.props.id !== id);
+      this.setState({
+        videoData,
+      }, () => {
+        this.resetSelectedTrack();
+        this.parseYDVideoData();
+      });
+    })
+    .catch((err) => {
+      this.setState({
+        videoData: {},
+      }, () => {
+        this.resetSelectedTrack();
+        this.parseYDVideoData();
+      });
+    });
+  }
+
+  nudgeTrackRight(e, id, data) {
+    console.log('e', e);
+    console.log('id', id);
+    console.log('data', data);
   }
 
   resetSelectedTrack() {

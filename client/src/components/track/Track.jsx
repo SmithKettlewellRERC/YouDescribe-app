@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ActionIcon from '../action-icon/ActionIcon.jsx';
 import DeleteTrack from '../delete-track/DeleteTrack.jsx';
+import NudgeLeft from '../nudge-left/NudgeLeft.jsx';
+import NudgeRight from '../nudge-right/NudgeRight.jsx';
 import AlertBox from '../alert-box/AlertBox.jsx';
 const conf = require('../../shared/config');
 
@@ -15,6 +17,7 @@ class Track extends Component {
   }
 
   render() {
+    console.log('HAPPYYYY', this.props)
     let label;
     if (this.props.data._id) {
       if (this.props.data.label === '') {
@@ -49,6 +52,12 @@ class Track extends Component {
               </div>
               <div className="w3-right" style={{ paddingRight: '8px' }}>
                 <ActionIcon {...this.props} />
+              </div>
+              <div className="w3-right" style={{ paddingRight: '8px' }}>
+                <NudgeRight {...this.props} />
+              </div>
+              <div className="w3-right" style={{ paddingRight: '8px' }}>
+                <NudgeLeft {...this.props} />
               </div>
             </div>
           </div>
