@@ -73,6 +73,7 @@ class AuthoringTool extends Component {
     this.alertBoxClose = this.alertBoxClose.bind(this);
     this.updateNotes = this.updateNotes.bind(this);
     this.deleteTrack = this.deleteTrack.bind(this);
+    this.switchTrackType = this.switchTrackType.bind(this);
     this.saveLabelsAndNotes = this.saveLabelsAndNotes.bind(this);
     this.nudgeTrackLeft = this.nudgeTrackLeft.bind(this);
     this.nudgeTrackRight = this.nudgeTrackRight.bind(this);
@@ -215,6 +216,7 @@ class AuthoringTool extends Component {
             deleteTrack={this.deleteTrack}
             nudgeTrackLeft={this.nudgeTrackLeft}
             nudgeTrackRight={this.nudgeTrackRight}
+            switchTrackType={this.switchTrackType}
           />);
       });
     }
@@ -454,6 +456,7 @@ class AuthoringTool extends Component {
         updateTrackLabel={this.updateTrackLabel}
         setSelectedTrack={this.setSelectedTrack}
         deleteTrack={this.deleteTrack}
+        switchTrackType={this.switchTrackType}
       />,
     );
 
@@ -572,6 +575,45 @@ class AuthoringTool extends Component {
     console.log('data', data);
   }
 
+  switchTrackType(e, id, data) {
+    let resConfirm;
+    let playback_type;
+    if (data.playback_type === 'extended') {
+      resConfirm = confirm('Are you sure you want to change from EXTENDED to INLINE?');
+      playback_type = 'inline';
+    } else {
+      resConfirm = confirm('Are you sure you want to change from INLINE to EXTENDED?');
+      playback_type = 'extended';
+    }
+    if (resConfirm) {
+      const url = `${conf.apiUrl}/audioclips/${data._id}`;
+      ourFetch(url, true, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: this.props.getAppState().userId,
+          userToken: this.props.getAppState().userToken,
+          playback_type,
+          start_time: data.start_time,
+          end_time: data.end_time,
+          duration: data.duration,
+        }),
+      })
+      .then(response => {
+        this.refs.spinner.off();
+        const saved = response.result;
+        const tcs = this.state.tracksComponents.slice();
+        const acs = Object.assign({}, this.state.audioDescriptionAudioClips);
+        acs[saved._id] = saved;
+        this.setState({ audioDescriptionAudioClips: acs }, () => {
+          this.loadExistingTracks();
+        });
+      });
+    }
+  }
+
   resetSelectedTrack() {
     this.setState({
       selectedTrackComponentId: null,
@@ -670,6 +712,7 @@ class AuthoringTool extends Component {
             updateTrackLabel={this.updateTrackLabel}
             setSelectedTrack={this.setSelectedTrack}
             deleteTrack={this.deleteTrack}
+            switchTrackType={this.switchTrackType}
           />
         );
       }
