@@ -75,14 +75,16 @@ class AuthoringTool extends Component {
     this.deleteTrack = this.deleteTrack.bind(this);
     this.switchTrackType = this.switchTrackType.bind(this);
     this.saveLabelsAndNotes = this.saveLabelsAndNotes.bind(this);
+    this.preLoadAudioClips = this.preLoadAudioClips.bind(this);
+    this.getYTVideoInfo = this.getYTVideoInfo.bind(this);
   }
 
   componentDidMount() {
     this.refs.spinner.on();
     document.title = `YouDescribe - Authoring Tool`;
-    // if (!this.props.getAppState().isSignedIn) {
-    //   location.href = '/';
-    // }
+    if (!this.props.getAppState().isSignedIn) {
+      location.href = '/';
+    }
     this.getYDVideoData();
     // this.scrollingFix();
   }
@@ -145,12 +147,12 @@ class AuthoringTool extends Component {
       audioDescriptionAudioClips,
       audioDescriptionNotes,
     }, () => {
-      this.preLoadAudioClips();
+      this.preLoadAudioClips(this.getYTVideoInfo);
     });
   }
 
   // 4
-  preLoadAudioClips() {
+  preLoadAudioClips(callback) {
     console.log('4 -> preLoadAudioClips');
     const self = this;
     const audioClips = Object.values(this.state.audioDescriptionAudioClips);
@@ -163,13 +165,13 @@ class AuthoringTool extends Component {
       });
       Promise.all(promises).then(function() {
         console.log('Total audio clips:', audioClips.length, 'Audio clips loaded:', promises.length);
-        self.getYTVideoInfo();
+        callback();
       })
       .catch(function(errorAllAudios) {
         console.log('ERROR LOADING AUDIOS -> ', errorAllAudios);
       });
     } else {
-      self.getYTVideoInfo();
+      callback();
     }
   }
 
@@ -589,7 +591,6 @@ class AuthoringTool extends Component {
 
     if (this.state.selectedTrackComponentId !== trackId) {
       if (this.state.selectedTrackComponentStatus === 'recording') {
-        // this.alertBoxOpen();
         alert('You need to stop recording in order to activate any other track');
         return;
       }
@@ -599,7 +600,15 @@ class AuthoringTool extends Component {
 
     if (e.target.className === 'fa fa-circle') {
       // RECORD.
-      // console.log(this.state.currentVideoProgress);
+      // console.log('We will start this track at', this.state.currentVideoProgress);
+      console.log('Current video state', this.state.videoState, this.state.currentVideoProgress);
+
+      // if (this.state.selectedTrackComponentPlaybackType === 'inline' && this.state.videoState !== 1) {
+      //   console.log('No ready to record because the video is not playing yet');
+      //   this.state.videoPlayer.playVideo();
+      // } else {
+
+      // }
       this.setState({
         selectedTrackComponentAudioClipStartTime: this.state.currentVideoProgress,
         selectedTrackComponentId: trackId,

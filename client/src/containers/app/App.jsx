@@ -88,7 +88,7 @@ class App extends Component {
   }
 
   signinChanged(val) {
-      console.log('Signin state changed to ', val);
+      // console.log('Signin state changed to ', val);
   }
 
   refreshUserInfo() {
