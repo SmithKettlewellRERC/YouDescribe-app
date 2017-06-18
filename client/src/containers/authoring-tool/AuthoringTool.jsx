@@ -69,14 +69,14 @@ class AuthoringTool extends Component {
     this.recordAudioClip = this.recordAudioClip.bind(this);
     this.uploadAudioRecorded = this.uploadAudioRecorded.bind(this);
     this.setSelectedTrack = this.setSelectedTrack.bind(this);
-    this.alertBoxOpen = this.alertBoxOpen.bind(this);
-    this.alertBoxClose = this.alertBoxClose.bind(this);
     this.updateNotes = this.updateNotes.bind(this);
     this.deleteTrack = this.deleteTrack.bind(this);
     this.switchTrackType = this.switchTrackType.bind(this);
     this.saveLabelsAndNotes = this.saveLabelsAndNotes.bind(this);
     this.preLoadAudioClips = this.preLoadAudioClips.bind(this);
     this.getYTVideoInfo = this.getYTVideoInfo.bind(this);
+    this.nudgeTrackLeft = this.nudgeTrackLeft.bind(this);
+    this.nudgeTrackRight = this.nudgeTrackRight.bind(this);
   }
 
   componentDidMount() {
@@ -214,6 +214,8 @@ class AuthoringTool extends Component {
             updateTrackLabel={this.updateTrackLabel}
             setSelectedTrack={this.setSelectedTrack}
             deleteTrack={this.deleteTrack}
+            nudgeTrackLeft={this.nudgeTrackLeft}
+            nudgeTrackRight={this.nudgeTrackRight}
             switchTrackType={this.switchTrackType}
           />);
       });
@@ -276,10 +278,10 @@ class AuthoringTool extends Component {
       self.setState({ videoState: event.data }, () => {
         switch (event.data) {
           case -1: // unstarted
-            self.stopProgressWatcher();
+            // self.stopProgressWatcher();
             break;
           case 0: // ended
-            self.stopProgressWatcher();
+            // self.stopProgressWatcher();
             // self.resetPlayedAudioClips();
             break;
           case 1: // playing
@@ -288,17 +290,17 @@ class AuthoringTool extends Component {
             break;
           case 2: // paused
             // self.pauseAudioClips();
-            self.stopProgressWatcher();
+            // self.stopProgressWatcher();
             break;
           case 3: // buffering
             // buffering
             self.resetPlayedAudioClips();
-            self.stopProgressWatcher();
+            // self.stopProgressWatcher();
             break;
           case 5: // video cued
             // Starting the watcher.
             self.state.videoPlayer.playVideo();
-            self.startProgressWatcher();
+            // self.startProgressWatcher();
             break;
           default:
         }
@@ -530,6 +532,49 @@ class AuthoringTool extends Component {
     }
   }
 
+  nudgeTrackLeft(e, id, data) {
+    console.log('e', e);
+    console.log('id', id);
+    console.log('data', data);
+    const url = `${conf.apiUrl}/audioclips/${data._id}`;
+
+    ourFetch(url, true, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: this.props.getAppState().userId,
+        userToken: this.props.getAppState().userToken,
+      }),
+    })
+    .then((response) => {
+      const videoData = response.result;
+      const tc = this.state.tracksComponents.slice();
+      const newTracks = tc.filter(t => t.props.id !== id);
+      this.setState({
+        videoData,
+      }, () => {
+        this.resetSelectedTrack();
+        this.parseYDVideoData();
+      });
+    })
+    .catch((err) => {
+      this.setState({
+        videoData: {},
+      }, () => {
+        this.resetSelectedTrack();
+        this.parseYDVideoData();
+      });
+    });
+  }
+
+  nudgeTrackRight(e, id, data) {
+    console.log('e', e);
+    console.log('id', id);
+    console.log('data', data);
+  }
+
   switchTrackType(e, id, data) {
     let resConfirm;
     let playback_type;
@@ -603,12 +648,11 @@ class AuthoringTool extends Component {
       // console.log('We will start this track at', this.state.currentVideoProgress);
       console.log('Current video state', this.state.videoState, this.state.currentVideoProgress);
 
-      // if (this.state.selectedTrackComponentPlaybackType === 'inline' && this.state.videoState !== 1) {
-      //   console.log('No ready to record because the video is not playing yet');
-      //   this.state.videoPlayer.playVideo();
-      // } else {
+      if (this.state.selectedTrackComponentPlaybackType === 'inline' && this.state.videoState !== 1) {
+        alert('Not ready to record an inline track because the video is not playing yet');
+        return;
+      }
 
-      // }
       this.setState({
         selectedTrackComponentAudioClipStartTime: this.state.currentVideoProgress,
         selectedTrackComponentId: trackId,
@@ -637,15 +681,16 @@ class AuthoringTool extends Component {
       });
     } else if (e.target.className === 'fa fa-step-forward') {
       // SEEK TO.
+
       const seekToValue = clickedTrackComponent.props.data.start_time;
-      console.log('Seek video to', seekToValue);
       this.state.videoPlayer.seekTo(parseFloat(seekToValue) - conf.seekToPositionDelayFix, true);
       this.state.videoPlayer.unMute();
       this.state.videoPlayer.pauseVideo();
 
       this.setState({
+        currentVideoProgress: seekToValue,
         currentTimeInVideo: seekToValue,
-        playheadPosition: 740 * seekToValue / this.state.videoDurationInSeconds,
+        playheadPosition: 756 * seekToValue / this.state.videoDurationInSeconds,
       });
     } else {
       console.log('?');
@@ -714,31 +759,6 @@ class AuthoringTool extends Component {
       });
     }
     xhr.send(formData);
-  }
-
-  alertBoxOpen(id) {
-    const alertBox = document.getElementById(id);
-
-    // // set parameters for the alert box
-    // this.setState({
-    //   alertBoxBackgroundColor,
-    //   alertBoxContent,
-    //   alertBoxTitle,
-    //   alertBoxText,
-    //   alertBoxButtonColor,
-    // });
-
-    if (alertBox.style.display === 'none') {
-      alertBox.style.display = 'block';
-    }
-  }
-
-  alertBoxClose(e) {
-    const alertBox = document.getElementById(e.target.parentNode.parentNode.parentNode.parentNode.parentNode.id);
-
-    if (alertBox.style.display === 'block') {
-      alertBox.style.display = 'none';
-    }
   }
 
   publishAudioDescription() {
@@ -823,7 +843,6 @@ class AuthoringTool extends Component {
   }
 
   setSelectedTrack(e, trackId) {
-    console.log('Set selected track');
     const tracks = this.state.tracksComponents;
     for (let i = 0; i < tracks.length; i += 1) {
       if (trackId === tracks[i].props.id) {
