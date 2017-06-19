@@ -19,7 +19,7 @@ module.exports = () => {
   const googleClientId = '1056671841574-e1r4soednlur8hl2sl0ooumpvftt1s2k.apps.googleusercontent.com';
 
   // Video Player Setup
-  const seekToPositionDelayFix = 0.100; // Seconds
+  const seekToPositionDelayFix = 1; // Seconds.
 
   return {
     apiUrl,

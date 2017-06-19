@@ -52,7 +52,7 @@ class AuthoringTool extends Component {
       selectedTrackComponentUrl: null,
 
       // Alert box parameters
-      alertBoxBackgroundColor: '',
+      audioClipsPlayed: '',
       alertBoxContent: '',
       alertBoxTitle: '',
       alertBoxText: '',
@@ -285,11 +285,11 @@ class AuthoringTool extends Component {
             // self.resetPlayedAudioClips();
             break;
           case 1: // playing
-            self.pauseAudioClips();
+            // self.pauseAudioClips();
             self.startProgressWatcher();
             break;
           case 2: // paused
-            // self.pauseAudioClips();
+            self.pauseAudioClips('inline');
             // self.stopProgressWatcher();
             break;
           case 3: // buffering
@@ -366,12 +366,16 @@ class AuthoringTool extends Component {
         src: [audioClip.url],
         html5: false,
         onplay: () => {
+          console.log('ONPLAY');
           if (playbackType === 'extended') {
+            // self.stopProgressWatcher();
             self.state.videoPlayer.pauseVideo();
           }
         },
         onend: () => {
+          console.log('ONEND');
           self.state.videoPlayer.playVideo();
+          self.startProgressWatcher();
         },
       });
 
@@ -397,11 +401,33 @@ class AuthoringTool extends Component {
     this.audioClipsPlayed = {};
   }
 
-  pauseAudioClips() {
-    const audioClipsObjs = Object.values(this.audioClipsPlayed);
-    audioClipsObjs.forEach(howler => {
-      howler.stop();
-    });
+  pauseAudioClips(playbackType = '') {
+    const self = this;
+
+    // Howler objects.
+    const audioClipsIdsPlayed = Object.keys(this.audioClipsPlayed);
+
+    // Simple objects.
+    const audioClips = Object.values(this.state.audioDescriptionAudioClips);
+
+    for (let i = 0; i < audioClips.length; i++) {
+      const audioClip = audioClips[i];
+
+      // As we don't have any howler object, we should skip.
+      if (!self.audioClipsPlayed[audioClip._id]) {
+        console.log('As we dont have any howler object, we should skip.')
+        continue;
+      }
+
+      if (playbackType === '') {
+        this.audioClipsPlayed[audioClip._id].stop();
+        continue;
+      }
+
+      if (audioClip.playback_type === playbackType) {
+        this.audioClipsPlayed[audioClip._id].stop();
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -645,14 +671,10 @@ class AuthoringTool extends Component {
 
     if (e.target.className === 'fa fa-circle') {
       // RECORD.
-      // console.log('We will start this track at', this.state.currentVideoProgress);
-      console.log('Current video state', this.state.videoState, this.state.currentVideoProgress);
-
-      if (this.state.selectedTrackComponentPlaybackType === 'inline' && this.state.videoState !== 1) {
-        alert('Not ready to record an inline track because the video is not playing yet');
-        return;
-      }
-
+      // if (this.state.selectedTrackComponentPlaybackType === 'inline' && this.state.videoState !== 1) {
+      //   alert('Not ready to record an inline track because the video is not playing yet');
+      //   return;
+      // }
       this.setState({
         selectedTrackComponentAudioClipStartTime: this.state.currentVideoProgress,
         selectedTrackComponentId: trackId,
@@ -683,14 +705,18 @@ class AuthoringTool extends Component {
       // SEEK TO.
 
       const seekToValue = clickedTrackComponent.props.data.start_time;
-      this.state.videoPlayer.seekTo(parseFloat(seekToValue) - conf.seekToPositionDelayFix, true);
-      this.state.videoPlayer.unMute();
-      this.state.videoPlayer.pauseVideo();
+      const seekToValueWithCorrection = parseFloat(seekToValue) - conf.seekToPositionDelayFix;
+
 
       this.setState({
-        currentVideoProgress: seekToValue,
-        currentTimeInVideo: seekToValue,
+        currentVideoProgress: seekToValueWithCorrection,
+        currentTimeInVideo: seekToValueWithCorrection,
         playheadPosition: 756 * seekToValue / this.state.videoDurationInSeconds,
+      }, () => {
+        this.state.videoPlayer.seekTo(seekToValueWithCorrection, true);
+        this.state.videoPlayer.unMute();
+        this.state.videoPlayer.pauseVideo();
+        this.pauseAudioClips();
       });
     } else {
       console.log('?');

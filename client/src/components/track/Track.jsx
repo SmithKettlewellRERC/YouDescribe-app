@@ -13,7 +13,6 @@ class Track extends Component {
   }
 
   render() {
-    console.log('HAPPYYYY', this.props)
     let label;
     let switchTrackTypeComponent = null;
     this.label = this.props.data.label;
