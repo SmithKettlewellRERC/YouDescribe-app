@@ -131,7 +131,6 @@ class AuthoringTool extends Component {
           audioDescriptionNotes = ad['notes'];
           if (ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
-              audioClip.url = `${conf.audioClipsUploadsPath}${audioClip.file_path}/${audioClip.file_name}`;
               audioDescriptionAudioClips[audioClip['_id']] = audioClip;
             });
           }
@@ -160,8 +159,9 @@ class AuthoringTool extends Component {
     if (audioClips.length > 0) {
       const promises = [];
       audioClips.forEach((audioObj, idx) => {
-        console.log(audioObj.url, audioObj.start_time, audioObj.end_time, audioObj.duration, audioObj.playback_type);
-        promises.push(ourFetch(audioObj.url, false));
+        const url = self.getAudioClipUrl(audioObj);
+        console.log(url, audioObj.start_time, audioObj.end_time, audioObj.duration, audioObj.playback_type);
+        promises.push(ourFetch(url, false));
       });
       Promise.all(promises).then(function() {
         console.log('Total audio clips:', audioClips.length, 'Audio clips loaded:', promises.length);
@@ -282,7 +282,7 @@ class AuthoringTool extends Component {
             break;
           case 0: // ended
             // self.stopProgressWatcher();
-            // self.resetPlayedAudioClips();
+            self.resetPlayedAudioClips();
             break;
           case 1: // playing
             // self.pauseAudioClips();
@@ -308,7 +308,11 @@ class AuthoringTool extends Component {
     }
   }
 
-  // 8
+  getAudioClipUrl(audioClip) {
+    return `${conf.audioClipsUploadsPath}${audioClip.file_path}/${audioClip.file_name}`;
+  }
+
+  // 10
   startProgressWatcher() {
     console.log('10 -> startProgressWatcher');
     const self = this;
@@ -360,26 +364,22 @@ class AuthoringTool extends Component {
     const self = this;
     const audioClipId = audioClip._id;
     const playbackType = audioClip.playback_type;
-
+    const url = this.getAudioClipUrl(audioClip);
     if (!this.audioClipsPlayed.hasOwnProperty(audioClipId)) {
       this.audioClipsPlayed[audioClipId] = new Howl({
-        src: [audioClip.url],
+        src: [url],
         html5: false,
         onplay: () => {
-          console.log('ONPLAY');
           if (playbackType === 'extended') {
             // self.stopProgressWatcher();
             self.state.videoPlayer.pauseVideo();
           }
         },
         onend: () => {
-          console.log('ONEND');
           self.state.videoPlayer.playVideo();
           self.startProgressWatcher();
         },
       });
-
-      console.log('Let\'s play', playbackType, 'at', audioClip.start_time);
 
       // Audio ducking.
       // if (playbackType === 'inline') {
@@ -634,6 +634,7 @@ class AuthoringTool extends Component {
         const acs = Object.assign({}, this.state.audioDescriptionAudioClips);
         acs[saved._id] = saved;
         this.setState({ audioDescriptionAudioClips: acs }, () => {
+          this.resetPlayedAudioClips();
           this.loadExistingTracks();
         });
       });
