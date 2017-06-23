@@ -54,8 +54,8 @@ class Track extends Component {
             <div id="track-action" className="w3-right">
               <ActionIcon {...this.props} />
               {switchTrackTypeComponent}
-              {nudgeLeftComponent}
-              {nudgeRightComponent}
+              {/*{nudgeLeftComponent}
+              {nudgeRightComponent}*/}
               <DeleteTrack {...this.props} />
             </div>
           </div>
