@@ -2,9 +2,9 @@ import React from 'react';
 
 const DeleteTrack = (props) => {
   return (
-    <div className="deleteTrack">
+    <span className="deleteTrack">
       <i className="fa fa-trash-o" aria-hidden="true" onClick={(evt) => { props.deleteTrack(evt, props.id, props.data); }}></i>
-    </div>
+    </span>
   )
 };
 

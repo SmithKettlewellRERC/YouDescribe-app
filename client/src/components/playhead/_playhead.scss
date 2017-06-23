@@ -3,13 +3,15 @@
   width: 3px;
   position: relative;
   left: 0px;
-  top: -15px;
+  // top: -15px;
   #playhead-head {
-    width: 3px;
-    height: 20px;
+    width: 2px;
+    height: 24px;
+    background-color: red;
   }
   #playhead-tail {
-    width: 3px;
+    background-color: blue;
+    width: 2px;
     // height: 26px;
   }
 }

@@ -41,15 +41,11 @@ const Editor = (props) => {
           </div>
           <div className="w3-col l9 m9 s9">
             <div id="timeline">
-              <div>
+              <div id="timers">
                 <span className="w3-left">{props.currentVideoProgressToDisplay}</span>
                 <span className="w3-right">{props.videoDurationToDisplay}</span>
               </div>
 
-              {/* This is the line that need to add time mark */}
-              <hr />
-
-              {/* This is moving line that show the time */}
               <Playhead
                 videoDurationInSeconds={props.videoDurationInSeconds}
                 currentVideoProgress={props.currentVideoProgress}

@@ -1,4 +1,6 @@
 #navbar {
+  position: relative;
+  z-index: 20;
   .w3-bar .w3-button {
     padding: 16px;
   }

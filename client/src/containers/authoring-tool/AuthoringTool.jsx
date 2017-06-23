@@ -51,12 +51,7 @@ class AuthoringTool extends Component {
       selectedTrackComponentLabel: '',
       selectedTrackComponentUrl: null,
 
-      // Alert box parameters
       audioClipsPlayed: '',
-      alertBoxContent: '',
-      alertBoxTitle: '',
-      alertBoxText: '',
-      alertBoxButtonColor: '',
     };
 
     // Bindings.
@@ -82,11 +77,10 @@ class AuthoringTool extends Component {
   componentDidMount() {
     this.refs.spinner.on();
     document.title = `YouDescribe - Authoring Tool`;
-    if (!this.props.getAppState().isSignedIn) {
-      location.href = '/';
-    }
+    // if (!this.props.getAppState().isSignedIn) {
+    //   location.href = '/';
+    // }
     this.getYDVideoData();
-    // this.scrollingFix();
   }
 
   // 2
@@ -220,7 +214,7 @@ class AuthoringTool extends Component {
           />);
       });
     }
-    const playheadTailHeight = audioClipsLength <= 7 ? audioClipsLength * 27 : 189;
+    const playheadTailHeight = audioClipsLength <= 4 ? (audioClipsLength * 54) - 1 : 189;
     this.setState({
       tracksComponents,
       playheadTailHeight,
@@ -596,9 +590,6 @@ class AuthoringTool extends Component {
   }
 
   nudgeTrackRight(e, id, data) {
-    console.log('e', e);
-    console.log('id', id);
-    console.log('data', data);
   }
 
   switchTrackType(e, id, data) {
@@ -854,19 +845,6 @@ class AuthoringTool extends Component {
 
   updateState(newState) {
     this.setState(newState);
-  }
-
-  scrollingFix() {
-    function mouseWheelHandler(e) {
-      const delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-
-      this.scrollTop += (delta < 0
-        ? 1
-        : -1) * 30;
-      e.preventDefault();
-    }
-    document.getElementById('notes-textarea').addEventListener('mousewheel', mouseWheelHandler);
-    document.getElementById('tracks').addEventListener('mousewheel', mouseWheelHandler);
   }
 
   setSelectedTrack(e, trackId) {

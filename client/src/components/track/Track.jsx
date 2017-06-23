@@ -15,6 +15,8 @@ class Track extends Component {
   render() {
     let label;
     let switchTrackTypeComponent = null;
+    let nudgeLeftComponent = null;
+    let nudgeRightComponent = null;
     this.label = this.props.data.label;
     this.url = this.props.data.url;
     this.labelText = this.props.data.playback_type === 'inline' ? 'I' : 'E';
@@ -23,11 +25,13 @@ class Track extends Component {
     // It is an existant track.
     if (this.props.data._id) {
       if (this.props.data.label === '') {
-        label = <input type="text" data-id={this.props.data._id} onChange={this.props.updateTrackLabel} placeholder="Unlabeled track" />;
+        label = <input type="text" data-id={this.props.data._id} onChange={this.props.updateTrackLabel} placeholder="Unlabeled saved track" />;
       } else {
         label = <input type="text" data-id={this.props.data._id} onChange={this.props.updateTrackLabel} value={this.props.data.label} />;
       }
-      switchTrackTypeComponent = <div className="w3-right" style={{ paddingRight: '8px' }}><SwitchTrackType {...this.props} /></div>;
+      switchTrackTypeComponent = <SwitchTrackType {...this.props} />;
+      nudgeLeftComponent = <NudgeLeft {...this.props} />;
+      nudgeRightComponent = <NudgeRight {...this.props} />;
     } else {
       label = <input
         type="text"
@@ -43,26 +47,16 @@ class Track extends Component {
       <div id="track" className="w3-row w3-display-container">
         <div className="w3-col l3 m3 s3">
           <div id="track-info">
-            <div className="w3-left">
+            <div className="label">
               <div id="type" className={this.styleButton}>{this.labelText}</div>
-            </div>
-            <div className="w3-left">
-              {label}
+              <div>{label}</div>
             </div>
             <div id="track-action" className="w3-right">
-              <div className="w3-right">
-                <DeleteTrack {...this.props} />
-              </div>
+              <ActionIcon {...this.props} />
               {switchTrackTypeComponent}
-              <div className="w3-right" style={{ paddingRight: '8px' }}>
-                <ActionIcon {...this.props} />
-              </div>
-              {/*<div className="w3-right" style={{ paddingRight: '8px' }}>
-                <NudgeRight {...this.props} />
-              </div>
-              <div className="w3-right" style={{ paddingRight: '8px' }}>
-                <NudgeLeft {...this.props} />
-              </div>*/}
+              {nudgeLeftComponent}
+              {nudgeRightComponent}
+              <DeleteTrack {...this.props} />
             </div>
           </div>
         </div>
@@ -75,7 +69,7 @@ class Track extends Component {
               width: Math.abs(756 * ((this.props.data.end_time - this.props.data.start_time) / this.props.getATState().videoDurationInSeconds)) !== 0 ?
               `${~~(756 * ((this.props.data.end_time - this.props.data.start_time) / this.props.getATState().videoDurationInSeconds))}px` :
               1,
-              height: '27px',
+              height: '53px',
             }}
           >
             <div id={`wave${this.props.id}`} />

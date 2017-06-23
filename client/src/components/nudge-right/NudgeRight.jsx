@@ -1,13 +1,13 @@
 import React from 'react';
 
 const NudgeRight = props => (
-  <div id="nudge-left">
+  <span id="nudge-left">
     <i
-      className="fa fa-caret-right"
+      className="fa fa-arrow-right"
       aria-hidden="true"
       onClick={(evt) => { props.nudgeTrackRight(evt, props.id, props.data); }}
     />
-  </div>
+  </span>
 );
 
 export default NudgeRight;
