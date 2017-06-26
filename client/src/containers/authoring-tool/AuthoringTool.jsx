@@ -553,11 +553,13 @@ class AuthoringTool extends Component {
   }
 
   nudgeTrackLeft(e, id, data) {
+    this.refs.spinner.on();
     const nudgeIncrementDecrementValue = conf.nudgeIncrementDecrementValue;
 
     // Trying to decrease from 0;
     if (data.start_time === 0) {
       alert('Impossible to descrease the start time. It is already 0.');
+      this.refs.spinner.off();
       return;
     }
 
@@ -599,11 +601,13 @@ class AuthoringTool extends Component {
   }
 
   nudgeTrackRight(e, id, data) {
+    this.refs.spinner.on();
     const nudgeIncrementDecrementValue = conf.nudgeIncrementDecrementValue;
 
     // Trying to increase beyond video duration.
     if (data.start_time + nudgeIncrementDecrementValue > this.videoDurationInSeconds - data.duration) {
       alert('Impossible to increase the start time more.');
+      this.refs.spinner.off();
       return;
     }
 
@@ -637,11 +641,12 @@ class AuthoringTool extends Component {
       });
     })
     .catch((err) => {
-      console.log('Error nudge left');
+      console.log('Error nudge right');
     });
   }
 
   switchTrackType(e, id, data) {
+    this.refs.spinner.on();
     let resConfirm;
     let playback_type;
     if (data.playback_type === 'extended') {
