@@ -17,7 +17,10 @@ class Track extends Component {
     let switchTrackTypeComponent = null;
     let nudgeLeftComponent = null;
     let nudgeRightComponent = null;
-    const startEndTimeInfo = this.props.data.start_time.toFixed(2) + ' - ' + this.props.data.end_time.toFixed(2);
+    let startEndTimeInfo =  '00.00 - 00.00';
+    if (this.props.data.start_time && this.props.data.end_time) {
+      startEndTimeInfo = this.props.data.start_time.toFixed(2) + ' - ' + this.props.data.end_time.toFixed(2);
+    }
     this.label = this.props.data.label;
     this.url = this.props.data.url;
     this.labelText = this.props.data.playback_type === 'inline' ? 'I' : 'E';
