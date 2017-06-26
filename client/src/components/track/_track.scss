@@ -49,6 +49,16 @@
   }
   #sinewave-container {
     height: 53px;
+    span {
+      display: inline-block;
+      position: absolute;
+      background: #333;
+      right: 5px;
+      bottom: 7px;
+      z-index: 3;
+      color: #fff;
+      font-size: 10px;
+    }
   }
   #sinewave {
     position: relative;

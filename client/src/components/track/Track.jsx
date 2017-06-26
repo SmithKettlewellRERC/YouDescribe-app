@@ -17,6 +17,7 @@ class Track extends Component {
     let switchTrackTypeComponent = null;
     let nudgeLeftComponent = null;
     let nudgeRightComponent = null;
+    const startEndTimeInfo = this.props.data.start_time.toFixed(2) + ' - ' + this.props.data.end_time.toFixed(2);
     this.label = this.props.data.label;
     this.url = this.props.data.url;
     this.labelText = this.props.data.playback_type === 'inline' ? 'I' : 'E';
@@ -54,13 +55,14 @@ class Track extends Component {
             <div id="track-action" className="w3-right">
               <ActionIcon {...this.props} />
               {switchTrackTypeComponent}
-              {/*{nudgeLeftComponent}
-              {nudgeRightComponent}*/}
+              {nudgeLeftComponent}
+              {nudgeRightComponent}
               <DeleteTrack {...this.props} />
             </div>
           </div>
         </div>
         <div id="sinewave-container" className="w3-col l9 m9 s9">
+          <span>{startEndTimeInfo}</span>
           <div
             id="sinewave"
             className={this.styleButton}

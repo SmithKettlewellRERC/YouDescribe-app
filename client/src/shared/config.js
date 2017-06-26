@@ -21,6 +21,9 @@ module.exports = () => {
   // Video Player Setup
   const seekToPositionDelayFix = 1; // Seconds.
 
+  // Nudge increment/decrement value.
+  const nudgeIncrementDecrementValue = 1;// Seconds.
+
   return {
     apiUrl,
     apiVersion,
@@ -29,5 +32,6 @@ module.exports = () => {
     youTubeApiKey,
     seekToPositionDelayFix,
     googleClientId,
+    nudgeIncrementDecrementValue,
   };
 };

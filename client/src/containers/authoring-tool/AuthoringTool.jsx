@@ -553,9 +553,62 @@ class AuthoringTool extends Component {
   }
 
   nudgeTrackLeft(e, id, data) {
-    console.log('e', e);
-    console.log('id', id);
-    console.log('data', data);
+    const nudgeIncrementDecrementValue = conf.nudgeIncrementDecrementValue;
+
+    // Trying to decrease from 0;
+    if (data.start_time === 0) {
+      alert('Impossible to descrease the start time. It is already 0.');
+      return;
+    }
+
+    // Impossible to nudge to less than 0 so we decide to make it zero.
+    if (data.start_time - nudgeIncrementDecrementValue < 0) {
+      data.start_time = 0;
+    } else {
+      data.start_time = data.start_time - nudgeIncrementDecrementValue;
+    }
+
+    ourFetch(`${conf.apiUrl}/audioclips/${data._id}`, true, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: this.props.getAppState().userId,
+        userToken: this.props.getAppState().userToken,
+        playback_type: data.playback_type,
+        start_time: data.start_time,
+        end_time: data.end_time,
+        duration: data.duration,
+      }),
+    })
+    .then((response) => {
+      this.refs.spinner.off();
+      const saved = response.result;
+      const tcs = this.state.tracksComponents.slice();
+      const acs = Object.assign({}, this.state.audioDescriptionAudioClips);
+      acs[saved._id] = saved;
+      this.setState({ audioDescriptionAudioClips: acs }, () => {
+        this.resetPlayedAudioClips();
+        this.loadExistingTracks();
+      });
+    })
+    .catch((err) => {
+      console.log('Error nudge left');
+    });
+  }
+
+  nudgeTrackRight(e, id, data) {
+    const nudgeIncrementDecrementValue = conf.nudgeIncrementDecrementValue;
+
+    // Trying to increase beyond video duration.
+    if (data.start_time + nudgeIncrementDecrementValue > this.videoDurationInSeconds - data.duration) {
+      alert('Impossible to increase the start time more.');
+      return;
+    }
+
+    data.start_time = data.start_time + nudgeIncrementDecrementValue;
+
     const url = `${conf.apiUrl}/audioclips/${data._id}`;
 
     ourFetch(url, true, {
@@ -566,30 +619,26 @@ class AuthoringTool extends Component {
       body: JSON.stringify({
         userId: this.props.getAppState().userId,
         userToken: this.props.getAppState().userToken,
+        playback_type: data.playback_type,
+        start_time: data.start_time,
+        end_time: data.end_time,
+        duration: data.duration,
       }),
     })
     .then((response) => {
-      const videoData = response.result;
-      const tc = this.state.tracksComponents.slice();
-      const newTracks = tc.filter(t => t.props.id !== id);
-      this.setState({
-        videoData,
-      }, () => {
-        this.resetSelectedTrack();
-        this.parseYDVideoData();
+      this.refs.spinner.off();
+      const saved = response.result;
+      const tcs = this.state.tracksComponents.slice();
+      const acs = Object.assign({}, this.state.audioDescriptionAudioClips);
+      acs[saved._id] = saved;
+      this.setState({ audioDescriptionAudioClips: acs }, () => {
+        this.resetPlayedAudioClips();
+        this.loadExistingTracks();
       });
     })
     .catch((err) => {
-      this.setState({
-        videoData: {},
-      }, () => {
-        this.resetSelectedTrack();
-        this.parseYDVideoData();
-      });
+      console.log('Error nudge left');
     });
-  }
-
-  nudgeTrackRight(e, id, data) {
   }
 
   switchTrackType(e, id, data) {
@@ -703,7 +752,7 @@ class AuthoringTool extends Component {
       this.setState({
         currentVideoProgress: seekToValueWithCorrection,
         currentTimeInVideo: seekToValueWithCorrection,
-        playheadPosition: 756 * seekToValue / this.state.videoDurationInSeconds,
+        playheadPosition: 756 * seekToValue / this.videoDurationInSeconds,
       }, () => {
         this.state.videoPlayer.seekTo(seekToValueWithCorrection, true);
         this.state.videoPlayer.unMute();
