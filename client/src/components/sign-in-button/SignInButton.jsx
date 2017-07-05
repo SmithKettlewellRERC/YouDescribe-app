@@ -1,11 +1,11 @@
 import React from 'react';
 import Button from '../button/Button.jsx';
 
-const SignInButton = () => (
+const SignInButton = (props) => (
   <Button
     id="btn-sign-in"
     color="w3-indigo"
-    text="Sign in with Google"
+    text={props.translate('Sign in with Google')}
   />
 );
 

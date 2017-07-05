@@ -44,7 +44,7 @@ class Navbar extends Component {
     if (isSignedIn) {
       signInComponent = <UserAvatar signOut={this.props.signOut} userMenuToggle={this.userMenuToggle} getAppState={this.props.getAppState} />;
     } else {
-      signInComponent = <SignInButton />;
+      signInComponent = <SignInButton translate={this.props.translate} />;
     }
     return (
       <nav id="navbar">
@@ -69,7 +69,7 @@ class Navbar extends Component {
             </Link>
 
             <div className="w3-left">
-              <SearchBar updateSearch={searchValue => this.props.updateSearch(searchValue)} />
+              <SearchBar updateSearch={searchValue => this.props.updateSearch(searchValue)} translate={this.props.translate} />
             </div>
 
             {/* Right-sided navbar links */}
@@ -79,14 +79,14 @@ class Navbar extends Component {
                 className="w3-bar-item"
                 style={{ position: 'relative', top: '8px' }}
               >
-                <i className="fa fa-home" aria-hidden="true">&nbsp;&nbsp;</i>RECENT DESCRIPTIONS
+                <i className="fa fa-home" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate('RECENT DESCRIPTIONS')}
               </Link>
               <Link
                 to="/wishlist"
                 className="w3-bar-item"
                 style={{ position: 'relative', top: '8px' }}
               >
-                <i className="fa fa-heart" aria-hidden="true">&nbsp;&nbsp;</i>WISH LIST
+                <i className="fa fa-heart" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate('WISH LIST')}
               </Link>
               <div className="w3-bar-item" style={{ position: 'relative', top: '2px' }}>
                 {signInComponent}
@@ -111,20 +111,20 @@ class Navbar extends Component {
           className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-large"
           style={{ display: 'none' }}
         >
-          <a href="javascript:void(0)" onClick={this.navMenuClose} className="w3-large w3-padding-16">Close ×</a>
+          <a href="javascript:void(0)" onClick={this.navMenuClose} className="w3-large w3-padding-16">{this.props.translate('Close')} ×</a>
           <Link
             to="/"
             className="w3-bar-item w3-button"
             onClick={() => document.getElementById('home-heading').focus()}
           >
-            <i className="fa fa-home" aria-hidden="true" /> HOME
+            <i className="fa fa-home" aria-hidden="true" /> {this.props.translate('HOME')}
           </Link>
           <Link
             to="/wishlist"
             className="w3-bar-item w3-button"
             onClick={() => document.getElementById('wish-list-heading').focus()}
           >
-            <i className="fa fa-heart" aria-hidden="true" /> WISH LIST
+            <i className="fa fa-heart" aria-hidden="true" /> {this.props.translate('WISH LIST')}
           </Link>
           {signInComponent}
         </div>

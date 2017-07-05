@@ -28,7 +28,7 @@ class Home extends Component {
 
   componentDidMount() {
     document.getElementById('navbar').focus();
-    document.title = `YouDescribe - Audio Description for YouTube Videos`;
+    document.title = this.props.translate('YouDescribe - Audio Description for YouTube Videos');
     this.fetchingVideosToHome();
   }
 
@@ -112,14 +112,14 @@ class Home extends Component {
   render() {
     let YDloadMoreButton = (
       <div className="w3-margin-top w3-center load-more w3-hide">
-        <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+        <Button title={this.props.translate('Load more videos')} color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
       </div>
     );
 
     if (this.state.videos.length > 20) {
       YDloadMoreButton = (
         <div className="w3-margin-top w3-center load-more">
-          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+          <Button title={this.props.translate('Load more videos')} color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
         </div>
       );
     }
@@ -128,7 +128,7 @@ class Home extends Component {
       <main id="home" title="YouDescribe home page">
 
         <header role="banner" className="w3-container w3-indigo">
-          <h2 id="home-heading" tabIndex="-1">RECENT DESCRIPTIONS</h2>
+          <h2 id="home-heading" tabIndex="-1">{this.props.translate('RECENT DESCRIPTIONS')}</h2>
         </header>
 
         <Spinner />

@@ -16,12 +16,12 @@ const SearchBar = (props) => {
         <div className="w3-left">
           <input
             id="search-input"
-            title={`Search for a YouTube video. If a video with an audio description matching the search criteria exists, it will be available in the first section. If not, Youtube videos without audio descriptions matching the search criteria will be listed in the second section and requests for any of those videos can be made.`}
-            className="w3-padding-small w3-border w3-border-indigo" type="search" placeholder="Search" defaultValue=""
+            title={props.translate(`Search for a YouTube video. If a video with an audio description matching the search criteria exists, it will be available in the first section. If not, Youtube videos without audio descriptions matching the search criteria will be listed in the second section and requests for any of those videos can be made.`)}
+            className="w3-padding-small w3-border w3-border-indigo" type="search" placeholder={props.translate('Search')} defaultValue=""
           />
         </div>
         <div className="w3-left">
-          <Button text="Search" color="w3-indigo" />
+          <Button text={props.translate('Search')} color="w3-indigo" />
         </div>
       </form>
     </div>

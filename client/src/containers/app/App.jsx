@@ -3,8 +3,22 @@ import Navbar from '../../components/navbar/Navbar.jsx';
 import Footer from '../../components/footer/Footer.jsx';
 import { ourFetch } from '../../shared/helperFunctions.js';
 import { browserHistory } from 'react-router';
+import strings from './../../strings';
 
 const conf = require('./../../shared/config')();
+
+import Polyglot from 'node-polyglot';
+
+const locale = navigator.language || 'en-US';
+
+console.log('LOCALE', locale);
+
+const polyglot = new Polyglot({
+    locale,
+    phrases: strings[locale],
+});
+
+const translate = polyglot.t.bind(polyglot);
 
 class App extends Component {
   constructor(props, context) {
@@ -214,14 +228,16 @@ class App extends Component {
         <Navbar
           getAppState={this.getAppState}
           signOut={this.signOut}
+          translate={translate}
           updateSearch={searchValue => this.clickHandler(searchValue)}
         />
         {React.cloneElement(this.props.children, {
           getAppState: this.getAppState,
           getVideoProgress: this.getVideoProgress,
+          translate: translate,
           getUserInfo: this.getUserInfo,
         })}
-        <Footer />
+        <Footer translate={translate} />
       </div>
     );
   }
