@@ -123,7 +123,7 @@ class AuthoringTool extends Component {
           audioDescriptionId = ad['_id'];
           audioDescriptionStatus = ad['status'];
           audioDescriptionNotes = ad['notes'];
-          if (ad.audio_clips.length > 0) {
+          if (ad.audio_clips && ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
               audioDescriptionAudioClips[audioClip['_id']] = audioClip;
             });
@@ -259,6 +259,8 @@ class AuthoringTool extends Component {
         }, () => {
           self.refs.spinner.off();
         });
+      } else {
+        self.refs.spinner.off();
       }
     }
 
@@ -839,7 +841,7 @@ class AuthoringTool extends Component {
     if (resultConfirm) {
       const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=publish`;
       ourFetch(url, true, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -869,7 +871,7 @@ class AuthoringTool extends Component {
     if (resultConfirm) {
       const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=unpublish`;
       ourFetch(url, true, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -942,46 +944,51 @@ class AuthoringTool extends Component {
   }
 
   saveLabelsAndNotes() {
-    // Update notes.
-    const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}`;
     this.refs.spinner.on();
+    let url = `${conf.apiUrl}/audiodescriptions`;
+    let method = 'PUT';
+
+    // We already have an audio description.
+    if (this.state.audioDescriptionId) {
+      url += `/${this.state.audioDescriptionId}`;
+
+      // Update labels at each audio clip.
+      const audioClips = this.state.audioDescriptionAudioClips;
+      Object.keys(audioClips).forEach((acId) => {
+        const ac = this.state.audioDescriptionAudioClips[acId];
+        ourFetch(`${conf.apiUrl}/audioclips/${acId}`, true, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: this.props.getAppState().userId,
+            userToken: this.props.getAppState().userToken,
+            label: ac.label,
+          }),
+        })
+        .then(response => {
+          this.refs.spinner.off();
+        });
+      });
+    } else {
+      // We still don't have a AD.
+      url += `/${this.state.videoId}`;
+      method = 'POST';
+    }
+
+    // Update audio description.
     ourFetch(url, true, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      method,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        title: this.state.videoTitle,
+        description: this.state.videoDescription,
         userId: this.props.getAppState().userId,
         userToken: this.props.getAppState().userToken,
         notes: this.state.audioDescriptionNotes,
       }),
     })
     .then(response => {
-      // console.log('Notes updated', response.result)
-      this.refs.spinner.off();
-    });
-
-    // Update labels.
-    const audioClips = this.state.audioDescriptionAudioClips;
-    this.refs.spinner.on();
-    Object.keys(audioClips).forEach((acId) => {
-      const ac = this.state.audioDescriptionAudioClips[acId];
-      const url = `${conf.apiUrl}/audioclips/${acId}`;
-      ourFetch(url, true, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: this.props.getAppState().userId,
-          userToken: this.props.getAppState().userToken,
-          label: ac.label,
-        }),
-      })
-      .then(response => {
-        this.refs.spinner.off();
-        // console.log('Label updated', response.result);
-      });
+      this.getYDVideoData();
     });
   }
 

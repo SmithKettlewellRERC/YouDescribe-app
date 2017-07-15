@@ -5,33 +5,39 @@ import Playhead from '../playhead/Playhead.jsx';
 const Editor = (props) => {
   const audioDescriptionId = props.getATState().audioDescriptionId;
   const audioDescriptionStatus = props.getATState().audioDescriptionStatus;
+
   let publishButton = null;
-  let saveButton = null;
-  if (audioDescriptionStatus === 'draft') {
-    publishButton = <Button
-      title="Publish the video along with all audio description tracks"
-      text="Publish"
-      color="w3-indigo"
-      onClick={props.publishAudioDescription}
-    />
+
+  // Publish button should just be showed if we have at least one track.
+  if (props.getATState().tracksComponents.length > 0) {
+    if (audioDescriptionStatus === 'draft') {
+      publishButton = <Button
+        title="Publish the video along with all audio description tracks"
+        text="Publish"
+        color="w3-indigo"
+        onClick={props.publishAudioDescription}
+      />
+    }
+    if (audioDescriptionStatus === 'published') {
+      publishButton = <Button
+        title="Unpublish this audio description for the current video"
+        text="Unpublish"
+        color="w3-indigo"
+        onClick={props.unpublishAudioDescription}
+      />
+    }
   }
-  if (audioDescriptionStatus === 'published') {
-    publishButton = <Button
-      title="Unpublish this audio description for the current video"
-      text="Unpublish"
-      color="w3-indigo"
-      onClick={props.unpublishAudioDescription}
-    />
-  }
+
   // Just show save button after the audio description has at least one audio clip.
-  if (audioDescriptionId) {
-    saveButton = <Button
+  // let saveButton = null;
+  // if (audioDescriptionId) {
+  let saveButton = <Button
       title="Save notes and labels anytime"
       text="Save"
       color="w3-indigo"
       onClick={props.saveLabelsAndNotes}
     />
-  }
+  // }
   return (
     <div id="editor" className="w3-card-2">
       <div className="w3-card-4">

@@ -5,6 +5,8 @@ import NudgeLeft from '../nudge-left/NudgeLeft.jsx';
 import NudgeRight from '../nudge-right/NudgeRight.jsx';
 import SwitchTrackType from '../switch-track-type/SwitchTrackType.jsx';
 import AlertBox from '../alert-box/AlertBox.jsx';
+import { convertSecondsToEditorFormat } from '../../shared/helperFunctions';
+
 const conf = require('../../shared/config');
 
 class Track extends Component {
@@ -19,7 +21,7 @@ class Track extends Component {
     let nudgeRightComponent = null;
     let startEndTimeInfo =  '00.00 - 00.00';
     if (this.props.data.start_time && this.props.data.end_time) {
-      startEndTimeInfo = this.props.data.start_time.toFixed(2) + ' - ' + this.props.data.end_time.toFixed(2);
+      startEndTimeInfo = convertSecondsToEditorFormat(this.props.data.start_time) + ' - ' + convertSecondsToEditorFormat(this.props.data.end_time);
     }
     this.label = this.props.data.label;
     this.url = this.props.data.url;

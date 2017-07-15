@@ -22,7 +22,7 @@ module.exports = () => {
   const seekToPositionDelayFix = 1; // Seconds.
 
   // Nudge increment/decrement value.
-  const nudgeIncrementDecrementValue = 0.5;// Seconds.
+  const nudgeIncrementDecrementValue = 0.15; // Seconds.
 
   return {
     apiUrl,
