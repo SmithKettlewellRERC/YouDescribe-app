@@ -66,6 +66,7 @@ class AuthoringTool extends Component {
     this.setSelectedTrack = this.setSelectedTrack.bind(this);
     this.updateNotes = this.updateNotes.bind(this);
     this.deleteTrack = this.deleteTrack.bind(this);
+    this.deleteAudioDescription = this.deleteAudioDescription.bind(this);
     this.switchTrackType = this.switchTrackType.bind(this);
     this.saveLabelsAndNotes = this.saveLabelsAndNotes.bind(this);
     this.preLoadAudioClips = this.preLoadAudioClips.bind(this);
@@ -992,6 +993,25 @@ class AuthoringTool extends Component {
     });
   }
 
+  deleteAudioDescription() {
+    const resConfirm = confirm('Are you sure you want to delete the audio description? This will remove all recorder tracks and cannot be undone.');
+    if (resConfirm) {
+      this.refs.spinner.on();
+      ourFetch(`${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}`, true, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: this.props.getAppState().userId,
+          userToken: this.props.getAppState().userToken,
+        }),
+      })
+      .then(response => {
+        this.refs.spinner.off();
+        browserHistory.push(`/videos/user/${this.props.getAppState().userId}`);
+      });
+    }
+  }
+
   // 1
   render() {
     // console.log('1 -> render authoring tool')
@@ -1019,6 +1039,7 @@ class AuthoringTool extends Component {
                 addAudioClipTrack={this.addAudioClipTrack}
                 recordAudioClip={this.recordAudioClip}
                 deleteTrack={this.deleteTrack}
+                deleteAudioDescription={this.deleteAudioDescription}
                 saveLabelsAndNotes={this.saveLabelsAndNotes}
                 {...this.state}
               />

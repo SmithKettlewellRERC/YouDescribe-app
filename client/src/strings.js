@@ -1,7 +1,20 @@
 const strings = {
-//   'en-US': {
-//     'RECENT DESCRIPTIONS': 'RECENT DESCRIPTIONS',
-//   },
+  'en-US': {
+    'RECENT DESCRIPTIONS': 'RECENT DESCRIPTIONS',
+    'WISH LIST': 'WISH LIST',
+    HOME: 'HOME',
+    Close: 'Close',
+    Search: 'Search',
+    Credits: 'Credits',
+    'Contact Us': 'Contact Us',
+    Support: 'Support',
+    'YouDescribe is a project of': 'YouDescribe is a project of',
+    'Load more videos': 'Load more videos',
+    'Sign in with Google': 'Sign in with Google',
+    'All rights reserved': 'All rights reserved',
+    'YouDescribe - Audio Description for YouTube Videos': 'YouDescribe - Audio Description for YouTube Videos',
+    'Search for a YouTube video. If a video with an audio description matching the search criteria exists, it will be available in the first section. If not, Youtube videos without audio descriptions matching the search criteria will be listed in the second section and requests for any of those videos can be made.': 'Search for a YouTube video. If a video with an audio description matching the search criteria exists, it will be available in the first section. If not, Youtube videos without audio descriptions matching the search criteria will be listed in the second section and requests for any of those videos can be made.',    
+  },
   'pt-BR': {
     'RECENT DESCRIPTIONS': 'DESCRIÇÕES RECENTES',
     'WISH LIST': 'LISTA DE DESEJOS',

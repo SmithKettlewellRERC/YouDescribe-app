@@ -7,6 +7,7 @@ const Editor = (props) => {
   const audioDescriptionStatus = props.getATState().audioDescriptionStatus;
 
   let publishButton = null;
+  let deleteAllButton = null;
 
   // Publish button should just be showed if we have at least one track.
   if (props.getATState().tracksComponents.length > 0) {
@@ -26,6 +27,16 @@ const Editor = (props) => {
         onClick={props.unpublishAudioDescription}
       />
     }
+  }
+
+  // If we have an audio description, then we can allow users to delete.
+  if (props.getATState().audioDescriptionId !== null) {
+      deleteAllButton = <Button
+        title="Complete remove this audio description"
+        text="Delete"
+        color="w3-red"
+        onClick={props.deleteAudioDescription}
+      />
   }
 
   // Just show save button after the audio description has at least one audio clip.
@@ -90,6 +101,7 @@ const Editor = (props) => {
         </div>
       </div>
       <div className="w3-right-align w3-border-top w3-border-black w3-padding">
+        {deleteAllButton}
         {saveButton}
         {publishButton}
       </div>
