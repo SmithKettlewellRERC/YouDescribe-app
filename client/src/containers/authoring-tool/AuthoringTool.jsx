@@ -1006,6 +1006,7 @@ class AuthoringTool extends Component {
         }),
       })
       .then(response => {
+        console.log('Deleted', response);
         this.refs.spinner.off();
         browserHistory.push(`/videos/user/${this.props.getAppState().userId}`);
       });

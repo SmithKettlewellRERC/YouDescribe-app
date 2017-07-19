@@ -19,8 +19,8 @@ class Track extends Component {
     let switchTrackTypeComponent = null;
     let nudgeLeftComponent = null;
     let nudgeRightComponent = null;
-    let startEndTimeInfo =  '00.00 - 00.00';
-    if (this.props.data.start_time && this.props.data.end_time) {
+    let startEndTimeInfo = '';
+    if (this.props.data.end_time >= 0) {
       startEndTimeInfo = convertSecondsToEditorFormat(this.props.data.start_time) + ' - ' + convertSecondsToEditorFormat(this.props.data.end_time);
     }
     this.label = this.props.data.label;
