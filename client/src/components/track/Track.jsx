@@ -21,7 +21,7 @@ class Track extends Component {
     let nudgeRightComponent = null;
     let startEndTimeInfo = '';
     if (this.props.data.end_time >= 0) {
-      startEndTimeInfo = convertSecondsToEditorFormat(this.props.data.start_time) + ' - ' + convertSecondsToEditorFormat(this.props.data.end_time);
+      startEndTimeInfo = convertSecondsToEditorFormat(this.props.data.start_time) + ' - ' + convertSecondsToEditorFormat(this.props.data.end_time) + ' (' + convertSecondsToEditorFormat(this.props.data.duration) + ')';
     }
     this.label = this.props.data.label;
     this.url = this.props.data.url;

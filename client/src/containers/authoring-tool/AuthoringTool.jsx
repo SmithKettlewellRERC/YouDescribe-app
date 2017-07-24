@@ -570,7 +570,8 @@ class AuthoringTool extends Component {
     if (data.start_time - nudgeIncrementDecrementValue < 0) {
       data.start_time = 0;
     } else {
-      data.start_time = data.start_time - nudgeIncrementDecrementValue;
+      // Fix for 0.3 + 0.15 floating point issue.
+      data.start_time = ((data.start_time * 1000) - (nudgeIncrementDecrementValue * 1000)) / 1000;
     }
 
     ourFetch(`${conf.apiUrl}/audioclips/${data._id}`, true, {
@@ -614,7 +615,7 @@ class AuthoringTool extends Component {
       return;
     }
 
-    data.start_time = data.start_time + nudgeIncrementDecrementValue;
+    data.start_time = ((data.start_time * 1000) + (nudgeIncrementDecrementValue * 1000)) / 1000;
 
     const url = `${conf.apiUrl}/audioclips/${data._id}`;
 
