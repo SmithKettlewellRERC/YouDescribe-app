@@ -14,7 +14,7 @@ class VideoCard extends Component {
 
   upVote(e) {
     if (!this.props.getAppState().isSignedIn) {
-      alert('You have to be logged in in order to up vote');
+      alert(this.props.translate('You have to be logged in in order to vote'));
     } else {
       e.currentTarget.className = 'w3-btn w3-white w3-text-indigo w3-left w3-text-red';
       const url = `${conf.apiUrl}/wishlist`;
@@ -34,7 +34,7 @@ class VideoCard extends Component {
       })
       .catch(err => {
         console.log(err);
-        alert('It was impossible to vote. Maybe your session has expired. Try to logout and login again.');
+        alert(this.props.translate('It was impossible to vote. Maybe your session has expired. Try to logout and login again.'));
       });
     }
   }

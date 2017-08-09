@@ -77,7 +77,7 @@ class AuthoringTool extends Component {
 
   componentDidMount() {
     this.refs.spinner.on();
-    document.title = `YouDescribe - Authoring Tool`;
+    document.title = this.props.translate('YouDescribe - Authoring Tool');
     // if (!this.props.getAppState().isSignedIn) {
     //   location.href = '/';
     // }
@@ -412,7 +412,6 @@ class AuthoringTool extends Component {
 
       // As we don't have any howler object, we should skip.
       if (!self.audioClipsPlayed[audioClip._id]) {
-        console.log('As we dont have any howler object, we should skip.')
         continue;
       }
 
@@ -435,7 +434,7 @@ class AuthoringTool extends Component {
 
   addAudioClipTrack(playbackType) {
     if (!this.props.getAppState().isSignedIn) {
-      alert('You have to be logged in in order to describe this video');
+      alert(this.props.translate('You have to be logged in in order to describe this video'));
       return;
     }
 
@@ -446,7 +445,7 @@ class AuthoringTool extends Component {
     for (let i = 0; i < tracks.length; i += 1) {
       if (tracks[i].props.data.url === '') {
         // this.alertBoxOpen('unused-track');
-        alert('Finish using your available record tracks.');
+        alert(this.props.translate('Finish using your available record tracks'));
         return;
       }
     }
@@ -454,7 +453,7 @@ class AuthoringTool extends Component {
     // Don't allow adding more tracks while recording.
     if (this.state.selectedTrackComponentStatus === 'recording') {
       // this.alertBoxOpen('recording-in-process');
-      alert('You can just add more tracks when you finish recording the existing one.');
+      alert(this.props.translate('You can just add more tracks when you finish recording the existing one'));
       return;
     }
 
@@ -512,7 +511,7 @@ class AuthoringTool extends Component {
   deleteTrack(e, id, data) {
     // It is an existing recorder audio track.
     if (data._id) {
-      const resConfirm = confirm('Are you sure you want to remove this track? This action cannot be undone!');
+      const resConfirm = confirm(this.props.translate('Are you sure you want to remove this track? This action cannot be undone!'));
       if (resConfirm) {
         const url = `${conf.apiUrl}/audioclips/${data._id}`;
         ourFetch(url, true, {
@@ -561,7 +560,7 @@ class AuthoringTool extends Component {
 
     // Trying to decrease from 0;
     if (data.start_time === 0) {
-      alert('Impossible to descrease the start time. It is already 0.');
+      alert(this.props.translate('Impossible to descrease the start time. It is already 0'));
       this.refs.spinner.off();
       return;
     }
@@ -610,7 +609,7 @@ class AuthoringTool extends Component {
 
     // Trying to increase beyond video duration.
     if (data.start_time + nudgeIncrementDecrementValue > this.videoDurationInSeconds - data.duration) {
-      alert('Impossible to increase the start time more.');
+      alert(this.props.translate('Impossible to increase the start time more'));
       this.refs.spinner.off();
       return;
     }
@@ -654,10 +653,10 @@ class AuthoringTool extends Component {
     let resConfirm;
     let playback_type;
     if (data.playback_type === 'extended') {
-      resConfirm = confirm('Are you sure you want to change from EXTENDED to INLINE?');
+      resConfirm = confirm(this.props.translate('Are you sure you want to change from EXTENDED to INLINE?'));
       playback_type = 'inline';
     } else {
-      resConfirm = confirm('Are you sure you want to change from INLINE to EXTENDED?');
+      resConfirm = confirm(this.props.translate('Are you sure you want to change from INLINE to EXTENDED?'));
       playback_type = 'extended';
     }
     if (resConfirm) {
@@ -706,13 +705,13 @@ class AuthoringTool extends Component {
   recordAudioClip(e, trackId) {
     const self = this;
     if (!this.props.getAppState().isSignedIn) {
-      alert('You need to be logged in in order to record audio clips');
+      alert(this.props.translate('You need to be logged in in order to record audio clips'));
       return;
     }
 
     if (this.state.selectedTrackComponentId !== trackId) {
       if (this.state.selectedTrackComponentStatus === 'recording') {
-        alert('You need to stop recording in order to activate any other track');
+        alert(this.props.translate('You need to stop recording in order to activate any other track'));
         return;
       }
     }
@@ -839,7 +838,7 @@ class AuthoringTool extends Component {
 
   publishAudioDescription() {
     const self = this;
-    const resultConfirm = confirm('Are you sure you wanna publish this audio description?');
+    const resultConfirm = confirm(this.props.translate('Are you sure you wanna publish this audio description?'));
     if (resultConfirm) {
       const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=publish`;
       ourFetch(url, true, {
@@ -869,7 +868,7 @@ class AuthoringTool extends Component {
 
   unpublishAudioDescription() {
     const self = this;
-    const resultConfirm = confirm('Are you sure you wanna unpublish this audio description?');
+    const resultConfirm = confirm(this.props.translate('Are you sure you wanna unpublish this audio description?'));
     if (resultConfirm) {
       const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=unpublish`;
       ourFetch(url, true, {
@@ -995,7 +994,7 @@ class AuthoringTool extends Component {
   }
 
   deleteAudioDescription() {
-    const resConfirm = confirm('Are you sure you want to delete the audio description? This will remove all recorder tracks and cannot be undone.');
+    const resConfirm = confirm(this.props.translate('Are you sure you want to delete the audio description? This will remove all recorder tracks and cannot be undone'));
     if (resConfirm) {
       this.refs.spinner.on();
       ourFetch(`${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}`, true, {
@@ -1022,7 +1021,7 @@ class AuthoringTool extends Component {
         <SpinnerGlobal ref="spinner" />
         <main role="main">
           <div className="w3-row">
-            <div className="w3-hide-large">Authoring is not available on this screen size. Please use a larger screen to add a description.</div>
+            <div className="w3-hide-large">{this.props.translate('Authoring is not available on this screen size. Please use a larger screen to add a description')}</div>
             <div id="video-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
               <div id="playerAT" />
             </div>
@@ -1033,6 +1032,7 @@ class AuthoringTool extends Component {
           <div className="w3-row w3-margin-top w3-hide-small w3-hide-medium">
             <div className="w3-col w3-margin-bottom">
               <Editor
+                translate={this.props.translate}
                 getATState={this.getATState}
                 updateState={this.updateState}
                 publishAudioDescription={this.publishAudioDescription}

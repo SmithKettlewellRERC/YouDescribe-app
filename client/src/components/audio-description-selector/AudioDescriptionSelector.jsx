@@ -13,7 +13,7 @@ class AudioDescriptionSelector extends Component {
       if (this.props.getAppState().isSignedIn) {
         browserHistory.push('/authoring-tool/' + this.props.videoId);
       } else {
-        alert('You must sign in to perform this action');
+        alert(this.props.translate('You must sign in to perform this action'));
       }
     } else {
       this.props.changeAudioDescription(selectedAudioDescriptionId);
@@ -25,12 +25,10 @@ class AudioDescriptionSelector extends Component {
     options.push(<option key={-1} value="">None</option>);
     const ads = this.props.audioDescriptionsIdsUsers;
     Object.keys(ads).forEach((ad, idx) => {
-      console.log('ad', ad);
       if (ads[ad]) {
         options.push(<option key={idx+1} value={ad}>{ads[ad].name}</option>);
       }
     });
-    // options.push(<option key={0} value="add">Add a new audio description</option>);
     let selectedAudioDescriptionId = '';
     if (this.props.selectedAudioDescriptionId !== null) {
       selectedAudioDescriptionId = this.props.selectedAudioDescriptionId;

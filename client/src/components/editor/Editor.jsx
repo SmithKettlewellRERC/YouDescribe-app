@@ -13,16 +13,16 @@ const Editor = (props) => {
   if (props.getATState().tracksComponents.length > 0) {
     if (audioDescriptionStatus === 'draft') {
       publishButton = <Button
-        title="Publish the video along with all audio description tracks"
-        text="Publish"
+        title={props.translate("Publish the video along with all audio description tracks")}
+        text={props.translate("Publish")}
         color="w3-indigo"
         onClick={props.publishAudioDescription}
       />
     }
     if (audioDescriptionStatus === 'published') {
       publishButton = <Button
-        title="Unpublish this audio description for the current video"
-        text="Unpublish"
+        title={props.translate("Unpublish this audio description for the current video")}
+        text={props.translate("Unpublish")}
         color="w3-indigo"
         onClick={props.unpublishAudioDescription}
       />
@@ -32,8 +32,8 @@ const Editor = (props) => {
   // If we have an audio description, then we can allow users to delete.
   if (props.getATState().audioDescriptionId !== null) {
       deleteAllButton = <Button
-        title="Complete remove this audio description"
-        text="Delete"
+        title={props.translate("Complete remove this audio description")}
+        text={props.translate("Delete")}
         color="w3-red"
         onClick={props.deleteAudioDescription}
       />
@@ -43,8 +43,8 @@ const Editor = (props) => {
   // let saveButton = null;
   // if (audioDescriptionId) {
   let saveButton = <Button
-      title="Save notes and labels anytime"
-      text="Save"
+      title={props.translate("Save notes and labels anytime")}
+      text={props.translate("Save")}
       color="w3-indigo"
       onClick={props.saveLabelsAndNotes}
     />
@@ -88,10 +88,10 @@ const Editor = (props) => {
           <div className="w3-col l3 m3 s3">
             <div className="cont">
               <div className="w3-left" style={{ paddingRight: '14px' }}>
-                <Button title="Add an inline audio description track which plays concurrently with the video's audio" text="Add inline" color="w3-yellow" onClick={() => props.addAudioClipTrack('inline')} />
+                <Button title={props.translate("Add an inline audio description track which plays concurrently with the video's audio")} text="Add inline" color="w3-yellow" onClick={() => props.addAudioClipTrack('inline')} />
               </div>
               <div className="w3-left">
-                <Button title="Add an extended audio description track which pauses the video as it plays and then resumes the video when it finishes" text="Add extended" color="w3-purple" onClick={() => props.addAudioClipTrack('extended')}  />
+                <Button title={props.tranlate("Add an extended audio description track which pauses the video as it plays and then resumes the video when it finishes")} text="Add extended" color="w3-purple" onClick={() => props.addAudioClipTrack('extended')}  />
               </div>
             </div>
           </div>

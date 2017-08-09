@@ -448,7 +448,7 @@ class VideoPage extends Component {
   handleRatingSubmit(rating) {
     if (rating === 0) alert('You must select a rating');
     else if (!this.props.getAppState().isSignedIn) {
-      alert('You have to be logged in in order to vote');
+      alert(this.props.translate('You have to be logged in in order to vote'));
     } else {
       this.rating = rating;
       const url = `${conf.apiUrl}/audiodescriptionsrating/${this.state.selectedAudioDescriptionId}`;

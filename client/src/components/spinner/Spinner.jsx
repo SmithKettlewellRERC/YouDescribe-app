@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Spinner = () => (
+const Spinner = (props) => (
   <div className="spinner" >
     <img
       className="spinner-loader"
@@ -8,7 +8,7 @@ const Spinner = () => (
       width="10px"
       alt="Loading video"
     />
-  <div className="loading-text">Loading...</div>
+  <div className="loading-text">{props.translate('Loading')}...</div>
   </div>
 );
 

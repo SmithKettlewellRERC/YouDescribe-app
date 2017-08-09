@@ -13,7 +13,7 @@ const UserAvatar = (props) => {
           src={props.getAppState().userPicture} height="33px"
         />
       </button>
-      <UserMenu getAppState={props.getAppState} signOut={props.signOut} userMenuToggle={props.userMenuToggle} />
+      <UserMenu getAppState={props.getAppState} signOut={props.signOut} userMenuToggle={props.userMenuToggle} translate={props.translate} />
     </div>
   );
 };
