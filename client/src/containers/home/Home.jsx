@@ -77,6 +77,7 @@ class Home extends Component {
 
       videos.push(
         <VideoCard
+          translate={this.props.translate}
           key={_id}
           youTubeId={youTubeId}
           description={description}
@@ -131,7 +132,7 @@ class Home extends Component {
           <h2 id="home-heading" tabIndex="-1">{this.props.translate('RECENT DESCRIPTIONS')}</h2>
         </header>
 
-        <Spinner />
+        <Spinner translate={this.props.translate} />
 
         <div className="w3-row container">
           {this.state.videos}

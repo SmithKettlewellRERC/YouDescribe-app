@@ -1,8 +1,6 @@
 import React from 'react';
 
 const YTInfoCard = (props) => {
-
-  // console.log('props', props);
   return (
     <div id="yt-info-card">
       <div className="w3-card-2">
@@ -10,7 +8,7 @@ const YTInfoCard = (props) => {
         <span>{props.videoAuthor}</span><span style={{ float: 'right' }}>{props.videoViews}</span>
         <hr style={{ marginTop: 0 }} aria-hidden="true" />
         <div id="time-and-likes-container">
-          <div id="publish-time">Published on {props.videoPublishedAt}</div>
+          <div id="publish-time">{props.translate('Published on')} {props.videoPublishedAt}</div>
           <div id="video-likes">
             <span style={{ paddingRight: '16px' }}><i className="fa fa-thumbs-o-up" aria-hidden="true" /> {props.videoLikes}</span>
             <span><i className="fa fa-thumbs-o-down" aria-hidden="true" /> {props.videoDislikes}</span>

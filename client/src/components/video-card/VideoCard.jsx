@@ -104,7 +104,7 @@ class VideoCard extends Component {
                 <h3><Link role="link" to={'/video/' + this.props.youTubeId}>{this.props.title}</Link></h3>
               </div>
               <div id="card-author">
-                <span>Author: {this.props.author}</span>
+                <span>{this.props.translate('Author')}: {this.props.author}</span>
                 {/* <a href="#">{this.props.describer}</a> */}
               </div>
             </div>

@@ -426,7 +426,7 @@ class VideoPage extends Component {
     if (this.props.getAppState().isSignedIn) {
       browserHistory.push('/authoring-tool/' + this.state.videoId);
     } else {
-      alert('You must sign in to perform this action');
+      alert(this.props.translate('You must sign in to perform this action'));
     }
   }
 
@@ -503,7 +503,7 @@ class VideoPage extends Component {
       })
       .catch((err) => {
         console.log(err);
-        alert('It was impossible to vote. Maybe your session has expired. Try to logout and login again.');
+        alert(this.props.translate('It was impossible to vote. Maybe your session has expired. Try to logout and login again.'));
       });
     }
   }
@@ -533,13 +533,13 @@ class VideoPage extends Component {
     })
     .catch((err) => {
       console.log(err);
-      alert('It was impossible to vote. Maybe your session has expired. Try to logout and login again.');
+      alert(this.props.translate('It was impossible to vote. Maybe your session has expired. Try to logout and login again.'));
     });
   }
 
   handleRatingPopup() {
     if (!this.props.getAppState().isSignedIn) {
-      alert('You have to be logged in in order to vote');
+      alert(this.props.translate('You have to be logged in in order to vote'));
     } else {
       document.getElementById('rating-popup').style.display = 'block';
       document.getElementById('rating-popup').focus();
@@ -627,6 +627,7 @@ class VideoPage extends Component {
       describerCards.push(
         <DescriberCard
           key={i}
+          translate={this.props.translate}
           handleDescriberChange={this.handleDescriberChange}
           handleRatingPopup={this.handleRatingPopup}
           describerId={describerId}
@@ -642,7 +643,7 @@ class VideoPage extends Component {
           <section id="video-area">
             <ShareBar videoTitle={this.state.videoTitle} />
             <div id="video">
-              <Spinner />
+              <Spinner translate={this.props.translate}/>
               <div id="playerVP" />
               <VideoPlayerControls
                 getAppState={this.props.getAppState}
@@ -670,27 +671,27 @@ class VideoPage extends Component {
             />
             <div id="feedback-success" tabIndex="-1">Thank you for your feedback!</div>
             <div id="yt-info-card" className="w3-col l8 m8">
-              <YTInfoCard {...this.state} />
+              <YTInfoCard translate={this.props.translate} {...this.state} />
             </div>
             {/* <div id="yd-info-card" className="w3-col l4 m4">
               <YDInfoCard {...this.state.videoData} />
             </div> */}
             <div id="describers" className="w3-col l4 m4">
               <div className="w3-card-2">
-                <h3>Selected description</h3>
+                <h3>{this.props.translate('Selected description')}</h3>
                 {describerCards[0]}
                 <hr aria-hidden="true" />
                 <h3>Other description options</h3>
                 {describerCards.slice(1)}
                 <Button
-                  title="Turn off descriptions for this video"
-                  text="Turn off descriptions"
+                  title={this.props.translate("Turn off descriptions for this video")}
+                  text={this.props.translate("Turn off descriptions")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleTurnOffDescriptions()}
                 />
                 <Button
-                  title="Add a new description for this video"
-                  text="Add description"
+                  title={this.props.translate("Add a new description for this video")}
+                  text={this.props.translate("Add description")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleAddDescription()}
                 />
@@ -698,10 +699,10 @@ class VideoPage extends Component {
             </div>
             <div id="descriptions-off" className="w3-col l4 m4">
               <div className="w3-card-2">
-                <h3>Descriptions off</h3>
+                <h3>{this.props.translate('Descriptions off')}</h3>
                 <Button
-                  title="Turn on descriptions for this video"
-                  text="Turn on descriptions"
+                  title={this.props.translate("Turn on descriptions for this video")}
+                  text={this.props.translate("Turn on descriptions")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleTurnOnDescriptions()}
                 />
@@ -711,8 +712,8 @@ class VideoPage extends Component {
               <div className="w3-card-2">
                 <h3>No descriptions available</h3>
                 <Button
-                  title="Add a new description for this video"
-                  text="Add description"
+                  title={this.props.translate("Add a new description for this video")}
+                  text={this.props.translate("Add description")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleAddDescription()}
                 />

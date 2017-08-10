@@ -26,7 +26,7 @@ class WishList extends Component {
   }
 
   componentDidMount() {
-    document.title = `YouDescribe - Wish List`;
+    document.title = this.props.translate('YouDescribe - Wish List');
     this.loadWishListVideos();
   }
 
@@ -68,6 +68,7 @@ class WishList extends Component {
       videoCardsComponents.push(
         <VideoCard
           key={_id}
+          translate={this.props.translate}
           youTubeId={youTubeId}
           thumbnailMediumUrl={thumbnailMedium.url}
           title={title}
@@ -98,14 +99,14 @@ class WishList extends Component {
   render() {
     let loadMoreButton = (
       <div className="w3-margin-top w3-center load-more w3-hide">
-        <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+        <Button title={this.props.translate('Load more videos')} color="w3-indigo" text={this.props.translate("Load more")} onClick={this.loadMoreResults} />
       </div>
     );
 
     if (this.state.videoCardsComponents.length > 20) {
       loadMoreButton = (
         <div className="w3-margin-top w3-center load-more">
-          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+          <Button title={this.props.translate('Load more videos')} color="w3-indigo" text={this.props.translate("Load more")} onClick={this.loadMoreResults} />
         </div>
       );
     }
@@ -115,7 +116,7 @@ class WishList extends Component {
         <div className="w3-container w3-indigo">
           <h2 id="wish-list-heading" tabIndex="-1">WISH LIST</h2>
         </div>
-        <Spinner />
+        <Spinner translate={this.props.translate}/>
         <div className="w3-row-padding container">
           {this.state.videoCardsComponents}
         </div>

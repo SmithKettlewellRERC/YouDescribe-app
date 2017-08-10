@@ -151,6 +151,7 @@ class SearchPage extends Component {
 
       videoAlreadyOnYD.push(
         <VideoCard
+          translate={this.props.translate}
           key={_id}
           youTubeId={youTubeId}
           description={description}
@@ -193,6 +194,7 @@ class SearchPage extends Component {
       videoNotOnYD.push(
         <VideoCard
           key={i}
+          translate={this.props.translate}
           youTubeId={youTubeId}
           description={description}
           thumbnailMediumUrl={thumbnailMedium.url}
@@ -276,7 +278,7 @@ class SearchPage extends Component {
               <h2 id="search-page-heading" tabIndex="-1">DESCRIBED VIDEOS</h2>
             </header>
 
-            <Spinner />
+            <Spinner translate={this.props.translate}/>
 
             <div id="on-yd" className="w3-row container">
               {this.state.videoAlreadyOnYD}
@@ -291,7 +293,7 @@ class SearchPage extends Component {
               <h2>NON-DESCRIBED VIDEOS</h2>
             </header>
 
-            <Spinner />
+            <Spinner translate={this.props.translate}/>
 
             <div className="w3-row container">
               {this.state.videoNotOnYD}

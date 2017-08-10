@@ -84,6 +84,7 @@ class UserVideosPage extends Component {
 
       videoComponents.push(
         <VideoCard
+          translate={this.props.translate}
           key={youTubeId}
           youTubeId={youTubeId}
           thumbnailMediumUrl={thumbnail.url}
@@ -136,7 +137,7 @@ class UserVideosPage extends Component {
               <h2>MY DESCRIBED VIDEOS</h2>
             </header>
 
-            <Spinner />
+            <Spinner translate={this.props.translate}/>
 
             <div className="w3-row container">
               {this.state.videoComponents}

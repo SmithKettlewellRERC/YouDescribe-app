@@ -8,8 +8,8 @@ const DescriberCard = (props) => {
   if (props.describerId === props.selectedDescriberId) {
     button = (
       <Button
-        title="Rate this describer's audio description"
-        text="Rate description"
+        title={props.translate("Rate this describer's audio description")}
+        text={props.translate("Rate description")}
         color="w3-indigo w3-block"
         onClick={() => props.handleRatingPopup()}
       />
@@ -17,8 +17,8 @@ const DescriberCard = (props) => {
   } else {
     button = (
       <Button
-        title="Select this describer's audio description"
-        text="Use description"
+        title={props.translate("Select this describer's audio description")}
+        text={props.translate("Use description")}
         color="w3-indigo w3-block"
         onClick={() => props.handleDescriberChange(props.describerId)}
       />
