@@ -76,6 +76,7 @@ class VideoPage extends Component {
     this.handleFeedbackSubmit = this.handleFeedbackSubmit.bind(this);
     this.handleTurnOffDescriptions = this.handleTurnOffDescriptions.bind(this);
     this.handleTurnOnDescriptions = this.handleTurnOnDescriptions.bind(this);
+    this.upVote = this.upVote.bind(this);
   }
 
   componentDidMount() {
@@ -603,6 +604,32 @@ class VideoPage extends Component {
     })
   }
 
+  upVote(e) {
+    if (!this.props.getAppState().isSignedIn) {
+      alert(this.props.translate('You have to be logged in in order to vote'));
+    } else {
+      const url = `${conf.apiUrl}/wishlist`;
+      ourFetch(url, true, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          youTubeId: this.state.videoId,
+          userId: this.props.getAppState().userId,
+          userToken: this.props.getAppState().userToken,
+        }),
+      })
+      .then((res) => {
+        console.log('Success upVote');
+      })
+      .catch(err => {
+        console.log(err);
+        alert(this.props.translate('It was impossible to vote. Maybe your session has expired. Try to logout and login again.'));
+      });
+    }
+  }
+
   // 1
   render() {
     // console.log('1 -> Render');
@@ -711,6 +738,12 @@ class VideoPage extends Component {
             <div id="no-descriptions" className="w3-col l4 m4">
               <div className="w3-card-2">
                 <h3>No descriptions available</h3>
+                <Button
+                  title={this.props.translate("Request an audio description for this video")}
+                  text={this.props.translate("Add to wish list")}
+                  color="w3-indigo w3-block w3-margin-top"
+                  onClick={() => this.upVote()}
+                />
                 <Button
                   title={this.props.translate("Add a new description for this video")}
                   text={this.props.translate("Add description")}

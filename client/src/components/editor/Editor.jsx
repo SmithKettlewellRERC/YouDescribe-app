@@ -91,7 +91,7 @@ const Editor = (props) => {
                 <Button title={props.translate("Add an inline audio description track which plays concurrently with the video's audio")} text="Add inline" color="w3-yellow" onClick={() => props.addAudioClipTrack('inline')} />
               </div>
               <div className="w3-left">
-                <Button title={props.tranlate("Add an extended audio description track which pauses the video as it plays and then resumes the video when it finishes")} text="Add extended" color="w3-purple" onClick={() => props.addAudioClipTrack('extended')}  />
+                <Button title={props.translate("Add an extended audio description track which pauses the video as it plays and then resumes the video when it finishes")} text="Add extended" color="w3-purple" onClick={() => props.addAudioClipTrack('extended')}  />
               </div>
             </div>
           </div>
