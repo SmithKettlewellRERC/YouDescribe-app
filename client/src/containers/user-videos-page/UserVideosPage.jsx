@@ -110,7 +110,7 @@ class UserVideosPage extends Component {
   render() {
     let loadMoreButton = (
       <div className="w3-margin-top w3-center load-more w3-hide">
-        <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreResults} />
+        <Button title={this.props.translate('Load more videos')} color="w3-indigo" text={this.props.translate('Load more')} onClick={this.loadMoreResults} />
       </div>
     );
 
@@ -118,9 +118,9 @@ class UserVideosPage extends Component {
       loadMoreButton = (
         <div className="w3-margin-top w3-center load-more">
           <Button
-            title="Load more videos"
+            title={this.props.translate('Load more videos')}
             color="w3-indigo"
-            text="Load more"
+            text={this.props.translate('Load more')}
             onClick={this.loadMoreResults}
           />
         </div>
@@ -134,7 +134,7 @@ class UserVideosPage extends Component {
 
           <section>
             <header className="w3-container w3-indigo">
-              <h2>MY DESCRIBED VIDEOS</h2>
+              <h2>{this.props.translate('MY DESCRIBED VIDEOS')}</h2>
             </header>
 
             <Spinner translate={this.props.translate}/>

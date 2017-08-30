@@ -43,7 +43,7 @@ class VideoCard extends Component {
     if (this.props.getAppState().isSignedIn) {
       browserHistory.push('/authoring-tool/' + this.props.youTubeId);
     } else {
-      alert('You have to be logged in in order to describe this video');
+      alert(this.props.translate('You have to be logged in in order to describe this video'));
     }
   }
 
@@ -64,15 +64,15 @@ class VideoCard extends Component {
       buttons = (
         <div>
           <Button
-            ariaLabel="Request an audio description for this video"
+            ariaLabel={this.props.translate('Request an audio description for this video')}
             text={<i className="fa fa-heart" />}
             color="w3-white w3-text-indigo w3-left"
             onClick={this.upVote}
           />
           <span id="vote-count">{voteCount}</span>
           <Button
-            ariaLabel="Create an audio description for this video"
-            text="Describe"
+            ariaLabel={this.props.translate('Create an audio description for this video')}
+            text={this.props.translate('Describe')}
             color="w3-indigo w3-right"
             onClick={this.describeThisVideo}
           />
@@ -82,8 +82,8 @@ class VideoCard extends Component {
       buttons = (
         <div>
           <Button
-            arialabel="Edit the audio description for this video"
-            text="Edit"
+            arialabel={this.props.translate('Edit the audio description for this video')}
+            text={this.props.translate('Edit')}
             color="w3-indigo w3-block"
             onClick={this.describeThisVideo}
           />

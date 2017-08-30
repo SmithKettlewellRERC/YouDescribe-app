@@ -114,7 +114,7 @@ class WishList extends Component {
     return (
       <main id="wish-list" title="Wish list page">
         <div className="w3-container w3-indigo">
-          <h2 id="wish-list-heading" tabIndex="-1">WISH LIST</h2>
+          <h2 id="wish-list-heading" tabIndex="-1">{this.props.translate('WISH LIST')}</h2>
         </div>
         <Spinner translate={this.props.translate}/>
         <div className="w3-row-padding container">

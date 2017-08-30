@@ -241,41 +241,41 @@ class SearchPage extends Component {
     let noVideos;
     let YDloadMoreButton = (
       <div className="w3-margin-top w3-center load-more w3-hide">
-        <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYD} />
+        <Button title={this.props.translate('Load more videos')} color="w3-indigo" text={this.props.translate('Load more')} onClick={this.loadMoreVideosFromYD} />
       </div>
     );
     let YTloadMoreButton = (
       <div className="w3-margin-top w3-center load-more w3-hide">
-        <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYT} />
+        <Button title={this.props.translate('Load more videos')} color="w3-indigo" text="{this.props.translate('Load more')}" onClick={this.loadMoreVideosFromYT} />
       </div>
     );
 
     if (!this.state.videoAlreadyOnYD.length) {
-      noVideos = <div className="w3-center no-videos">There are no described videos that match your search</div>;
+      noVideos = <div className="w3-center no-videos">{this.props.translate('There are no described videos that match your search')}</div>;
     }
     if (this.state.videoAlreadyOnYD.length > 20) {
       YDloadMoreButton = (
         <div className="w3-margin-top w3-center load-more">
-          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYD} />
+          <Button title={this.props.translate('Load more videos')} color="w3-indigo" text={this.props.translate('Load more')} onClick={this.loadMoreVideosFromYD} />
         </div>
       );
     }
     if (this.state.videoNotOnYD.length > 20) {
       YTloadMoreButton = (
         <div className="w3-margin-top w3-center load-more">
-          <Button title="Load more videos" color="w3-indigo" text="Load more" onClick={this.loadMoreVideosFromYT} />
+          <Button title={this.props.translate('Load more videos')} color="w3-indigo" text={this.props.translate('Load more')} onClick={this.loadMoreVideosFromYT} />
         </div>
       );
     }
 
     return (
-      <div id="search-page" title="YouDescribe search results page">
+      <div id="search-page" title="{this.props.translate('Search results page')}">
 
         <main>
 
           <section>
             <header className="w3-container w3-indigo">
-              <h2 id="search-page-heading" tabIndex="-1">DESCRIBED VIDEOS</h2>
+              <h2 id="search-page-heading" tabIndex="-1">{this.props.translate('DESCRIBED VIDEOS')}</h2>
             </header>
 
             <Spinner translate={this.props.translate}/>
@@ -290,7 +290,7 @@ class SearchPage extends Component {
 
           <section>
             <header className="w3-container w3-indigo">
-              <h2>NON-DESCRIBED VIDEOS</h2>
+              <h2>{this.props.translate('NON-DESCRIBED VIDEOS')}</h2>
             </header>
 
             <Spinner translate={this.props.translate}/>
