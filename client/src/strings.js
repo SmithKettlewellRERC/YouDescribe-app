@@ -1,5 +1,5 @@
 const strings = {
-  'en-US': {
+  'en-us': {
     'RECENT DESCRIPTIONS': 'DESCRIÇÕES RECENTES',
     'WISH LIST': 'LISTA DE DESEJOS',
     HOME: 'INÍCIO',
@@ -73,8 +73,12 @@ const strings = {
     'MY DESCRIBED VIDEOS': 'MEUS VÍDEOS COM ÁUDIO DESCRIÇÃO',
     Edit: 'Editar',
     'Edit the audio description for this video': 'Editar a áudio descrição deste vídeo',
+    'Other description options': 'Outras opções para a áudio descrição',
+    Notes: 'Anotações',
+    Idiom: 'Idioma',
+    'Audio description idiom': 'Idioma da áudio descrição',
   },
-  'pt-BR': {},
+  'pt-br': {},
 };
 
 export default strings;

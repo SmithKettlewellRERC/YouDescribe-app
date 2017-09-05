@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Howl } from 'howler';
 import SpinnerGlobal from '../../components/spinner-global/SpinnerGlobal.jsx';
 import Notes from '../../components/notes/Notes.jsx';
+import IdiomSelector from '../../components/idiom-selector/IdiomSelector.jsx';
 import Editor from '../../components/editor/Editor.jsx';
 import Track from '../../components/track/Track.jsx';
 import { convertISO8601ToSeconds, convertSecondsToEditorFormat } from '../../shared/helperFunctions';
@@ -1026,7 +1027,8 @@ class AuthoringTool extends Component {
               <div id="playerAT" />
             </div>
             <div id="notes-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
-              <Notes updateNotes={this.updateNotes} getATState={this.getATState} />
+              <Notes translate={this.props.translate} updateNotes={this.updateNotes} getATState={this.getATState} />
+              <IdiomSelector translate={this.props.translate} getATState={this.getATState} />
             </div>
           </div>
           <div className="w3-row w3-margin-top w3-hide-small w3-hide-medium">

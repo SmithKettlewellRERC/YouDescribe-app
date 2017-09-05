@@ -1,31 +1,24 @@
 #notes {
   background-color: #262626;
-  height: 100%;
+  margin-bottom: 10px;
+  height: 259px;
   .w3-card-4 {
-    background-color: #000;
+    background-color: #666;
     border: none;
-    height: 50px;
+    height: 30px;
     text-align: center;
-    line-height: 50px;
-    margin-top: 0px;
-    padding-top: 0px;
-  }
-  .notes-area {
-    height: 80%;
-    overflow: auto;
-    color: #ccc;
-    font-size: 14px;
-    line-height: 1.4;
-    // text-align: justify;
-    padding-top: 8px;
-  }
-  input[type="text"] {
-    background: transparent;
-    border: none;
+    margin-top: 0;
+    padding-top: 4px;
   }
   textarea {
+    line-height: 1.4;
+    padding-top: 8px;
     width: 100%;
+    font-size: 14px;
+    height: 229px;
+    overflow: auto;
     resize: none;
+    color: #ccc;
     background: transparent;
     border: none;
     outline: none;
@@ -34,14 +27,9 @@
     color: transparent!important;
   }
   textarea:focus::-moz-placeholder{
-      color: transparent!important;
+    color: transparent!important;
   }
   textarea:focus:-moz-placeholder{
-      color: transparent!important;
+    color: transparent!important;
   }
 }
-
-// header {
-//   background-color: #000;
-//   height: 50px;
-// }

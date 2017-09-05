@@ -9,9 +9,9 @@ const conf = require('./../../shared/config')();
 
 import Polyglot from 'node-polyglot';
 
-const locale = navigator.language || 'en-US';
+window.locale = navigator.language.toLocaleLowerCase() || 'en-us';
 
-console.log('LOCALE', locale);
+console.log('window.locale', window.locale);
 
 const polyglot = new Polyglot({
     locale,

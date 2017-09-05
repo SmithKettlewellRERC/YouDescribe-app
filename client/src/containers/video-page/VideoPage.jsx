@@ -708,7 +708,7 @@ class VideoPage extends Component {
                 <h3>{this.props.translate('Selected description')}</h3>
                 {describerCards[0]}
                 <hr aria-hidden="true" />
-                <h3>Other description options</h3>
+                <h3>{this.props.translate('Other description options')}</h3>
                 {describerCards.slice(1)}
                 <Button
                   title={this.props.translate("Turn off descriptions for this video")}
