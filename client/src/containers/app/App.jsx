@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Navbar from '../../components/navbar/Navbar.jsx';
 import Footer from '../../components/footer/Footer.jsx';
-import { ourFetch } from '../../shared/helperFunctions.js';
+import { ourFetch, getLang } from '../../shared/helperFunctions.js';
 import { browserHistory } from 'react-router';
 import strings from './../../strings';
 
@@ -9,13 +9,9 @@ const conf = require('./../../shared/config')();
 
 import Polyglot from 'node-polyglot';
 
-window.locale = navigator.language.toLocaleLowerCase() || 'en-us';
-
-console.log('window.locale', window.locale);
-
 const polyglot = new Polyglot({
-    locale,
-    phrases: strings[locale],
+    locale: getLang(),
+    phrases: strings[getLang()],
 });
 
 const translate = polyglot.t.bind(polyglot);

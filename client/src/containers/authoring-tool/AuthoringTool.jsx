@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Howl } from 'howler';
 import SpinnerGlobal from '../../components/spinner-global/SpinnerGlobal.jsx';
 import Notes from '../../components/notes/Notes.jsx';
-import IdiomSelector from '../../components/idiom-selector/IdiomSelector.jsx';
+import LanguageSelector from '../../components/language-selector/LanguageSelector.jsx';
 import Editor from '../../components/editor/Editor.jsx';
 import Track from '../../components/track/Track.jsx';
 import { convertISO8601ToSeconds, convertSecondsToEditorFormat } from '../../shared/helperFunctions';
-import { ourFetch } from '../../shared/helperFunctions';
+import { ourFetch, getLang } from '../../shared/helperFunctions';
 import { browserHistory } from 'react-router';
 
 const conf = require('../../shared/config')();
@@ -39,6 +39,7 @@ class AuthoringTool extends Component {
       audioDescriptionId: null,
       audioDescriptionStatus: null,
       audioDescriptionNotes: '',
+      audioDescriptionSelectedLanguage: getLang(),
       audioDescriptionAudioClips: {},
 
       // Tracks controls.
@@ -115,6 +116,7 @@ class AuthoringTool extends Component {
     let audioDescriptionId = null;
     let audioDescriptionStatus = null;
     let audioDescriptionNotes = '';
+    let audioDescriptionSelectedLanguage = '';
     const audioDescriptionAudioClips = {};
 
     if (videoData && videoData.audio_descriptions && videoData.audio_descriptions.length > 0) {
@@ -125,6 +127,7 @@ class AuthoringTool extends Component {
           audioDescriptionId = ad['_id'];
           audioDescriptionStatus = ad['status'];
           audioDescriptionNotes = ad['notes'];
+          audioDescriptionSelectedLanguage = ad['language'];
           if (ad.audio_clips && ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
               audioDescriptionAudioClips[audioClip['_id']] = audioClip;
@@ -141,6 +144,7 @@ class AuthoringTool extends Component {
       audioDescriptionStatus,
       audioDescriptionAudioClips,
       audioDescriptionNotes,
+      audioDescriptionSelectedLanguage,
     }, () => {
       this.preLoadAudioClips(this.getYTVideoInfo);
     });
@@ -817,6 +821,7 @@ class AuthoringTool extends Component {
     formData.append('startTime', this.state.selectedTrackComponentAudioClipStartTime);
     formData.append('audioDescriptionId', this.state.audioDescriptionId);
     formData.append('audioDescriptionNotes', this.state.audioDescriptionNotes);
+    formData.append('audioDescriptionSelectedLanguage', this.state.audioDescriptionSelectedLanguage);
     if (this.state.selectedTrackComponentPlaybackType === 'extended') {
       formData.append('endTime', this.state.selectedTrackComponentAudioClipStartTime);
     } else {
@@ -987,6 +992,7 @@ class AuthoringTool extends Component {
         userId: this.props.getAppState().userId,
         userToken: this.props.getAppState().userToken,
         notes: this.state.audioDescriptionNotes,
+        audioDescriptionSelectedLanguage: this.state.audioDescriptionSelectedLanguage,
       }),
     })
     .then(response => {
@@ -1028,7 +1034,7 @@ class AuthoringTool extends Component {
             </div>
             <div id="notes-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
               <Notes translate={this.props.translate} updateNotes={this.updateNotes} getATState={this.getATState} />
-              <IdiomSelector translate={this.props.translate} getATState={this.getATState} />
+              <LanguageSelector translate={this.props.translate} getATState={this.getATState} updateState={this.updateState} />
             </div>
           </div>
           <div className="w3-row w3-margin-top w3-hide-small w3-hide-medium">

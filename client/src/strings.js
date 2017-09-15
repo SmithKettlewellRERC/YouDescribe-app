@@ -75,8 +75,8 @@ const strings = {
     'Edit the audio description for this video': 'Editar a áudio descrição deste vídeo',
     'Other description options': 'Outras opções para a áudio descrição',
     Notes: 'Anotações',
-    Idiom: 'Idioma',
-    'Audio description idiom': 'Idioma da áudio descrição',
+    Language: 'Idioma',
+    'Audio description language': 'Idioma da áudio descrição',
   },
   'pt-br': {},
 };

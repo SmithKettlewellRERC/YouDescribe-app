@@ -1,3 +1,13 @@
+function getLang() {
+  let defaultLang = 'en-us';
+  if (navigator.languages != undefined) {
+    defaultLang = navigator.languages[0].toLowerCase();
+  } else  {
+    defaultLang = navigator.language.toLowerCase();
+  }
+  return defaultLang;
+}
+
 function convertTimeToCardFormat(time) {
   const year = 31536000000;
   const month = 2629740000;
@@ -134,4 +144,5 @@ export {
   convertSecondsToCardFormat,
   convertSecondsToEditorFormat,
   ourFetch,
+  getLang,
 };
