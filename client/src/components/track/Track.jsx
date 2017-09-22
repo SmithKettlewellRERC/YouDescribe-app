@@ -31,7 +31,7 @@ class Track extends Component {
     // It is an existant track.
     if (this.props.data._id) {
       if (this.props.data.label === '') {
-        label = <input type="text" data-id={this.props.data._id} onChange={this.props.updateTrackLabel} placeholder="Unlabeled saved track" />;
+        label = <input type="text" data-id={this.props.data._id} onChange={this.props.updateTrackLabel} placeholder={this.props.translate("Unlabeled saved track")} />;
       } else {
         label = <input type="text" data-id={this.props.data._id} onChange={this.props.updateTrackLabel} value={this.props.data.label} />;
       }
@@ -42,7 +42,7 @@ class Track extends Component {
       label = <input
         type="text"
         data-id=""
-        placeholder={'Label for this track'}
+        placeholder={this.props.translate('Label for this track')}
         onChange={this.props.updateTrackLabel}
         onKeyPress={evt => {
           this.props.setSelectedTrack(evt, this.props.id)

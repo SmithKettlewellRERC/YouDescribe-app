@@ -509,7 +509,7 @@ class VideoPage extends Component {
     }
   }
 
-  handleFeedbackSubmit(event, feedback) {
+  handleFeedbackSubmit(feedback) {
     const url = `${conf.apiUrl}/audiodescriptionsrating/${this.state.selectedAudioDescriptionId}`;
 
     ourFetch(url, true, {
@@ -521,11 +521,10 @@ class VideoPage extends Component {
         userId: this.props.getAppState().userId,
         userToken: this.props.getAppState().userToken,
         rating: this.rating,
-        feedback: feedback,
+        feedback,
       }),
     })
     .then((res) => {
-      console.log('got there');
       document.getElementById('feedback-popup').style.display = 'none';
       document.getElementById('feedback-success').style.display = 'block';
       document.getElementById('feedback-success').focus();
@@ -688,15 +687,17 @@ class VideoPage extends Component {
           </section>
           <section id="video-info" className="container w3-row">
             <RatingPopup
+              translate={this.props.translate}
               handleRatingSubmit={this.handleRatingSubmit}
               handleRatingPopupClose={this.handleRatingPopupClose}
             />
-            <div id="rating-success" tabIndex="-1">Thanks for rating this description!</div>
+            <div id="rating-success" tabIndex="-1">{this.props.translate('Thanks for rating this description!')}</div>
             <FeedbackPopup
+              translate={this.props.translate}
               handleFeedbackSubmit={this.handleFeedbackSubmit}
               handleFeedbackPopupClose={this.handleFeedbackPopupClose}
             />
-            <div id="feedback-success" tabIndex="-1">Thank you for your feedback!</div>
+            <div id="feedback-success" tabIndex="-1">{this.props.translate('Thank you for your feedback!')}</div>
             <div id="yt-info-card" className="w3-col l8 m8">
               <YTInfoCard translate={this.props.translate} {...this.state} />
             </div>

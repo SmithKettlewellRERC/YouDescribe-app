@@ -39,7 +39,7 @@ class AuthoringTool extends Component {
       audioDescriptionId: null,
       audioDescriptionStatus: null,
       audioDescriptionNotes: '',
-      audioDescriptionSelectedLanguage: getLang(),
+      audioDescriptionSelectedLanguage: '',
       audioDescriptionAudioClips: {},
 
       // Tracks controls.
@@ -80,6 +80,8 @@ class AuthoringTool extends Component {
   componentDidMount() {
     this.refs.spinner.on();
     document.title = this.props.translate('YouDescribe - Authoring Tool');
+    console.log('############## DID', this.state.audioDescriptionSelectedLanguage, 'getLang', getLang());
+
     // if (!this.props.getAppState().isSignedIn) {
     //   location.href = '/';
     // }
@@ -136,6 +138,10 @@ class AuthoringTool extends Component {
           break;
         }
       }
+    }
+
+    if (!audioDescriptionSelectedLanguage) {
+      audioDescriptionSelectedLanguage = getLang();
     }
 
     this.setState({
@@ -208,6 +214,7 @@ class AuthoringTool extends Component {
             key={idx}
             id={idx}
             data={audioClip}
+            translate={this.props.translate}
             actionIconClass={'fa-step-forward'}
             getATState={this.getATState}
             recordAudioClip={this.recordAudioClip}
@@ -477,6 +484,7 @@ class AuthoringTool extends Component {
         key={newTrackId}
         id={newTrackId}
         data={audioClip}
+        translate={this.props.translate}
         actionIconClass={'fa-circle'}
         getATState={this.getATState}
         recordAudioClip={this.recordAudioClip}
@@ -792,6 +800,7 @@ class AuthoringTool extends Component {
           <Track
             key={this.state.selectedTrackComponentId}
             id={this.state.selectedTrackComponentId}
+            translate={this.props.translate}
             data={audioClip}
             actionIconClass={classIcon}
             getATState={this.getATState}
@@ -855,6 +864,7 @@ class AuthoringTool extends Component {
         body: JSON.stringify({
           userId: this.props.getAppState().userId,
           userToken: this.props.getAppState().userToken,
+          audioDescriptionSelectedLanguage: this.state.audioDescriptionSelectedLanguage,
         }),
       })
       .then(response => {

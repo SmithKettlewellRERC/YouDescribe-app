@@ -13,8 +13,8 @@ class RatingPopup extends Component {
       <div id="rating-popup" tabIndex="-1">
         <div id="rating-popup-contents">
           <a aria-label="close window" href="#" onClick={this.props.handleRatingPopupClose}><i className="fa fa-window-close" /></a>
-          <h2>Rate description</h2>
-          <p>Please rate this description with 1 star being unusable and 5 stars being perfect</p>
+          <h2>{this.props.translate('Rate description')}</h2>
+          <p>{this.props.translate('Please rate this description with 1 star being unusable and 5 stars being perfect')}</p>
           <div className="rating" aria-hidden="true">
             <button onClick={() => this.props.handleRatingSubmit(5)} tabIndex="-1">★</button>
             <button onClick={() => this.props.handleRatingSubmit(4)} tabIndex="-1">★</button>

@@ -1,11 +1,11 @@
 function getLang() {
   let defaultLang = 'en-us';
   if (navigator.languages != undefined) {
-    defaultLang = navigator.languages[0].toLowerCase();
+    defaultLang = navigator.languages[0];
   } else  {
-    defaultLang = navigator.language.toLowerCase();
+    defaultLang = navigator.language;
   }
-  return defaultLang;
+  return defaultLang.toLowerCase();
 }
 
 function convertTimeToCardFormat(time) {
