@@ -15,7 +15,7 @@ const Credits = () => (
       <p>Indispensable engineering support and expertise for YouDescribe has been provided by:</p>
 
       <ul>
-        <li>Rodrigo Leme</li>
+        <li>Rodrigo Leme de Mello</li>
         <li>Curt Toppel</li>
         <li>Trung Dinh</li>
         <li>Owen Edwards</li>
