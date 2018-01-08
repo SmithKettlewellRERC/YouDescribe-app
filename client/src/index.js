@@ -13,8 +13,7 @@ import WishList from './containers/wish-list/WishList.jsx';
 import UserVideosPage from './containers/user-videos-page/UserVideosPage.jsx';
 import Credits from './containers/credits/Credits.jsx';
 import Contact from './containers/contact/Contact.jsx';
-// import Support from './containers/support/Support.jsx';
-import Faq from './containers/faq/Faq.jsx';
+import Support from './containers/support/Support.jsx';
 
 ReactDOM.render((
   <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
@@ -27,7 +26,7 @@ ReactDOM.render((
       <Route path="/videos/user/:userId" component={UserVideosPage} />
       <Route path="/credits" component={Credits} />
       <Route path="/contact" component={Contact} />
-      <Route path="/faq" component={Faq} />
+      <Route path="/support" component={Support} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>

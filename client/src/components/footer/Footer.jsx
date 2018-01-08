@@ -14,8 +14,7 @@ const Footer = (props) => (
     <div>
       <Link to="/credits" className="footer-links">{props.translate('Credits')}</Link>
       <Link to="/contact" className="footer-links">{props.translate('Contact Us')}</Link>
-      <Link to="/faq" className="footer-links">{props.translate('Support')}</Link>
-      <Link to="/faq" className="footer-links">FAQ</Link>
+      <Link to="/support" className="footer-links">{props.translate('Support')}</Link>
     </div>
     <h6>
       Copyright © {getYear()}, The Smith-Kettlewell Eye Research Institute, {props.translate('All rights reserved')}.
