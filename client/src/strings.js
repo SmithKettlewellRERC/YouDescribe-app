@@ -100,6 +100,11 @@ const strings = {
     'Description given before action': 'Descrições antes das ações',
     'Submit': 'Enviar',
     'Submit feedback': 'Enviar avaliação',
+    'General information about YouDescribe': 'Informações gerais sobre o YouDescribe',
+    'FAQ pages for viewers': 'Perguntas frequentes para videntes',
+    'FAQ for describers': 'Perguntas frequentes para áudio descritores',
+    'A step-by-step audio description tutorial with a trouble shooting section': 'Tutorial passo-a-passo para [audio descritores',
+    'SUPPORT': 'SUPORTE'
   },
   'en-us': {
     'RECENT DESCRIPTIONS': 'RECENT DESCRIPTIONS',
@@ -202,6 +207,11 @@ const strings = {
     'Description given before action': 'Description given before action',
     'Submit': 'Submit',
     'Submit feedback': 'Submit feedback',
+    'General information about YouDescribe': 'General information about YouDescribe',
+    'FAQ pages for viewers': 'FAQ pages for viewers',
+    'FAQ for describers': 'FAQ for describers',
+    'A step-by-step audio description tutorial with a trouble shooting section': 'A step-by-step audio description tutorial with a trouble shooting section',
+    'SUPPORT': 'SUPPORT'
   },
 };
 

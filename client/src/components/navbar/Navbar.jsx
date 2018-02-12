@@ -76,17 +76,24 @@ class Navbar extends Component {
             <div className="w3-right w3-hide-small w3-hide-medium">
               <Link
                 to="/"
-                className="w3-bar-item"
-                style={{ position: 'relative', top: '8px' }}
+                className="w3-bar-item w3-small"
+                style={{ position: 'relative', top: '11px' }}
               >
                 <i className="fa fa-home" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate('RECENT DESCRIPTIONS')}
               </Link>
               <Link
                 to="/wishlist"
-                className="w3-bar-item"
-                style={{ position: 'relative', top: '8px' }}
+                className="w3-bar-item w3-small"
+                style={{ position: 'relative', top: '11px' }}
               >
                 <i className="fa fa-heart" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate('WISH LIST')}
+              </Link>
+              <Link
+                to="/support"
+                className="w3-bar-item w3-small"
+                style={{ position: 'relative', top: '11px' }}
+              >
+                <i className="fa fa-question-circle" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate('SUPPORT')}
               </Link>
               <div className="w3-bar-item" style={{ position: 'relative', top: '2px' }}>
                 {signInComponent}

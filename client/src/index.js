@@ -14,6 +14,10 @@ import UserVideosPage from './containers/user-videos-page/UserVideosPage.jsx';
 import Credits from './containers/credits/Credits.jsx';
 import Contact from './containers/contact/Contact.jsx';
 import Support from './containers/support/Support.jsx';
+import About from './containers/support/About.jsx';
+import Describers from './containers/support/Describers.jsx';
+import Tutorial from './containers/support/Tutorial.jsx';
+import Viewers from './containers/support/Viewers.jsx';
 
 ReactDOM.render((
   <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
@@ -27,6 +31,10 @@ ReactDOM.render((
       <Route path="/credits" component={Credits} />
       <Route path="/contact" component={Contact} />
       <Route path="/support" component={Support} />
+      <Route path="/support/about" component={About} />
+      <Route path="/support/describers" component={Describers} />
+      <Route path="/support/tutorial" component={Tutorial} />
+      <Route path="/support/viewers" component={Viewers} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>
