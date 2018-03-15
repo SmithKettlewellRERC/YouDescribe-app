@@ -97,8 +97,8 @@ class WishList extends Component {
   }
 
   render() {
-    const loadMoreButton = (
-      <div className="w3-margin-top w3-center load-more w3-hide">
+    let loadMoreButton = (
+      <div className="w3-margin-top w3-center load-more">
         <Button title={this.props.translate('Load more videos')} color="w3-indigo" text={this.props.translate("Load more")} onClick={this.loadMoreResults} />
       </div>
     );
