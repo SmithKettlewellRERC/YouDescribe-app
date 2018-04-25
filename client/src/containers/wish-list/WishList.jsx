@@ -34,15 +34,17 @@ class WishList extends Component {
     const url = (`${conf.apiUrl}/wishlist?page=${this.currentPageNumber}`);
     ourFetch(url)
     .then((response) => {
-      this.wishListItems = response.result;
-      for (let i = 0; i < this.wishListItems.length; i += 1) {
-        this.youTubeIds.push(this.wishListItems[i].youtube_id);
-        this.youDescribeIds.push(this.wishListItems[i]._id);
+      const wishListItems = response.result;
+      this.youTubeIds = [];
+      this.youDescribeIds = [];
+      for (let i = 0; i < wishListItems.length; i += 1) {
+        this.youTubeIds.push(wishListItems[i].youtube_id);
+        this.youDescribeIds.push(wishListItems[i]._id);
       }
     })
     .then(() => {
-      const url = `${conf.youTubeApiUrl}/videos?id=${this.youTubeIds.join(',')}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
-      ourFetch(url)
+      const urlYT = `${conf.youTubeApiUrl}/videos?id=${this.youTubeIds.join(',')}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
+      ourFetch(urlYT)
       .then(youTubeResponse => this.parseFetchedData(youTubeResponse));
     });
   }
