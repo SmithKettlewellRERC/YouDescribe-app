@@ -1023,6 +1023,8 @@ class AuthoringTool extends Component {
     .then(() => {
       if (method === 'POST') {
         this.getYDVideoData();
+      } else {
+        this.refs.spinner.on();
       }
     });
   }
