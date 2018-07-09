@@ -1024,7 +1024,7 @@ class AuthoringTool extends Component {
       if (method === 'POST') {
         this.getYDVideoData();
       } else {
-        this.refs.spinner.on();
+        this.refs.spinner.off();
       }
     });
   }
