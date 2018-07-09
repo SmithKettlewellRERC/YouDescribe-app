@@ -95,7 +95,7 @@ class AuthoringTool extends Component {
     const self = this;
     const url = `${conf.apiUrl}/videos/${this.props.params.videoId}`;
     ourFetch(url)
-    .then(response => {
+    .then((response) => {
       if (response.result) {
         self.setState({
           videoData: response.result,
@@ -106,7 +106,7 @@ class AuthoringTool extends Component {
         self.parseYDVideoData();
       }
     })
-    .catch(err => {
+    .catch(() => {
       self.parseYDVideoData();
     });
   }
@@ -997,7 +997,7 @@ class AuthoringTool extends Component {
             label: ac.label,
           }),
         })
-        .then(response => {
+        .then(() => {
           this.refs.spinner.off();
         });
       });
@@ -1020,8 +1020,10 @@ class AuthoringTool extends Component {
         audioDescriptionSelectedLanguage: this.state.audioDescriptionSelectedLanguage,
       }),
     })
-    .then(response => {
-      this.getYDVideoData();
+    .then(() => {
+      if (method === 'POST') {
+        this.getYDVideoData();
+      }
     });
   }
 
