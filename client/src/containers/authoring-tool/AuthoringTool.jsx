@@ -15,6 +15,7 @@ class AuthoringTool extends Component {
   constructor(props) {
     super(props);
     this.watcher = null;
+    this.autoSaveTimer = null;
     this.videoDurationInSeconds = -1;
     this.audioClipsPlayed = {};
 
@@ -56,7 +57,6 @@ class AuthoringTool extends Component {
       audioClipsPlayed: '',
     };
 
-    // Bindings.
     this.getATState = this.getATState.bind(this);
     this.updateState = this.updateState.bind(this);
     this.publishAudioDescription = this.publishAudioDescription.bind(this);
@@ -75,6 +75,7 @@ class AuthoringTool extends Component {
     this.getYTVideoInfo = this.getYTVideoInfo.bind(this);
     this.nudgeTrackLeft = this.nudgeTrackLeft.bind(this);
     this.nudgeTrackRight = this.nudgeTrackRight.bind(this);
+    this.autoSave = this.autoSave.bind(this);
   }
 
   componentDidMount() {
@@ -957,7 +958,21 @@ class AuthoringTool extends Component {
   updateNotes(e) {
     this.setState({
       audioDescriptionNotes: e.target.value,
+    }, () => {
+      this.autoSave();
     });
+  }
+
+  autoSave() {
+    const now = new Date();
+    const nowMs = now.getTime();
+    if (nowMs - this.autoSaveTimer > 3000) {
+      console.log('auto save');
+      this.saveLabelsAndNotes();
+    } else {
+      console.log('too soon to auto save', this.autoSaveTimer - nowMs);
+    }
+    this.autoSaveTimer = nowMs;
   }
 
   saveLabelsAndNotes() {
@@ -1043,7 +1058,7 @@ class AuthoringTool extends Component {
               <div id="playerAT" />
             </div>
             <div id="notes-section" className="w3-left w3-card-2 w3-margin-top w3-hide-small w3-hide-medium">
-              <Notes translate={this.props.translate} updateNotes={this.updateNotes} getATState={this.getATState} />
+              <Notes translate={this.props.translate} updateNotes={this.updateNotes} saveLabelsAndNotes={this.saveLabelsAndNotes} getATState={this.getATState} />
               <LanguageSelector translate={this.props.translate} getATState={this.getATState} updateState={this.updateState} />
             </div>
           </div>
