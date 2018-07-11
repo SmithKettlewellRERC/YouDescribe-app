@@ -1,13 +1,14 @@
-const express = require('express');
 const path = require('path');
-const port = process.env.PORT || 3000;
+const express = require('express');
+const webpack = require('webpack');
+const webpackConfig = require('../webpack.config.dev');
+
+const port = 3000;
 const app = express();
 
 console.log('DEVELOPMENT MODE');
 console.log('WILL HOT RELOAD CHANGES');
 
-const webpack = require('webpack');
-const webpackConfig = require('../webpack.config.dev');
 const compiler = webpack(webpackConfig);
 
 app.use(require('webpack-dev-middleware')(compiler, {
@@ -16,12 +17,6 @@ app.use(require('webpack-dev-middleware')(compiler, {
 }));
 
 app.use(require('webpack-hot-middleware')(compiler));
-
-// Legacy URLs handler.
-const legacyUrlsController = require('./controllers/legacyUrlsController');
-app.get(`/player.php`, (req, res) => {
-  legacyUrlsController.redirect(req, res);
-});
 
 // The main folder.
 app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
