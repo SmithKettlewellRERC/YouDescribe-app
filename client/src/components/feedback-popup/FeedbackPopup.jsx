@@ -59,6 +59,9 @@ class FeedbackPopup extends Component {
             <input id="feedback-input-10" name="feedback-input" type="checkbox" value="10" />
             <label htmlFor="feedback-input-10"> {this.props.translate('Description given before action')}</label><br />
 
+            <input id="feedback-input-11" name="feedback-input" type="checkbox" value="11" />
+            <label htmlFor="feedback-input-11"> {this.props.translate('Needs to read all onscreen text')}</label><br />
+
             <center>
               <Button
                 text={this.props.translate('Submit')}
