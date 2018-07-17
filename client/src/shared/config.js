@@ -24,6 +24,21 @@ module.exports = () => {
   // Nudge increment/decrement value.
   const nudgeIncrementDecrementValue = 0.15; // Seconds.
 
+  // User feedbacks data source.
+  const audioDescriptionFeedbacks = {
+    1: 'Needs better audio Quality',
+    2: 'Needs better diction',
+    3: 'Needs more inline descriptions',
+    4: 'Needs more extended descriptions',
+    5: 'Do not step on the dialogue',
+    6: 'Needs less description',
+    7: 'Needs more description',
+    8: 'Description does not match video tone',
+    9: 'Description has innappropriate content',
+    10: 'Description given before action',
+    11: 'Needs to read all onscreen text',
+  };
+
   return {
     apiUrl,
     apiVersion,
@@ -33,5 +48,6 @@ module.exports = () => {
     seekToPositionDelayFix,
     googleClientId,
     nudgeIncrementDecrementValue,
+    audioDescriptionFeedbacks,
   };
 };

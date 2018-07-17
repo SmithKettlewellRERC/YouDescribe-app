@@ -6,7 +6,7 @@ import Spinner from '../../components/spinner/Spinner.jsx';
 import VideoPlayerControls from '../../components/video-player-controls/VideoPlayerControls.jsx';
 import DescriberCard from '../../components/describer-card/DescriberCard.jsx';
 import YTInfoCard from '../../components/yt-info-card/YTInfoCard.jsx';
-import YDInfoCard from '../../components/yd-info-card/YDInfoCard.jsx';
+import RatingsInfoCard from '../../components/ratings-info-card/RatingsInfoCard.jsx';
 import Button from '../../components/button/Button.jsx';
 import RatingPopup from '../../components/rating-popup/RatingPopup.jsx';
 import FeedbackPopup from '../../components/feedback-popup/FeedbackPopup.jsx';
@@ -16,7 +16,6 @@ import {
   convertISO8601ToSeconds,
   convertISO8601ToDate,
   convertSecondsToEditorFormat,
-  convertTimeToCardFormat,
   convertViewsToCardFormat,
   convertLikesToCardFormat,
 } from '../../shared/helperFunctions';
@@ -58,7 +57,6 @@ class VideoPage extends Component {
       videoDurationToDisplay: '00:00:00:00',
     };
 
-    // method bindings
     this.updateState = this.updateState.bind(this);
     this.setAudioDescriptionActive = this.setAudioDescriptionActive.bind(this);
     this.closeSpinner = this.closeSpinner.bind(this);
@@ -133,6 +131,7 @@ class VideoPage extends Component {
           audioDescriptionsIdsUsers[ad._id].overall_rating_votes_counter = ad.overall_rating_votes_counter;
           audioDescriptionsIdsUsers[ad._id].overall_rating_average = ad.overall_rating_average;
           audioDescriptionsIdsUsers[ad._id].overall_rating_votes_sum = ad.overall_rating_votes_sum;
+          audioDescriptionsIdsUsers[ad._id].feedbacks = ad.feedbacks;
           audioDescriptionsIdsAudioClips[ad._id] = [];
           if (ad.audio_clips.length > 0) {
             ad.audio_clips.forEach((audioClip) => {
@@ -698,12 +697,17 @@ class VideoPage extends Component {
               handleFeedbackPopupClose={this.handleFeedbackPopupClose}
             />
             <div id="feedback-success" tabIndex="-1">{this.props.translate('Thank you for your feedback!')}</div>
-            <div id="yt-info-card" className="w3-col l8 m8">
-              <YTInfoCard translate={this.props.translate} {...this.state} />
+            <div className="w3-col l8 m8">
+              <YTInfoCard
+                translate={this.props.translate}
+                {...this.state}
+              />
+              <RatingsInfoCard
+                translate={this.props.translate}
+                selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
+                audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
+              />
             </div>
-            {/* <div id="yd-info-card" className="w3-col l4 m4">
-              <YDInfoCard {...this.state.videoData} />
-            </div> */}
             <div id="describers" className="w3-col l4 m4">
               <div className="w3-card-2">
                 <h3>{this.props.translate('Selected description')}</h3>
@@ -762,6 +766,7 @@ class VideoPage extends Component {
 
 VideoPage.PropTypes = {
   params: PropTypes.object.isRequired,
+  trnaslate: PropTypes.object.isRequired,
   videoId: PropTypes.string.isRequired,
   getAppState: PropTypes.func.isRequired,
 };
