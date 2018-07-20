@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
+import Polyglot from 'node-polyglot';
+
 import Navbar from '../../components/navbar/Navbar.jsx';
 import Footer from '../../components/footer/Footer.jsx';
 import { ourFetch, getLang } from '../../shared/helperFunctions.js';
-import { browserHistory } from 'react-router';
 import strings from './../../strings';
 
 const conf = require('./../../shared/config')();
-
-import Polyglot from 'node-polyglot';
 
 const polyglot = new Polyglot({
     locale: getLang(),
@@ -112,10 +112,10 @@ class App extends Component {
         if (userId && userToken && userName && userPicture) {
           self.setState({
             isSignedIn: true,
-            userName: userName,
-            userId: userId,
-            userToken: userToken,
-            userPicture: userPicture,
+            userName,
+            userId,
+            userToken,
+            userPicture,
           }, () => {
             self.setCookie();
           });

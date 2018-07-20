@@ -702,11 +702,11 @@ class VideoPage extends Component {
                 translate={this.props.translate}
                 {...this.state}
               />
-              <RatingsInfoCard
+              {this.props.location.query.show && <RatingsInfoCard
                 translate={this.props.translate}
                 selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
                 audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
-              />
+              />}
             </div>
             <div id="describers" className="w3-col l4 m4">
               <div className="w3-card-2">
