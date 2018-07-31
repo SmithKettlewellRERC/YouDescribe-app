@@ -235,6 +235,7 @@ class VideoPage extends Component {
             width: '100%',
             videoId: self.state.videoId,
             playerVars: {
+              cc_load_policy: 1,
               rel: 0,
               controls: 0,
               disablekb: 1,
