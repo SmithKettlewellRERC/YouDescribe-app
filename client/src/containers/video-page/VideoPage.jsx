@@ -40,7 +40,7 @@ class VideoPage extends Component {
       audioDescriptionsIds: [],
       audioDescriptionsIdsUsers: {},
       audioDescriptionsIdsAudioClips: {},
-      selectedAudioDescriptionId: null,
+      selectedAudioDescriptionId: props.location.query.ad || null,
       previousSelectedAudioDescriptionId: null,
       showDescribersList: true,
 
@@ -96,7 +96,6 @@ class VideoPage extends Component {
     const self = this;
     const url = `${conf.apiUrl}/videos/${this.props.params.videoId}`;
 
-    // Use custom fetch for cross-browser compatability
     ourFetch(url)
     .then((response) => {
       if (response.result) {
@@ -161,6 +160,9 @@ class VideoPage extends Component {
     } else {
       selectedAudioDescriptionId = this.state.audioDescriptionsIds[0];
     }
+    const location = Object.assign({}, browserHistory.getCurrentLocation());
+    Object.assign(location.query, { ad: selectedAudioDescriptionId });
+    browserHistory.push(location);
     this.setState({
       selectedAudioDescriptionId,
     }, () => {
