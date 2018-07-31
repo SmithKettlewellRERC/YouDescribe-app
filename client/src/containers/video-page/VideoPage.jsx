@@ -243,7 +243,7 @@ class VideoPage extends Component {
               iv_load_policy: 3,
               modestbranding: 1,
               showinfo: 0,
-              autoplay: true,
+              autoplay: 0,
             },
             events: {
               onReady: onVideoPlayerReady,
