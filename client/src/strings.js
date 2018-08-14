@@ -105,7 +105,8 @@ const strings = {
     'FAQ pages for viewers': 'Perguntas frequentes para videntes',
     'FAQ for describers': 'Perguntas frequentes para áudio descritores',
     'A step-by-step audio description tutorial with a trouble shooting section': 'Tutorial passo-a-passo para [audio descritores',
-    'SUPPORT': 'SUPORTE'
+    'SUPPORT': 'SUPORTE',
+    'It is not possible to vote again for this video.': 'Não é possível votar novamente neste vídeo.'
   },
   'en-us': {
     'RECENT DESCRIPTIONS': 'RECENT DESCRIPTIONS',
@@ -213,7 +214,8 @@ const strings = {
     'FAQ pages for viewers': 'FAQ pages for viewers',
     'FAQ for describers': 'FAQ for describers',
     'A step-by-step audio description tutorial with a trouble shooting section': 'A step-by-step audio description tutorial with a trouble shooting section',
-    'SUPPORT': 'SUPPORT'
+    'SUPPORT': 'SUPPORT',
+    'It is not possible to vote again for this video.': 'It is not possible to vote again for this video.'
   },
 };
 

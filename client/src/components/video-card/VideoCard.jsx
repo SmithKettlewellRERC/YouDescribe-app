@@ -30,11 +30,16 @@ class VideoCard extends Component {
         }),
       })
       .then((res) => {
-        console.log('Success upVote');
+        console.log('Success upVote', res);
       })
       .catch(err => {
-        console.log(err);
-        alert(this.props.translate('It was impossible to vote. Maybe your session has expired. Try to logout and login again.'));
+        switch (err.code) {
+          case 67:
+            alert(this.props.translate('It is not possible to vote again for this video.'));
+            break;
+          default:
+            alert(this.props.translate('It was impossible to vote. Maybe your session has expired. Try to logout and login again.'));
+        }
       });
     }
   }
