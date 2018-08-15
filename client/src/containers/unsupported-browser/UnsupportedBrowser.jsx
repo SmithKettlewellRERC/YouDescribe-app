@@ -8,7 +8,7 @@ const UnsupportedBrowser = () => (
     </header>
 
     <main className="w3-row">
-      <h2>Error page</h2>
+      <h2>Unsupported device</h2>
 
       <p>If you are using your iPhone or iPad, and have reached this page please <a href="https://itunes.apple.com/app/id1177344886">download YouDescribe mobile app for Apple</a>.</p>
 
