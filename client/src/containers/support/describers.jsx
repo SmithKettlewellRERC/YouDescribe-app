@@ -20,6 +20,22 @@ class Describers extends Component {
 
           <h2>For Describers</h2>
 
+          <p>By popular demand - the Describer trouble shooting checklist! Having trouble saving your tracks? Before you panic - use this handy, dandy check list.</p>
+
+          <p><strong>1.</strong> You need to be on a desktop (not an ipad or iphone) with fast internet (shared internet at a coffee shop etc. is generally over-subscribed).</p>
+
+          <p><strong>2.</strong> Check that your mic is not intermittent (loose wire, or connection). There are several programs that will check your microphone.</p>
+
+          <p><strong>3.</strong> Start fresh! If you have been logged in for a while, log out, then log back in. This will make sure the version of YouDescribe you are working in is the latest version!</p>
+
+          <p><strong>4.</strong> Make short tracks, around one minute or less is optimal, anything over two minutes will gum up the works.</p>
+
+          <p><strong>5.</strong> Make sure your tracks are not overlapping or neither of them will play.</p>
+
+          <p><strong>6.</strong> Don't "spot-check" your tracks by skipping around, in general your recorded tracks are there, but the API cant keep up the synchronized play with rapid changes.</p>
+
+          <p><strong>7.</strong> When in doubt press save, wait a few minutes, close down all non-essential programs you may have running concurrently, then log out of YouDescribe and then sign back in.</p>
+
           <p>Many frequently asked questions are answered in our description tutorial playlist. Go to our <a href="https://www.youtube.com/playlist?list=PLNJrbI_nyy9uzywoJfyDRoeKA1SaIEFJ7">Description Tutorial Playlist</a></p>
 
           <h3>Q: Do I need any kind of training or certification to be a YouDescribe describer?</h3>
