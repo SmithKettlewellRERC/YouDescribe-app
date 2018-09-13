@@ -74,6 +74,7 @@ class VideoPage extends Component {
     this.handleFeedbackSubmit = this.handleFeedbackSubmit.bind(this);
     this.handleTurnOffDescriptions = this.handleTurnOffDescriptions.bind(this);
     this.handleTurnOnDescriptions = this.handleTurnOnDescriptions.bind(this);
+    this.goToErrorPage = this.goToErrorPage.bind(this);
     this.upVote = this.upVote.bind(this);
   }
 
@@ -83,9 +84,17 @@ class VideoPage extends Component {
     this.fetchVideoData();
   }
 
+  goToErrorPage() {
+    browserHistory.push('/not-found');
+  }
+
   getAudioClips() {
     if (this.state.audioDescriptionsIdsAudioClips && this.state.selectedAudioDescriptionId) {
-      return this.state.audioDescriptionsIdsAudioClips[this.state.selectedAudioDescriptionId];
+      if (this.state.audioDescriptionsIdsAudioClips[this.state.selectedAudioDescriptionId]) {
+        return this.state.audioDescriptionsIdsAudioClips[this.state.selectedAudioDescriptionId];
+      } else {
+        return this.goToErrorPage();
+      }
     }
     return [];
   }
@@ -105,12 +114,13 @@ class VideoPage extends Component {
           self.parseVideoData();
         });
       } else {
-        self.parseVideoData();
+        return this.goToErrorPage();
+        // self.parseVideoData();
       }
     })
     .catch((err) => {
-      console.log(err);
-      self.parseVideoData();
+      return this.goToErrorPage();
+      // self.parseVideoData();
     });
   }
 
@@ -118,6 +128,9 @@ class VideoPage extends Component {
   parseVideoData() {
     // console.log('3 -> parseVideoData');
     const videoData = Object.assign({}, this.state.videoData);
+    // if (Object.keys(videoData).length === 0) {
+    //   console.log('invalid video');
+    // }
     const audioDescriptionsIds = [];
     const audioDescriptionsIdsUsers = {};
     const audioDescriptionsIdsAudioClips = {};
@@ -434,7 +447,9 @@ class VideoPage extends Component {
   }
 
   componentWillUnmount() {
-    this.state.videoPlayer.stopVideo();
+    if (this.state.videoPlayer) {
+      this.state.videoPlayer.stopVideo();
+    }
     this.resetPlayedAudioClips();
     this.stopProgressWatcher();
   }
