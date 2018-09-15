@@ -92,8 +92,6 @@ class VideoPage extends Component {
     if (this.state.audioDescriptionsIdsAudioClips && this.state.selectedAudioDescriptionId) {
       if (this.state.audioDescriptionsIdsAudioClips[this.state.selectedAudioDescriptionId]) {
         return this.state.audioDescriptionsIdsAudioClips[this.state.selectedAudioDescriptionId];
-      } else {
-        return this.goToErrorPage();
       }
     }
     return [];
@@ -114,13 +112,11 @@ class VideoPage extends Component {
           self.parseVideoData();
         });
       } else {
-        return this.goToErrorPage();
-        // self.parseVideoData();
+        self.parseVideoData();
       }
     })
     .catch((err) => {
       return this.goToErrorPage();
-      // self.parseVideoData();
     });
   }
 
@@ -173,6 +169,12 @@ class VideoPage extends Component {
     } else {
       selectedAudioDescriptionId = this.state.audioDescriptionsIds[0];
     }
+
+    // Invalid audio description id passed.
+    if (this.state.audioDescriptionsIds.length && this.state.audioDescriptionsIds.indexOf(selectedAudioDescriptionId) === -1) {
+      return this.goToErrorPage();
+    }
+
     const location = Object.assign({}, browserHistory.getCurrentLocation());
     Object.assign(location.query, { ad: selectedAudioDescriptionId });
     browserHistory.push(location);
@@ -231,6 +233,7 @@ class VideoPage extends Component {
       });
     }).catch((err) => {
       console.log('Unable to load the video you are trying to edit.', err);
+      this.goToErrorPage();
     });
   }
 
