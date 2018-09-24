@@ -29,15 +29,9 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    const browser = detect();
-    console.log('Browser:', browser.name);
-    if (browser.name !== 'chrome' && browser.name !== 'firefox') {
-      browserHistory.push(`/unsupported-browser`);
-    } else {
-      document.getElementById('navbar').focus();
-      document.title = this.props.translate('YouDescribe - Audio Description for YouTube Videos');
-      this.fetchingVideosToHome();
-    }
+    document.getElementById('navbar').focus();
+    document.title = this.props.translate('YouDescribe - Audio Description for YouTube Videos');
+    this.fetchingVideosToHome();
   }
 
   fetchingVideosToHome() {

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import Polyglot from 'node-polyglot';
-
 import Navbar from '../../components/navbar/Navbar.jsx';
 import Footer from '../../components/footer/Footer.jsx';
 import { ourFetch, getLang } from '../../shared/helperFunctions.js';
 import strings from './../../strings';
 
+const { detect } = require('detect-browser');
 const conf = require('./../../shared/config')();
 
 const polyglot = new Polyglot({
@@ -207,7 +207,14 @@ class App extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('google-auth-lib-loaded', this.initGoogleAuth);
+    const browser = detect();
+    const unsupportedOs = ['ios', 'Android OS'];
+    const supportedBrowsers = ['chrome', 'firefox'];
+    if (unsupportedOs.indexOf(browser.os) !== -1 || supportedBrowsers.indexOf(browser.name) === -1) {
+      browserHistory.push(`/unsupported-browser`);
+    } else {
+      window.addEventListener('google-auth-lib-loaded', this.initGoogleAuth);
+    }
   }
 
   clickHandler(searchValue) {
