@@ -102,6 +102,7 @@ class Navbar extends Component {
 
             {/* Hide right-floated links on small screens and replace them with a menu icon */}
             <a
+              aria-hidden="true"
               href="javascript:void(0)"
               className="w3-bar-item w3-right w3-hide-large"
               style={{ position: 'relative', top: '8px' }}
