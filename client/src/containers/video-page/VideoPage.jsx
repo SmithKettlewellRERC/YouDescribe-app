@@ -76,6 +76,7 @@ class VideoPage extends Component {
     this.handleTurnOnDescriptions = this.handleTurnOnDescriptions.bind(this);
     this.goToErrorPage = this.goToErrorPage.bind(this);
     this.upVote = this.upVote.bind(this);
+    this.getHighestRatingADId = this.getHighestRatingADId.bind(this);
   }
 
   componentDidMount() {
@@ -150,6 +151,7 @@ class VideoPage extends Component {
         }
       });
     }
+    console.log('audioDescriptionsIdsUsers', audioDescriptionsIdsUsers)
     this.setState({
       videoData,
       audioDescriptionsIds,
@@ -160,6 +162,24 @@ class VideoPage extends Component {
     });
   }
 
+  getHighestRatingADId() {
+    let maxAvarage = 0;
+    let selectedId = null;
+    Object.keys(this.state.audioDescriptionsIdsUsers).forEach((adId, idx) => {
+      const current = this.state.audioDescriptionsIdsUsers[adId];
+      if (idx === 0) {
+        selectedId = adId;
+        if (current.overall_rating_average) {
+          maxAvarage = current.overall_rating_average;
+        }
+      } else if (current.overall_rating_average > maxAvarage) {
+        selectedId = adId;
+        maxAvarage = current.overall_rating_average;
+      }
+    });
+    return selectedId;
+  }
+
   // 4
   setAudioDescriptionActive() {
     // console.log('4 -> setAudioDescriptionActive');
@@ -167,7 +187,9 @@ class VideoPage extends Component {
     if (this.state.selectedAudioDescriptionId !== null) {
       selectedAudioDescriptionId = this.state.selectedAudioDescriptionId;
     } else {
-      selectedAudioDescriptionId = this.state.audioDescriptionsIds[0];
+      console.log('SELECTED', this.getHighestRatingADId())
+      // selectedAudioDescriptionId = this.state.audioDescriptionsIds[0];
+      selectedAudioDescriptionId = this.getHighestRatingADId();
     }
 
     // Invalid audio description id passed.
