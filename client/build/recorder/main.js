@@ -25,8 +25,12 @@ function doneEncoding(blob) {
 
 function startRecording() {
     if (!audioRecorder) return;
-    audioRecorder.clear();
-    audioRecorder.record();
+
+    audioContext.resume().then(() => {
+        console.log('Playback resumed successfully');
+        audioRecorder.clear();
+        audioRecorder.record();
+    });
 }
 
 function stopRecordingAndSave(callback) {
