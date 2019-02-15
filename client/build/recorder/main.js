@@ -30,6 +30,10 @@ function startRecording() {
         console.log('Playback resumed successfully');
         audioRecorder.clear();
         audioRecorder.record();
+    }).catch((error) => {
+        console.log('Catch resume audiocontext', error);
+        audioRecorder.clear();
+        audioRecorder.record();
     });
 }
 
@@ -84,7 +88,7 @@ function initAudioRecorder(callback) {
     // var promise = navigator.mediaDevices.getUserMedia(constraints);
 
     if (!navigator.getUserMedia) {
-        navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        navigator.getUserMedia = navigator.mediaDevices.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
     };
     navigator.getUserMedia({
         "audio": {
