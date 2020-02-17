@@ -1,6 +1,6 @@
 function getLang() {
   let defaultLang = 'en-us';
-  if (navigator.languages != undefined) {
+  if (navigator.languages !== undefined) {
     defaultLang = navigator.languages[0];
   } else  {
     defaultLang = navigator.language;

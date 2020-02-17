@@ -3,8 +3,8 @@ module.exports = () => {
   const apiVersion = 'v1';
   
   // DON'T CHANGE THESE URLS!
-  let apiUrl = `https://52.53.181.55/${apiVersion}`;
-  let audioClipsUploadsPath = 'https://52.53.181.55/audio-descriptions-files';
+  let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
+  let audioClipsUploadsPath = 'https://api.youdescribe.org/audio-descriptions-files';
 
   const devHost = 'localhost';
   // const devHost = 'beta.youdescribe.org';
