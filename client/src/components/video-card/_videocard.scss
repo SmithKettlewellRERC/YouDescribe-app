@@ -1,0 +1,73 @@
+#video-card {
+  background-color: #fff;
+  width: 180px;
+  padding: 0 4px;
+  @media screen and (min-width: 601px) {
+    width: 194px;
+    padding: 0 8px;
+  }
+  #card-thumbnail {
+    position: relative;
+    #card-duration {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      font-size: 10px;
+      padding: 2px;
+    }
+  }
+  #card-title-container {
+    height: 80px;
+    #card-title {
+      color: #337ab7;
+      line-height: 18px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2; // max nb lines to show
+      -webkit-box-orient: vertical;
+    }
+    #card-author {
+      padding-bottom: 24px;
+    }
+  }
+  #card-stats {
+    height: 12px;
+  }
+  #card-buttons {
+    // margin-bottom: 8px;
+  }
+  // #vote-count {
+  //   position: relative;
+  //   font-size: 10px;
+  //   float: left;
+  //   padding-left: 4px;
+  //   padding-top: 20px;
+  // }
+  button {
+    outline: 1px solid #475CAE;
+    outline-offset: -1px;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    @media (min-width:601px) {
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+  }
+  h3 {
+    line-height: 17px;
+    margin: 8px 0 0 0;
+    cursor: pointer;
+  }
+  span, span a {
+    color: grey;
+    line-height: 11px;
+    margin: 4px 0 0 0;
+    font-size: 11px;
+  }
+  span a:hover {
+    color: #337ab7;
+  }
+}

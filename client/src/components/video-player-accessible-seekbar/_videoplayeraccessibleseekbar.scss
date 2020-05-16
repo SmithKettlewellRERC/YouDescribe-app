@@ -1,0 +1,94 @@
+.seekbar-slider-rail {
+  /* Firefox */
+  width: -moz-calc(100% - 24px);
+  /* WebKit */
+  width: -webkit-calc(100% - 24px);
+  /* Opera */
+  width: -o-calc(100% - 24px);
+  /* Standard */
+  width: calc(100% - 24px);
+  height: 4px;
+  // border: 1px solid #999999;
+  background-color: #333;
+  position: relative;
+  margin: 6px 12px;
+  // bottom: -6px;
+  @media screen and (min-width: 601px) {
+    // /* Firefox */
+    // width: -moz-calc(100% - 24px);
+    // /* WebKit */
+    // width: -webkit-calc(100% - 24px);
+    // /* Opera */
+    // width: -o-calc(100% - 24px);
+    // /* Standard */
+    // width: calc(100% - 24px);
+  }
+}
+.seekbar-slider-thumb:focus{
+  border: 1px solid #00CCCC;
+  border-radius: 50%;
+  background-color: #00CCCC;
+  outline: none;
+}
+
+.seekbar-slider-thumb {
+  margin: 0px;
+  padding: 0px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #EEEEEE;
+  border: 1px solid #999999;
+  position: absolute;
+  top: -4px;
+  left: 6px;
+  cursor: pointer;
+}
+
+.floatLeft {
+  float:left;
+}
+
+
+/* video-player-accessible-seekbar */
+// .video-player-accessible-seekbar:after {
+// content: ".";
+// display: block;
+// clear: both;
+// visibility: hidden;
+// line-height: 0;
+// height: 0;
+// }
+
+// .video-player-accessible-seekbar {
+//   width: 640px;
+//   margin: auto 0px;
+//   // position: relative;
+//   color: #fff;
+//   padding-left: 28px;
+//   @media screen and (min-width: 601px) {
+//     padding-left: 16px;
+//   }
+//   #video-player-accessible-seekbar-header {
+//     position: relative;
+//     left: 102px;
+//     padding-bottom: 8px;
+//     @media screen and (min-width: 601px) {
+//       left: 80px;
+//     }
+//   }
+// }
+
+#keyboard-controls {
+  position: relative;
+  padding-left: 100px;
+  margin-left: 100px;
+}
+
+html[xmlns] .video-player-accessible-seekbar {
+display: block;
+}
+
+* html .video-player-accessible-seekbar {
+height: 1%;
+}
