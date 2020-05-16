@@ -9,6 +9,11 @@ import { convertISO8601ToSeconds, convertSecondsToEditorFormat } from '../../sha
 import { ourFetch, getLang } from '../../shared/helperFunctions';
 import { browserHistory } from 'react-router';
 
+/* start of custom tags */
+import { WithContext as ReactTags } from "react-tag-input";
+import Button from "../../components/button/Button.jsx";
+/* end of custom tags */
+
 const conf = require('../../shared/config')();
 
 class AuthoringTool extends Component {
@@ -55,8 +60,15 @@ class AuthoringTool extends Component {
       selectedTrackComponentUrl: null,
 
       audioClipsPlayed: '',
+
+      /* start of custom tags */
+      tags: [],
+      suggestions: [],
+      delimiters: [188, 13],
+      /* end of custom tags */
     };
 
+    this.handleClick = this.handleClick.bind(this);
     this.getATState = this.getATState.bind(this);
     this.updateState = this.updateState.bind(this);
     this.publishAudioDescription = this.publishAudioDescription.bind(this);
@@ -76,12 +88,27 @@ class AuthoringTool extends Component {
     this.nudgeTrackLeft = this.nudgeTrackLeft.bind(this);
     this.nudgeTrackRight = this.nudgeTrackRight.bind(this);
     this.autoSave = this.autoSave.bind(this);
+
+    /* start of custom tags */
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleAddition = this.handleAddition.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);
+    this.handleTagClick = this.handleTagClick.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    /* end of custom tags */
+    /* start of email */
+    this.sendOptInEmail = this.sendOptInEmail.bind(this);
+    /* end of email */
   }
 
   componentDidMount() {
     this.refs.spinner.on();
     document.title = this.props.translate('YouDescribe - Authoring Tool');
     console.log('############## DID', this.state.audioDescriptionSelectedLanguage, 'getLang', getLang());
+
+    /* start of custom tags */
+    this.loadYTVideoTags();
+    /* end of custom tags */
 
     // if (!this.props.getAppState().isSignedIn) {
     //   location.href = '/';
@@ -856,6 +883,10 @@ class AuthoringTool extends Component {
     const self = this;
     const resultConfirm = confirm(this.props.translate('Are you sure you wanna publish this audio description?'));
     if (resultConfirm) {
+      /* start of email */
+      this.sendOptInEmail();
+      /* end of email */
+
       const url = `${conf.apiUrl}/audiodescriptions/${this.state.audioDescriptionId}?action=publish`;
       ourFetch(url, true, {
         method: 'PUT',
@@ -882,6 +913,26 @@ class AuthoringTool extends Component {
       });
     }
   }
+
+  /* start of email */
+  sendOptInEmail() {
+    const ref = `${window.location.protocol}//${window.location.host}/video/${this.state.videoId}?ad=${this.state.audioDescriptionId}`;
+    const emailBody = `Your wishlist selection has been described and published:\n${ref}.`;
+    const url = `${conf.apiUrl}/users/sendoptinemail`;
+    const optionObj = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: this.state.videoId,
+        optin: 0,
+        emailbody: emailBody,
+      })
+    };
+    ourFetch(url, true, optionObj).then((response) => {});
+  }
+  /* end of email */
 
   unpublishAudioDescription() {
     const self = this;
@@ -1049,11 +1100,81 @@ class AuthoringTool extends Component {
     }
   }
 
+  /* start of custom tags */
+  loadYTVideoTags() {
+    const url = `${conf.apiUrl}/videos/getyoutubetags?id=${this.state.videoId}`;
+    ourFetch(url).then((response) => {
+      const video = response.result;
+      const tags = [];
+      video.tags.forEach(tag => {
+        tags.push({
+          id: tag,
+          text: tag,
+        });
+      });
+      this.setState({
+        tags: tags,
+      });
+    });
+  }
+
+  handleDelete(i) {
+    const {tags} = this.state;
+    this.setState({
+      tags: tags.filter((tag, index) => index !== i),
+    });
+  }
+
+  handleAddition(tag) {
+    this.setState(state => ({
+      tags: [...state.tags, tag]
+    }));
+  }
+
+  handleDrag(tag, currPos, newPos) {
+    const tags = [...this.state.tags];
+    const newTags = tags.slice();
+    newTags.splice(currPos, 1);
+    newTags.splice(newPos, 0, tag);
+    // re-render
+    this.setState({
+      tags: newTags,
+    });
+  }
+
+  handleTagClick(index) {
+    console.log("The tag at index " + index + "was clicked");
+  }
+
+  handleClick() {
+    window.location.href='/waitlist'
+  }
+
+  handleSave() {
+    const url = `${conf.apiUrl}/videos/updatecustomtags`;
+    const optionObj = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: this.state.videoId,
+        tags: this.state.tags,
+      }),
+    };
+    ourFetch(url, true, optionObj).then((response) => {
+      alert("Your custom tags have been successfully saved!");
+    });
+  }
+  /* end of custom tags */
+
   // 1
   render() {
     // console.log('1 -> render authoring tool')
     return (
       <div id="authoring-tool">
+        <button type="submit" onClick={this.handleClick} style={{fontWeight:"bold", cursor:"pointer" ,width:200,marginBlockStart: 15,  marginBottom: 10,marginInlineStart:530, height: 50, backgroundColor: "#4267B2", color: "white" }} variant="success">YouDescribeX</button>
+        
         <SpinnerGlobal ref="spinner" />
         <main role="main">
           <div className="w3-row">
@@ -1084,6 +1205,33 @@ class AuthoringTool extends Component {
               />
             </div>
           </div>
+
+          {/* start of custom tags */}
+          {/* https://stackblitz.com/edit/react-tag-input-1nelrc?file=index.js */}
+          <div className="w3-row w3-margin-top w3-hide-small w3-hide-medium">
+            Please delete unrelated tags below and add your own tags that can describe this video better.<br/><br/>
+            <div className="w3-col w3-margin-bottom">
+              <ReactTags
+                placeholder="Add custom tags here"
+                tags={this.state.tags}
+                suggestions={this.state.suggestions}
+                delimiters={this.state.delimiters}
+                handleDelete={this.handleDelete}
+                handleAddition={this.handleAddition}
+                handleDrag={this.handleDrag}
+                handleTagClick={this.handleTagClick}
+                inputFieldPosition="top"
+              />
+              <br/>
+              <Button
+                title="Save custom tags for this video"
+                text="Save Custom Tags"
+                color="w3-indigo"
+                onClick={this.handleSave}
+              />
+            </div>
+          </div>
+          {/* end of custom tags */}
         </main>
       </div>
     );

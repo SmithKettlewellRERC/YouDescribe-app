@@ -3,7 +3,7 @@
   top: 11px;
   padding-left: 0px;
   @media screen and (min-width: 601px) {
-    padding-left: 40px;
+    padding-left: 20px;                       /* 40px -> 20px */
   }
   input {
     outline: none;
@@ -11,10 +11,16 @@
     border-radius: 0px;
     -webkit-appearance: none;
     -webkit-border-radius: 0px;
-    width: 182px;
+    width: 150px;                             /* 182px -> 150px */
     height: 33px;
-    @media screen and (min-width: 601px) {
-      width: 280px;
+    @media (min-width: 900px) {               /* new */
+      width: 150px;                           /* new */
+    }
+    @media (min-width: 1050px) {              /* new */
+      width: 210px;                           /* new */
+    }
+    @media screen and (min-width: 1200px) {   /* 601px -> 1200px */
+      width: 270px;                           /* 280px -> 270px */
     }
   }
 }

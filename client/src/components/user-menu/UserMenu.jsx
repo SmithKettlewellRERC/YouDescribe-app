@@ -18,6 +18,9 @@ class UserMenu extends Component {
           <div className="my-described-videos-button">
             <Link to={myVideosUrl} title={this.props.translate('View my described videos')} onClick={this.props.userMenuToggle}><i className="fa fa-audio-description" aria-hidden="true">&nbsp;</i><span>{this.props.translate('My descriptions')}</span></Link>
           </div>
+          <div className="my-described-videos-button">
+            <Link to={`/profile/${this.props.getAppState().userId}`} title="View my profile" onClick={this.props.userMenuToggle}><i className="fa fa-audio-description" aria-hidden="true">&nbsp;</i><span>{this.props.translate("My profile")}</span></Link>
+          </div>
           <hr />
           <div className="sign-out-button">
             <Button color="w3-indigo" text={this.props.translate('Sign out')} onClick={this.props.signOut} />

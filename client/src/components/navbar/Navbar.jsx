@@ -77,23 +77,30 @@ class Navbar extends Component {
               <Link
                 to="/"
                 className="w3-bar-item w3-small"
-                style={{ position: 'relative', top: '11px' }}
+                style={{position: 'relative', top: '11px', padding: "8px"}}
               >
                 <i className="fa fa-home" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate('RECENT DESCRIPTIONS')}
               </Link>
               <Link
                 to="/wishlist"
                 className="w3-bar-item w3-small"
-                style={{ position: 'relative', top: '11px' }}
+                style={{position: 'relative', top: '11px', padding: "8px"}}
               >
                 <i className="fa fa-heart" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate('WISH LIST')}
               </Link>
               <Link
                 to="/support"
                 className="w3-bar-item w3-small"
-                style={{ position: 'relative', top: '11px' }}
+                style={{position: 'relative', top: '11px', padding: "8px"}}
               >
                 <i className="fa fa-question-circle" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate('SUPPORT')}
+              </Link>
+              <Link
+                to="/admin"
+                className="w3-bar-item w3-small"
+                style={{position: "relative", top: "11px", padding: "8px"}}
+              >
+                <i className="fa fa-user" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate("ADMIN")}
               </Link>
               <div className="w3-bar-item" style={{ position: 'relative', top: '2px' }}>
                 {signInComponent}
@@ -133,6 +140,12 @@ class Navbar extends Component {
             onClick={() => document.getElementById('wish-list-heading').focus()}
           >
             <i className="fa fa-heart" aria-hidden="true" /> {this.props.translate('WISH LIST')}
+          </Link>
+          <Link
+            to="/admin"
+            className="w3-bar-item w3-button"
+          >
+            <i className="fa fa-user" aria-hidden="true" /> {this.props.translate("ADMIN")}
           </Link>
           {signInComponent}
         </div>

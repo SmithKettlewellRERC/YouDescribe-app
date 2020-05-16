@@ -1,0 +1,63 @@
+.admin-responsive {
+  background-color: #fff;
+  // min-height: 100vh;
+  /* Firefox */
+  min-height: -moz-calc(100vh - 54px);
+  /* WebKit */
+  min-height: -webkit-calc(100vh - 54px);
+  /* Opera */
+  min-height: -o-calc(100vh - 54px);
+  /* Standard */
+  min-height: calc(100vh - 54px);
+  main {
+    width: 450px;                             /* 416px -> 450px */
+    padding: 0px 8px;
+    margin: 0 auto;
+    @media (min-width: 600px) {               /* 601px -> 600px */
+      width: 600px;                           /* 601px -> 600px */
+    }
+    @media (min-width: 750px) {               /* new */
+      width: 750px;                           /* new */
+    }
+    @media (min-width: 900px) {               /* new */
+      width: 900px;                           /* new */
+    }
+    @media (min-width: 1050px) {              /* new */
+      width: 1050px;                          /* new */
+    }
+    @media screen and (min-width: 1200px) {   /* 993px -> 1200px */
+      width: 1200px;                          /* 993px -> 1200px */
+    }
+  }
+}
+
+.self-pagination>li {
+  position: relative;
+  float: left;
+  padding: 6px 12px;
+  margin-bottom: 20px;
+  margin-left: -2px;
+  line-height: 1.42857143;
+  text-decoration: none;
+  background-color: #fff;
+  border: 0.5px solid #ddd;
+  list-style: none;
+}
+
+.self-pagination>.borderless {
+  color: #337ab7;
+  border: 0px;
+  background-color: transparent;
+}
+
+.self-pagination>li>a {
+  color: #337ab7;
+}
+
+.self-pagination>.active {
+  background-color: #337ab7;
+}
+
+.self-pagination>.active>a {
+  color: #fff;
+}

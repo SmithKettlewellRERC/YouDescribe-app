@@ -88,7 +88,7 @@ const strings = {
     'Optional feedback': 'Avaliação adicional',
     'Please give additional feedback to help describers make adjustments': 'Contribua com essa avaliação adicional para ajudar os áudio descritores a fazerem ajustes',
     'Check all that apply': 'Marque todas que fizerem sentido',
-    'Needs better audio Quality': 'Precisa melhorar a qualidade do áudio',
+    'Needs better audio quality': 'Precisa melhorar a qualidade do áudio',
     'Needs better diction': 'Precisa melhorar a dicção',
     'Needs more inline descriptions': 'Precisa de mais trilhas lineares',
     'Needs more extended descriptions': 'Precisa de mais trilhas extendidas',
@@ -106,7 +106,14 @@ const strings = {
     'FAQ for describers': 'Perguntas frequentes para áudio descritores',
     'A step-by-step audio description tutorial with a trouble shooting section': 'Tutorial passo-a-passo para [audio descritores',
     'SUPPORT': 'SUPORTE',
-    'It is not possible to vote again for this video.': 'Não é possível votar novamente neste vídeo.'
+    'It is not possible to vote again for this video.': 'Não é possível votar novamente neste vídeo.',
+
+    "Statistics": "Estatisticas",
+    "Videos": "Vídeos",
+    "Descriptions": "Descrições",
+    "Description Detail": "Descrição Detalhe",
+    "My profile": "Meus perfil",
+    "ADMIN": "ADMIN",
   },
   'en-us': {
     'RECENT DESCRIPTIONS': 'RECENT DESCRIPTIONS',
@@ -197,7 +204,7 @@ const strings = {
     'Optional feedback': 'Optional feedback',
     'Please give additional feedback to help describers make adjustments': 'Please give additional feedback to help describers make adjustments',
     'Check all that apply': 'Check all that apply',
-    'Needs better audio Quality': 'Needs better audio Quality',
+    'Needs better audio quality': 'Needs better audio quality',
     'Needs better diction': 'Needs better diction',
     'Needs more inline descriptions': 'Needs more inline descriptions',
     'Needs more extended descriptions': 'Needs more extended descriptions',
@@ -215,7 +222,14 @@ const strings = {
     'FAQ for describers': 'FAQ for describers',
     'A step-by-step audio description tutorial with a trouble shooting section': 'A step-by-step audio description tutorial with a trouble shooting section',
     'SUPPORT': 'SUPPORT',
-    'It is not possible to vote again for this video.': 'It is not possible to vote again for this video.'
+    'It is not possible to vote again for this video.': 'It is not possible to vote again for this video.',
+
+    "Statistics": "Statistics",
+    "Videos": "Videos",
+    "Descriptions": "Descriptions",
+    "Description Detail": "Description Detail",
+    "My profile": "My profile",
+    "ADMIN": "ADMIN",
   },
 };
 

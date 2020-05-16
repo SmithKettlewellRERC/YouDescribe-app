@@ -77,6 +77,10 @@ class VideoPage extends Component {
     this.goToErrorPage = this.goToErrorPage.bind(this);
     this.upVote = this.upVote.bind(this);
     this.getHighestRatingADId = this.getHighestRatingADId.bind(this);
+
+    /* start of email */
+    this.sendOptInEmail = this.sendOptInEmail.bind(this);
+    /* end of email */
   }
 
   componentDidMount() {
@@ -383,6 +387,10 @@ class VideoPage extends Component {
         }
       }
     }, interval);
+
+    /* start of email */
+    this.sendOptInEmail(1);
+    /* end of email */
   }
 
   stopProgressWatcher() {
@@ -513,7 +521,11 @@ class VideoPage extends Component {
           document.getElementById('rating-popup').style.display = 'none';
           document.getElementById('rating-success').style.display = 'block';
           document.getElementById('rating-success').focus();
-          setTimeout(() => document.getElementById('rating-success').style.display = 'none', 1000)
+          setTimeout(() => document.getElementById('rating-success').style.display = 'none', 1000);
+
+          /* start of email */
+          this.sendOptInEmail(2, this.rating, []);
+          /* end of email */
         } else {
           this.handleFeedbackPopup();
         }
@@ -572,12 +584,44 @@ class VideoPage extends Component {
       document.getElementById('feedback-success').focus();
       setTimeout(() => document.getElementById('feedback-success').style.display = 'none', 1000)
       // alert('Thanks for your feedback!');
+
+      /* start of email */
+      this.sendOptInEmail(2, this.rating, feedback);
+      /* end of email */
     })
     .catch((err) => {
       console.log(err);
       alert(this.props.translate('It was impossible to vote. Maybe your session has expired. Try to logout and login again.'));
     });
   }
+
+  /* start of email */
+  sendOptInEmail(optIn, rating = 0, feedback = []) {
+    let emailBody = "";
+    if (optIn == 1) {
+      emailBody = `Your audio description ${window.location.href} has been viewed.`;
+    } else if (optIn == 2) {
+      emailBody = `Your audio description ${window.location.href} has been rated as ${rating}`;
+      emailBody += (feedback.length > 0) ? ", with the following comment(s):" : ".";
+      feedback.forEach(index => {
+        emailBody += `\n${conf.audioDescriptionFeedbacks[index]}`;
+      });
+    }
+    const url = `${conf.apiUrl}/users/sendoptinemail`;
+    const optionObj = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: this.state.selectedAudioDescriptionId,
+        optin: optIn,
+        emailbody: emailBody,
+      })
+    };
+    ourFetch(url, true, optionObj).then((response) => {});
+  }
+  /* end of email */
 
   handleRatingPopup() {
     if (!this.props.getAppState().isSignedIn) {

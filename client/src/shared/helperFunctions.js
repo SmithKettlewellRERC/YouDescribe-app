@@ -1,6 +1,6 @@
 function getLang() {
   let defaultLang = 'en-us';
-  if (navigator.languages !== undefined) {
+  if (navigator.languages != undefined) {
     defaultLang = navigator.languages[0];
   } else  {
     defaultLang = navigator.language;
@@ -120,6 +120,14 @@ function ourFetch(url, JSONparsing = true, optionObj = { method: 'GET' }) {
         req.setRequestHeader(key, optionObj.headers[key]);
       }
     }
+    
+    /* used for visit counter */
+    if (!sessionStorage.getItem("connection")) {
+      sessionStorage.setItem("connection", Date.now());
+    }
+    req.setRequestHeader("X-Requested-With", sessionStorage.getItem("connection"));
+    /* end of used for visit counter */
+
     req.onload = () => {
       if (req.status === 200) {
         if (JSONparsing) {
@@ -127,6 +135,37 @@ function ourFetch(url, JSONparsing = true, optionObj = { method: 'GET' }) {
         } else {
           resolve(req.response);
         }
+      } else {
+        reject(JSON.parse(req.response));
+      }
+    };
+    req.send(optionObj.body);
+  });
+}
+
+function ourFetchWithToken(url, JSONparsing = true, optionObj = {
+  method: "GET",
+  headers: {
+    "Authorization": localStorage.getItem("adminToken"),
+  }
+}) {
+  return new Promise((resolve, reject) => {
+    const req = new XMLHttpRequest();
+    req.open(optionObj.method, url);
+    if (optionObj.headers) {
+      for (let key in optionObj.headers) {
+        req.setRequestHeader(key, optionObj.headers[key]);
+      }
+    }
+    req.onload = () => {
+      if (req.status === 200) {
+        if (JSONparsing) {
+          resolve(JSON.parse(req.response));
+        } else {
+          resolve(req.response);
+        }
+      } else if (req.status === 401) {
+        location.href = "/admin/signin";
       } else {
         reject(JSON.parse(req.response));
       }
@@ -144,5 +183,6 @@ export {
   convertSecondsToCardFormat,
   convertSecondsToEditorFormat,
   ourFetch,
+  ourFetchWithToken,
   getLang,
 };
