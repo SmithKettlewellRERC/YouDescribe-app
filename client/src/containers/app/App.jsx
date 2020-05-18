@@ -27,19 +27,11 @@ class App extends Component {
 
       // Authentication.
       auth2: null,
-      // isSignedIn: false,
-      // userId: '',
-      // userToken: '',
-      // userName: '',
-      // userPicture: '',
-
-      /* start of fake logged-in account */
-      isSignedIn: true,
-      userName: "Youdescribe Sfsu",
-      userId: "5cedd767a774ac520ff93e60",
-      userToken: "9d692596ed6c4c380e804a831c90998512141fee778054765967a395c32cbdb2",
-      userPicture: "https://lh4.googleusercontent.com/-RqeSDv3-Kic/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rcQkBKDUG6yOIFbrd1Wpvk2lFO4TQ/s96-c/photo.jpg",
-      /* end of fake logged-in account */
+      isSignedIn: false,
+      userId: '',
+      userToken: '',
+      userName: '',
+      userPicture: '',
     };
     this.initGoogleAuth = this.initGoogleAuth.bind(this);
     this.googleSignInSuccess = this.googleSignInSuccess.bind(this);
@@ -53,7 +45,6 @@ class App extends Component {
   }
 
   componentWillMount() {
-    this.setCookie(); /* fake logged-in account */
     this.setState({ searchValue: this.props.location.query.q });
   }
 
@@ -112,8 +103,8 @@ class App extends Component {
 
   refreshUserInfo() {
     const self = this;
-    // this.state.auth2.then(() => {              /* fake logged-in account */
-    //   if (this.state.auth2.isSignedIn.get()) { /* fake logged-in account */
+    this.state.auth2.then(() => {
+      if (this.state.auth2.isSignedIn.get()) {
         const userId = this.getCookie('userId');
         const userToken = this.getCookie('userToken');
         const userName = this.getCookie('userName');
@@ -139,8 +130,8 @@ class App extends Component {
             self.resetCookie();
           });
         }
-    //   }  /* fake logged-in account */
-    // });  /* fake logged-in account */
+      }
+    });
   }
 
   getUserInfo() {
@@ -168,7 +159,7 @@ class App extends Component {
         userToken: '',
       }, () => {
         this.resetCookie();
-        // this.initGoogleAuth(); /* fake logged-in account */
+        this.initGoogleAuth();
         location.href = '/';
       });
     });
@@ -222,7 +213,7 @@ class App extends Component {
     if (unsupportedOs.indexOf(browser.os) !== -1 || supportedBrowsers.indexOf(browser.name) === -1) {
       browserHistory.push(`/unsupported-browser`);
     } else {
-      // window.addEventListener('google-auth-lib-loaded', this.initGoogleAuth);  /* fake logged-in account */
+      window.addEventListener('google-auth-lib-loaded', this.initGoogleAuth);
     }
   }
 
