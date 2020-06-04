@@ -20,6 +20,7 @@ import About from "./containers/support/About.jsx";
 import Describers from "./containers/support/Describers.jsx";
 import Tutorial from "./containers/support/Tutorial.jsx";
 import Viewers from "./containers/support/Viewers.jsx";
+import Privacy from "./containers/support/Privacy.jsx";
 import UnsupportedBrowser from "./containers/unsupported-browser/UnsupportedBrowser.jsx";
 
 // video indexer
@@ -63,6 +64,7 @@ ReactDOM.render((
       <Route path="/support/describers" component={Describers} />
       <Route path="/support/tutorial" component={Tutorial} />
       <Route path="/support/viewers" component={Viewers} />
+      <Route path="/support/privacy" component={Privacy} />
       <Route path="/unsupported-browser" component={UnsupportedBrowser} />
 
       // Video Indexer
