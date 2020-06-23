@@ -5,6 +5,11 @@ module.exports = () => {
   // DON'T CHANGE THESE URLS!
   let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
   let audioClipsUploadsPath = 'https://api.youdescribe.org/audio-descriptions-files';
+  
+  if (href.indexOf('dev.youdescribe') !== -1) {
+    apiUrl = `https://dev-api.youdescribe.org/${apiVersion}`;
+    audioClipsUploadsPath = 'https://dev-api.youdescribe.org/audio-descriptions-files';
+  }
 
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';
   const youTubeApiKey = "AIzaSyDV8QMir3NE8S2jA1GyXvLXyTuSq72FPyE";                                    // 
