@@ -199,7 +199,7 @@ class Profile extends Component {
               >
               </Form.Check>
               <br/>
-              <h4>If you feel you are bothered by too many emails, you may opt out AT ANY TIME :-)</h4>
+              <b>If you feel you are bothered by too many emails, you may opt out AT ANY TIME :-)</b>
             </div>
             <div style={{marginTop: 20, marginBottom: 20, textAlign: "center"}}>
               <Button type="submit" style={{marginTop: 20, marginBottom: 20}} variant="outline-success" onClick={this.handleSave}>Save</Button>

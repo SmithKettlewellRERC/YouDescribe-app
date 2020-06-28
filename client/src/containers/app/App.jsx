@@ -32,6 +32,7 @@ class App extends Component {
       userToken: '',
       userName: '',
       userPicture: '',
+      userAdmin: 0,
     };
     this.initGoogleAuth = this.initGoogleAuth.bind(this);
     this.googleSignInSuccess = this.googleSignInSuccess.bind(this);
@@ -66,6 +67,7 @@ class App extends Component {
         userId: res.result._id,
         userToken: res.result.token,
         userPicture: res.result.picture,
+        userAdmin: res.result.admin,
       }, () => {
         this.setCookie();
       });

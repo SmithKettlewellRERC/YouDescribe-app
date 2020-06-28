@@ -11,16 +11,16 @@
     border-radius: 0px;
     -webkit-appearance: none;
     -webkit-border-radius: 0px;
-    width: 150px;                             /* 182px -> 150px */
+    width: 140px;                             /* 182px -> 140px */
     height: 33px;
     @media (min-width: 900px) {               /* new */
-      width: 150px;                           /* new */
+      width: 140px;                           /* new */
     }
     @media (min-width: 1050px) {              /* new */
-      width: 210px;                           /* new */
+      width: 200px;                           /* new */
     }
     @media screen and (min-width: 1200px) {   /* 601px -> 1200px */
-      width: 270px;                           /* 280px -> 270px */
+      width: 260px;                           /* 280px -> 260px */
     }
   }
 }

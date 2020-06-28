@@ -32,8 +32,7 @@ class WishList extends Component {
 
   loadWishListVideos() {
     const url = (`${conf.apiUrl}/wishlist?page=${this.currentPageNumber}`);
-    ourFetch(url)
-    .then((response) => {
+    ourFetch(url).then((response) => {
       const wishListItems = response.result;
       this.youTubeIds = [];
       this.youDescribeIds = [];
@@ -41,11 +40,11 @@ class WishList extends Component {
         this.youTubeIds.push(wishListItems[i].youtube_id);
         this.youDescribeIds.push(wishListItems[i]._id);
       }
-    })
-    .then(() => {
-      const urlYT = `${conf.youTubeApiUrl}/videos?id=${this.youTubeIds.join(',')}&part=snippet,statistics&key=${conf.youTubeApiKey}`;
-      ourFetch(urlYT)
-      .then(youTubeResponse => this.parseFetchedData(youTubeResponse));
+    }).then(() => {
+      const url = `${conf.apiUrl}/videos/getyoutubedatafromcache?youtubeids=${this.youTubeIds.join(',')}&key=wishlist`;
+      ourFetch(url).then(response => {
+        this.parseFetchedData(JSON.parse(response.result));
+      });
     });
   }
 

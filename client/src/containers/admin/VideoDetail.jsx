@@ -534,7 +534,7 @@ class VideoDetail extends Component {
   handleReload() {
     let youtubeId = this.state.youtubeId;
     const youtubeLink = document.getElementById("youtubelink").value.trim();
-    if (youtubeLink && youtubeLink.match(/^https:\/\/(?:www\.)?youtube.com\/watch\?(?=v=\w+)(?:\S+)?$/g)) {
+    if (youtubeLink.match(/^https:\/\/(?:www\.)?youtube.com\/watch\?(?=v=\w+)(?:\S+)?$/g)) {
         const url = new URL(youtubeLink);
         youtubeId = url.searchParams.get("v");
     } else {

@@ -47,6 +47,7 @@ class UserVideosPage extends Component {
 
   getVideos() {
     let youTubeIds;
+    let sortedIds;
     const url = (`${conf.apiUrl}/videos/user/${this.userId}`);
     ourFetch(url)
     .then((response) => {
@@ -58,12 +59,22 @@ class UserVideosPage extends Component {
       youTubeIds = this.youTubeVideosIds.join(',');
     })
     .then(() => {
-      const url = `${conf.youTubeApiUrl}/videos?id=${youTubeIds}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
-      ourFetch(url)
-      .then(data => {
-        this.youTubeVideosArray = data;
+      sortedIds = this.youTubeVideosIds.sort();
+      if (sortedIds == window.localStorage.getItem("userVideosSortedIds")) {
+        console.log("loading user videos page from local storage");
+        this.youTubeVideosArray = JSON.parse(window.localStorage.getItem("userVideosYoutubeData"));
         this.parseResponseData();
-      });
+      } else {
+        window.localStorage.setItem("userVideosSortedIds", sortedIds);
+        const url = `${conf.youTubeApiUrl}/videos?id=${youTubeIds}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
+        ourFetch(url)
+        .then(data => {
+          console.log("loading user videos page from youtube; quota consumption: " + this.youTubeVideosIds.length);
+          window.localStorage.setItem("userVideosYoutubeData", JSON.stringify(data));
+          this.youTubeVideosArray = data;
+          this.parseResponseData();
+        });
+      }
     });
   }
 

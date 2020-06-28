@@ -54,7 +54,11 @@ class SearchPage extends Component {
 
   getSearchResultsFromYdAndYt(page = 1) {
     const value = this.props.location.query.q;
-    const q = encodeURIComponent(value);
+    let q = (value || "").trim();
+    if (value.match(/^https:\/\/(?:www\.)?youtube.com\/watch\?(?=v=\w+)(?:\S+)?$/g)) {
+      const url = new URL(value);
+      q = url.searchParams.get("v");
+    }
     const serverVideoIds = [];
     const url = `${conf.apiUrl}/videos/search?q=${q}&page=${page}`;
     ourFetch(url)

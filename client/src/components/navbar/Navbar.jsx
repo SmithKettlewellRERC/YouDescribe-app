@@ -95,13 +95,6 @@ class Navbar extends Component {
               >
                 <i className="fa fa-question-circle" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate('SUPPORT')}
               </Link>
-              <Link
-                to="/admin"
-                className="w3-bar-item w3-small"
-                style={{position: "relative", top: "11px", padding: "8px"}}
-              >
-                <i className="fa fa-user" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate("ADMIN")}
-              </Link>
               <div className="w3-bar-item" style={{ position: 'relative', top: '2px' }}>
                 {signInComponent}
               </div>
@@ -110,7 +103,6 @@ class Navbar extends Component {
             {/* Hide right-floated links on small screens and replace them with a menu icon */}
             <a
               aria-hidden="true"
-              href="javascript:void(0)"
               className="w3-bar-item w3-right w3-hide-large"
               style={{ position: 'relative', top: '8px' }}
               onClick={this.navMenuOpen}
@@ -126,7 +118,7 @@ class Navbar extends Component {
           className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-large"
           style={{ display: 'none' }}
         >
-          <a href="javascript:void(0)" onClick={this.navMenuClose} className="w3-large w3-padding-16">{this.props.translate('Close')} ×</a>
+          <a onClick={this.navMenuClose} className="w3-large w3-padding-16">{this.props.translate('Close')} ×</a>
           <Link
             to="/"
             className="w3-bar-item w3-button"
@@ -140,12 +132,6 @@ class Navbar extends Component {
             onClick={() => document.getElementById('wish-list-heading').focus()}
           >
             <i className="fa fa-heart" aria-hidden="true" /> {this.props.translate('WISH LIST')}
-          </Link>
-          <Link
-            to="/admin"
-            className="w3-bar-item w3-button"
-          >
-            <i className="fa fa-user" aria-hidden="true" /> {this.props.translate("ADMIN")}
           </Link>
           {signInComponent}
         </div>

@@ -12,7 +12,11 @@ module.exports = () => {
   }
 
   const youTubeApiUrl = 'https://www.googleapis.com/youtube/v3';
-  const youTubeApiKey = "AIzaSyDV8QMir3NE8S2jA1GyXvLXyTuSq72FPyE";                                    // 
+  const youTubeApiKey = "AIzaSyDV8QMir3NE8S2jA1GyXvLXyTuSq72FPyE";                                    // project youdescribe-0126 in youdescribeadm@gmail.com
+  // const youTubeApiKey = "AIzaSyBQFD0fJoEO2l8g0OIrqbtjj2qXXVNO__U";                                 // project youdescribe-0127 in youdescribeadm@gmail.com
+  // const youTubeApiKey = "AIzaSyBWQ2o3N0MVc8oP96JvWVVwqjxpEOgkhQU";                                 // project youdescribe-0612 in youdescribeadm@gmail.com
+  // const youTubeApiKey = "AIzaSyAfU2tpVpMKmIyTlRljnKfPUFWXrNXg21Q";                                 // project youdescribe-0613 in youdescribeadm@gmail.com
+  // const youTubeApiKey = "AIzaSyBaJHiKgT4KW58WJ26tH4PIIQE6vbOvU8w";                                 // project youdescribe-0616 in youdescribeadm@gmail.com
   const googleClientId = '1056671841574-e1r4soednlur8hl2sl0ooumpvftt1s2k.apps.googleusercontent.com';
 
   // Video player setup.
