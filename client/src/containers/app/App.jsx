@@ -5,16 +5,17 @@ import Navbar from '../../components/navbar/Navbar.jsx';
 import Footer from '../../components/footer/Footer.jsx';
 import { ourFetch, getLang } from '../../shared/helperFunctions.js';
 import strings from './../../strings';
+import ReactGA from "react-ga";
 
 const { detect } = require('detect-browser');
 const conf = require('./../../shared/config')();
-
 const polyglot = new Polyglot({
     locale: getLang(),
     phrases: strings[getLang()],
 });
-
 const translate = polyglot.t.bind(polyglot);
+const trackingId = "UA-171142756-3";
+ReactGA.initialize(trackingId);
 
 class App extends Component {
   constructor(props, context) {

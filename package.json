@@ -42,6 +42,7 @@
     "react-dnd-html5-backend": "^3.0.2",
     "react-dom": "^16.10.2",
     "react-draggable": "^4.4.1",
+    "react-ga": "^3.0.0",
     "react-iframe": "^1.8.0",
     "react-paginate": "^6.3.0",
     "react-player-controls": "^1.1.0",
