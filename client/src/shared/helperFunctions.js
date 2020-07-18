@@ -122,10 +122,10 @@ function ourFetch(url, JSONparsing = true, optionObj = { method: 'GET' }) {
     }
     
     /* used for visit counter */
-    if (!sessionStorage.getItem("visit")) {
-      sessionStorage.setItem("visit", Date.now());
-    }
-    req.setRequestHeader("Visit", sessionStorage.getItem("visit"));
+    // if (!sessionStorage.getItem("visit")) {
+    //   sessionStorage.setItem("visit", Date.now());
+    // }
+    // req.setRequestHeader("Visit", sessionStorage.getItem("visit"));
     /* end of used for visit counter */
 
     req.onload = () => {
