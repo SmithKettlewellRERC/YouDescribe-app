@@ -39,22 +39,19 @@ class Home extends Component {
     const youTubeVideosIds = [];
     let ids;
     const url = (`${conf.apiUrl}/videos?page=${this.currentPage}`);
-    ourFetch(url)
-      .then((response) => {
-        this.dbResultArray = response.result;
-        for (let i = 0; i < this.dbResultArray.length; i += 1) {
-          youTubeVideosIds.push(this.dbResultArray[i].youtube_id);
-          youDescribeVideosIds.push(this.dbResultArray[i]._id);
-        }
-        ids = youTubeVideosIds.join(',');
-      })
-      .then(() => {
-        const url = `${conf.youTubeApiUrl}/videos?id=${ids}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
-        ourFetch(url)
-        .then(data => {
-          this.parseFetchedData(data, youDescribeVideosIds)
-        });
+    ourFetch(url).then((response) => {
+      this.dbResultArray = response.result;
+      for (let i = 0; i < this.dbResultArray.length; i += 1) {
+        youTubeVideosIds.push(this.dbResultArray[i].youtube_id);
+        youDescribeVideosIds.push(this.dbResultArray[i]._id);
+      }
+      ids = youTubeVideosIds.join(',');
+    }).then(() => {
+      const url = `${conf.apiUrl}/videos/getyoutubedatafromcache?youtubeids=${ids}&key=home`;
+      ourFetch(url).then(response => {
+        this.parseFetchedData(JSON.parse(response.result), youDescribeVideosIds);
       });
+    });
   }
 
   parseFetchedData(data, youDescribeVideosIds) {

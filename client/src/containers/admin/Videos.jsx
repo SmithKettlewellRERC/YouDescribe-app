@@ -21,9 +21,10 @@ class Videos extends Component {
       this.pageNumber = 1;
     }
 
-    this.keyword = props.location.query.keyword;
-    if (this.keyword == undefined || this.keyword.trim() == "") {
-      this.keyword = "";
+    this.keyword = (props.location.query.keyword || "").trim();
+    if (this.keyword.match(/^https:\/\/(?:www\.)?youtube.com\/watch\?(?=v=\w+)(?:\S+)?$/g)) {
+      const url = new URL(this.keyword);
+      this.keyword = url.searchParams.get("v");
     }
 
     this.sortBy = props.location.query.sortby;
@@ -86,6 +87,10 @@ class Videos extends Component {
   }
 
   render() {
+    if (!window.localStorage.getItem("adminToken") || !window.localStorage.getItem("adminLevel")) {
+      return null;
+    }
+
     let startNumber = 0;
     let endNumber = 0;
     if (this.pageNumber >= 1 && this.pageNumber <= Math.ceil(this.state.totalCount / 50)) {

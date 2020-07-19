@@ -14,15 +14,20 @@ class VideoIndexerMerge extends Component{
     this.state = {
       sceneData: [],
       scene_num: 0,
+      note:"",
       scenes: [],
+      sceneIds: [],
       currentTime: 0,
       timer: 0,
       youtubeId: (props.location.query.id || "7QZNpS0uos4"),
+      currentSceneId: ""
     };
     this.onStateChange = this.onStateChange.bind(this);
     this.onPlay = this.onPlay.bind(this);
     this.updateTime = this.updateTime.bind(this);
     this.highlightScene = this.highlightScene.bind(this);
+    this.handleNoteChange = this.handleNoteChange.bind(this);
+    this.handleSaveNote = this.handleSaveNote.bind(this);
   }
 
   componentWillMount() {
@@ -35,11 +40,14 @@ class VideoIndexerMerge extends Component{
     ourFetch(url).then((response) => {
       const scenes = [];                    // create an empty array of scenes[]
       const sceneData = [];
+      const sceneIds = [];
       let scene_num = 0;
       const items = response.modifiedData;
+     // console.log({items});
       items.forEach(item => {               // iterate the modifiedData[]
         scene_num++;
         //console.log("Hello"+scene_num);
+        sceneIds.push(item.sc_id);
         sceneData.push({
           id: item.sc_id,
           startTime: item.start_time,
@@ -54,6 +62,7 @@ class VideoIndexerMerge extends Component{
             endTime={item.end_time}         // end time
             originalDescription={item.original_description}
             ocr={item.original_ocr}
+            note={item.note}
             scene_num={scene_num}
           />
         );
@@ -62,7 +71,8 @@ class VideoIndexerMerge extends Component{
       this.setState({
         scenes: scenes,
         sceneData: sceneData,
-        scene_num: scene_num
+        scene_num: scene_num,
+        sceneIds: sceneIds,
       });
     });
   }
@@ -105,22 +115,82 @@ class VideoIndexerMerge extends Component{
     this.state.sceneData.forEach(item => {
       const isHighlighted = (currentTime >= item.startTime && currentTime < item.endTime);
       const sceneElement = document.getElementById(item.id);
-      
-    //   sceneElement.style.position = isHighlighted ? "absolute": "relative";
-    //   if(isHighlighted == true){
-    //   $(item.div).animate({top: '0px'});
-    //  console.log({isHighlighted});
-    //   }
       sceneElement.style.backgroundColor = isHighlighted ? "#AFEEEE" : "#FFFFFF";
-      
-      // sceneElement.style.top = isHighlighted ? 1000: 2000 ;
-      // var el = sceneElement.nextElementSibling.innerHTML;
-      // console.log('Siblings of div-01:');
-      // console.log({el});
       const progressBarElement = document.getElementById(item.id + "_progress_bar");
       progressBarElement.style.left = isHighlighted ? `${(currentTime - item.startTime) / (item.endTime - item.startTime) * 100}%` : 0;
+      if (isHighlighted) {
+        document.getElementById("scroll_bar").scrollTo({top: sceneElement.offsetTop - 496});
+        let curNote = "";
+        let scenenumber = "";
+        this.state.scenes.forEach(i => {
+          // scenenumber++;
+          console.log(this.state.scenes)
+          if(i.key === item.id){
+              curNote = i.props.note; 
+              scenenumber = i.props.scene_num;             
+          }
+          
+        });
+      
+        this.setState({
+          currentSceneId: item.id,
+          note: curNote,
+          scenenumber : scenenumber
+        });
+        //console.log(this.state.scenenumber);
+      }
     });
   }
+
+  handleNoteChange(event) {
+    this.setState({
+      note: event.target.value,
+    });
+  }
+
+  handleSaveNote(){
+    const element = document.getElementById(this.state.currentSceneId);
+    let currentScene = "";
+    this.state.scenes.forEach(item => {
+        if(this.state.currentSceneId === item.key){
+            currentScene = item.props;
+        }
+    });
+    let scene = {};
+    scene.scene_id = currentScene.id;
+    scene.modified_description = currentScene.originalDescription;
+   // scene.sceneNumber = currentScene.sceneNumber;
+    scene.start_time = currentScene.startTime;
+    scene.end_time = currentScene.endTime;
+    scene.modified_ocr = currentScene.ocr;
+    scene.note = this.state.note;
+    scene.has_ai= true;
+    const qnaData = [];
+    console.log("Note saved: " + this.state.note);
+    let sceneArr = [];
+    sceneArr.push(scene);
+    const url = `http://18.221.192.73:5001/saveAiDescription`;
+  const optionObj = {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      user_id: "9fe1e2c6-5cd2-11ea-bc55-0242ac130003",
+      videoId: "7QZNpS0uos4",
+      scene_arr: sceneArr,
+      qnaData: qnaData,
+    }),
+  };
+  ourFetch(url, true, optionObj).then((response) => {
+    console.log("response: " + JSON.stringify(response));
+    console.log( {user_id: "9fe1e2c6-5cd2-11ea-bc55-0242ac130003",
+    videoId: "7QZNpS0uos4",
+    scene_arr: sceneArr,
+    qnaData: qnaData})
+  });
+  }
+
 
   render() {
     // https://developers.google.com/youtube/player_parameters
@@ -156,21 +226,21 @@ class VideoIndexerMerge extends Component{
               onPlay={(event) => this.onPlay(event)}
             />
             <hr/>
-            {/* <h5><b>Create Notes </b></h5>
-            <div>
-            <form> 
-                <label>
-                  <b>Scene 1</b>
-                <textarea name="notes" style={{ display: "flex",padding: 10, border: "2px solid gray", marginBlockStart: 30, marginBlockEnd: 25, width: 500, height: 100}}/>
-                </label>
-                <Button type="submit" style={{fontWeight:"bold", fontSize:14, padding: 12,marginLeft: 200 ,marginTop: 10,  marginRight: 25, marginBottom: 10}}  variant="success">Save</Button>
-              </form>
-            </div> */}
-                
+            <div style ={{display: "flex"}}>
+            <h6 style={{width:100, paddingTop:15, }}><b>Create Notes Scene {this.state.scenenumber} </b></h6>
+            <textarea
+              defaultValue={this.state.note}
+              onChange={(event) => this.handleNoteChange(event)}
+              style={{display: "flex",padding: 10, border: "2px solid gray", marginBlockEnd: 25,marginBlockStart: 15, width: 450, height: 120, marginInlineStart:10}}
+            /> 
+            <Button type="submit" onClick={this.handleSaveNote} style={{fontWeight:"bold",width:120,height: 40, marginTop: 20, marginBlockStart: 95, marginBottom: 10, marginInlineStart:3 }} variant="success">Save</Button>
+      
+            </div>
+               
 
           </div>
-          <div style={{marginLeft: "20px"}}>
-            {this.state.scenes}
+          <div id="scroll_bar" style={{marginLeft: 10, width:800,maxHeight: 750,marginInlineStart: 20 , overflowY: "scroll", border: "0.5px solid gray"}}>
+             {this.state.scenes}
             <Button type="submit" style={{fontWeight:"bold", fontSize:16, padding: 15,marginLeft: 200 ,marginTop: 10, marginBlockStart: 25, marginBlockEnd: 25,  marginRight: 25, marginBottom: 10}} variant="success">Done Merging!</Button>
           </div>
         </div>

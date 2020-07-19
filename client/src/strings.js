@@ -113,7 +113,7 @@ const strings = {
     "Descriptions": "Descrições",
     "Description Detail": "Descrição Detalhe",
     "My profile": "Meus perfil",
-    "ADMIN": "ADMIN",
+    "Admin": "Admin",
   },
   'en-us': {
     'RECENT DESCRIPTIONS': 'RECENT DESCRIPTIONS',
@@ -229,7 +229,7 @@ const strings = {
     "Descriptions": "Descriptions",
     "Description Detail": "Description Detail",
     "My profile": "My profile",
-    "ADMIN": "ADMIN",
+    "Admin": "Admin",
   },
 };
 

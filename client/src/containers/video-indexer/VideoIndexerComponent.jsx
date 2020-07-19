@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import Iframe from "react-iframe";
 import { Slider, Direction } from "react-player-controls";
 import { Navbar, Nav, NavDropdown, Button, FormControl, Form, Table } from "react-bootstrap";
-import { ourFetch, convertTimeToCardFormat, convertViewsToCardFormat } from "../../shared/helperFunctions";
+import { ourFetch, convertTimeToCardFormat, convertViewsToCardFormat,convertSecondsToCardFormat  } from "../../shared/helperFunctions";
 import Modal from 'react-awesome-modal';
 
 class VideoIndexerComponent extends Component {
@@ -17,6 +17,7 @@ class VideoIndexerComponent extends Component {
         endTime: this.props.endTime,
         originalDescription: this.props.originalDescription,
         ocr: this.props.ocr,
+        note: this.props.note
       };
       this.handleClick = this.handleClick.bind(this);
     }
@@ -57,6 +58,7 @@ class VideoIndexerComponent extends Component {
       let start_time_temp = element1.getAttribute("starttime");
       let end_time_temp = element1.getAttribute("endtime");
       let has_ai_temp = true;
+      let note_temp = element1.getAttribute("note");
       this.state.sceneIds.map(id => {
         if(flag){
           const element = document.getElementById(id);
@@ -69,6 +71,7 @@ class VideoIndexerComponent extends Component {
             start_time: start_time_temp,
             end_time: element.getAttribute("endtime"),
             has_ai: true,
+            note: note_temp + element.getAttribute("note"),
             deletedScene: dScene
           }); 
       
@@ -80,7 +83,7 @@ class VideoIndexerComponent extends Component {
           flag = false;
         }
       });
-      console.log(sceneArr);
+      console.log({sceneArr});
       const qnaData = this.state.qnaData;
       const elements = Array.prototype.slice.call(document.getElementsByName("humanQuestion")) || [];
       elements.forEach(element => {
@@ -96,8 +99,7 @@ class VideoIndexerComponent extends Component {
         });
       });
       
-      console.log("qnaData:");
-      console.log(qnaData);
+      console.log({qnaData});
       const url = `http://18.221.192.73:5001/saveAiDescription`;
       const optionObj = {
         method: "POST",
@@ -108,20 +110,19 @@ class VideoIndexerComponent extends Component {
           user_id: "9fe1e2c6-5cd2-11ea-bc55-0242ac130003",
           videoId: "7QZNpS0uos4",
           scene_arr: sceneArr,
-          qnaData: "",
+          qnaData: qnaData,
         }),
       };
+
+     
+      ourFetch(url, true, optionObj).then((response) => {
+        console.log("response: " + JSON.stringify(response));
+      });
+
+      
       this.setState({
         visible : true
     });
-      ourFetch(url, true, optionObj).then((response) => {
-        console.log("response: " + JSON.stringify(response));
-        console.log({ user_id: "9fe1e2c6-5cd2-11ea-bc55-0242ac130003",
-        videoId: "7QZNpS0uos4",
-        scene_arr: sceneArr,
-        qnaData: qnaData})
-
-      });
       
     }
 
@@ -130,7 +131,9 @@ class VideoIndexerComponent extends Component {
           visible : false
       });
       window.location.reload(false);
-  }
+  
+    }
+
 
     render() {
       return (
@@ -140,13 +143,14 @@ class VideoIndexerComponent extends Component {
         endtime={this.state.endTime}
         originalDescription={this.state.originalDescription}
         ocr={this.state.ocr}
+        note={this.state.note}
         >
         <div style={{padding: 5, border: "3px solid gray", marginBlockStart: 25, marginBlockEnd: 25, width: 500}}>
           <div style={{display: "flex"}}>
             <h5 style={{width: 160, marginRight: 10}}><b>Scene {this.props.scene_num}</b></h5>
             <p style={{ marginRight: 30, fontWeight:"bold", marginLeft: 50, width: 400, paddingTop: 1, color:"#008CBA" }}>
-               {this.props.startTime} - {this.props.endTime} (s)
-              <Slider
+            {convertSecondsToCardFormat(this.props.startTime)} - {convertSecondsToCardFormat(this.props.endTime)}
+             <Slider
                 isEnabled={true}
                 direction={Direction.HORIZONTAL}
               >
@@ -177,6 +181,8 @@ class VideoIndexerComponent extends Component {
               </Slider>
             </p>
             <Button type="submit" onClick={this.handleClick} style={{fontWeight:"bold", fontSize:14,marginLeft: 10}} variant="warning">Merge with Next scene.</Button>
+            
+            
             <Modal visible={this.state.visible} width="400" height="200" effect="fadeInUp" onClickAway={() => this.closeModal()}>
                     <div>
                         <h1 style={{display: "flex", justifyContent: "center", padding: 10}}>Succefully Merged! </h1>
@@ -185,6 +191,17 @@ class VideoIndexerComponent extends Component {
                     </div>
         </Modal>
           </div>
+          {/* <div style ={{display: "flex"}}>
+            <h6 style={{width:100, paddingTop:15, }}><b>Create Notes </b></h6>
+            <textarea
+              defaultValue={this.props.note}
+              onChange={(event) => this.handleNoteChange(event)}
+              style={{display: "flex",padding: 10, border: "2px solid gray", marginBlockEnd: 25,marginBlockStart: 15, width: 400, height: 150, marginInlineStart:10}}
+            /> 
+            
+            </div>
+            <Button type="submit" onClick={this.handleSaveNote} style={{fontWeight:"bold",width:120, marginTop: 20, marginBlockStart: 2, marginBottom: 10, marginInlineStart:360 }} variant="success">Save</Button>
+       */}
           {/* <div style={{display: "block"}}>
             Description: {this.props.originalDescription}
           </div> */}
