@@ -6,11 +6,14 @@ import { Link } from "react-router";
 class UserMenu extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      userAdmin: localStorage.getItem("userAdmin")
+    };
   }
 
   render() {
     const myVideosUrl = `/videos/user/${this.props.getAppState().userId}`;
-
+    alert(this.state.userAdmin);
     return (
       <div id="user-menu" tabIndex="-1">
         <div className="arrow-up"></div>
@@ -35,7 +38,7 @@ class UserMenu extends Component {
           {/* <div className="my-described-videos-button">
             <Link to={`/profile/${this.props.getAppState().userId}`} title="View my profile" onClick={this.props.userMenuToggle}><i style={{width: 40}} className="fa fa-cog" aria-hidden="true"></i><span>{this.props.translate("My profile")}</span></Link>
           </div> */}
-          {this.props.getAppState().userAdmin !== 0 ? (
+          {this.state.userAdmin !== "undefined" ? (
             <div className="my-described-videos-button">
               <Link
                 to={`/admin`}
