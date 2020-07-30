@@ -46,7 +46,20 @@ import TagsOfVideos from "./containers/statistics/TagsOfVideos.jsx";
 import SummaryOfTimeRange from "./containers/statistics/SummaryOfTimeRange.jsx";
 import DailyCountOfDataRecords from "./containers/statistics/DailyCountOfDataRecords.jsx";
 
-ReactDOM.render((
+//Google Analytics
+import ReactGA from "react-ga";
+import { createBrowserHistory } from "history";
+const history = createBrowserHistory();
+//const trackingId = "UA-171142756-3"; //live site key
+const trackingId = "UA-174046676-1"; //dev key
+ReactGA.initialize(trackingId);
+
+history.listen(location => {
+  ReactGA.set({ page: location.pathname }); // Update the user's current page
+  ReactGA.pageview(location.pathname); // Record a pageview for the given page
+});
+
+ReactDOM.render(
   <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
     <Route path="/" component={App}>
       // website
@@ -66,35 +79,62 @@ ReactDOM.render((
       <Route path="/support/viewers" component={Viewers} />
       <Route path="/support/privacy" component={Privacy} />
       <Route path="/unsupported-browser" component={UnsupportedBrowser} />
-
       // Video Indexer
       <Route path="/video-indexer-merge" component={VideoIndexerMerge} />
-      <Route path="/video-indexer-description" component={VideoIndexerDescription} />
+      <Route
+        path="/video-indexer-description"
+        component={VideoIndexerDescription}
+      />
       <Route path="/waitlist" component={Waitlist} />
-      
       // admin panel
       <Route path="/admin" component={Videos} />
       <Route path="/admin/signin" component={Signin} />
       <Route path="/admin/descriptions" component={Descriptions} />
       <Route path="/admin/descriptions/search" component={Descriptions} />
-      <Route path="/admin/description/detail/:id" component={DescriptionDetail} />
+      <Route
+        path="/admin/description/detail/:id"
+        component={DescriptionDetail}
+      />
       <Route path="/admin/videos" component={Videos} />
       <Route path="/admin/videos/search" component={Videos} />
       <Route path="/admin/video/detail/:id" component={VideoDetail} />
-
       // statistics
-      <Route path="/statistics/audioclipsofdescriptions" component={AudioClipsOfDescriptions} />
-      <Route path="/statistics/timelengthofaudioclips" component={TimeLengthOfAudioClips} />
-      <Route path="/statistics/wordcountofaudioclips" component={WordCountOfAudioClips} />
-      <Route path="/statistics/wordcloudofaudioclips" component={WordCloudOfAudioClips} />
-      <Route path="/statistics/summaryofdatarecords" component={SummaryOfDataRecords} />
-      <Route path="/statistics/categoriesofvideos" component={CategoriesOfVideos} />
-      <Route path="/statistics/summaryoftimerange" component={SummaryOfTimeRange} />
+      <Route
+        path="/statistics/audioclipsofdescriptions"
+        component={AudioClipsOfDescriptions}
+      />
+      <Route
+        path="/statistics/timelengthofaudioclips"
+        component={TimeLengthOfAudioClips}
+      />
+      <Route
+        path="/statistics/wordcountofaudioclips"
+        component={WordCountOfAudioClips}
+      />
+      <Route
+        path="/statistics/wordcloudofaudioclips"
+        component={WordCloudOfAudioClips}
+      />
+      <Route
+        path="/statistics/summaryofdatarecords"
+        component={SummaryOfDataRecords}
+      />
+      <Route
+        path="/statistics/categoriesofvideos"
+        component={CategoriesOfVideos}
+      />
+      <Route
+        path="/statistics/summaryoftimerange"
+        component={SummaryOfTimeRange}
+      />
       <Route path="/statistics/tagsofvideos" component={TagsOfVideos} />
-      <Route path="/statistics/dailycountofdatarecords" component={DailyCountOfDataRecords} />
-
+      <Route
+        path="/statistics/dailycountofdatarecords"
+        component={DailyCountOfDataRecords}
+      />
       // misc (error) pages
       <Route path="*" component={NotFound} />
     </Route>
-  </Router>
-), document.getElementById("app"));
+  </Router>,
+  document.getElementById("app")
+);

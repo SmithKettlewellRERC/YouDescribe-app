@@ -10,6 +10,7 @@ class UserMenu extends Component {
 
   render() {
     const myVideosUrl = `/videos/user/${this.props.getAppState().userId}`;
+
     return (
       <div id="user-menu" tabIndex="-1">
         <div className="arrow-up"></div>
@@ -34,9 +35,7 @@ class UserMenu extends Component {
           {/* <div className="my-described-videos-button">
             <Link to={`/profile/${this.props.getAppState().userId}`} title="View my profile" onClick={this.props.userMenuToggle}><i style={{width: 40}} className="fa fa-cog" aria-hidden="true"></i><span>{this.props.translate("My profile")}</span></Link>
           </div> */}
-          {localStorage.getItem("adminLevel") ? (
-            ""
-          ) : (
+          {this.props.getAppState().userAdmin !== 0 ? (
             <div className="my-described-videos-button">
               <Link
                 to={`/admin`}
@@ -51,6 +50,8 @@ class UserMenu extends Component {
                 <span>{this.props.translate("Admin")}</span>
               </Link>
             </div>
+          ) : (
+            ""
           )}
           <hr />
           <div className="sign-out-button">
