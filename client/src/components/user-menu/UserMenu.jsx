@@ -13,7 +13,6 @@ class UserMenu extends Component {
 
   render() {
     const myVideosUrl = `/videos/user/${this.props.getAppState().userId}`;
-    alert(this.state.userAdmin);
     return (
       <div id="user-menu" tabIndex="-1">
         <div className="arrow-up"></div>
