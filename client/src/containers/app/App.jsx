@@ -58,6 +58,7 @@ class App extends Component {
       },
       body: JSON.stringify({ googleToken })
     }).then(res => {
+      localStorage.setItem("userAdmin", res.result.admin);
       this.setState(
         {
           isSignedIn: true,
