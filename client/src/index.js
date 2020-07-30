@@ -50,8 +50,8 @@ import DailyCountOfDataRecords from "./containers/statistics/DailyCountOfDataRec
 import ReactGA from "react-ga";
 import { createBrowserHistory } from "history";
 const history = createBrowserHistory();
-const trackingId = "UA-171142756-3"; //live site key
-//const trackingId = "UA-174046676-1"; //dev key
+//const trackingId = "UA-171142756-3"; //live site key
+const trackingId = "UA-174046676-1"; //dev key
 ReactGA.initialize(trackingId);
 
 history.listen(location => {
