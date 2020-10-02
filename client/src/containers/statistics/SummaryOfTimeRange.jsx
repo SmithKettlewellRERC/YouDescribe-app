@@ -219,7 +219,7 @@ class SummaryOfTimeRange extends Component {
             </thead>
             <tbody>
               <tr>
-                <th>Count Of Video Visits</th>
+                <th>Count Of Total Video Visits (not individual)</th>
                 <th>
                   {this.state.videoVisits}&nbsp;
                   <Link to={this.getRoute("Video Visits")} target="daily">
@@ -228,7 +228,7 @@ class SummaryOfTimeRange extends Component {
                 </th>
               </tr>
               <tr>
-                <th>Count Of Home Page Visits</th>
+                <th>Count Of Total Home Page Visits (not individual)</th>
                 <th>
                   {this.state.webVisits}&nbsp;
                   <Link to={this.getRoute("Web Visits")} target="daily">
@@ -255,7 +255,7 @@ class SummaryOfTimeRange extends Component {
                 </th>
               </tr>
               <tr>
-                <th>Count Of Audio Descriptions</th>
+                <th>Count Of Audio Descriptions Created</th>
                 <th>
                   {this.state.audioDescriotions}&nbsp;
                   <Link to={this.getRoute("Audio Descriptions")} target="daily">
@@ -264,7 +264,7 @@ class SummaryOfTimeRange extends Component {
                 </th>
               </tr>
               <tr>
-                <th>Count Of Videos</th>
+                <th>Count Of Videos Added</th>
                 <th>
                   {this.state.videos.count}&nbsp;
                   <Link to={this.getRoute("Videos")} target="daily">
