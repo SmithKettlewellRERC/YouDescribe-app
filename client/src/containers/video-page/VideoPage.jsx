@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
-import PropTypes from 'prop-types';
-import { Howl } from 'howler';
-import Spinner from '../../components/spinner/Spinner.jsx';
-import VideoPlayerControls from '../../components/video-player-controls/VideoPlayerControls.jsx';
-import DescriberCard from '../../components/describer-card/DescriberCard.jsx';
-import YTInfoCard from '../../components/yt-info-card/YTInfoCard.jsx';
-import RatingsInfoCard from '../../components/ratings-info-card/RatingsInfoCard.jsx';
-import Button from '../../components/button/Button.jsx';
-import RatingPopup from '../../components/rating-popup/RatingPopup.jsx';
-import FeedbackPopup from '../../components/feedback-popup/FeedbackPopup.jsx';
+import React, { Component } from "react";
+import { browserHistory } from "react-router";
+import PropTypes from "prop-types";
+import { Howl } from "howler";
+import Spinner from "../../components/spinner/Spinner.jsx";
+import VideoPlayerControls from "../../components/video-player-controls/VideoPlayerControls.jsx";
+import DescriberCard from "../../components/describer-card/DescriberCard.jsx";
+import YTInfoCard from "../../components/yt-info-card/YTInfoCard.jsx";
+import RatingsInfoCard from "../../components/ratings-info-card/RatingsInfoCard.jsx";
+import Button from "../../components/button/Button.jsx";
+import RatingPopup from "../../components/rating-popup/RatingPopup.jsx";
+import FeedbackPopup from "../../components/feedback-popup/FeedbackPopup.jsx";
 
 import {
   ourFetch,
@@ -17,11 +17,11 @@ import {
   convertISO8601ToDate,
   convertSecondsToEditorFormat,
   convertViewsToCardFormat,
-  convertLikesToCardFormat,
-} from '../../shared/helperFunctions';
-import ShareBar from '../../components/share-bar/ShareBar.jsx';
+  convertLikesToCardFormat
+} from "../../shared/helperFunctions";
+import ShareBar from "../../components/share-bar/ShareBar.jsx";
 
-const conf = require('../../shared/config')();
+const conf = require("../../shared/config")();
 
 class VideoPage extends Component {
   constructor(props) {
@@ -45,16 +45,16 @@ class VideoPage extends Component {
       showDescribersList: true,
 
       // Video controls and data
-      videoTitle: '',
-      videoDescription: '',
+      videoTitle: "",
+      videoDescription: "",
       videoData: {},
       videoPlayer: null,
       videoState: -1,
       videoPlayerAccessibilitySeekbarValue: 0,
       videoVolume: 0,
       balancerValue: 50,
-      currentVideoProgress: '00:00:00:00',
-      videoDurationToDisplay: '00:00:00:00',
+      currentVideoProgress: "00:00:00:00",
+      videoDurationToDisplay: "00:00:00:00"
     };
 
     this.updateState = this.updateState.bind(this);
@@ -85,18 +85,27 @@ class VideoPage extends Component {
 
   componentDidMount() {
     SocialShareKit.init();
-    document.getElementById('video-page').focus();
+    document.getElementById("video-page").focus();
     this.fetchVideoData();
   }
 
   goToErrorPage() {
-    browserHistory.push('/not-found');
+    browserHistory.push("/not-found");
   }
 
   getAudioClips() {
-    if (this.state.audioDescriptionsIdsAudioClips && this.state.selectedAudioDescriptionId) {
-      if (this.state.audioDescriptionsIdsAudioClips[this.state.selectedAudioDescriptionId]) {
-        return this.state.audioDescriptionsIdsAudioClips[this.state.selectedAudioDescriptionId];
+    if (
+      this.state.audioDescriptionsIdsAudioClips &&
+      this.state.selectedAudioDescriptionId
+    ) {
+      if (
+        this.state.audioDescriptionsIdsAudioClips[
+          this.state.selectedAudioDescriptionId
+        ]
+      ) {
+        return this.state.audioDescriptionsIdsAudioClips[
+          this.state.selectedAudioDescriptionId
+        ];
       }
     }
     return [];
@@ -109,20 +118,23 @@ class VideoPage extends Component {
     const url = `${conf.apiUrl}/videos/${this.props.params.videoId}`;
 
     ourFetch(url)
-    .then((response) => {
-      if (response.result) {
-        self.setState({
-          videoData: response.result,
-        }, () => {
+      .then(response => {
+        if (response.result) {
+          self.setState(
+            {
+              videoData: response.result
+            },
+            () => {
+              self.parseVideoData();
+            }
+          );
+        } else {
           self.parseVideoData();
-        });
-      } else {
-        self.parseVideoData();
-      }
-    })
-    .catch((err) => {
-      return this.goToErrorPage();
-    });
+        }
+      })
+      .catch(err => {
+        return this.goToErrorPage();
+      });
   }
 
   // 3
@@ -136,18 +148,25 @@ class VideoPage extends Component {
     const audioDescriptionsIdsUsers = {};
     const audioDescriptionsIdsAudioClips = {};
 
-    if (videoData && videoData.audio_descriptions && videoData.audio_descriptions.length > 0) {
-      videoData.audio_descriptions.forEach((ad) => {
-        if (ad.status === 'published') {
+    if (
+      videoData &&
+      videoData.audio_descriptions &&
+      videoData.audio_descriptions.length > 0
+    ) {
+      videoData.audio_descriptions.forEach(ad => {
+        if (ad.status === "published") {
           audioDescriptionsIds.push(ad._id);
           audioDescriptionsIdsUsers[ad._id] = ad.user;
-          audioDescriptionsIdsUsers[ad._id].overall_rating_votes_counter = ad.overall_rating_votes_counter;
-          audioDescriptionsIdsUsers[ad._id].overall_rating_average = ad.overall_rating_average;
-          audioDescriptionsIdsUsers[ad._id].overall_rating_votes_sum = ad.overall_rating_votes_sum;
+          audioDescriptionsIdsUsers[ad._id].overall_rating_votes_counter =
+            ad.overall_rating_votes_counter;
+          audioDescriptionsIdsUsers[ad._id].overall_rating_average =
+            ad.overall_rating_average;
+          audioDescriptionsIdsUsers[ad._id].overall_rating_votes_sum =
+            ad.overall_rating_votes_sum;
           audioDescriptionsIdsUsers[ad._id].feedbacks = ad.feedbacks;
           audioDescriptionsIdsAudioClips[ad._id] = [];
           if (ad.audio_clips.length > 0) {
-            ad.audio_clips.forEach((audioClip) => {
+            ad.audio_clips.forEach(audioClip => {
               audioClip.url = `${conf.audioClipsUploadsPath}${audioClip.file_path}/${audioClip.file_name}`;
               audioDescriptionsIdsAudioClips[ad._id].push(audioClip);
             });
@@ -155,15 +174,18 @@ class VideoPage extends Component {
         }
       });
     }
-    console.log('audioDescriptionsIdsUsers', audioDescriptionsIdsUsers)
-    this.setState({
-      videoData,
-      audioDescriptionsIds,
-      audioDescriptionsIdsUsers,
-      audioDescriptionsIdsAudioClips,
-    }, () => {
-      this.setAudioDescriptionActive();
-    });
+    console.log("audioDescriptionsIdsUsers", audioDescriptionsIdsUsers);
+    this.setState(
+      {
+        videoData,
+        audioDescriptionsIds,
+        audioDescriptionsIdsUsers,
+        audioDescriptionsIdsAudioClips
+      },
+      () => {
+        this.setAudioDescriptionActive();
+      }
+    );
   }
 
   getHighestRatingADId() {
@@ -191,24 +213,30 @@ class VideoPage extends Component {
     if (this.state.selectedAudioDescriptionId !== null) {
       selectedAudioDescriptionId = this.state.selectedAudioDescriptionId;
     } else {
-      console.log('SELECTED', this.getHighestRatingADId())
+      console.log("SELECTED", this.getHighestRatingADId());
       // selectedAudioDescriptionId = this.state.audioDescriptionsIds[0];
       selectedAudioDescriptionId = this.getHighestRatingADId();
     }
 
     // Invalid audio description id passed.
-    if (this.state.audioDescriptionsIds.length && this.state.audioDescriptionsIds.indexOf(selectedAudioDescriptionId) === -1) {
+    if (
+      this.state.audioDescriptionsIds.length &&
+      this.state.audioDescriptionsIds.indexOf(selectedAudioDescriptionId) === -1
+    ) {
       return this.goToErrorPage();
     }
 
     const location = Object.assign({}, browserHistory.getCurrentLocation());
     Object.assign(location.query, { ad: selectedAudioDescriptionId });
     browserHistory.push(location);
-    this.setState({
-      selectedAudioDescriptionId,
-    }, () => {
-      this.preLoadAudioClips();
-    });
+    this.setState(
+      {
+        selectedAudioDescriptionId
+      },
+      () => {
+        this.preLoadAudioClips();
+      }
+    );
   }
 
   // 5
@@ -223,12 +251,13 @@ class VideoPage extends Component {
       audioClips.forEach((audioObj, idx) => {
         promises.push(ourFetch(audioObj.url, false));
       });
-      Promise.all(promises).then(() => {
-        self.getYTVideoInfo();
-      })
-      .catch((errorAllAudios) => {
-        console.log('ERROR LOADING AUDIOS -> ', errorAllAudios);
-      });
+      Promise.all(promises)
+        .then(() => {
+          self.getYTVideoInfo();
+        })
+        .catch(errorAllAudios => {
+          console.log("ERROR LOADING AUDIOS -> ", errorAllAudios);
+        });
     } else {
       self.getYTVideoInfo();
     }
@@ -241,26 +270,46 @@ class VideoPage extends Component {
     const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet,statistics&forUsername=iamOTHER&key=${conf.youTubeApiKey}`;
 
     // Use custom fetch for cross-browser compatability
-    ourFetch(url).then((data) => {
-      this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
-      this.setState({
-        videoTitle: data.items[0].snippet.title,
-        videoAuthor: data.items[0].snippet.channelTitle,
-        videoPublishedAt: convertISO8601ToDate(data.items[0].snippet.publishedAt),
-        videoDescription: data.items[0].snippet.description,
-        videoViews: convertViewsToCardFormat(data.items[0].statistics.viewCount),
-        videoLikes: convertLikesToCardFormat(data.items[0].statistics.likeCount),
-        videoDislikes: convertLikesToCardFormat(data.items[0].statistics.dislikeCount),
-        videoDurationInSeconds: this.videoDurationInSeconds,
-        videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
-      }, () => {
-        document.title = `YouDescribe - ${this.state.videoTitle}`;
-        self.initVideoPlayer();
+    ourFetch(url)
+      .then(data => {
+        this.videoDurationInSeconds = convertISO8601ToSeconds(
+          data.items[0].contentDetails.duration
+        );
+        this.setState(
+          {
+            videoTitle: data.items[0].snippet.title,
+            videoAuthor: data.items[0].snippet.channelTitle,
+            videoPublishedAt: convertISO8601ToDate(
+              data.items[0].snippet.publishedAt
+            ),
+            videoDescription: data.items[0].snippet.description,
+            videoViews: convertViewsToCardFormat(
+              data.items[0].statistics.viewCount
+            ),
+            videoLikes: convertLikesToCardFormat(
+              data.items[0].statistics.likeCount
+            ),
+            videoDislikes: convertLikesToCardFormat(
+              data.items[0].statistics.dislikeCount
+            ),
+            videoDurationInSeconds: this.videoDurationInSeconds,
+            videoDurationToDisplay: convertSecondsToEditorFormat(
+              this.videoDurationInSeconds
+            )
+          },
+          () => {
+            document.title = `YouDescribe - ${this.state.videoTitle}`;
+            self.initVideoPlayer();
+          }
+        );
+      })
+      .catch(err => {
+        console.log("Unable to load the video you are trying to edit.", err);
+        alert(
+          "Thank you for visiting YouDescribe. This video is not viewable at this time due to YouTube API key limits. Our key is reset by Google at midnight Pacific time."
+        );
+        //this.goToErrorPage();
       });
-    }).catch((err) => {
-      console.log('Unable to load the video you are trying to edit.', err);
-      this.goToErrorPage();
-    });
   }
 
   // 7
@@ -273,8 +322,8 @@ class VideoPage extends Component {
       // console.log('8 -> startVideo');
       if (self.state.videoPlayer === null) {
         self.setState({
-          videoPlayer: new YT.Player('playerVP', {
-            width: '100%',
+          videoPlayer: new YT.Player("playerVP", {
+            width: "100%",
             videoId: self.state.videoId,
             playerVars: {
               cc_load_policy: 1,
@@ -285,13 +334,13 @@ class VideoPage extends Component {
               iv_load_policy: 3,
               modestbranding: 1,
               showinfo: 0,
-              autoplay: 0,
+              autoplay: 0
             },
             events: {
               onReady: onVideoPlayerReady,
-              onStateChange: onPlayerStateChange,
-            },
-          }),
+              onStateChange: onPlayerStateChange
+            }
+          })
         });
       }
     }
@@ -320,10 +369,9 @@ class VideoPage extends Component {
             self.startProgressWatcher();
             break;
           case 2: // paused
-
             // stops all inline clip instances
             for (const clip in self.audioClipsPlayed) {
-              if (self.audioClipsPlayed[clip].playbackType === 'inline') {
+              if (self.audioClipsPlayed[clip].playbackType === "inline") {
                 self.audioClipsPlayed[clip].stop();
               }
             }
@@ -363,17 +411,22 @@ class VideoPage extends Component {
       const currentVideoProgress = self.state.videoPlayer.getCurrentTime();
 
       // audio ducking
-      self.state.inlineClipsCurrentlyPlaying.length ?
-        self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4) :
-        self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
+      self.state.inlineClipsCurrentlyPlaying.length
+        ? self.state.videoPlayer.setVolume(
+            (100 - self.state.balancerValue) * 0.4
+          )
+        : self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
 
       for (const clip in this.audioClipsPlayed) {
         this.audioClipsPlayed[clip].volume(self.state.balancerValue / 100);
       }
 
       this.setState({
-        videoPlayerAccessibilitySeekbarValue: currentVideoProgress / this.state.videoDurationInSeconds,
-        currentVideoProgress: convertSecondsToEditorFormat(Math.floor(currentVideoProgress)),
+        videoPlayerAccessibilitySeekbarValue:
+          currentVideoProgress / this.state.videoDurationInSeconds,
+        currentVideoProgress: convertSecondsToEditorFormat(
+          Math.floor(currentVideoProgress)
+        )
       });
 
       const currentVideoProgressFloor = Math.floor(currentVideoProgress);
@@ -412,22 +465,24 @@ class VideoPage extends Component {
         html5: false,
         volume: self.state.balancerValue / 100,
         onplay: () => {
-          if (playbackType === 'extended') {
+          if (playbackType === "extended") {
             self.state.videoPlayer.pauseVideo();
           }
-          if (playbackType === 'inline') {
-            const inlineClipsCurrentlyPlaying = self.state.inlineClipsCurrentlyPlaying;
+          if (playbackType === "inline") {
+            const inlineClipsCurrentlyPlaying =
+              self.state.inlineClipsCurrentlyPlaying;
 
             inlineClipsCurrentlyPlaying.push(audioClipId);
             self.setState({ inlineClipsCurrentlyPlaying });
           }
         },
         onend: () => {
-          if (playbackType === 'extended') {
+          if (playbackType === "extended") {
             self.state.videoPlayer.playVideo();
           }
-          if (playbackType === 'inline') {
-            const inlineClipsCurrentlyPlaying = self.state.inlineClipsCurrentlyPlaying;
+          if (playbackType === "inline") {
+            const inlineClipsCurrentlyPlaying =
+              self.state.inlineClipsCurrentlyPlaying;
 
             inlineClipsCurrentlyPlaying.pop();
             if (!inlineClipsCurrentlyPlaying.length) {
@@ -435,10 +490,14 @@ class VideoPage extends Component {
             }
             self.setState({ inlineClipsCurrentlyPlaying });
           }
-        },
+        }
       });
 
-      console.log('Audio clip playback started', playbackType, audioClip.start_time);
+      console.log(
+        "Audio clip playback started",
+        playbackType,
+        audioClip.start_time
+      );
       this.audioClipsPlayed[audioClipId].playbackType = playbackType;
       this.audioClipsPlayed[audioClipId].play();
     }
@@ -458,24 +517,27 @@ class VideoPage extends Component {
   changeAudioDescription(selectedAudioDescriptionId) {
     this.state.videoPlayer.stopVideo();
     this.resetPlayedAudioClips();
-    this.setState({
-      selectedAudioDescriptionId,
-    }, () => {
-      this.setAudioDescriptionActive();
-    });
+    this.setState(
+      {
+        selectedAudioDescriptionId
+      },
+      () => {
+        this.setAudioDescriptionActive();
+      }
+    );
   }
 
   handleDescriberChange(id) {
     this.changeAudioDescription(id);
-    document.getElementById('play-pause-button').style.outline = 'none';
-    document.getElementById('play-pause-button').focus();
+    document.getElementById("play-pause-button").style.outline = "none";
+    document.getElementById("play-pause-button").focus();
   }
 
   handleAddDescription() {
     if (this.props.getAppState().isSignedIn) {
-      browserHistory.push('/authoring-tool/' + this.state.videoId);
+      browserHistory.push("/authoring-tool/" + this.state.videoId);
     } else {
-      alert(this.props.translate('You must sign in to perform this action'));
+      alert(this.props.translate("You must sign in to perform this action"));
     }
   }
 
@@ -492,74 +554,82 @@ class VideoPage extends Component {
   }
 
   closeSpinner() {
-    const spinner = document.getElementsByClassName('spinner')[0];
-    spinner.style.display = 'none';
+    const spinner = document.getElementsByClassName("spinner")[0];
+    spinner.style.display = "none";
   }
 
   handleRatingSubmit(rating) {
-    if (rating === 0) alert('You must select a rating');
+    if (rating === 0) alert("You must select a rating");
     else if (!this.props.getAppState().isSignedIn) {
-      alert(this.props.translate('You have to be logged in in order to vote'));
+      alert(this.props.translate("You have to be logged in in order to vote"));
     } else {
       this.rating = rating;
       const url = `${conf.apiUrl}/audiodescriptionsrating/${this.state.selectedAudioDescriptionId}`;
 
       ourFetch(url, true, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           userId: this.props.getAppState().userId,
           userToken: this.props.getAppState().userToken,
-          rating,
-        }),
+          rating
+        })
       })
-      .then((res) => {
-        if (rating === 5) {
-          // alert(`You have successfully given this description a rating of ${rating}`);
-          document.getElementById('rating-popup').style.display = 'none';
-          document.getElementById('rating-success').style.display = 'block';
-          document.getElementById('rating-success').focus();
-          setTimeout(() => document.getElementById('rating-success').style.display = 'none', 1000);
+        .then(res => {
+          if (rating === 5) {
+            // alert(`You have successfully given this description a rating of ${rating}`);
+            document.getElementById("rating-popup").style.display = "none";
+            document.getElementById("rating-success").style.display = "block";
+            document.getElementById("rating-success").focus();
+            setTimeout(
+              () =>
+                (document.getElementById("rating-success").style.display =
+                  "none"),
+              1000
+            );
 
-          /* start of email */
-          this.sendOptInEmail(2, this.rating, []);
-          /* end of email */
-        } else {
-          this.handleFeedbackPopup();
-        }
-        const describers = { ...this.state.audioDescriptionsIdsUsers };
-        const selectedId = this.state.selectedAudioDescriptionId;
+            /* start of email */
+            this.sendOptInEmail(2, this.rating, []);
+            /* end of email */
+          } else {
+            this.handleFeedbackPopup();
+          }
+          const describers = { ...this.state.audioDescriptionsIdsUsers };
+          const selectedId = this.state.selectedAudioDescriptionId;
 
-        if (!describers[selectedId].overall_rating_votes_sum) {
-          describers[selectedId].overall_rating_votes_sum = 0;
-        }
-        if (!describers[selectedId].overall_rating_votes_counter) {
-          describers[selectedId].overall_rating_votes_counter = 0;
-        }
-        if (!describers[selectedId].overall_rating_average) {
-          describers[selectedId].overall_rating_average = 0;
-        }
+          if (!describers[selectedId].overall_rating_votes_sum) {
+            describers[selectedId].overall_rating_votes_sum = 0;
+          }
+          if (!describers[selectedId].overall_rating_votes_counter) {
+            describers[selectedId].overall_rating_votes_counter = 0;
+          }
+          if (!describers[selectedId].overall_rating_average) {
+            describers[selectedId].overall_rating_average = 0;
+          }
 
-        describers[selectedId].overall_rating_votes_sum += rating;
-        describers[selectedId].overall_rating_votes_counter += 1;
-        describers[selectedId].overall_rating_average = (
-          describers[selectedId].overall_rating_votes_sum /
-          describers[selectedId].overall_rating_votes_counter
-        );
+          describers[selectedId].overall_rating_votes_sum += rating;
+          describers[selectedId].overall_rating_votes_counter += 1;
+          describers[selectedId].overall_rating_average =
+            describers[selectedId].overall_rating_votes_sum /
+            describers[selectedId].overall_rating_votes_counter;
 
-        this.setState({
-          audioDescriptionsIdsUsers: describers,
+          this.setState({
+            audioDescriptionsIdsUsers: describers
+          });
+
+          // close rating popup
+          document.getElementById("rating-popup").style.display = "none";
+        })
+        .catch(err => {
+          console.log(err);
+          alert(
+            this.props.translate(
+              "It was impossible to vote. Maybe your session has expired. Try to logout and login again."
+            )
+          );
         });
-
-        // close rating popup
-        document.getElementById('rating-popup').style.display = 'none';
-      })
-      .catch((err) => {
-        console.log(err);
-        alert(this.props.translate('It was impossible to vote. Maybe your session has expired. Try to logout and login again.'));
-      });
     }
   }
 
@@ -567,32 +637,41 @@ class VideoPage extends Component {
     const url = `${conf.apiUrl}/audiodescriptionsrating/${this.state.selectedAudioDescriptionId}`;
 
     ourFetch(url, true, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         userId: this.props.getAppState().userId,
         userToken: this.props.getAppState().userToken,
         rating: this.rating,
-        feedback,
-      }),
+        feedback
+      })
     })
-    .then((res) => {
-      document.getElementById('feedback-popup').style.display = 'none';
-      document.getElementById('feedback-success').style.display = 'block';
-      document.getElementById('feedback-success').focus();
-      setTimeout(() => document.getElementById('feedback-success').style.display = 'none', 1000)
-      // alert('Thanks for your feedback!');
+      .then(res => {
+        document.getElementById("feedback-popup").style.display = "none";
+        document.getElementById("feedback-success").style.display = "block";
+        document.getElementById("feedback-success").focus();
+        setTimeout(
+          () =>
+            (document.getElementById("feedback-success").style.display =
+              "none"),
+          1000
+        );
+        // alert('Thanks for your feedback!');
 
-      /* start of email */
-      this.sendOptInEmail(2, this.rating, feedback);
-      /* end of email */
-    })
-    .catch((err) => {
-      console.log(err);
-      alert(this.props.translate('It was impossible to vote. Maybe your session has expired. Try to logout and login again.'));
-    });
+        /* start of email */
+        this.sendOptInEmail(2, this.rating, feedback);
+        /* end of email */
+      })
+      .catch(err => {
+        console.log(err);
+        alert(
+          this.props.translate(
+            "It was impossible to vote. Maybe your session has expired. Try to logout and login again."
+          )
+        );
+      });
   }
 
   /* start of email */
@@ -602,7 +681,8 @@ class VideoPage extends Component {
       emailBody = `Your audio description ${window.location.href} has been viewed.`;
     } else if (optIn == 2) {
       emailBody = `Your audio description ${window.location.href} has been rated as ${rating}`;
-      emailBody += (feedback.length > 0) ? ", with the following comment(s):" : ".";
+      emailBody +=
+        feedback.length > 0 ? ", with the following comment(s):" : ".";
       feedback.forEach(index => {
         emailBody += `\n${conf.audioDescriptionFeedbacks[index]}`;
       });
@@ -611,44 +691,45 @@ class VideoPage extends Component {
     const optionObj = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         id: this.state.selectedAudioDescriptionId,
         optin: optIn,
-        emailbody: emailBody,
+        emailbody: emailBody
       })
     };
-    ourFetch(url, true, optionObj).then((response) => {});
+    ourFetch(url, true, optionObj).then(response => {});
   }
   /* end of email */
 
   handleRatingPopup() {
     if (!this.props.getAppState().isSignedIn) {
-      alert(this.props.translate('You have to be logged in in order to vote'));
+      alert(this.props.translate("You have to be logged in in order to vote"));
     } else {
-      document.getElementById('rating-popup').style.display = 'block';
-      document.getElementById('rating-popup').focus();
+      document.getElementById("rating-popup").style.display = "block";
+      document.getElementById("rating-popup").focus();
     }
   }
 
   handleRatingPopupClose() {
-    document.getElementById('rating-popup').style.display = 'none';
+    document.getElementById("rating-popup").style.display = "none";
   }
 
   handleFeedbackPopup() {
-    document.getElementById('feedback-popup').style.display = 'block';
-    document.getElementById('feedback-popup').focus();
+    document.getElementById("feedback-popup").style.display = "block";
+    document.getElementById("feedback-popup").focus();
   }
 
   handleFeedbackPopupClose() {
-    document.getElementById('feedback-popup').style.display = 'none';
+    document.getElementById("feedback-popup").style.display = "none";
   }
 
   playFullscreen() {
     const $ = document.querySelector.bind(document);
-    const iframe = $('#playerVP');
-    const requestFullScreen = iframe.requestFullScreen ||
+    const iframe = $("#playerVP");
+    const requestFullScreen =
+      iframe.requestFullScreen ||
       iframe.mozRequestFullScreen ||
       iframe.webkitRequestFullScreen;
 
@@ -659,64 +740,78 @@ class VideoPage extends Component {
 
   handleTurnOffDescriptions() {
     this.setState({ showDescribersList: false }, () => {
-      document.getElementById('describers').style.display = 'none';
-      document.getElementById('descriptions-off').style.display = 'block';
+      document.getElementById("describers").style.display = "none";
+      document.getElementById("descriptions-off").style.display = "block";
       const currentSelected = this.state.selectedAudioDescriptionId;
       this.state.videoPlayer.stopVideo();
       this.resetPlayedAudioClips();
-      this.setState({
-        previousSelectedAudioDescriptionId: currentSelected,
-        selectedAudioDescriptionId: null,
-      }, () => {
-        this.initVideoPlayer();
-      });
-    })
+      this.setState(
+        {
+          previousSelectedAudioDescriptionId: currentSelected,
+          selectedAudioDescriptionId: null
+        },
+        () => {
+          this.initVideoPlayer();
+        }
+      );
+    });
   }
 
   handleTurnOnDescriptions(selectedAudioDescriptionId) {
     this.setState({ showDescribersList: true }, () => {
-      document.getElementById('describers').style.display = 'block';
-      document.getElementById('descriptions-off').style.display = 'none';
+      document.getElementById("describers").style.display = "block";
+      document.getElementById("descriptions-off").style.display = "none";
       const previousSelected = this.state.previousSelectedAudioDescriptionId;
       this.state.videoPlayer.stopVideo();
       this.resetPlayedAudioClips();
-      this.setState({
-        previousSelectedAudioDescriptionId: null,
-        selectedAudioDescriptionId: previousSelected,
-      }, () => {
-        this.setAudioDescriptionActive();
-      });
-    })
+      this.setState(
+        {
+          previousSelectedAudioDescriptionId: null,
+          selectedAudioDescriptionId: previousSelected
+        },
+        () => {
+          this.setAudioDescriptionActive();
+        }
+      );
+    });
   }
 
   upVote(e) {
     if (!this.props.getAppState().isSignedIn) {
-      alert(this.props.translate('You have to be logged in in order to vote'));
+      alert(this.props.translate("You have to be logged in in order to vote"));
     } else {
       const url = `${conf.apiUrl}/wishlist`;
       ourFetch(url, true, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           youTubeId: this.state.videoId,
           userId: this.props.getAppState().userId,
-          userToken: this.props.getAppState().userToken,
-        }),
+          userToken: this.props.getAppState().userToken
+        })
       })
-      .then((res) => {
-        console.log('Success upVote');
-      })
-      .catch(err => {
-        switch (err.code) {
-          case 67:
-            alert(this.props.translate('It is not possible to vote again for this video.'));
-            break;
-          default:
-            alert(this.props.translate('It was impossible to vote. Maybe your session has expired. Try to logout and login again.'));
-        }
-      });
+        .then(res => {
+          console.log("Success upVote");
+        })
+        .catch(err => {
+          switch (err.code) {
+            case 67:
+              alert(
+                this.props.translate(
+                  "It is not possible to vote again for this video."
+                )
+              );
+              break;
+            default:
+              alert(
+                this.props.translate(
+                  "It was impossible to vote. Maybe your session has expired. Try to logout and login again."
+                )
+              );
+          }
+        });
     }
   }
 
@@ -729,15 +824,17 @@ class VideoPage extends Component {
     let describerIds = Object.keys(describers);
 
     if (describerIds.length) {
-      document.getElementById('no-descriptions').style.display = 'none';
+      document.getElementById("no-descriptions").style.display = "none";
       if (this.state.showDescribersList) {
-        document.getElementById('describers').style.display = 'block';
+        document.getElementById("describers").style.display = "block";
       }
     }
 
     if (describerIds.length && describerIds[0] !== selectedId) {
       const selectedIdIndex = describerIds.indexOf(selectedId);
-      describerIds = describerIds.splice(selectedIdIndex, 1).concat(describerIds);
+      describerIds = describerIds
+        .splice(selectedIdIndex, 1)
+        .concat(describerIds);
     }
 
     describerIds.forEach((describerId, i) => {
@@ -760,7 +857,7 @@ class VideoPage extends Component {
           <section id="video-area">
             <ShareBar videoTitle={this.state.videoTitle} />
             <div id="video">
-              <Spinner translate={this.props.translate}/>
+              <Spinner translate={this.props.translate} />
               <div id="playerVP" />
               <VideoPlayerControls
                 getAppState={this.props.getAppState}
@@ -769,7 +866,9 @@ class VideoPage extends Component {
                 resetPlayedAudioClips={this.resetPlayedAudioClips}
                 playFullscreen={this.playFullscreen}
                 audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
-                selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
+                selectedAudioDescriptionId={
+                  this.state.selectedAudioDescriptionId
+                }
                 videoId={this.state.videoId}
                 pauseAudioClips={this.pauseAudioClips}
                 {...this.state}
@@ -782,39 +881,50 @@ class VideoPage extends Component {
               handleRatingSubmit={this.handleRatingSubmit}
               handleRatingPopupClose={this.handleRatingPopupClose}
             />
-            <div id="rating-success" tabIndex="-1">{this.props.translate('Thanks for rating this description!')}</div>
+            <div id="rating-success" tabIndex="-1">
+              {this.props.translate("Thanks for rating this description!")}
+            </div>
             <FeedbackPopup
               translate={this.props.translate}
               handleFeedbackSubmit={this.handleFeedbackSubmit}
               handleFeedbackPopupClose={this.handleFeedbackPopupClose}
             />
-            <div id="feedback-success" tabIndex="-1">{this.props.translate('Thank you for your feedback!')}</div>
+            <div id="feedback-success" tabIndex="-1">
+              {this.props.translate("Thank you for your feedback!")}
+            </div>
             <div className="w3-col l8 m8">
-              <YTInfoCard
-                translate={this.props.translate}
-                {...this.state}
-              />
-              {this.props.location.query.show && <RatingsInfoCard
-                translate={this.props.translate}
-                selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
-                audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
-              />}
+              <YTInfoCard translate={this.props.translate} {...this.state} />
+              {this.props.location.query.show && (
+                <RatingsInfoCard
+                  translate={this.props.translate}
+                  selectedAudioDescriptionId={
+                    this.state.selectedAudioDescriptionId
+                  }
+                  audioDescriptionsIdsUsers={
+                    this.state.audioDescriptionsIdsUsers
+                  }
+                />
+              )}
             </div>
             <div id="describers" className="w3-col l4 m4">
               <div className="w3-card-2">
-                <h3>{this.props.translate('Selected description')}</h3>
+                <h3>{this.props.translate("Selected description")}</h3>
                 {describerCards[0]}
                 <hr aria-hidden="true" />
-                <h3>{this.props.translate('Other description options')}</h3>
+                <h3>{this.props.translate("Other description options")}</h3>
                 {describerCards.slice(1)}
                 <Button
-                  title={this.props.translate("Turn off descriptions for this video")}
+                  title={this.props.translate(
+                    "Turn off descriptions for this video"
+                  )}
                   text={this.props.translate("Turn off descriptions")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleTurnOffDescriptions()}
                 />
                 <Button
-                  title={this.props.translate("Add a new description for this video")}
+                  title={this.props.translate(
+                    "Add a new description for this video"
+                  )}
                   text={this.props.translate("Add description")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleAddDescription()}
@@ -823,9 +933,11 @@ class VideoPage extends Component {
             </div>
             <div id="descriptions-off" className="w3-col l4 m4">
               <div className="w3-card-2">
-                <h3>{this.props.translate('Descriptions off')}</h3>
+                <h3>{this.props.translate("Descriptions off")}</h3>
                 <Button
-                  title={this.props.translate("Turn on descriptions for this video")}
+                  title={this.props.translate(
+                    "Turn on descriptions for this video"
+                  )}
                   text={this.props.translate("Turn on descriptions")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleTurnOnDescriptions()}
@@ -836,13 +948,17 @@ class VideoPage extends Component {
               <div className="w3-card-2">
                 <h3>No descriptions available</h3>
                 <Button
-                  title={this.props.translate("Request an audio description for this video")}
+                  title={this.props.translate(
+                    "Request an audio description for this video"
+                  )}
                   text={this.props.translate("Add to wish list")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.upVote()}
                 />
                 <Button
-                  title={this.props.translate("Add a new description for this video")}
+                  title={this.props.translate(
+                    "Add a new description for this video"
+                  )}
                   text={this.props.translate("Add description")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleAddDescription()}
@@ -860,7 +976,7 @@ VideoPage.PropTypes = {
   params: PropTypes.object.isRequired,
   trnaslate: PropTypes.object.isRequired,
   videoId: PropTypes.string.isRequired,
-  getAppState: PropTypes.func.isRequired,
+  getAppState: PropTypes.func.isRequired
 };
 
 export default VideoPage;
