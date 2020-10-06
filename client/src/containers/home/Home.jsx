@@ -66,8 +66,9 @@ class Home extends Component {
     if (data.items === undefined) {
       videos.push(
         <h1>
-          YouDescribe has hit its daily quota for today. Please try again
-          tomorrow!
+          Thank you for visiting YouDescribe. This video is not viewable at this
+          time due to YouTube API key limits. Our key is reset by Google at
+          midnight Pacific time
         </h1>
       );
     } else {
