@@ -199,7 +199,7 @@ class Privacy extends Component {
                 user through,{" "}
                 <Link to="https://security.google.com/settings/security/permissions">
                   {" "}
-                  this setting page/
+                  this setting page.
                 </Link>
               </p>
             </div>
