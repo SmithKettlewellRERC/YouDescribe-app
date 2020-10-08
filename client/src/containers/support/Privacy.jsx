@@ -197,10 +197,9 @@ class Privacy extends Component {
                 User data is used with the permission of the user by signing
                 into their Google account. This permission can be revoked by the
                 user through,{" "}
-                <Link to="https://security.google.com/settings/security/permissions">
-                  {" "}
+                <a href="https://security.google.com/settings/security/permissions">
                   this setting page.
-                </Link>
+                </a>
               </p>
             </div>
           </div>
