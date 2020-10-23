@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 
 class VolumeBalancer extends Component {
   constructor(props) {
     super(props);
     // globals
-    this.gDragging = '';
+    this.gDragging = "";
     this.gDragOffset = 0;
 
     this.$ = this.$.bind(this);
@@ -38,7 +38,7 @@ class VolumeBalancer extends Component {
   calibrate(target) {
     const rail = target.parentNode;
     const sliderLength = rail.clientWidth - target.clientWidth;
-    const max = parseInt(target.getAttribute('aria-valuemax')) + 10;
+    const max = parseInt(target.getAttribute("aria-valuemax")) + 10;
 
     return sliderLength / max;
   }
@@ -49,7 +49,7 @@ class VolumeBalancer extends Component {
     let offset = node.offsetLeft;
     while (node.offsetParent) {
       node = node.offsetParent;
-      if (node.nodeName.toLowerCase() !== 'html') {
+      if (node.nodeName.toLowerCase() !== "html") {
         offset += node.offsetLeft;
       }
     }
@@ -61,7 +61,10 @@ class VolumeBalancer extends Component {
 
     if (window.pageLeft !== undefined) {
       scrollOffset = window.pageLeft;
-    } else if (document.documentElement && document.documentElement.scrollLeft !== undefined) {
+    } else if (
+      document.documentElement &&
+      document.documentElement.scrollLeft !== undefined
+    ) {
       scrollOffset = document.documentElement.scrollLeft;
     } else if (document.body.scrollLeft !== undefined) {
       scrollOffset = document.body.scrollLeft;
@@ -117,9 +120,11 @@ class VolumeBalancer extends Component {
 
   handleRailMouseDown(event = window.event) {
     const target = event.target || event.srcElement;
-    const thumb = this.$(target.id.replace(/Rail/, 'Thumb'));
-    const newPos = (event.clientX - this.getHOffset(target)) +
-      (this.getHScrollOffset() - (thumb.clientWidth / 2));
+    const thumb = this.$(target.id.replace(/Rail/, "Thumb"));
+    const newPos =
+      event.clientX -
+      this.getHOffset(target) +
+      (this.getHScrollOffset() - thumb.clientWidth / 2);
 
     this.changeValue(thumb, this.mapPositionToValue(thumb, newPos));
     if (!document.activeElement || !document.activeElement !== thumb) {
@@ -132,7 +137,9 @@ class VolumeBalancer extends Component {
     const target = event.target || event.srcElement;
 
     this.gDragging = target.id;
-    this.gDragOffset = (event.clientX - this.getHOffset(target.parentNode)) -
+    this.gDragOffset =
+      event.clientX -
+      this.getHOffset(target.parentNode) -
       (target.offsetLeft + this.getHScrollOffset());
     document.onmousemove = this.handleDrag;
     document.onmouseup = this.stopDrag;
@@ -144,18 +151,20 @@ class VolumeBalancer extends Component {
   }
 
   handleDrag(event = window.event) {
-    if (this.gDragging === '') {
+    if (this.gDragging === "") {
       return;
     } else {
       const target = this.$(this.gDragging);
-      const newPos = (event.clientX - this.getHOffset(target.parentNode)) +
+      const newPos =
+        event.clientX -
+        this.getHOffset(target.parentNode) +
         (this.getHScrollOffset() - this.gDragOffset);
       this.changeValue(target, this.mapPositionToValue(target, newPos));
     }
   }
 
   stopDrag(event) {
-    this.gDragging = '';
+    this.gDragging = "";
     this.gDragOffset = 0;
 
     document.onmousemove = null;
@@ -167,30 +176,30 @@ class VolumeBalancer extends Component {
   }
 
   increment(target, byChunk) {
-    const newValue = parseInt(target.getAttribute('aria-valuenow')) +
-      (byChunk ? 8 : 1);
+    const newValue =
+      parseInt(target.getAttribute("aria-valuenow")) + (byChunk ? 8 : 1);
 
     this.changeValue(target, newValue);
   }
 
   decrement(target, byChunk) {
-    const newValue = parseInt(target.getAttribute('aria-valuenow')) -
-      (byChunk ? 8 : 1);
+    const newValue =
+      parseInt(target.getAttribute("aria-valuenow")) - (byChunk ? 8 : 1);
 
     this.changeValue(target, newValue);
   }
 
   changeValue(target, value) {
     const ratio = this.calibrate(target);
-    const min = parseInt(target.getAttribute('aria-valuemin'));
-    const max = parseInt(target.getAttribute('aria-valuemax'));
+    const min = parseInt(target.getAttribute("aria-valuemin"));
+    const max = parseInt(target.getAttribute("aria-valuemax"));
     const newValue = Math.min(Math.max(value, min), max);
     const newPos = Math.round(newValue * ratio);
 
-    target.style.left = newPos + 'px';
+    target.style.left = newPos + "px";
 
-    target.setAttribute('aria-valuenow', newValue);
-    target.setAttribute('aria-valuetext', newValue + '%');
+    target.setAttribute("aria-valuenow", newValue);
+    target.setAttribute("aria-valuetext", newValue + "%");
     // this.updateValueIndicator(target.id.replace(/Thumb/, 'Value'), newValue + "%");
     this.props.updateState({ balancerValue: newValue });
   }
@@ -205,19 +214,19 @@ class VolumeBalancer extends Component {
     slider.onmousedown = this.handleThumbMouseDown;
     slider.onkeydown = this.handleKeyDown;
 
-    slider.parentNode.onfocus = function(event) { // temp IE fix
+    slider.parentNode.onfocus = function(event) {
+      // temp IE fix
       event = event || window.event;
       let target = event.target || event.srcElement;
-      let thumb = this.$(target.id.replace(/Rail/, 'Thumb'));
-      if (thumb)
-        thumb.focus();
-      }
-    }
+      let thumb = this.$(target.id.replace(/Rail/, "Thumb"));
+      if (thumb) thumb.focus();
+    };
+  }
 
   cancelEvent(event) {
-    if (typeof event.stopPropagation === 'function') {
+    if (typeof event.stopPropagation === "function") {
       event.stopPropagation();
-    } else if (typeof event.cancelBubble !== 'undefined') {
+    } else if (typeof event.cancelBubble !== "undefined") {
       event.cancelBubble = true;
     }
     if (event.preventDefault) {
@@ -227,13 +236,12 @@ class VolumeBalancer extends Component {
   }
 
   init() {
-    this.setHandlers(this.$('sliderThumb1'));
+    this.setHandlers(this.$("sliderThumb1"));
   }
 
   render() {
     return (
       <div className="volume-balancer" title="volume balancer">
-        <span id="sliderLabel" className="floatLeft" aria-hidden="true">V</span>
         <div id="sliderRail1" className="sliderRail floatLeft">
           <button
             role="slider"
@@ -246,7 +254,9 @@ class VolumeBalancer extends Component {
             accessKey="v"
           />
         </div>
-        <span className="floatLeft" aria-hidden="true">D</span>
+        <span className="floatLeft" aria-hidden="true">
+          Description Volume
+        </span>
       </div>
     );
   }
