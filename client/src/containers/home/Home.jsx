@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { browserHistory } from "react-router";
+import { browserHistory, Router, useHistory } from "react-router";
 import VideoCard from "../../components/video-card/VideoCard.jsx";
 import Button from "../../components/button/Button.jsx";
 import Spinner from "../../components/spinner/Spinner.jsx";
@@ -131,6 +131,20 @@ class Home extends Component {
 
   // displayed on page
   render() {
+    const isSignedIn = this.props.getAppState().isSignedIn;
+    const userid = this.props.getAppState().userId;
+    if (isSignedIn) {
+      const url = `${conf.apiUrl}/users/${userid}`;
+      ourFetch(url).then(response => {
+        const user = response.result;
+        if (user.policy_review === "") {
+          alert(
+            "YouDescribe has been updated, please update your notification preferences in the next page."
+          );
+          browserHistory.push(`/profile/` + this.props.getAppState().userId);
+        }
+      });
+    }
     let YDloadMoreButton = (
       <div className="w3-margin-top w3-center load-more w3-hide">
         <Button

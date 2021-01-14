@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router';
-import path from 'path';
-import SearchBar from '../search-bar/SearchBar.jsx';
-import SignInButton from '../sign-in-button/SignInButton.jsx';
-import UserAvatar from '../user-avatar/UserAvatar.jsx';
+import React, { Component } from "react";
+import { Link } from "react-router";
+import path from "path";
+import SearchBar from "../search-bar/SearchBar.jsx";
+import SignInButton from "../sign-in-button/SignInButton.jsx";
+import UserAvatar from "../user-avatar/UserAvatar.jsx";
 
 class Navbar extends Component {
   constructor(props) {
@@ -14,27 +14,27 @@ class Navbar extends Component {
 
   // Toggle between showing and hiding the sidenav when clicking the menu icon
   navMenuOpen() {
-    const mySidenav = document.getElementById('mySidenav');
-    if (mySidenav.style.display === 'block') {
-      mySidenav.style.display = 'none';
+    const mySidenav = document.getElementById("mySidenav");
+    if (mySidenav.style.display === "block") {
+      mySidenav.style.display = "none";
     } else {
-      mySidenav.style.display = 'block';
+      mySidenav.style.display = "block";
     }
   }
 
   // Close the sidenav with the close button
   navMenuClose() {
-    const mySidenav = document.getElementById('mySidenav');
-    mySidenav.style.display = 'none';
+    const mySidenav = document.getElementById("mySidenav");
+    mySidenav.style.display = "none";
   }
 
   userMenuToggle() {
-    const userMenu = document.getElementById('user-menu');
-    if (userMenu.style.display === 'block') {
-      userMenu.style.display = 'none';
+    const userMenu = document.getElementById("user-menu");
+    if (userMenu.style.display === "block") {
+      userMenu.style.display = "none";
     } else {
-      userMenu.style.display = 'block';
-      document.getElementById('user-menu').focus();
+      userMenu.style.display = "block";
+      document.getElementById("user-menu").focus();
     }
   }
 
@@ -42,7 +42,14 @@ class Navbar extends Component {
     const isSignedIn = this.props.getAppState().isSignedIn;
     let signInComponent = null;
     if (isSignedIn) {
-      signInComponent = <UserAvatar translate={this.props.translate} signOut={this.props.signOut} userMenuToggle={this.userMenuToggle} getAppState={this.props.getAppState} />;
+      signInComponent = (
+        <UserAvatar
+          translate={this.props.translate}
+          signOut={this.props.signOut}
+          userMenuToggle={this.userMenuToggle}
+          getAppState={this.props.getAppState}
+        />
+      );
     } else {
       signInComponent = <SignInButton translate={this.props.translate} />;
     }
@@ -51,12 +58,20 @@ class Navbar extends Component {
         {/* Navbar (sit on top) */}
         <div className="w3-top">
           <div className="w3-bar w3-white w3-card-2 w3-text-indigo">
-
-            <Link to="/" id="logo" className="w3-bar-item w3-hide-small w3-hide-medium">
+            <Link
+              to="/"
+              id="logo"
+              className="w3-bar-item w3-hide-small w3-hide-medium"
+            >
               <img
                 alt="YouDescribe home"
                 height="100%"
-                src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_full_(indigo_and_grey).png')}
+                src={path.join(
+                  __dirname,
+                  "assets",
+                  "img",
+                  "youdescribe_logo_full_(indigo_and_grey).png"
+                )}
               />
             </Link>
 
@@ -64,12 +79,22 @@ class Navbar extends Component {
               <img
                 alt="YouDescribe home"
                 height="100%"
-                src={path.join(__dirname, 'assets', 'img', 'youdescribe_logo_small_(indigo_and_grey).png')}
+                src={path.join(
+                  __dirname,
+                  "assets",
+                  "img",
+                  "youdescribe_logo_small_(indigo_and_grey).png"
+                )}
               />
             </Link>
 
             <div className="w3-left">
-              <SearchBar updateSearch={searchValue => this.props.updateSearch(searchValue)} translate={this.props.translate} />
+              <SearchBar
+                updateSearch={searchValue =>
+                  this.props.updateSearch(searchValue)
+                }
+                translate={this.props.translate}
+              />
             </div>
 
             {/* Right-sided navbar links */}
@@ -77,25 +102,37 @@ class Navbar extends Component {
               <Link
                 to="/"
                 className="w3-bar-item w3-small"
-                style={{position: 'relative', top: '11px', padding: "8px"}}
+                style={{ position: "relative", top: "11px", padding: "8px" }}
               >
-                <i className="fa fa-home" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate('RECENT DESCRIPTIONS')}
+                <i className="fa fa-home" aria-hidden="true">
+                  &nbsp;&nbsp;
+                </i>
+                {this.props.translate("RECENT DESCRIPTIONS")}
               </Link>
               <Link
                 to="/wishlist"
                 className="w3-bar-item w3-small"
-                style={{position: 'relative', top: '11px', padding: "8px"}}
+                style={{ position: "relative", top: "11px", padding: "8px" }}
               >
-                <i className="fa fa-heart" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate('WISH LIST')}
+                <i className="fa fa-heart" aria-hidden="true">
+                  &nbsp;&nbsp;
+                </i>
+                {this.props.translate("WISH LIST")}
               </Link>
               <Link
                 to="/support"
                 className="w3-bar-item w3-small"
-                style={{position: 'relative', top: '11px', padding: "8px"}}
+                style={{ position: "relative", top: "11px", padding: "8px" }}
               >
-                <i className="fa fa-question-circle" aria-hidden="true">&nbsp;&nbsp;</i>{this.props.translate('SUPPORT')}
+                <i className="fa fa-question-circle" aria-hidden="true">
+                  &nbsp;&nbsp;
+                </i>
+                {this.props.translate("SUPPORT")}
               </Link>
-              <div className="w3-bar-item" style={{ position: 'relative', top: '2px' }}>
+              <div
+                className="w3-bar-item"
+                style={{ position: "relative", top: "2px" }}
+              >
                 {signInComponent}
               </div>
             </div>
@@ -104,7 +141,7 @@ class Navbar extends Component {
             <a
               aria-hidden="true"
               className="w3-bar-item w3-right w3-hide-large"
-              style={{ position: 'relative', top: '8px' }}
+              style={{ position: "relative", top: "8px" }}
               onClick={this.navMenuOpen}
             >
               <i className="fa fa-bars" aria-hidden="true" />
@@ -116,22 +153,26 @@ class Navbar extends Component {
         <div
           id="mySidenav"
           className="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-large"
-          style={{ display: 'none' }}
+          style={{ display: "none" }}
         >
-          <a onClick={this.navMenuClose} className="w3-large w3-padding-16">{this.props.translate('Close')} ×</a>
+          <a onClick={this.navMenuClose} className="w3-large w3-padding-16">
+            {this.props.translate("Close")} ×
+          </a>
           <Link
             to="/"
             className="w3-bar-item w3-button"
-            onClick={() => document.getElementById('home-heading').focus()}
+            onClick={() => document.getElementById("home-heading").focus()}
           >
-            <i className="fa fa-home" aria-hidden="true" /> {this.props.translate('HOME')}
+            <i className="fa fa-home" aria-hidden="true" />{" "}
+            {this.props.translate("HOME")}
           </Link>
           <Link
             to="/wishlist"
             className="w3-bar-item w3-button"
-            onClick={() => document.getElementById('wish-list-heading').focus()}
+            onClick={() => document.getElementById("wish-list-heading").focus()}
           >
-            <i className="fa fa-heart" aria-hidden="true" /> {this.props.translate('WISH LIST')}
+            <i className="fa fa-heart" aria-hidden="true" />{" "}
+            {this.props.translate("WISH LIST")}
           </Link>
           {signInComponent}
         </div>

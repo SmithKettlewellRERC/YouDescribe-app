@@ -34,9 +34,20 @@ class UserMenu extends Component {
               <span>{this.props.translate("My descriptions")}</span>
             </Link>
           </div>
-          {/* <div className="my-described-videos-button">
-            <Link to={`/profile/${this.props.getAppState().userId}`} title="View my profile" onClick={this.props.userMenuToggle}><i style={{width: 40}} className="fa fa-cog" aria-hidden="true"></i><span>{this.props.translate("My profile")}</span></Link>
-          </div> */}
+          <div className="my-described-videos-button">
+            <Link
+              to={`/profile/${this.props.getAppState().userId}`}
+              title="View my profile"
+              onClick={this.props.userMenuToggle}
+            >
+              <i
+                style={{ width: 50 }}
+                className="fa fa-cog"
+                aria-hidden="true"
+              ></i>
+              <span>{this.props.translate("My profile")}</span>
+            </Link>
+          </div>
           {this.state.userAdmin !== "undefined" ? (
             <div className="my-described-videos-button">
               <Link
