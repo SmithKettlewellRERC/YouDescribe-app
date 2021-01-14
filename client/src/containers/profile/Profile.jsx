@@ -1,6 +1,17 @@
 import React, { Component } from "react";
-import { ButtonToolbar, Button, FormControl, Form, Table } from "react-bootstrap";
-import { ourFetch, convertTimeToCardFormat, convertViewsToCardFormat } from "../../shared/helperFunctions";
+import {
+  ButtonToolbar,
+  Button,
+  FormControl,
+  Form,
+  Table
+} from "react-bootstrap";
+import {
+  ourFetch,
+  convertTimeToCardFormat,
+  convertViewsToCardFormat
+} from "../../shared/helperFunctions";
+import { browserHistory, Router, useHistory } from "react-router";
 
 const conf = require("../../shared/config")();
 
@@ -11,7 +22,7 @@ class Profile extends Component {
       optInChoices: [false, false, false],
       optIn: false,
       reviewStatus: "",
-      userId: this.props.params.userId,
+      userId: this.props.params.userId
     };
     this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this);
     this.handleRadioButtonChange = this.handleRadioButtonChange.bind(this);
@@ -24,8 +35,8 @@ class Profile extends Component {
   }
 
   loadUser() {
-    const url = (`${conf.apiUrl}/users/${this.state.userId}`);
-    ourFetch(url).then((response) => {
+    const url = `${conf.apiUrl}/users/${this.state.userId}`;
+    ourFetch(url).then(response => {
       const user = response.result;
       const optInChoices = [false, false, false];
       user.opt_in.forEach(index => {
@@ -33,8 +44,8 @@ class Profile extends Component {
       });
       this.setState({
         optInChoices: optInChoices,
-        optIn: (user.opt_in.length > 0) ? true : false,
-        reviewStatus: user.policy_review,
+        optIn: user.opt_in.length > 0 ? true : false,
+        reviewStatus: user.policy_review
       });
     });
   }
@@ -43,14 +54,16 @@ class Profile extends Component {
     let optInChoices = this.state.optInChoices;
     const index = event.target.id;
     if (index == 3) {
-      optInChoices = event.target.checked ? [true, true, true] : [false, false, false];
+      optInChoices = event.target.checked
+        ? [true, true, true]
+        : [false, false, false];
     } else {
       optInChoices[index] = event.target.checked;
     }
     this.setState({
       optInChoices: optInChoices,
       optIn: true,
-      reviewStatus: "reviewed",
+      reviewStatus: "reviewed"
     });
   }
 
@@ -60,12 +73,12 @@ class Profile extends Component {
       this.setState({
         optInChoices: [false, false, false],
         optIn: false,
-        reviewStatus: "reviewed",
+        reviewStatus: "reviewed"
       });
     } else {
       this.setState({
         optIn: true,
-        reviewStatus: "reviewed",
+        reviewStatus: "reviewed"
       });
     }
   }
@@ -74,7 +87,12 @@ class Profile extends Component {
     if (this.state.reviewStatus != "reviewed") {
       alert("Sorry, you have not made any choice yet.");
       return;
-    } else if (this.state.optIn && !this.state.optInChoices[0] && !this.state.optInChoices[1] && !this.state.optInChoices[2]) {
+    } else if (
+      this.state.optIn &&
+      !this.state.optInChoices[0] &&
+      !this.state.optInChoices[1] &&
+      !this.state.optInChoices[2]
+    ) {
       alert("Sorry, you have not selected any opt-in checkbox.");
       return;
     }
@@ -82,15 +100,18 @@ class Profile extends Component {
     const optionObj = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         id: this.state.userId,
-        choices: this.state.optInChoices,
-      }),
+        choices: this.state.optInChoices
+      })
     };
-    ourFetch(url, true, optionObj).then((response) => {
-      alert("Your opt-in choices have been successfully saved!");
+    ourFetch(url, true, optionObj).then(response => {
+      alert(
+        "Your opt-in choices have been successfully saved! You will now be redirected to the home page"
+      );
+      browserHistory.goBack();
     });
   }
 
@@ -98,112 +119,110 @@ class Profile extends Component {
     return (
       <div>
         <header className="w3-container w3-indigo">
-          <h2 style={{fontSize: 20, lineHeight: 1.5, marginTop: 10, marginBottom: 10}}>MY PROFILE</h2>
-          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+          <h2
+            style={{
+              fontSize: 20,
+              lineHeight: 1.5,
+              marginTop: 10,
+              marginBottom: 10
+            }}
+            tabIndex="0"
+          >
+            MY PROFILE
+          </h2>
+          <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          />
         </header>
-        
-        <main style={{minHeight: 450}}>
+
+        <main style={{ minHeight: 450 }}>
+          <br></br>
+
           <div className="w3-row container">
-            <div style={{marginTop: 20, marginBottom: 20, textAlign: "center"}}>
-              <h2>Data Policy For YouDescribe</h2>
-            </div>
-            <div style={{marginLeft: 50, marginRight: 50}}>
-              Dear YouDescribe Community Member!
-              <br/><br/>
-              Updates for the California Consumer Privacy Act (CCPA)
-              <br/><br/>
-              At YouDescribe, we're committed to open, transparent communication that puts our people first. As we continue to expand YouDescribe’s functionality, 
-              we've also updated our Privacy Policy, and we’re writing to make sure you know of the change. 
-              <br/><br/>
-              We made these changes with two priorities in mind:
-              <br/>
-              &emsp;&emsp;More Transparency: We've added additional information about the data we collect, why and how we use it, and how we may share it.
-              <br/>
-              &emsp;&emsp;More Choices: We've added information about new methods to exercise control over your personal information.
-              <br/><br/>
-              We encourage you to view our Privacy Policy in full. Thank you for being a valued YouDescribe Community Member!
-              <br/><br/>
-              When you log into YouDescribe you will be asked to choose the amount of engagement you want. While some portions are mandatory for you to use the tool 
-              (like permission for us to contact you by email), some are optional (like the creation of a User Profile, and notifications about your videos 
-              being described, viewed, or rated), and you will be able to opt in and out as desired.
-              <br/><br/>
-              What will YouDescribe do? 
-              <br/><br/>
-              Welcome! We are rolling out some new and needed features in the next few months. To that end, we are changing some login procedures, 
-              updating our privacy policy, and asking you to choose your level of engagement.
-              <br/><br/>
-              When you sign in with your google ID you will be asked to create a user profile. Currently your user profile IS you google ID. 
-              Creating a profile allows you an extra level of online safety and privacy. You can keep using your google ID and picture, 
-              OR come up with a unique profile name and avatar. In the future, logged in members of the community will be able to search by user (to 
-              more quickly find videos an individual has requested, and to find videos described by a particular community member).
-              <br/><br/>
-              Because we would like to be able to give you feedback about videos, we are asking for permission for an admin to contact you by email. 
-              While you still can view videos without signing in, to place items on the wishlist, or to describe videos, you will need to give us 
-              permission to contact you. Don’t worry, we will never give your email to a third party, and it will be only used to contact you 
-              if it is important. No other YouDescribe users will be able to email you.
-              <br/><br/>
-              <Form.Check
-                type="radio"
-                checked={this.state.reviewStatus == "reviewed" && this.state.optIn}
-                label="A. Yes I want to be notified by email when:"
-                name="optin"
-                value="on"
-                onChange={(event) => this.handleRadioButtonChange(event)}
-              >
-              </Form.Check>
-              <Form.Check
-                style={{marginLeft: 20}}
-                type="checkbox"
-                checked={this.state.optInChoices[0]}
-                name="optinchoices"
-                label="My wishlist selection has been described and published"
-                id="0"
-                onChange={(event) => this.handleCheckBoxChange(event)}
-              >
-              </Form.Check>
-              <Form.Check
-                style={{marginLeft: 20}}
-                type="checkbox"
-                checked={this.state.optInChoices[1]}
-                name="optinchoices"
-                label="My audio description has been viewed"
-                id="1"
-                onChange={(event) => this.handleCheckBoxChange(event)}
-              >
-              </Form.Check>
-              <Form.Check
-                style={{marginLeft: 20}}
-                type="checkbox"
-                checked={this.state.optInChoices[2]}
-                name="optinchoices"
-                label="I wish to receive automated feedback on my published audio descriptions"
-                id="2"
-                onChange={(event) => this.handleCheckBoxChange(event)}
-              >
-              </Form.Check>
-              <Form.Check
-                style={{marginLeft: 20}}
-                type="checkbox"
-                checked={this.state.optInChoices[0] && this.state.optInChoices[1] && this.state.optInChoices[2]}
-                label="All notifications please" id="3" onChange={(event) => this.handleCheckBoxChange(event)}
-              >
-              </Form.Check>
-              <br/>
-              <Form.Check
-                type="radio"
-                checked={this.state.reviewStatus == "reviewed" && !this.state.optIn}
-                label="B. I do not want any automated notifications from YouDescribe."
-                name="optin"
-                value="off"
-                onChange={(event) => this.handleRadioButtonChange(event)}
-              >
-              </Form.Check>
-              <br/>
-              <b>If you feel you are bothered by too many emails, you may opt out AT ANY TIME :-)</b>
-            </div>
-            <div style={{marginTop: 20, marginBottom: 20, textAlign: "center"}}>
-              <Button type="submit" style={{marginTop: 20, marginBottom: 20}} variant="outline-success" onClick={this.handleSave}>Save</Button>
-            </div>
+            <p tabIndex="0">
+              YouDescribe is now using an optional email notification system. In
+              the form below, please select your desired notification options.
+              These can be changed later in the My Profile tab, found in your
+              user menu.
+            </p>
+            <Form.Check
+              type="radio"
+              checked={
+                this.state.reviewStatus == "reviewed" && this.state.optIn
+              }
+              label="A. Yes I want to be notified by email when:"
+              id="yes"
+              name="optionchoices"
+              value="on"
+              onChange={event => this.handleRadioButtonChange(event)}
+            ></Form.Check>
+            <Form.Check
+              style={{ marginLeft: 20 }}
+              type="checkbox"
+              checked={this.state.optInChoices[0]}
+              name="optinchoices"
+              label="My wishlist selection has been described and published"
+              id="0"
+              onChange={event => this.handleCheckBoxChange(event)}
+            ></Form.Check>
+            <Form.Check
+              style={{ marginLeft: 20 }}
+              type="checkbox"
+              checked={this.state.optInChoices[1]}
+              name="optinchoices"
+              label="My audio description has been viewed"
+              id="1"
+              onChange={event => this.handleCheckBoxChange(event)}
+            ></Form.Check>
+            <Form.Check
+              style={{ marginLeft: 20 }}
+              type="checkbox"
+              checked={this.state.optInChoices[2]}
+              name="optinchoices"
+              label="I wish to receive automated feedback on my published audio descriptions"
+              id="2"
+              onChange={event => this.handleCheckBoxChange(event)}
+            ></Form.Check>
+            <Form.Check
+              style={{ marginLeft: 20 }}
+              type="checkbox"
+              checked={
+                this.state.optInChoices[0] &&
+                this.state.optInChoices[1] &&
+                this.state.optInChoices[2]
+              }
+              label="I would like to receive all notifications"
+              id="3"
+              onChange={event => this.handleCheckBoxChange(event)}
+            ></Form.Check>
+            <br />
+            <Form.Check
+              type="radio"
+              checked={
+                this.state.reviewStatus == "reviewed" && !this.state.optIn
+              }
+              label="B. I do not want any automated notifications from YouDescribe."
+              name="optin"
+              value="off"
+              id="no"
+              onChange={event => this.handleRadioButtonChange(event)}
+            ></Form.Check>
+            <br />
+            <b tabIndex="0">
+              If you feel you are bothered by too many emails, you may opt out
+              AT ANY TIME.
+            </b>
+          </div>
+          <div style={{ marginTop: 20, marginBottom: 20, textAlign: "center" }}>
+            <Button
+              type="submit"
+              style={{ marginTop: 20, marginBottom: 20 }}
+              variant="outline-success"
+              onClick={this.handleSave}
+            >
+              Save
+            </Button>
           </div>
         </main>
       </div>

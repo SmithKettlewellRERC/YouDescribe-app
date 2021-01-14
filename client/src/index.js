@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Router, IndexRoute, Route, browserHistory } from "react-router";
+import { withRouter } from "react-router-dom";
 import styles from "./main.scss";
 
 // regular user
