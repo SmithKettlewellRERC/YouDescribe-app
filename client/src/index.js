@@ -15,6 +15,7 @@ import WishList from "./containers/wish-list/WishList.jsx";
 import UserVideosPage from "./containers/user-videos-page/UserVideosPage.jsx";
 import Profile from "./containers/profile/Profile.jsx";
 import Credits from "./containers/credits/Credits.jsx";
+import CreditsPage from "./containers/credits/CreditsPage.jsx";
 import Contact from "./containers/contact/Contact.jsx";
 import Support from "./containers/support/Support.jsx";
 import About from "./containers/support/About.jsx";
@@ -72,6 +73,7 @@ ReactDOM.render(
       <Route path="/videos/user/:userId" component={UserVideosPage} />
       <Route path="/profile/:userId" component={Profile} />
       <Route path="/credits" component={Credits} />
+      <Route path="/creditspage" component={CreditsPage} />
       <Route path="/contact" component={Contact} />
       <Route path="/support" component={Support} />
       <Route path="/support/about" component={About} />
