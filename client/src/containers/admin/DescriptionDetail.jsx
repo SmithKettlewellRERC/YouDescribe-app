@@ -1,7 +1,16 @@
 import React, { Component } from "react";
 import AdminNav from "../../components/admin-nav/AdminNav.jsx";
 import DescriptionRatingComponent from "./DescriptionRatingComponent.jsx";
-import { Container, Row, Col, Button, FormControl, Form, Table } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  FormControl,
+  Form,
+  Table,
+  Modal
+} from "react-bootstrap";
 import { Link } from "react-router";
 import {
   ourFetch,
@@ -11,7 +20,7 @@ import {
   convertSecondsToEditorFormat,
   convertViewsToCardFormat,
   convertLikesToCardFormat,
-  convertTimeToCardFormat,
+  convertTimeToCardFormat
 } from "../../shared/helperFunctions";
 import PropTypes from "prop-types";
 import { Howl } from "howler";
@@ -32,12 +41,13 @@ class DescriptionDetail extends Component {
       audioDescription: {},
       audioClips: [],
       ratings: [],
-      videoId: "",          // video object id
-      youtubeId: "",        // youtube id
-      id: props.params.id,  // description object id
+      videoId: "", // video object id
+      youtubeId: "", // youtube id
+      id: props.params.id, // description object id
       order: props.location.query.order,
       sortBy: props.location.query.sortby,
       keyword: props.location.query.keyword,
+      isOpen: false,
 
       // Audio descriptions
       inlineClipsCurrentlyPlaying: [],
@@ -56,9 +66,9 @@ class DescriptionDetail extends Component {
       videoVolume: 0,
       balancerValue: 50,
       currentVideoProgress: "00:00:00:00",
-      videoDurationToDisplay: "00:00:00:00",
-    }
-    
+      videoDurationToDisplay: "00:00:00:00"
+    };
+
     this.publish = this.publish.bind(this);
     this.unpublish = this.unpublish.bind(this);
     this.sendOptInEmail = this.sendOptInEmail.bind(this);
@@ -71,8 +81,15 @@ class DescriptionDetail extends Component {
     this.resetPlayedAudioClips = this.resetPlayedAudioClips.bind(this);
     this.pauseAudioClips = this.pauseAudioClips.bind(this);
     this.playFullscreen = this.playFullscreen.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
-
+  openModal() {
+    this.setState({ isOpen: true });
+  }
+  closeModal() {
+    this.setState({ isOpen: false });
+  }
   componentWillUnmount() {
     if (this.state.videoPlayer) {
       this.state.videoPlayer.stopVideo();
@@ -89,7 +106,7 @@ class DescriptionDetail extends Component {
 
   loadDescriptionDetail() {
     const url = `${conf.apiUrl}/audiodescriptions/getbyid?id=${this.state.id}`;
-    ourFetchWithToken(url).then((response) => {
+    ourFetchWithToken(url).then(response => {
       const ratings = [];
       const item = response.result;
       const audioDescription = item.audioDescription;
@@ -116,7 +133,7 @@ class DescriptionDetail extends Component {
         ratings: ratings,
         videoId: audioDescription.video._id,
         youtubeId: audioDescription.video.youtube_id,
-        videoData: audioDescription.video,
+        videoData: audioDescription.video
       });
       this.fetchVideoData();
     });
@@ -157,12 +174,13 @@ class DescriptionDetail extends Component {
       audioClips.forEach((audioObj, idx) => {
         promises.push(ourFetch(audioObj.url, false));
       });
-      Promise.all(promises).then(() => {
-        self.getYTVideoInfo();
-      })
-      .catch((errorAllAudios) => {
-        console.log("ERROR LOADING AUDIOS -> ", errorAllAudios);
-      });
+      Promise.all(promises)
+        .then(() => {
+          self.getYTVideoInfo();
+        })
+        .catch(errorAllAudios => {
+          console.log("ERROR LOADING AUDIOS -> ", errorAllAudios);
+        });
     } else {
       self.getYTVideoInfo();
     }
@@ -175,25 +193,42 @@ class DescriptionDetail extends Component {
     const url = `${conf.youTubeApiUrl}/videos?id=${this.state.youtubeId}&part=contentDetails,snippet,statistics&forUsername=iamOTHER&key=${conf.youTubeApiKey}`;
 
     // Use custom fetch for cross-browser compatability
-    ourFetch(url).then((data) => {
-      this.videoDurationInSeconds = convertISO8601ToSeconds(data.items[0].contentDetails.duration);
-      this.setState({
-        videoTitle: data.items[0].snippet.title,
-        videoAuthor: data.items[0].snippet.channelTitle,
-        videoPublishedAt: convertISO8601ToDate(data.items[0].snippet.publishedAt),
-        videoDescription: data.items[0].snippet.description,
-        videoViews: convertViewsToCardFormat(data.items[0].statistics.viewCount),
-        videoLikes: convertLikesToCardFormat(data.items[0].statistics.likeCount),
-        videoDislikes: convertLikesToCardFormat(data.items[0].statistics.dislikeCount),
-        videoDurationInSeconds: this.videoDurationInSeconds,
-        videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
-      }, () => {
-        document.title = `YouDescribe - ${this.state.videoTitle}`;
-        self.initVideoPlayer();
+    ourFetch(url)
+      .then(data => {
+        this.videoDurationInSeconds = convertISO8601ToSeconds(
+          data.items[0].contentDetails.duration
+        );
+        this.setState(
+          {
+            videoTitle: data.items[0].snippet.title,
+            videoAuthor: data.items[0].snippet.channelTitle,
+            videoPublishedAt: convertISO8601ToDate(
+              data.items[0].snippet.publishedAt
+            ),
+            videoDescription: data.items[0].snippet.description,
+            videoViews: convertViewsToCardFormat(
+              data.items[0].statistics.viewCount
+            ),
+            videoLikes: convertLikesToCardFormat(
+              data.items[0].statistics.likeCount
+            ),
+            videoDislikes: convertLikesToCardFormat(
+              data.items[0].statistics.dislikeCount
+            ),
+            videoDurationInSeconds: this.videoDurationInSeconds,
+            videoDurationToDisplay: convertSecondsToEditorFormat(
+              this.videoDurationInSeconds
+            )
+          },
+          () => {
+            document.title = `YouDescribe - ${this.state.videoTitle}`;
+            self.initVideoPlayer();
+          }
+        );
+      })
+      .catch(err => {
+        console.log("need to check getYTVideoInfo()");
       });
-    }).catch((err) => {
-      console.log("need to check getYTVideoInfo()");
-    });
   }
 
   // 7
@@ -218,13 +253,13 @@ class DescriptionDetail extends Component {
               iv_load_policy: 3,
               modestbranding: 1,
               showinfo: 0,
-              autoplay: 0,
+              autoplay: 0
             },
             events: {
               onReady: onVideoPlayerReady,
-              onStateChange: onPlayerStateChange,
-            },
-          }),
+              onStateChange: onPlayerStateChange
+            }
+          })
         });
       }
     }
@@ -253,7 +288,6 @@ class DescriptionDetail extends Component {
             self.startProgressWatcher();
             break;
           case 2: // paused
-
             // stops all inline clip instances
             for (const clip in self.audioClipsPlayed) {
               if (self.audioClipsPlayed[clip].playbackType === "inline") {
@@ -296,17 +330,22 @@ class DescriptionDetail extends Component {
       const currentVideoProgress = self.state.videoPlayer.getCurrentTime();
 
       // audio ducking
-      self.state.inlineClipsCurrentlyPlaying.length ?
-        self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4) :
-        self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
+      self.state.inlineClipsCurrentlyPlaying.length
+        ? self.state.videoPlayer.setVolume(
+            (100 - self.state.balancerValue) * 0.4
+          )
+        : self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
 
       for (const clip in this.audioClipsPlayed) {
         this.audioClipsPlayed[clip].volume(self.state.balancerValue / 100);
       }
 
       this.setState({
-        videoPlayerAccessibilitySeekbarValue: currentVideoProgress / this.state.videoDurationInSeconds,
-        currentVideoProgress: convertSecondsToEditorFormat(Math.floor(currentVideoProgress)),
+        videoPlayerAccessibilitySeekbarValue:
+          currentVideoProgress / this.state.videoDurationInSeconds,
+        currentVideoProgress: convertSecondsToEditorFormat(
+          Math.floor(currentVideoProgress)
+        )
       });
 
       const currentVideoProgressFloor = Math.floor(currentVideoProgress);
@@ -345,7 +384,8 @@ class DescriptionDetail extends Component {
             self.state.videoPlayer.pauseVideo();
           }
           if (playbackType === "inline") {
-            const inlineClipsCurrentlyPlaying = self.state.inlineClipsCurrentlyPlaying;
+            const inlineClipsCurrentlyPlaying =
+              self.state.inlineClipsCurrentlyPlaying;
 
             inlineClipsCurrentlyPlaying.push(audioClipId);
             self.setState({ inlineClipsCurrentlyPlaying });
@@ -356,7 +396,8 @@ class DescriptionDetail extends Component {
             self.state.videoPlayer.playVideo();
           }
           if (playbackType === "inline") {
-            const inlineClipsCurrentlyPlaying = self.state.inlineClipsCurrentlyPlaying;
+            const inlineClipsCurrentlyPlaying =
+              self.state.inlineClipsCurrentlyPlaying;
 
             inlineClipsCurrentlyPlaying.pop();
             if (!inlineClipsCurrentlyPlaying.length) {
@@ -364,10 +405,14 @@ class DescriptionDetail extends Component {
             }
             self.setState({ inlineClipsCurrentlyPlaying });
           }
-        },
+        }
       });
 
-      console.log("Audio clip playback started", playbackType, audioClip.start_time);
+      console.log(
+        "Audio clip playback started",
+        playbackType,
+        audioClip.start_time
+      );
       this.audioClipsPlayed[audioClipId].playbackType = playbackType;
       this.audioClipsPlayed[audioClipId].play();
     }
@@ -396,7 +441,8 @@ class DescriptionDetail extends Component {
   playFullscreen() {
     const $ = document.querySelector.bind(document);
     const iframe = $("#playerVP");
-    const requestFullScreen = iframe.requestFullScreen ||
+    const requestFullScreen =
+      iframe.requestFullScreen ||
       iframe.mozRequestFullScreen ||
       iframe.webkitRequestFullScreen;
 
@@ -412,6 +458,7 @@ class DescriptionDetail extends Component {
 
   unpublish() {
     this.updateStatus("draft");
+    //send email
   }
 
   updateStatus(status) {
@@ -420,14 +467,14 @@ class DescriptionDetail extends Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("adminToken"),
+        Authorization: localStorage.getItem("adminToken")
       },
       body: JSON.stringify({
         id: this.state.id,
-        status: status,
-      }),
+        status: status
+      })
     };
-    ourFetchWithToken(url, true, optionObj).then((response) => {
+    ourFetchWithToken(url, true, optionObj).then(response => {
       location.reload(true);
     });
   }
@@ -452,22 +499,22 @@ class DescriptionDetail extends Component {
     const optionObj = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         id: id,
         optin: optIn,
-        emailbody: emailBody,
+        emailbody: emailBody
       })
     };
-    ourFetchWithToken(url, true, optionObj).then((response) => {
+    ourFetchWithToken(url, true, optionObj).then(response => {
       alert(response.info);
     });
   }
 
   getNext(isNext) {
     const url = `${conf.apiUrl}/audiodescriptions/getnext?id=${this.state.id}&isnext=${isNext}&keyword=${this.state.keyword}&sortby=${this.state.sortBy}&order=${this.state.order}`;
-    ourFetchWithToken(url).then((response) => {
+    ourFetchWithToken(url).then(response => {
       if (response.result) {
         window.location.href = `/admin/description/detail/${response.result._id}?keyword=${this.state.keyword}&sortby=${this.state.sortBy}&order=${this.state.order}`;
       }
@@ -477,28 +524,51 @@ class DescriptionDetail extends Component {
   render() {
     return (
       <div className="admin-responsive">
-        <AdminNav/>
+        <AdminNav />
         <main className="w3-row">
-          <div style={{textAlign: "center", fontSize: 20}}><b>Detail of Description</b></div>
+          <div style={{ textAlign: "center", fontSize: 20 }}>
+            <b>Detail of Description</b>
+          </div>
           <div>
             {/* <Button variant="outline-info" type="submit" onClick={() => this.getNext(-1)}>Prev</Button> */}
             {/* <Button variant="outline-info" className="pull-right" type="submit" onClick={() => this.getNext(1)}>Next</Button> */}
-            <Link onClick={() => this.getNext(-1)} style={{color: "#17a2b8", fontSize: 20}}>
-              <i className="fa fa-arrow-left"/>Previous
+            <Link
+              onClick={() => this.getNext(-1)}
+              style={{ color: "#17a2b8", fontSize: 20 }}
+            >
+              <i className="fa fa-arrow-left" />
+              Previous
             </Link>
-            <Link onClick={() => this.getNext(1)} style={{color: "#17a2b8", fontSize: 20}} className="pull-right">
-              Next<i className="fa fa-arrow-right"/>
+            <Link
+              onClick={() => this.getNext(1)}
+              style={{ color: "#17a2b8", fontSize: 20 }}
+              className="pull-right"
+            >
+              Next
+              <i className="fa fa-arrow-right" />
             </Link>
           </div>
-          <div style={{marginTop: 20, marginBottom: 30}}>
+          <div style={{ marginTop: 20, marginBottom: 30 }}>
             <Row>
               <Col xs="auto">
-                <p><b>Title:</b> {this.state.audioDescriptionTitle}</p>
-                <p><b>Describer:</b> {this.state.audioDescriptionUser}</p>
-                <p><b>Overall Rating:</b> {this.state.audioDescriptionOverallRating || "N/A"}</p>
-                <p><b>Status:</b> {this.state.audioDescriptionStatus}</p>
-                <div id="video" style={{color: "white", backgroundColor: "black"}}>
-                  <Spinner translate={this.props.translate}/>
+                <p>
+                  <b>Title:</b> {this.state.audioDescriptionTitle}
+                </p>
+                <p>
+                  <b>Describer:</b> {this.state.audioDescriptionUser}
+                </p>
+                <p>
+                  <b>Overall Rating:</b>{" "}
+                  {this.state.audioDescriptionOverallRating || "N/A"}
+                </p>
+                <p>
+                  <b>Status:</b> {this.state.audioDescriptionStatus}
+                </p>
+                <div
+                  id="video"
+                  style={{ color: "white", backgroundColor: "black" }}
+                >
+                  <Spinner translate={this.props.translate} />
                   <div id="playerVP" />
                   <VideoPlayerControls
                     getAppState={this.props.getAppState}
@@ -513,29 +583,110 @@ class DescriptionDetail extends Component {
                 </div>
               </Col>
               <Col>
-                <p><b>Actions For Admin User</b></p>
-                <Button type="submit" style={{marginBottom: 10}} className="pull-left" variant="outline-success" onClick={this.publish}>Publish Description</Button>
-                <Button type="submit" style={{marginBottom: 10}} className="pull-right" variant="outline-danger" onClick={this.unpublish}>Unpublish Description</Button>
-                <br/>
-                <FormControl as="textarea" style={{marginBottom: 10}} rows="8" placeholder="Input feedback here..." id="emailbody" className="mr-sm-2"/>
-                <Button type="submit" style={{marginBottom: 60}} variant="outline-primary" onClick={() => this.sendOptInEmail(2)}>Send Feedback</Button>
+                <p>
+                  <b>Actions For Admin User</b>
+                </p>
+                <Button
+                  type="submit"
+                  style={{ marginBottom: 10 }}
+                  className="pull-left"
+                  variant="outline-success"
+                  onClick={this.publish}
+                >
+                  Publish Description
+                </Button>
+                <Button
+                  type="submit"
+                  style={{ marginBottom: 10 }}
+                  className="pull-right"
+                  variant="outline-danger"
+                  onClick={this.openModal}
+                >
+                  Unpublish Description
+                </Button>
+                <br />
+                <FormControl
+                  as="textarea"
+                  style={{ marginBottom: 10 }}
+                  rows="8"
+                  placeholder="Input feedback here..."
+                  id="emailbody"
+                  className="mr-sm-2"
+                />
+                <Button
+                  type="submit"
+                  style={{ marginBottom: 60 }}
+                  variant="outline-primary"
+                  onClick={() => this.sendOptInEmail(2)}
+                >
+                  Send Feedback
+                </Button>
                 {/* <div style={{border: "0.5px solid", marginBottom: 20}}></div> */}
-                <p><b>Rating Details (No Action Required)</b></p>
-                <Table striped hover style={{color: "black", justifyContent: "center"}}>
+                <p>
+                  <b>Rating Details (No Action Required)</b>
+                </p>
+                <Table
+                  striped
+                  hover
+                  style={{ color: "black", justifyContent: "center" }}
+                >
                   <thead>
-                    <tr><th>Viewer</th><th>Rating</th></tr>
+                    <tr>
+                      <th>Viewer</th>
+                      <th>Rating</th>
+                    </tr>
                   </thead>
-                  <tbody>
-                    {this.state.ratings}
-                  </tbody>
+                  <tbody>{this.state.ratings}</tbody>
                 </Table>
               </Col>
             </Row>
           </div>
+          <Modal show={this.state.isOpen} onHide={this.closeModal}>
+            {" "}
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Select a reason for unpublishing this description:
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group as={Row}>
+                  <Col sm={10}>
+                    <Form.Check
+                      type="radio"
+                      label="Quality"
+                      name="formHorizontalRadios"
+                      id="formHorizontalRadios1"
+                    />
+                    <Form.Check
+                      type="radio"
+                      label="TOS Violation"
+                      name="formHorizontalRadios"
+                      id="formHorizontalRadios2"
+                    />
+                    <Form.Check
+                      type="radio"
+                      label="Content"
+                      name="formHorizontalRadios"
+                      id="formHorizontalRadios3"
+                    />
+                  </Col>
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.closeModal}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={this.unpublish}>
+                Submit
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </main>
       </div>
     );
-  };
-};
+  }
+}
 
 export default DescriptionDetail;
