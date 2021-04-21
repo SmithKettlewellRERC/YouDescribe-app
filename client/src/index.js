@@ -10,6 +10,7 @@ import Home from "./containers/home/Home.jsx";
 import SearchPage from "./containers/search-page/SearchPage.jsx";
 import AuthoringTool from "./containers/authoring-tool/AuthoringTool.jsx";
 import VideoPage from "./containers/video-page/VideoPage.jsx";
+import VideoEmbed from "./containers/video-embed/VideoEmbed.jsx";
 import NotFound from "./containers/not-found/NotFound.jsx";
 import WishList from "./containers/wish-list/WishList.jsx";
 import UserVideosPage from "./containers/user-videos-page/UserVideosPage.jsx";
@@ -51,6 +52,7 @@ import DailyCountOfDataRecords from "./containers/statistics/DailyCountOfDataRec
 //Google Analytics
 import ReactGA from "react-ga";
 import { createBrowserHistory } from "history";
+
 const history = createBrowserHistory();
 //const trackingId = "UA-171142756-3"; //live site key
 const trackingId = "UA-174046676-1"; //dev key
@@ -63,6 +65,7 @@ history.listen(location => {
 
 ReactDOM.render(
   <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
+    <Route path="/embed/:videoId" component={VideoEmbed} />
     <Route path="/" component={App}>
       // website
       <IndexRoute component={Home} />

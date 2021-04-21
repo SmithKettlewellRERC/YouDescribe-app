@@ -9,7 +9,7 @@ import FullscreenButton from "../fullscreen-button/FullscreenButton.jsx";
 const VideoPlayerControls = props => {
   return (
     <div id="video-player-controls">
-      <div className="w3-row">
+      <div className="">
         <div>
           <VolumeBalancer updateState={props.updateState} />
         </div>

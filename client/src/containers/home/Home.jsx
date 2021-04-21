@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import { browserHistory, Router, useHistory } from "react-router";
 import VideoCard from "../../components/video-card/VideoCard.jsx";
 import Button from "../../components/button/Button.jsx";
+import UserStudyModal from "../../components/user-study-modal/user-study-modal.jsx";
 import Spinner from "../../components/spinner/Spinner.jsx";
+import Announcement from "../../components/announcement/Announcement.jsx";
 import {
   ourFetch,
   convertTimeToCardFormat,
   convertViewsToCardFormat,
   convertISO8601ToSeconds,
-  convertSecondsToCardFormat
+  convertSecondsToCardFormat,
 } from "../../shared/helperFunctions";
 
 const { detect } = require("detect-browser");
@@ -20,7 +22,7 @@ class Home extends Component {
     this.dbResultArray = [];
     this.state = {
       searchQuery: "",
-      videos: []
+      videos: [],
     };
     this.currentPage = 1;
     this.fetchingVideosToHome = this.fetchingVideosToHome.bind(this);
@@ -42,7 +44,7 @@ class Home extends Component {
     let ids;
     const url = `${conf.apiUrl}/videos?page=${this.currentPage}`;
     ourFetch(url)
-      .then(response => {
+      .then((response) => {
         this.dbResultArray = response.result;
         for (let i = 0; i < this.dbResultArray.length; i += 1) {
           youTubeVideosIds.push(this.dbResultArray[i].youtube_id);
@@ -52,7 +54,7 @@ class Home extends Component {
       })
       .then(() => {
         const url = `${conf.apiUrl}/videos/getyoutubedatafromcache?youtubeids=${ids}&key=home`;
-        ourFetch(url).then(response => {
+        ourFetch(url).then((response) => {
           this.parseFetchedData(
             JSON.parse(response.result),
             youDescribeVideosIds
@@ -135,7 +137,7 @@ class Home extends Component {
     const userid = this.props.getAppState().userId;
     if (isSignedIn) {
       const url = `${conf.apiUrl}/users/${userid}`;
-      ourFetch(url).then(response => {
+      ourFetch(url).then((response) => {
         const user = response.result;
         if (user.policy_review === "") {
           alert(
@@ -171,10 +173,17 @@ class Home extends Component {
 
     return (
       <main id="home" title="YouDescribe home page">
+        <Announcement
+          text={
+            "Attention: YouDescribe will be down on Saturday, April 24 for maintenance. We apologize for any inconvenience."
+          }
+        ></Announcement>
         <header role="banner" className="w3-container w3-indigo">
-          <h2 id="home-heading" tabIndex="-1">
+          <h2 id="home-heading" tabIndex="0">
             {this.props.translate("RECENT DESCRIPTIONS")}
           </h2>
+
+          {/* <UserStudyModal></UserStudyModal> */}
         </header>
 
         <Spinner translate={this.props.translate} />
