@@ -173,11 +173,11 @@ class Home extends Component {
 
     return (
       <main id="home" title="YouDescribe home page">
-        <Announcement
+        {/* <Announcement
           text={
-            "Attention: YouDescribe will be down on Saturday, April 24 for maintenance. We apologize for any inconvenience."
+            "Attention: YouDescribe will be down on for maintenance. We apologize for any inconvenience."
           }
-        ></Announcement>
+        ></Announcement> */}
         <header role="banner" className="w3-container w3-indigo">
           <h2 id="home-heading" tabIndex="0">
             {this.props.translate("RECENT DESCRIPTIONS")}
