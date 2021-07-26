@@ -6,7 +6,11 @@ class VolumeBalancer extends Component {
     // globals
     this.gDragging = "";
     this.gDragOffset = 0;
-
+    if (this.props.className) {
+      this.className = this.props.className;
+    } else {
+      this.className = "volume-balancer";
+    }
     this.$ = this.$.bind(this);
     this.calibrate = this.calibrate.bind(this);
     this.getHOffset = this.getHOffset.bind(this);
@@ -214,7 +218,7 @@ class VolumeBalancer extends Component {
     slider.onmousedown = this.handleThumbMouseDown;
     slider.onkeydown = this.handleKeyDown;
 
-    slider.parentNode.onfocus = function(event) {
+    slider.parentNode.onfocus = function (event) {
       // temp IE fix
       event = event || window.event;
       let target = event.target || event.srcElement;
@@ -241,7 +245,7 @@ class VolumeBalancer extends Component {
 
   render() {
     return (
-      <div className="volume-balancer" title="volume balancer">
+      <div className={this.className} title="volume balancer">
         <div id="sliderRail1" className="sliderRail floatLeft">
           <button
             role="slider"

@@ -18,7 +18,7 @@ import {
   convertISO8601ToDate,
   convertSecondsToEditorFormat,
   convertViewsToCardFormat,
-  convertLikesToCardFormat
+  convertLikesToCardFormat,
 } from "../../shared/helperFunctions";
 import ShareBar from "../../components/share-bar/ShareBar.jsx";
 
@@ -55,7 +55,7 @@ class VideoPage extends Component {
       videoVolume: 0,
       balancerValue: 50,
       currentVideoProgress: "00:00:00:00",
-      videoDurationToDisplay: "00:00:00:00"
+      videoDurationToDisplay: "00:00:00:00",
     };
 
     this.updateState = this.updateState.bind(this);
@@ -119,11 +119,11 @@ class VideoPage extends Component {
     const url = `${conf.apiUrl}/videos/${this.props.params.videoId}`;
 
     ourFetch(url)
-      .then(response => {
+      .then((response) => {
         if (response.result) {
           self.setState(
             {
-              videoData: response.result
+              videoData: response.result,
             },
             () => {
               self.parseVideoData();
@@ -133,7 +133,7 @@ class VideoPage extends Component {
           self.parseVideoData();
         }
       })
-      .catch(err => {
+      .catch((err) => {
         return this.goToErrorPage();
       });
   }
@@ -154,7 +154,7 @@ class VideoPage extends Component {
       videoData.audio_descriptions &&
       videoData.audio_descriptions.length > 0
     ) {
-      videoData.audio_descriptions.forEach(ad => {
+      videoData.audio_descriptions.forEach((ad) => {
         if (ad.status === "published") {
           audioDescriptionsIds.push(ad._id);
           audioDescriptionsIdsUsers[ad._id] = ad.user;
@@ -167,7 +167,7 @@ class VideoPage extends Component {
           audioDescriptionsIdsUsers[ad._id].feedbacks = ad.feedbacks;
           audioDescriptionsIdsAudioClips[ad._id] = [];
           if (ad.audio_clips.length > 0) {
-            ad.audio_clips.forEach(audioClip => {
+            ad.audio_clips.forEach((audioClip) => {
               audioClip.url = `${conf.audioClipsUploadsPath}${audioClip.file_path}/${audioClip.file_name}`;
               audioDescriptionsIdsAudioClips[ad._id].push(audioClip);
             });
@@ -181,7 +181,7 @@ class VideoPage extends Component {
         videoData,
         audioDescriptionsIds,
         audioDescriptionsIdsUsers,
-        audioDescriptionsIdsAudioClips
+        audioDescriptionsIdsAudioClips,
       },
       () => {
         this.setAudioDescriptionActive();
@@ -232,7 +232,7 @@ class VideoPage extends Component {
     browserHistory.push(location);
     this.setState(
       {
-        selectedAudioDescriptionId
+        selectedAudioDescriptionId,
       },
       () => {
         this.preLoadAudioClips();
@@ -256,7 +256,7 @@ class VideoPage extends Component {
         .then(() => {
           self.getYTVideoInfo();
         })
-        .catch(errorAllAudios => {
+        .catch((errorAllAudios) => {
           console.log("ERROR LOADING AUDIOS -> ", errorAllAudios);
         });
     } else {
@@ -272,7 +272,7 @@ class VideoPage extends Component {
 
     // Use custom fetch for cross-browser compatability
     ourFetch(url)
-      .then(data => {
+      .then((data) => {
         this.videoDurationInSeconds = convertISO8601ToSeconds(
           data.items[0].contentDetails.duration
         );
@@ -296,7 +296,7 @@ class VideoPage extends Component {
             videoDurationInSeconds: this.videoDurationInSeconds,
             videoDurationToDisplay: convertSecondsToEditorFormat(
               this.videoDurationInSeconds
-            )
+            ),
           },
           () => {
             document.title = `YouDescribe - ${this.state.videoTitle}`;
@@ -304,7 +304,7 @@ class VideoPage extends Component {
           }
         );
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("Unable to load the video you are trying to edit.", err);
         alert(
           "Thank you for visiting YouDescribe. This video is not viewable at this time due to YouTube API key limits. Our key is reset by Google at midnight Pacific time."
@@ -335,13 +335,13 @@ class VideoPage extends Component {
               iv_load_policy: 3,
               modestbranding: 1,
               showinfo: 0,
-              autoplay: 0
+              autoplay: 0,
             },
             events: {
               onReady: onVideoPlayerReady,
-              onStateChange: onPlayerStateChange
-            }
-          })
+              onStateChange: onPlayerStateChange,
+            },
+          }),
         });
       }
     }
@@ -427,7 +427,7 @@ class VideoPage extends Component {
           currentVideoProgress / this.state.videoDurationInSeconds,
         currentVideoProgress: convertSecondsToEditorFormat(
           Math.floor(currentVideoProgress)
-        )
+        ),
       });
 
       const currentVideoProgressFloor = Math.floor(currentVideoProgress);
@@ -491,7 +491,7 @@ class VideoPage extends Component {
             }
             self.setState({ inlineClipsCurrentlyPlaying });
           }
-        }
+        },
       });
 
       console.log(
@@ -506,13 +506,13 @@ class VideoPage extends Component {
 
   resetPlayedAudioClips() {
     const audioClipsIds = Object.keys(this.audioClipsPlayed);
-    audioClipsIds.forEach(id => this.audioClipsPlayed[id].stop());
+    audioClipsIds.forEach((id) => this.audioClipsPlayed[id].stop());
     this.audioClipsPlayed = {};
   }
 
   pauseAudioClips() {
     const audioClipsObjs = Object.values(this.audioClipsPlayed);
-    audioClipsObjs.forEach(howler => howler.stop());
+    audioClipsObjs.forEach((howler) => howler.stop());
   }
 
   changeAudioDescription(selectedAudioDescriptionId) {
@@ -520,7 +520,7 @@ class VideoPage extends Component {
     this.resetPlayedAudioClips();
     this.setState(
       {
-        selectedAudioDescriptionId
+        selectedAudioDescriptionId,
       },
       () => {
         this.setAudioDescriptionActive();
@@ -570,15 +570,15 @@ class VideoPage extends Component {
       ourFetch(url, true, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId: this.props.getAppState().userId,
           userToken: this.props.getAppState().userToken,
-          rating
-        })
+          rating,
+        }),
       })
-        .then(res => {
+        .then((res) => {
           if (rating === 5) {
             // alert(`You have successfully given this description a rating of ${rating}`);
             document.getElementById("rating-popup").style.display = "none";
@@ -617,13 +617,13 @@ class VideoPage extends Component {
             describers[selectedId].overall_rating_votes_counter;
 
           this.setState({
-            audioDescriptionsIdsUsers: describers
+            audioDescriptionsIdsUsers: describers,
           });
 
           // close rating popup
           document.getElementById("rating-popup").style.display = "none";
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           alert(
             this.props.translate(
@@ -640,16 +640,16 @@ class VideoPage extends Component {
     ourFetch(url, true, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         userId: this.props.getAppState().userId,
         userToken: this.props.getAppState().userToken,
         rating: this.rating,
-        feedback
-      })
+        feedback,
+      }),
     })
-      .then(res => {
+      .then((res) => {
         document.getElementById("feedback-popup").style.display = "none";
         document.getElementById("feedback-success").style.display = "block";
         document.getElementById("feedback-success").focus();
@@ -665,7 +665,7 @@ class VideoPage extends Component {
         this.sendOptInEmail(2, this.rating, feedback);
         /* end of email */
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         alert(
           this.props.translate(
@@ -684,7 +684,7 @@ class VideoPage extends Component {
       emailBody = `Your audio description ${window.location.href} has been rated as ${rating}`;
       emailBody +=
         feedback.length > 0 ? ", with the following comment(s):" : ".";
-      feedback.forEach(index => {
+      feedback.forEach((index) => {
         emailBody += `\n${conf.audioDescriptionFeedbacks[index]}`;
       });
     }
@@ -692,15 +692,15 @@ class VideoPage extends Component {
     const optionObj = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         id: this.state.selectedAudioDescriptionId,
         optin: optIn,
-        emailbody: emailBody
-      })
+        emailbody: emailBody,
+      }),
     };
-    ourFetch(url, true, optionObj).then(response => {});
+    ourFetch(url, true, optionObj).then((response) => {});
   }
   /* end of email */
 
@@ -749,7 +749,7 @@ class VideoPage extends Component {
       this.setState(
         {
           previousSelectedAudioDescriptionId: currentSelected,
-          selectedAudioDescriptionId: null
+          selectedAudioDescriptionId: null,
         },
         () => {
           this.initVideoPlayer();
@@ -768,7 +768,7 @@ class VideoPage extends Component {
       this.setState(
         {
           previousSelectedAudioDescriptionId: null,
-          selectedAudioDescriptionId: previousSelected
+          selectedAudioDescriptionId: previousSelected,
         },
         () => {
           this.setAudioDescriptionActive();
@@ -785,18 +785,18 @@ class VideoPage extends Component {
       ourFetch(url, true, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           youTubeId: this.state.videoId,
           userId: this.props.getAppState().userId,
-          userToken: this.props.getAppState().userToken
-        })
+          userToken: this.props.getAppState().userToken,
+        }),
       })
-        .then(res => {
+        .then((res) => {
           console.log("Success upVote");
         })
-        .catch(err => {
+        .catch((err) => {
           switch (err.code) {
             case 67:
               alert(
@@ -861,21 +861,19 @@ class VideoPage extends Component {
             <div id="video">
               <Spinner translate={this.props.translate} />
               <div id="playerVP" />
-              <VideoPlayerControls
-                getAppState={this.props.getAppState}
-                updateState={this.updateState}
-                changeAudioDescription={this.changeAudioDescription}
-                resetPlayedAudioClips={this.resetPlayedAudioClips}
-                playFullscreen={this.playFullscreen}
-                audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
-                selectedAudioDescriptionId={
-                  this.state.selectedAudioDescriptionId
-                }
-                videoId={this.state.videoId}
-                pauseAudioClips={this.pauseAudioClips}
-                {...this.state}
-              />
             </div>
+            <VideoPlayerControls
+              getAppState={this.props.getAppState}
+              updateState={this.updateState}
+              changeAudioDescription={this.changeAudioDescription}
+              resetPlayedAudioClips={this.resetPlayedAudioClips}
+              playFullscreen={this.playFullscreen}
+              audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
+              selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
+              videoId={this.state.videoId}
+              pauseAudioClips={this.pauseAudioClips}
+              {...this.state}
+            />
           </section>
           <section id="video-info" className="container w3-row">
             <RatingPopup
@@ -978,7 +976,7 @@ VideoPage.PropTypes = {
   params: PropTypes.object.isRequired,
   trnaslate: PropTypes.object.isRequired,
   videoId: PropTypes.string.isRequired,
-  getAppState: PropTypes.func.isRequired
+  getAppState: PropTypes.func.isRequired,
 };
 
 export default VideoPage;

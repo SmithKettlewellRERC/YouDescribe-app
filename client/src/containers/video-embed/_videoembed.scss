@@ -1,3 +1,36 @@
-#embed {
-  padding: 5px;
+#video-embed {
+  height: 0;
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+}
+
+.col {
+  position: relative;
+}
+
+#video-embed iframe {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+#video-player-controls {
+  margin-right: auto;
+}
+
+#youDescribeFeatures {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+#youDescribeImage {
+  margin-top: 10px;
+  height: auto;
+  max-width: 100%;
 }

@@ -645,14 +645,17 @@ class VideoEmbed extends Component {
   // 1
   render() {
     return (
-      <div id="video">
-        <div id="playerVP" />
-        <Col>
+      <div>
+        <div id="video-embed">
+          <div id="playerVP" />
+        </div>
+        <div id="youDescribeFeatures">
           <VideoPlayerControls
+            className={"video-player-controls-embed"}
             getAppState={this.props.getAppState}
             updateState={this.updateState}
             changeAudioDescription={this.changeAudioDescription}
-            resetPlayedAudioClips={this.resetPlayedAudioClips}
+            resetPlaionyedAudioClips={this.resetPlayedAudioClips}
             playFullscreen={this.playFullscreen}
             audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
             selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
@@ -660,9 +663,9 @@ class VideoEmbed extends Component {
             pauseAudioClips={this.pauseAudioClips}
             {...this.state}
           ></VideoPlayerControls>
-
           <a
-            href={`http://localhost:3000/video/${this.state.videoId}`}
+            id="imageLink"
+            href={`http://youdescribe.org/video/${this.state.videoId}`}
             target="_blank"
             onClick={() => {
               this.pauseAudioClips();
@@ -670,12 +673,12 @@ class VideoEmbed extends Component {
             }}
           >
             <img
+              id="youDescribeImage"
               alt="Watch this video on YouDescribe"
-              height="100%"
               src="/assets/img/youdescribe_logo_full_(indigo_and_grey).png"
             />
           </a>
-        </Col>
+        </div>
       </div>
     );
   }
