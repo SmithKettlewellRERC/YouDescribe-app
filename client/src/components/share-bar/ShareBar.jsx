@@ -2,7 +2,7 @@ import React from "react";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { store } from "react-notifications-component";
-
+import { BsFillPlusSquareFill, BsCode } from "react-icons/bs";
 const ShareBar = (props) => {
   const twitterText = `Check out ${props.videoTitle.substring(
     0,
@@ -18,23 +18,26 @@ const ShareBar = (props) => {
         href="#"
         className="ssk ssk-facebook"
         aria-label="Share this video on Facebook"
+        title="Share this video on Facebook"
       ></a>
       <a
         href="#"
         className="ssk ssk-twitter"
         aria-label="Share this video on Twitter"
         data-text={twitterText}
+        title="Share this video on Twitter"
       ></a>
       <a
         href="#"
         className="ssk ssk-email"
         aria-label="Share this video by e-mail"
         data-text={emailText}
+        title="Share via Email"
       ></a>
-      {/* <a
+      <a
+        title="Embed this video"
         href="#"
-        
-        className="ssk"
+        className="ssk embed"
         aria-label="Embed this video, the link will be copied to the clipboard"
         onClick={() => {
           navigator.clipboard.writeText(
@@ -50,11 +53,44 @@ const ShareBar = (props) => {
             animationOut: ["animate__animated", "animate__fadeOut"],
             dismiss: {
               duration: 2000,
-              onScreen: true
-            }
+              onScreen: true,
+            },
           });
         }}
-      ></a> */}
+      >
+        <BsFillPlusSquareFill></BsFillPlusSquareFill>
+      </a>
+      <a
+        title="Create an html snippet"
+        href="#"
+        className="ssk embed"
+        aria-label="Embed this video, the snippet will be copied to the clipboard"
+        onClick={() => {
+          navigator.clipboard.writeText(
+            "<iframe " +
+              'width="56s "' +
+              'height="315 "' +
+              'class="leftSide "' +
+              `src=${window.location.href.replace("video", "embed")} />`
+          );
+
+          store.addNotification({
+            title: "",
+            message: "The snippet has been copied to your clipboard!",
+            type: "default",
+            insert: "top",
+            container: "bottom-center",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 2000,
+              onScreen: true,
+            },
+          });
+        }}
+      >
+        <BsCode></BsCode>
+      </a>
     </div>
   );
 };

@@ -45,7 +45,8 @@
           width: 640px;
           height: 68px;
         }
-        #play-button, #pause-button {
+        #play-button,
+        #pause-button {
           // position: relative;
           // top: 0px;
           display: block;
@@ -75,7 +76,8 @@
       }
     }
   }
-  #feedback-success, #rating-success {
+  #feedback-success,
+  #rating-success {
     display: none;
     position: fixed;
     background-color: #fff;
