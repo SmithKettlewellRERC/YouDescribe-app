@@ -1,8 +1,10 @@
 import React from "react";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
+import * as Icon from "react-bootstrap-icons";
+
 import { store } from "react-notifications-component";
-// import { BsFillPlusSquareFill, BsCode } from "react-icons/lib/bs";
+
 const ShareBar = (props) => {
   const twitterText = `Check out ${props.videoTitle.substring(
     0,
@@ -58,7 +60,7 @@ const ShareBar = (props) => {
           });
         }}
       >
-        {/* <BsFillPlusSquareFill></BsFillPlusSquareFill> */}
+        <Icon.PlusSquareFill></Icon.PlusSquareFill>
       </a>
       <a
         title="Create an html snippet"
@@ -89,7 +91,7 @@ const ShareBar = (props) => {
           });
         }}
       >
-        {/* <BsCode></BsCode> */}
+        <Icon.Code></Icon.Code>
       </a>
     </div>
   );
