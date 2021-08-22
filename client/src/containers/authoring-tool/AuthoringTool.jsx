@@ -7,7 +7,7 @@ import Editor from "../../components/editor/Editor.jsx";
 import Track from "../../components/track/Track.jsx";
 import {
   convertISO8601ToSeconds,
-  convertSecondsToEditorFormat
+  convertSecondsToEditorFormat,
 } from "../../shared/helperFunctions";
 import { ourFetch, getLang } from "../../shared/helperFunctions";
 import { browserHistory } from "react-router";
@@ -67,7 +67,7 @@ class AuthoringTool extends Component {
       /* start of custom tags */
       tags: [],
       suggestions: [],
-      delimiters: [188, 13]
+      delimiters: [188, 13],
       /* end of custom tags */
     };
 
@@ -130,11 +130,11 @@ class AuthoringTool extends Component {
     const self = this;
     const url = `${conf.apiUrl}/videos/${this.props.params.videoId}`;
     ourFetch(url)
-      .then(response => {
+      .then((response) => {
         if (response.result) {
           self.setState(
             {
-              videoData: response.result
+              videoData: response.result,
             },
             () => {
               self.parseYDVideoData();
@@ -174,7 +174,7 @@ class AuthoringTool extends Component {
           audioDescriptionNotes = ad["notes"];
           audioDescriptionSelectedLanguage = ad["language"];
           if (ad.audio_clips && ad.audio_clips.length > 0) {
-            ad.audio_clips.forEach(audioClip => {
+            ad.audio_clips.forEach((audioClip) => {
               audioDescriptionAudioClips[audioClip["_id"]] = audioClip;
             });
           }
@@ -194,7 +194,7 @@ class AuthoringTool extends Component {
         audioDescriptionStatus,
         audioDescriptionAudioClips,
         audioDescriptionNotes,
-        audioDescriptionSelectedLanguage
+        audioDescriptionSelectedLanguage,
       },
       () => {
         this.preLoadAudioClips(this.getYTVideoInfo);
@@ -222,7 +222,7 @@ class AuthoringTool extends Component {
         promises.push(ourFetch(url, false));
       });
       Promise.all(promises)
-        .then(function() {
+        .then(function () {
           console.log(
             "Total audio clips:",
             audioClips.length,
@@ -231,7 +231,7 @@ class AuthoringTool extends Component {
           );
           callback();
         })
-        .catch(function(errorAllAudios) {
+        .catch(function (errorAllAudios) {
           console.log("ERROR LOADING AUDIOS -> ", errorAllAudios);
         });
     } else {
@@ -245,7 +245,7 @@ class AuthoringTool extends Component {
     console.log("5 -> getYTVideoInfo");
     const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet&key=${conf.youTubeApiKey}`;
     ourFetch(url)
-      .then(data => {
+      .then((data) => {
         this.videoDurationInSeconds = convertISO8601ToSeconds(
           data.items[0].contentDetails.duration
         );
@@ -256,14 +256,14 @@ class AuthoringTool extends Component {
             videoDurationInSeconds: this.videoDurationInSeconds,
             videoDurationToDisplay: convertSecondsToEditorFormat(
               this.videoDurationInSeconds
-            )
+            ),
           },
           () => {
             self.loadExistingTracks();
           }
         );
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("Unable to load the video you are trying to edit.", err);
       });
   }
@@ -300,7 +300,7 @@ class AuthoringTool extends Component {
     this.setState(
       {
         tracksComponents,
-        playheadTailHeight
+        playheadTailHeight,
       },
       () => {
         this.initVideoPlayer();
@@ -335,13 +335,13 @@ class AuthoringTool extends Component {
                 rel: 0,
                 disablekb: 0,
                 cc_load_policy: 0,
-                iv_load_policy: 3
+                iv_load_policy: 3,
               },
               events: {
                 onReady: onVideoPlayerReady,
-                onStateChange: onPlayerStateChange
-              }
-            })
+                onStateChange: onPlayerStateChange,
+              },
+            }),
           },
           () => {
             self.refs.spinner.off();
@@ -415,11 +415,10 @@ class AuthoringTool extends Component {
 
       this.setState({
         currentVideoProgress,
-        currentVideoProgressToDisplay: convertSecondsToEditorFormat(
-          currentVideoProgress
-        ),
+        currentVideoProgressToDisplay:
+          convertSecondsToEditorFormat(currentVideoProgress),
         playheadPosition,
-        videoVolume
+        videoVolume,
       });
 
       // if (this.currentClip && this.currentClip.playbackType === 'inline') {
@@ -465,7 +464,7 @@ class AuthoringTool extends Component {
         onend: () => {
           self.state.videoPlayer.playVideo();
           self.startProgressWatcher();
-        }
+        },
       });
 
       // Audio ducking.
@@ -482,7 +481,7 @@ class AuthoringTool extends Component {
 
   resetPlayedAudioClips() {
     const audioClipsIds = Object.keys(this.audioClipsPlayed);
-    audioClipsIds.forEach(id => {
+    audioClipsIds.forEach((id) => {
       this.audioClipsPlayed[id].stop();
     });
     this.audioClipsPlayed = {};
@@ -564,7 +563,7 @@ class AuthoringTool extends Component {
       label: "",
       playback_type: playbackType,
       start_time: 0,
-      url: ""
+      url: "",
     };
 
     tracks.push(
@@ -598,7 +597,7 @@ class AuthoringTool extends Component {
       selectedTrackComponentUrl: "",
       selectedTrackComponentAudioClipStartTime: 0,
       selectedTrackComponentAudioClipSEndTime: -1,
-      selectedTrackComponentAudioClipDuration: -1
+      selectedTrackComponentAudioClipDuration: -1,
     });
   }
 
@@ -625,20 +624,20 @@ class AuthoringTool extends Component {
         ourFetch(url, true, {
           method: "DELETE",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             userId: this.props.getAppState().userId,
-            userToken: this.props.getAppState().userToken
-          })
+            userToken: this.props.getAppState().userToken,
+          }),
         })
-          .then(response => {
+          .then((response) => {
             const videoData = response.result;
             const tc = this.state.tracksComponents.slice();
-            const newTracks = tc.filter(t => t.props.id !== id);
+            const newTracks = tc.filter((t) => t.props.id !== id);
             this.setState(
               {
-                videoData: videoData
+                videoData: videoData,
               },
               () => {
                 this.resetSelectedTrack();
@@ -646,10 +645,10 @@ class AuthoringTool extends Component {
               }
             );
           })
-          .catch(err => {
+          .catch((err) => {
             this.setState(
               {
-                videoData: {}
+                videoData: {},
               },
               () => {
                 this.resetSelectedTrack();
@@ -661,10 +660,10 @@ class AuthoringTool extends Component {
     } else {
       // We just need to remove from the UI.
       const tc = this.state.tracksComponents.slice();
-      const newTracks = tc.filter(t => t.props.id !== id);
+      const newTracks = tc.filter((t) => t.props.id !== id);
       this.setState(
         {
-          tracksComponents: newTracks
+          tracksComponents: newTracks,
         },
         this.resetSelectedTrack()
       );
@@ -698,7 +697,7 @@ class AuthoringTool extends Component {
     ourFetch(`${conf.apiUrl}/audioclips/${data._id}`, true, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         userId: this.props.getAppState().userId,
@@ -706,10 +705,10 @@ class AuthoringTool extends Component {
         playback_type: data.playback_type,
         start_time: data.start_time,
         end_time: data.end_time,
-        duration: data.duration
-      })
+        duration: data.duration,
+      }),
     })
-      .then(response => {
+      .then((response) => {
         this.refs.spinner.off();
         const saved = response.result;
         const tcs = this.state.tracksComponents.slice();
@@ -720,7 +719,7 @@ class AuthoringTool extends Component {
           this.loadExistingTracks();
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("Error nudge left");
       });
   }
@@ -747,7 +746,7 @@ class AuthoringTool extends Component {
     ourFetch(url, true, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         userId: this.props.getAppState().userId,
@@ -755,10 +754,10 @@ class AuthoringTool extends Component {
         playback_type: data.playback_type,
         start_time: data.start_time,
         end_time: data.end_time,
-        duration: data.duration
-      })
+        duration: data.duration,
+      }),
     })
-      .then(response => {
+      .then((response) => {
         this.refs.spinner.off();
         const saved = response.result;
         const tcs = this.state.tracksComponents.slice();
@@ -769,7 +768,7 @@ class AuthoringTool extends Component {
           this.loadExistingTracks();
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("Error nudge right");
       });
   }
@@ -798,7 +797,7 @@ class AuthoringTool extends Component {
       ourFetch(url, true, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId: this.props.getAppState().userId,
@@ -806,9 +805,9 @@ class AuthoringTool extends Component {
           playback_type,
           start_time: data.start_time,
           end_time: data.end_time,
-          duration: data.duration
-        })
-      }).then(response => {
+          duration: data.duration,
+        }),
+      }).then((response) => {
         this.refs.spinner.off();
         const saved = response.result;
         const tcs = this.state.tracksComponents.slice();
@@ -831,7 +830,7 @@ class AuthoringTool extends Component {
       selectedTrackComponentAudioClipSEndTime: -1,
       selectedTrackComponentAudioClipDuration: -1,
       selectedTrackComponentLabel: "",
-      selectedTrackComponentUrl: null
+      selectedTrackComponentUrl: null,
     });
   }
 
@@ -867,12 +866,12 @@ class AuthoringTool extends Component {
       // }
       this.setState(
         {
-          selectedTrackComponentAudioClipStartTime: this.state
-            .currentVideoProgress,
+          selectedTrackComponentAudioClipStartTime:
+            this.state.currentVideoProgress,
           selectedTrackComponentId: trackId,
           selectedTrackComponentPlaybackType:
             clickedTrackComponent.props.data.playback_type,
-          selectedTrackComponentStatus: "recording"
+          selectedTrackComponentStatus: "recording",
         },
         () => {
           this.updateTrackComponent("fa-stop", this.state.currentVideoProgress);
@@ -889,7 +888,7 @@ class AuthoringTool extends Component {
       // STOP RECORDING.
       this.setState(
         {
-          selectedTrackComponentStatus: "stopped"
+          selectedTrackComponentStatus: "stopped",
         },
         () => {
           this.updateTrackComponent("fa-step-forward");
@@ -910,7 +909,7 @@ class AuthoringTool extends Component {
         {
           currentVideoProgress: seekToValueWithCorrection,
           currentTimeInVideo: seekToValueWithCorrection,
-          playheadPosition: (756 * seekToValue) / this.videoDurationInSeconds
+          playheadPosition: (756 * seekToValue) / this.videoDurationInSeconds,
         },
         () => {
           this.state.videoPlayer.seekTo(seekToValueWithCorrection, true);
@@ -932,7 +931,7 @@ class AuthoringTool extends Component {
           label: this.state.selectedTrackComponentLabel,
           playback_type: this.state.selectedTrackComponentPlaybackType,
           start_time: startTime,
-          url: this.state.selectedTrackComponentUrl
+          url: this.state.selectedTrackComponentUrl,
         };
 
         tracks[i] = (
@@ -994,10 +993,10 @@ class AuthoringTool extends Component {
     const url = `${conf.apiUrl}/audioclips/${this.state.videoId}`;
     const xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
-    xhr.onload = function() {
+    xhr.onload = function () {
       self.setState(
         {
-          videoData: JSON.parse(this.responseText).result
+          videoData: JSON.parse(this.responseText).result,
         },
         () => {
           self.parseYDVideoData();
@@ -1024,20 +1023,20 @@ class AuthoringTool extends Component {
       ourFetch(url, true, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId: this.props.getAppState().userId,
           userToken: this.props.getAppState().userToken,
-          audioDescriptionSelectedLanguage: this.state
-            .audioDescriptionSelectedLanguage
-        })
-      }).then(response => {
+          audioDescriptionSelectedLanguage:
+            this.state.audioDescriptionSelectedLanguage,
+        }),
+      }).then((response) => {
         const result = response.result;
         if (result._id) {
           self.setState(
             {
-              videoData: result
+              videoData: result,
             },
             () => {
               self.parseYDVideoData();
@@ -1058,15 +1057,15 @@ class AuthoringTool extends Component {
     const optionObj = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         id: this.state.videoId,
         optin: 0,
-        emailbody: emailBody
-      })
+        emailbody: emailBody,
+      }),
     };
-    ourFetch(url, true, optionObj).then(response => {});
+    ourFetch(url, true, optionObj).then((response) => {});
   }
   /* end of email */
 
@@ -1082,18 +1081,18 @@ class AuthoringTool extends Component {
       ourFetch(url, true, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId: this.props.getAppState().userId,
-          userToken: this.props.getAppState().userToken
-        })
-      }).then(response => {
+          userToken: this.props.getAppState().userToken,
+        }),
+      }).then((response) => {
         const result = response.result;
         if (result._id) {
           self.setState(
             {
-              videoData: result
+              videoData: result,
             },
             () => {
               self.parseYDVideoData();
@@ -1125,7 +1124,7 @@ class AuthoringTool extends Component {
           selectedTrackComponentPlaybackType: tracks[i].props.playBackType,
           selectedTrackComponentAudioClipStartTime: tracks[i].props.startTime,
           selectedTrackComponentLabel: tracks[i].props.label,
-          selectedTrackComponentUrl: tracks[i].props.audioClipUrl
+          selectedTrackComponentUrl: tracks[i].props.audioClipUrl,
         });
       }
     }
@@ -1143,7 +1142,7 @@ class AuthoringTool extends Component {
       this.setState(
         {
           selectedTrackComponentLabel: label,
-          audioDescriptionAudioClips: audioClipsUpdated
+          audioDescriptionAudioClips: audioClipsUpdated,
         },
         () => {
           this.loadExistingTracks();
@@ -1151,7 +1150,7 @@ class AuthoringTool extends Component {
       );
     } else {
       this.setState({
-        selectedTrackComponentLabel: label
+        selectedTrackComponentLabel: label,
       });
     }
   }
@@ -1159,7 +1158,7 @@ class AuthoringTool extends Component {
   updateNotes(e) {
     this.setState(
       {
-        audioDescriptionNotes: e.target.value
+        audioDescriptionNotes: e.target.value,
       },
       () => {
         this.autoSave();
@@ -1190,7 +1189,7 @@ class AuthoringTool extends Component {
 
       // Update labels at each audio clip.
       const audioClips = this.state.audioDescriptionAudioClips;
-      Object.keys(audioClips).forEach(acId => {
+      Object.keys(audioClips).forEach((acId) => {
         const ac = this.state.audioDescriptionAudioClips[acId];
         ourFetch(`${conf.apiUrl}/audioclips/${acId}`, true, {
           method,
@@ -1198,8 +1197,8 @@ class AuthoringTool extends Component {
           body: JSON.stringify({
             userId: this.props.getAppState().userId,
             userToken: this.props.getAppState().userToken,
-            label: ac.label
-          })
+            label: ac.label,
+          }),
         }).then(() => {
           this.refs.spinner.off();
         });
@@ -1220,9 +1219,9 @@ class AuthoringTool extends Component {
         userId: this.props.getAppState().userId,
         userToken: this.props.getAppState().userToken,
         notes: this.state.audioDescriptionNotes,
-        audioDescriptionSelectedLanguage: this.state
-          .audioDescriptionSelectedLanguage
-      })
+        audioDescriptionSelectedLanguage:
+          this.state.audioDescriptionSelectedLanguage,
+      }),
     }).then(() => {
       if (method === "POST") {
         this.getYDVideoData();
@@ -1248,10 +1247,10 @@ class AuthoringTool extends Component {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userId: this.props.getAppState().userId,
-            userToken: this.props.getAppState().userToken
-          })
+            userToken: this.props.getAppState().userToken,
+          }),
         }
-      ).then(response => {
+      ).then((response) => {
         console.log("Deleted", response);
         this.refs.spinner.off();
         browserHistory.push(`/videos/user/${this.props.getAppState().userId}`);
@@ -1262,17 +1261,17 @@ class AuthoringTool extends Component {
   /* start of custom tags */
   loadYTVideoTags() {
     const url = `${conf.apiUrl}/videos/getyoutubetags?id=${this.state.videoId}`;
-    ourFetch(url).then(response => {
+    ourFetch(url).then((response) => {
       const video = response.result;
       const tags = [];
-      video.tags.forEach(tag => {
+      video.tags.forEach((tag) => {
         tags.push({
           id: tag,
-          text: tag
+          text: tag,
         });
       });
       this.setState({
-        tags: tags
+        tags: tags,
       });
     });
   }
@@ -1280,13 +1279,13 @@ class AuthoringTool extends Component {
   handleDelete(i) {
     const { tags } = this.state;
     this.setState({
-      tags: tags.filter((tag, index) => index !== i)
+      tags: tags.filter((tag, index) => index !== i),
     });
   }
 
   handleAddition(tag) {
-    this.setState(state => ({
-      tags: [...state.tags, tag]
+    this.setState((state) => ({
+      tags: [...state.tags, tag],
     }));
   }
 
@@ -1297,7 +1296,7 @@ class AuthoringTool extends Component {
     newTags.splice(newPos, 0, tag);
     // re-render
     this.setState({
-      tags: newTags
+      tags: newTags,
     });
   }
 
@@ -1314,14 +1313,14 @@ class AuthoringTool extends Component {
     const optionObj = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         id: this.state.videoId,
-        tags: this.state.tags
-      })
+        tags: this.state.tags,
+      }),
     };
-    ourFetch(url, true, optionObj).then(response => {
+    ourFetch(url, true, optionObj).then((response) => {
       alert("Your custom tags have been successfully saved!");
     });
   }
@@ -1332,7 +1331,7 @@ class AuthoringTool extends Component {
     // console.log('1 -> render authoring tool')
     return (
       <div id="authoring-tool">
-        <button
+        {/* <button
           type="submit"
           onClick={this.handleClick}
           style={{
@@ -1349,7 +1348,7 @@ class AuthoringTool extends Component {
           variant="success"
         >
           YouDescribeX
-        </button>
+        </button> */}
 
         <SpinnerGlobal ref="spinner" />
         <main role="main">
