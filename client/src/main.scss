@@ -29,6 +29,7 @@
 @import "./components/yd-info-card/ydinfocard";
 @import "./components/ratings-info-card/ratingsinfocard";
 @import "./components/spinner-global/spinnerglobal";
+@import "./components/member-card/member-card";
 
 @import "./containers/app/app";
 @import "./containers/authoring-tool/authoringtool";
@@ -42,7 +43,7 @@
 @import "./containers/user-videos-page/uservideospage";
 @import "./containers/wish-list/wishlist";
 @import "./containers/unsupported-browser/unsupportedbrowser";
-
+@import "./containers/credits/newCredits";
 @import "./containers/admin/admin";
 @import "./components/admin-nav/adminnav";
 @import "./components/announcement/announcement";

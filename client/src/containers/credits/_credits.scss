@@ -13,11 +13,16 @@
     width: 416px;
     padding: 0px 8px;
     margin: 0 auto;
-    @media (min-width:601px){
+    @media (min-width: 601px) {
       width: 601px;
     }
     @media screen and (min-width: 993px) {
       width: 993px;
     }
   }
+}
+
+.member {
+  width: auto;
+  margin: 0px !important;
 }
