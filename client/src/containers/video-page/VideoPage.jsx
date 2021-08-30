@@ -679,15 +679,18 @@ class VideoPage extends Component {
   sendOptInEmail(optIn, rating = 0, feedback = []) {
     let emailBody = "";
     if (optIn == 1) {
-      emailBody = `Your audio description ${window.location.href} has been viewed.`;
+      emailBody = `Your audio description for ${this.state.videoTitle} has been viewed. 
+      View it here:  ${window.location.href}`;
     } else if (optIn == 2) {
-      emailBody = `Your audio description ${window.location.href} has been rated as ${rating}`;
+      emailBody = `Your audio description for  ${this.state.videoTitle} has been rated as ${rating}.
+      View it here: ${window.location.href}`;
       emailBody +=
         feedback.length > 0 ? ", with the following comment(s):" : ".";
       feedback.forEach((index) => {
         emailBody += `\n${conf.audioDescriptionFeedbacks[index]}`;
       });
     }
+
     const url = `${conf.apiUrl}/users/sendoptinemail`;
     const optionObj = {
       method: "POST",
