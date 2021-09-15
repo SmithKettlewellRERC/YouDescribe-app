@@ -397,7 +397,7 @@ class VideoPage extends Component {
 
   // 10
   startProgressWatcher() {
-    // console.log('10 -> startProgressWatcher');
+    console.log("startProgressWatcher");
     const self = this;
     const audioClips = this.getAudioClips();
 
@@ -414,12 +414,14 @@ class VideoPage extends Component {
       // audio ducking
       self.state.inlineClipsCurrentlyPlaying.length
         ? self.state.videoPlayer.setVolume(
-            (100 - self.state.balancerValue) * 0.4
+            (100 - self.state.balancerValue) * 0.3
           )
         : self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
 
       for (const clip in this.audioClipsPlayed) {
         this.audioClipsPlayed[clip].volume(self.state.balancerValue / 100);
+
+        console.log(this.audioClipsPlayed[clip].volume());
       }
 
       this.setState({
@@ -437,6 +439,7 @@ class VideoPage extends Component {
 
         // Always try to play the clip
         if (Math.floor(audioClip.start_time) === currentVideoProgressFloor) {
+          console.log("here");
           self.playAudioClip(audioClip);
         }
       }
@@ -448,7 +451,7 @@ class VideoPage extends Component {
   }
 
   stopProgressWatcher() {
-    // console.log('stopProgressWatcher');
+    console.log("stopProgressWatcher");
     if (this.watcher) {
       clearInterval(this.watcher);
       this.watcher = null;
@@ -464,7 +467,7 @@ class VideoPage extends Component {
       this.audioClipsPlayed[audioClipId] = new Howl({
         src: [audioClip.url],
         html5: false,
-        volume: self.state.balancerValue / 100,
+        volume: self.state.balancerValue / 30,
         onplay: () => {
           if (playbackType === "extended") {
             self.state.videoPlayer.pauseVideo();
