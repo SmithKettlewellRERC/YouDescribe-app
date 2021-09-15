@@ -253,7 +253,7 @@ class VolumeBalancer extends Component {
             id="sliderThumb1"
             aria-label="video description balance"
             aria-valuemin="10"
-            aria-valuemax="90"
+            aria-valuemax="95"
             aria-valuenow="50"
             accessKey="v"
           />
