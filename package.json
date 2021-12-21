@@ -4,7 +4,7 @@
   "description": "You Describe Application",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "NODE_ENV=dev nodemon server/index.js",
+    "start": "nodemon server/index.js",
     "w": "webpack --config webpack.config.dev.js"
   },
   "repository": {
