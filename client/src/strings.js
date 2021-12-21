@@ -1,6 +1,6 @@
 const strings = {
   "pt-br": {
-    "RECENT DESCRIPTIONS1": "DESCRIÇÕES RECENTES",
+    "RECENT DESCRIPTIONS": "DESCRIÇÕES RECENTES",
     "WISH LIST": "LISTA DE DESEJOS",
     HOME: "INÍCIO",
     Close: "Fechar",
