@@ -32,9 +32,7 @@ class Home extends Component {
 
   componentDidMount() {
     document.getElementById("navbar").focus();
-    document.title = this.props.translate(
-      "YouDescribe - Audio Description for YouTube Videos"
-    );
+    document.title = this.props.translate("YouDescribe - Audio Description for YouTube Videos");
     this.fetchingVideosToHome();
   }
 
@@ -54,11 +52,12 @@ class Home extends Component {
       })
       .then(() => {
         const url = `${conf.apiUrl}/videos/getyoutubedatafromcache?youtubeids=${ids}&key=home`;
+        console.log("url");
+        console.log(url);
+        console.log(url);
+        console.log(url);
         ourFetch(url).then((response) => {
-          this.parseFetchedData(
-            JSON.parse(response.result),
-            youDescribeVideosIds
-          );
+          this.parseFetchedData(JSON.parse(response.result), youDescribeVideosIds);
         });
       });
   }
@@ -68,9 +67,8 @@ class Home extends Component {
     if (data.items === undefined) {
       videos.push(
         <h1>
-          Thank you for visiting YouDescribe. This video is not viewable at this
-          time due to YouTube API key limits. Our key is reset by Google at
-          midnight Pacific time
+          Thank you for visiting YouDescribe. This video is not viewable at this time due to YouTube
+          API key limits. Our key is reset by Google at midnight Pacific time
         </h1>
       );
     } else {
@@ -88,9 +86,7 @@ class Home extends Component {
         const title = item.snippet.title;
         const description = item.snippet.description;
         const author = item.snippet.channelTitle;
-        const views = convertViewsToCardFormat(
-          Number(item.statistics.viewCount)
-        );
+        const views = convertViewsToCardFormat(Number(item.statistics.viewCount));
         const publishedAt = new Date(item.snippet.publishedAt);
 
         const now = Date.now();
