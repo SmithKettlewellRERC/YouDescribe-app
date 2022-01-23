@@ -10,7 +10,6 @@ import RatingsInfoCard from "../../components/ratings-info-card/RatingsInfoCard.
 import Button from "../../components/button/Button.jsx";
 import RatingPopup from "../../components/rating-popup/RatingPopup.jsx";
 import FeedbackPopup from "../../components/feedback-popup/FeedbackPopup.jsx";
-import ReactNotification from "react-notifications-component";
 
 import {
   ourFetch,
@@ -95,9 +94,18 @@ class VideoPage extends Component {
   }
 
   getAudioClips() {
-    if (this.state.audioDescriptionsIdsAudioClips && this.state.selectedAudioDescriptionId) {
-      if (this.state.audioDescriptionsIdsAudioClips[this.state.selectedAudioDescriptionId]) {
-        return this.state.audioDescriptionsIdsAudioClips[this.state.selectedAudioDescriptionId];
+    if (
+      this.state.audioDescriptionsIdsAudioClips &&
+      this.state.selectedAudioDescriptionId
+    ) {
+      if (
+        this.state.audioDescriptionsIdsAudioClips[
+          this.state.selectedAudioDescriptionId
+        ]
+      ) {
+        return this.state.audioDescriptionsIdsAudioClips[
+          this.state.selectedAudioDescriptionId
+        ];
       }
     }
     return [];
@@ -140,15 +148,21 @@ class VideoPage extends Component {
     const audioDescriptionsIdsUsers = {};
     const audioDescriptionsIdsAudioClips = {};
 
-    if (videoData && videoData.audio_descriptions && videoData.audio_descriptions.length > 0) {
+    if (
+      videoData &&
+      videoData.audio_descriptions &&
+      videoData.audio_descriptions.length > 0
+    ) {
       videoData.audio_descriptions.forEach((ad) => {
         if (ad.status === "published") {
           audioDescriptionsIds.push(ad._id);
           audioDescriptionsIdsUsers[ad._id] = ad.user;
           audioDescriptionsIdsUsers[ad._id].overall_rating_votes_counter =
             ad.overall_rating_votes_counter;
-          audioDescriptionsIdsUsers[ad._id].overall_rating_average = ad.overall_rating_average;
-          audioDescriptionsIdsUsers[ad._id].overall_rating_votes_sum = ad.overall_rating_votes_sum;
+          audioDescriptionsIdsUsers[ad._id].overall_rating_average =
+            ad.overall_rating_average;
+          audioDescriptionsIdsUsers[ad._id].overall_rating_votes_sum =
+            ad.overall_rating_votes_sum;
           audioDescriptionsIdsUsers[ad._id].feedbacks = ad.feedbacks;
           audioDescriptionsIdsAudioClips[ad._id] = [];
           if (ad.audio_clips.length > 0) {
@@ -267,13 +281,23 @@ class VideoPage extends Component {
           {
             videoTitle: data.items[0].snippet.title,
             videoAuthor: data.items[0].snippet.channelTitle,
-            videoPublishedAt: convertISO8601ToDate(data.items[0].snippet.publishedAt),
+            videoPublishedAt: convertISO8601ToDate(
+              data.items[0].snippet.publishedAt
+            ),
             videoDescription: data.items[0].snippet.description,
-            videoViews: convertViewsToCardFormat(data.items[0].statistics.viewCount),
-            videoLikes: convertLikesToCardFormat(data.items[0].statistics.likeCount),
-            videoDislikes: convertLikesToCardFormat(data.items[0].statistics.dislikeCount),
+            videoViews: convertViewsToCardFormat(
+              data.items[0].statistics.viewCount
+            ),
+            videoLikes: convertLikesToCardFormat(
+              data.items[0].statistics.likeCount
+            ),
+            videoDislikes: convertLikesToCardFormat(
+              data.items[0].statistics.dislikeCount
+            ),
             videoDurationInSeconds: this.videoDurationInSeconds,
-            videoDurationToDisplay: convertSecondsToEditorFormat(this.videoDurationInSeconds),
+            videoDurationToDisplay: convertSecondsToEditorFormat(
+              this.videoDurationInSeconds
+            ),
           },
           () => {
             document.title = `YouDescribe - ${this.state.videoTitle}`;
@@ -390,7 +414,9 @@ class VideoPage extends Component {
 
       // audio ducking
       self.state.inlineClipsCurrentlyPlaying.length
-        ? self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.3)
+        ? self.state.videoPlayer.setVolume(
+            (100 - self.state.balancerValue) * 0.3
+          )
         : self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
 
       for (const clip in this.audioClipsPlayed) {
@@ -402,7 +428,9 @@ class VideoPage extends Component {
       this.setState({
         videoPlayerAccessibilitySeekbarValue:
           currentVideoProgress / this.state.videoDurationInSeconds,
-        currentVideoProgress: convertSecondsToEditorFormat(Math.floor(currentVideoProgress)),
+        currentVideoProgress: convertSecondsToEditorFormat(
+          Math.floor(currentVideoProgress)
+        ),
       });
 
       const currentVideoProgressFloor = Math.floor(currentVideoProgress);
@@ -446,7 +474,8 @@ class VideoPage extends Component {
             self.state.videoPlayer.pauseVideo();
           }
           if (playbackType === "inline") {
-            const inlineClipsCurrentlyPlaying = self.state.inlineClipsCurrentlyPlaying;
+            const inlineClipsCurrentlyPlaying =
+              self.state.inlineClipsCurrentlyPlaying;
 
             inlineClipsCurrentlyPlaying.push(audioClipId);
             self.setState({ inlineClipsCurrentlyPlaying });
@@ -457,7 +486,8 @@ class VideoPage extends Component {
             self.state.videoPlayer.playVideo();
           }
           if (playbackType === "inline") {
-            const inlineClipsCurrentlyPlaying = self.state.inlineClipsCurrentlyPlaying;
+            const inlineClipsCurrentlyPlaying =
+              self.state.inlineClipsCurrentlyPlaying;
 
             inlineClipsCurrentlyPlaying.pop();
             if (!inlineClipsCurrentlyPlaying.length) {
@@ -468,7 +498,11 @@ class VideoPage extends Component {
         },
       });
 
-      console.log("Audio clip playback started", playbackType, audioClip.start_time);
+      console.log(
+        "Audio clip playback started",
+        playbackType,
+        audioClip.start_time
+      );
       this.audioClipsPlayed[audioClipId].playbackType = playbackType;
       this.audioClipsPlayed[audioClipId].play();
     }
@@ -555,7 +589,9 @@ class VideoPage extends Component {
             document.getElementById("rating-success").style.display = "block";
             document.getElementById("rating-success").focus();
             setTimeout(
-              () => (document.getElementById("rating-success").style.display = "none"),
+              () =>
+                (document.getElementById("rating-success").style.display =
+                  "none"),
               1000
             );
 
@@ -622,7 +658,9 @@ class VideoPage extends Component {
         document.getElementById("feedback-success").style.display = "block";
         document.getElementById("feedback-success").focus();
         setTimeout(
-          () => (document.getElementById("feedback-success").style.display = "none"),
+          () =>
+            (document.getElementById("feedback-success").style.display =
+              "none"),
           1000
         );
         // alert('Thanks for your feedback!');
@@ -650,7 +688,8 @@ class VideoPage extends Component {
     } else if (optIn == 2) {
       emailBody = `Your audio description for  ${this.state.videoTitle} has been rated as ${rating}.
       View it here: ${window.location.href}`;
-      emailBody += feedback.length > 0 ? ", with the following comment(s):" : ".";
+      emailBody +=
+        feedback.length > 0 ? ", with the following comment(s):" : ".";
       feedback.forEach((index) => {
         emailBody += `\n${conf.audioDescriptionFeedbacks[index]}`;
       });
@@ -698,7 +737,9 @@ class VideoPage extends Component {
     const $ = document.querySelector.bind(document);
     const iframe = $("#playerVP");
     const requestFullScreen =
-      iframe.requestFullScreen || iframe.mozRequestFullScreen || iframe.webkitRequestFullScreen;
+      iframe.requestFullScreen ||
+      iframe.mozRequestFullScreen ||
+      iframe.webkitRequestFullScreen;
 
     if (requestFullScreen) {
       requestFullScreen.bind(iframe)();
@@ -765,7 +806,11 @@ class VideoPage extends Component {
         .catch((err) => {
           switch (err.code) {
             case 67:
-              alert(this.props.translate("It is not possible to vote again for this video."));
+              alert(
+                this.props.translate(
+                  "It is not possible to vote again for this video."
+                )
+              );
               break;
             default:
               alert(
@@ -795,7 +840,9 @@ class VideoPage extends Component {
 
     if (describerIds.length && describerIds[0] !== selectedId) {
       const selectedIdIndex = describerIds.indexOf(selectedId);
-      describerIds = describerIds.splice(selectedIdIndex, 1).concat(describerIds);
+      describerIds = describerIds
+        .splice(selectedIdIndex, 1)
+        .concat(describerIds);
     }
 
     describerIds.forEach((describerId, i) => {
@@ -816,7 +863,6 @@ class VideoPage extends Component {
       <div id="video-page">
         <main role="main" title="Video page">
           <section id="video-area">
-            <ReactNotification />
             <ShareBar videoTitle={this.state.videoTitle} />
             <div id="video">
               <Spinner translate={this.props.translate} />
@@ -857,8 +903,12 @@ class VideoPage extends Component {
               {this.props.location.query.show && (
                 <RatingsInfoCard
                   translate={this.props.translate}
-                  selectedAudioDescriptionId={this.state.selectedAudioDescriptionId}
-                  audioDescriptionsIdsUsers={this.state.audioDescriptionsIdsUsers}
+                  selectedAudioDescriptionId={
+                    this.state.selectedAudioDescriptionId
+                  }
+                  audioDescriptionsIdsUsers={
+                    this.state.audioDescriptionsIdsUsers
+                  }
                 />
               )}
             </div>
@@ -870,13 +920,17 @@ class VideoPage extends Component {
                 <h3>{this.props.translate("Other description options")}</h3>
                 {describerCards.slice(1)}
                 <Button
-                  title={this.props.translate("Turn off descriptions for this video")}
+                  title={this.props.translate(
+                    "Turn off descriptions for this video"
+                  )}
                   text={this.props.translate("Turn off descriptions")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleTurnOffDescriptions()}
                 />
                 <Button
-                  title={this.props.translate("Add a new description for this video")}
+                  title={this.props.translate(
+                    "Add a new description for this video"
+                  )}
                   text={this.props.translate("Add description")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleAddDescription()}
@@ -887,7 +941,9 @@ class VideoPage extends Component {
               <div className="w3-card-2">
                 <h3>{this.props.translate("Descriptions off")}</h3>
                 <Button
-                  title={this.props.translate("Turn on descriptions for this video")}
+                  title={this.props.translate(
+                    "Turn on descriptions for this video"
+                  )}
                   text={this.props.translate("Turn on descriptions")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleTurnOnDescriptions()}
@@ -898,13 +954,17 @@ class VideoPage extends Component {
               <div className="w3-card-2">
                 <h3>No descriptions available</h3>
                 <Button
-                  title={this.props.translate("Request an audio description for this video")}
+                  title={this.props.translate(
+                    "Request an audio description for this video"
+                  )}
                   text={this.props.translate("Add to wish list")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.upVote()}
                 />
                 <Button
-                  title={this.props.translate("Add a new description for this video")}
+                  title={this.props.translate(
+                    "Add a new description for this video"
+                  )}
                   text={this.props.translate("Add description")}
                   color="w3-indigo w3-block w3-margin-top"
                   onClick={() => this.handleAddDescription()}
