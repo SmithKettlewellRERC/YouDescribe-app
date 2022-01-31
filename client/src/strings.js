@@ -71,6 +71,7 @@ const strings = {
     "YouDescribe - Wish List": "YouDescribe - Lista de desejos",
     Author: "Autor",
     "Published on": "Publicado em",
+
     "Turn off descriptions for this video":
       "Desligar a áudio descrição deste vídeo",
     "Turn off descriptions": "Desligar áudio descrição",

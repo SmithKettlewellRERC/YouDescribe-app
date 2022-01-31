@@ -17,6 +17,7 @@ const Editor = (props) => {
           title={props.translate(
             "Publish the video along with all audio description tracks"
           )}
+
           text={props.translate("Publish")}
           color="w3-indigo"
           onClick={props.publishAudioDescription}
@@ -30,6 +31,8 @@ const Editor = (props) => {
           title={props.translate(
             "Unpublish this audio description for the current video"
           )}
+
+
           text={props.translate("Unpublish")}
           color="w3-indigo"
           onClick={props.unpublishAudioDescription}
@@ -70,6 +73,7 @@ const Editor = (props) => {
       onClick={props.playFromStart}
     />
   );
+
   // }
   return (
     <div id="editor" className="w3-card-2">
@@ -140,6 +144,7 @@ const Editor = (props) => {
           </div>
         </div>
       </div>
+
       <div class="w3-row w3-border-top w3-border-black w3-padding">
         <div class="w3-col m1 l1 w3-left-align">
           <p>{saveButton}</p>
