@@ -10,7 +10,7 @@ import RatingsInfoCard from "../../components/ratings-info-card/RatingsInfoCard.
 import Button from "../../components/button/Button.jsx";
 import RatingPopup from "../../components/rating-popup/RatingPopup.jsx";
 import FeedbackPopup from "../../components/feedback-popup/FeedbackPopup.jsx";
-
+import ReactNotification from "react-notifications-component";
 import {
   ourFetch,
   convertISO8601ToSeconds,
@@ -865,6 +865,7 @@ class VideoPage extends Component {
       <div id="video-page">
         <main role="main" title="Video page">
           <section id="video-area">
+            <ReactNotification />
             <ShareBar videoTitle={this.state.videoTitle} />
             <div id="video">
               <Spinner translate={this.props.translate} />

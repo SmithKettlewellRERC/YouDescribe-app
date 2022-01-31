@@ -1,5 +1,9 @@
 import React from "react";
+import ReactNotification from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 import * as Icon from "react-bootstrap-icons";
+
+import { store } from "react-notifications-component";
 
 const ShareBar = (props) => {
   const twitterText = `Check out ${props.videoTitle.substring(
@@ -41,18 +45,19 @@ const ShareBar = (props) => {
           navigator.clipboard.writeText(
             window.location.href.replace("video", "embed") //returns link to the embed page with video id
           );
-          // store.addNotification({
-          //   title: "",
-          //   message: "The embed link has been copied to your clipboard!",
-          //   type: "default",
-          //   insert: "top",
-          //   container: "bottom-center",
-          //   animationIn: ["animate__animated", "animate__fadeIn"],
-          //   animationOut: ["animate__animated", "animate__fadeOut"],
-          //   dismiss: {
-          //     duration: 2000,
-          //     onScreen: true,
-          //   },
+          store.addNotification({
+            title: "",
+            message: "The embed link has been copied to your clipboard!",
+            type: "default",
+            insert: "top",
+            container: "bottom-center",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 2000,
+              onScreen: true,
+            },
+          });
         }}
       >
         <Icon.PlusSquareFill></Icon.PlusSquareFill>
@@ -71,19 +76,19 @@ const ShareBar = (props) => {
               `src=${window.location.href.replace("video", "embed")} />`
           );
 
-          // store.addNotification({
-          //   title: "",
-          //   message: "The snippet has been copied to your clipboard!",
-          //   type: "default",
-          //   insert: "top",
-          //   container: "bottom-center",
-          //   animationIn: ["animate__animated", "animate__fadeIn"],
-          //   animationOut: ["animate__animated", "animate__fadeOut"],
-          //   dismiss: {
-          //     duration: 2000,
-          //     onScreen: true,
-          //   },
-          // });
+          store.addNotification({
+            title: "",
+            message: "The snippet has been copied to your clipboard!",
+            type: "default",
+            insert: "top",
+            container: "bottom-center",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 2000,
+              onScreen: true,
+            },
+          });
         }}
       >
         <Icon.Code></Icon.Code>
