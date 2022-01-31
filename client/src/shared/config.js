@@ -3,10 +3,14 @@ module.exports = () => {
   const apiVersion = "v1";
 
   // DON'T CHANGE THESE URLS!
-  // let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
-  // let audioClipsUploadsPath = "https://api.youdescribe.org/audio-descriptions-files";
-  let apiUrl = `https://dev-api.youdescribe.org/${apiVersion}`;
-  let audioClipsUploadsPath = "https://api.youdescribe.org/audio-descriptions-files";
+  let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
+  let audioClipsUploadsPath =
+    "https://api.youdescribe.org/audio-descriptions-files";
+  // let apiUrl = `https://dev-api.youdescribe.org/${apiVersion}`;
+  // let audioClipsUploadsPath =
+  //   "https://api.youdescribe.org/audio-descriptions-files";
+  // let apiUrl = `http://localhost:8080/${apiVersion}`;
+  //let audioClipsUploadsPath = "https://api.youdescribe.org/audio-descriptions-files";
   const youTubeApiUrl = "https://www.googleapis.com/youtube/v3";
 
   // YouDescribe APIKey

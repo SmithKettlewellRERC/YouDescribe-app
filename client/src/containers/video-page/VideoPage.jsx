@@ -493,6 +493,8 @@ class VideoPage extends Component {
               self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
             }
             self.setState({ inlineClipsCurrentlyPlaying });
+
+            this.audioClipsPlayed.delete(audioClipId);
           }
         },
       });

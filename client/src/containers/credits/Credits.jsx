@@ -93,14 +93,7 @@ class Credits extends Component {
         description:
           "Photo os Ilmi Yoon, an asian woman with fair skin and with long wavy brown hair. She is smiling brightly at the camera.",
       },
-      {
-        name: "Pooyan Fazli",
-        designation: "Machine Learning ",
-        tenure: "2018 - Present",
-        img: "PooyanFazli.jpg",
-        description:
-          "Photo of Pooyan Fazli, a fair skinned male with short spiked hair. He is wearing glasses in smiling at the camera.",
-      },
+
       {
         name: "Jianfei",
         designation: "YouDescribeX & YouDescribe admin ",
