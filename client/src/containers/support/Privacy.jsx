@@ -21,7 +21,7 @@ class Privacy extends Component {
               fontSize: 20,
               lineHeight: 1.5,
               marginTop: 10,
-              marginBottom: 10,
+              marginBottom: 10
             }}
           >
             Privacy Policy
