@@ -14,7 +14,10 @@ const Editor = (props) => {
     if (audioDescriptionStatus === "draft") {
       publishButton = (
         <Button
-          title={props.translate("Publish the video along with all audio description tracks")}
+          title={props.translate(
+            "Publish the video along with all audio description tracks"
+          )}
+
           text={props.translate("Publish")}
           color="w3-indigo"
           onClick={props.publishAudioDescription}
@@ -25,7 +28,11 @@ const Editor = (props) => {
     if (audioDescriptionStatus === "published") {
       publishButton = (
         <Button
-          title={props.translate("Unpublish this audio description for the current video")}
+          title={props.translate(
+            "Unpublish this audio description for the current video"
+          )}
+
+
           text={props.translate("Unpublish")}
           color="w3-indigo"
           onClick={props.unpublishAudioDescription}
@@ -57,6 +64,16 @@ const Editor = (props) => {
       onClick={props.saveLabelsAndNotes}
     />
   );
+
+  let playFromStartButton = (
+    <Button
+      title={props.translate("Play audio description from the start")}
+      text={props.translate("Play from Start")}
+      color="w3-gray"
+      onClick={props.playFromStart}
+    />
+  );
+
   // }
   return (
     <div id="editor" className="w3-card-2">
@@ -70,7 +87,9 @@ const Editor = (props) => {
           <div className="w3-col l9 m9 s9">
             <div id="timeline">
               <div id="timers">
-                <span className="w3-left">{props.currentVideoProgressToDisplay}</span>
+                <span className="w3-left">
+                  {props.currentVideoProgressToDisplay}
+                </span>
                 <span className="w3-right">{props.videoDurationToDisplay}</span>
               </div>
 
@@ -125,10 +144,20 @@ const Editor = (props) => {
           </div>
         </div>
       </div>
-      <div className="w3-left-align w3-border-top w3-border-black w3-padding">
-        {deleteAllButton}
-        {saveButton}
-        {publishButton}
+
+      <div class="w3-row w3-border-top w3-border-black w3-padding">
+        <div class="w3-col m1 l1 w3-left-align">
+          <p>{saveButton}</p>
+        </div>
+        <div class="w3-col m7 l7 w3-left-align">
+          <p>{playFromStartButton}</p>
+        </div>
+        <div class="w3-col m4 l4 w3-right-align ">
+          <p>
+            {deleteAllButton}
+            {publishButton}
+          </p>
+        </div>
       </div>
     </div>
   );

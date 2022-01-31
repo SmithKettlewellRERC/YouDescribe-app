@@ -7,13 +7,13 @@ import {
   Button,
   FormControl,
   Form,
-  Table
+  Table,
 } from "react-bootstrap";
 import AdminNav from "../../components/admin-nav/AdminNav.jsx";
 import {
   ourFetchWithToken,
   convertTimeToCardFormat,
-  convertViewsToCardFormat
+  convertViewsToCardFormat,
 } from "../../shared/helperFunctions";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -34,16 +34,17 @@ class SummaryOfTimeRange extends Component {
       users: "loading...",
       audioClips: {
         count: "loading...",
-        duration: "loading..."
+        duration: "loading...",
       },
-      audioDescriotions: "loading...",
+      audioDescriptionDrafts: "loading...",
+      audioDescriptions: "loading...",
       videos: {
         count: "loading...",
-        duration: "loading..."
+        duration: "loading...",
       },
       words: "loading...",
       topVideos: ["loading..."],
-      feedbacks: ["loading..."]
+      feedbacks: ["loading..."],
     };
 
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -65,14 +66,15 @@ class SummaryOfTimeRange extends Component {
     this.loadCountOfAudioDescriptions(startDate, endDate);
     this.loadCountOfVideos(startDate, endDate);
     this.loadCountOfWords(startDate, endDate);
+    this.loadCountOfPublishedAudioDescriptions(startDate, endDate);
   }
 
   loadCountOfVisits(startDate, endDate) {
     const url = `${conf.apiUrl}/statistics/getcountofvisits?startdate=${startDate}&enddate=${endDate}`;
-    ourFetchWithToken(url).then(response => {
+    ourFetchWithToken(url).then((response) => {
       const items = response.result;
       const topVideos = [];
-      items.topVideos.forEach(item => {
+      items.topVideos.forEach((item) => {
         topVideos.push(
           <div key={item._id}>
             <Link to={"/video/" + item._id} target={item._id}>
@@ -84,17 +86,17 @@ class SummaryOfTimeRange extends Component {
       this.setState({
         videoVisits: items.countOfVideoVisits,
         webVisits: items.countOfWebVisits,
-        topVideos: topVideos
+        topVideos: topVideos,
       });
     });
   }
 
   loadCountOfFeedbacks(startDate, endDate) {
     const url = `${conf.apiUrl}/statistics/getcountoffeedbacks?startdate=${startDate}&enddate=${endDate}`;
-    ourFetchWithToken(url).then(response => {
+    ourFetchWithToken(url).then((response) => {
       const items = response.result;
       const feedbacks = [];
-      items.forEach(feedback => {
+      items.forEach((feedback) => {
         feedbacks.push(
           <div key={feedback._id}>
             {conf.audioDescriptionFeedbacks[feedback._id]}
@@ -102,65 +104,74 @@ class SummaryOfTimeRange extends Component {
         );
       });
       this.setState({
-        feedbacks: feedbacks
+        feedbacks: feedbacks,
       });
     });
   }
 
   loadCountOfUsers(startDate, endDate) {
     const url = `${conf.apiUrl}/statistics/getcountofusers?startdate=${startDate}&enddate=${endDate}`;
-    ourFetchWithToken(url).then(response => {
+    ourFetchWithToken(url).then((response) => {
       this.setState({
-        users: response.result
+        users: response.result,
       });
     });
   }
 
   loadCountOfAudioClips(startDate, endDate) {
     const url = `${conf.apiUrl}/statistics/getcountofaudioclips?startdate=${startDate}&enddate=${endDate}`;
-    ourFetchWithToken(url).then(response => {
+    ourFetchWithToken(url).then((response) => {
       this.setState({
-        audioClips: response.result
+        audioClips: response.result,
       });
     });
   }
 
   loadCountOfAudioDescriptions(startDate, endDate) {
-    const url = `${conf.apiUrl}/statistics/getcountofaudiodescriptions?startdate=${startDate}&enddate=${endDate}`;
-    ourFetchWithToken(url).then(response => {
+    const url = `${conf.apiUrl}/statistics/getcountofaudiodescriptions?startdate=${startDate}&enddate=${endDate}&status=draft`;
+    ourFetchWithToken(url).then((response) => {
       this.setState({
-        audioDescriotions: response.result.count
+        audioDescriptionDrafts: response.result.count,
+      });
+    });
+  }
+
+  loadCountOfPublishedAudioDescriptions(startDate, endDate) {
+    const url = `${conf.apiUrl}/statistics/getcountofaudiodescriptions?startdate=${startDate}&enddate=${endDate}&status=published`;
+    ourFetchWithToken(url).then((response) => {
+      this.setState({
+        audioDescriptions: response.result.count,
       });
     });
   }
 
   loadCountOfVideos(startDate, endDate) {
     const url = `${conf.apiUrl}/statistics/getcountofvideos?startdate=${startDate}&enddate=${endDate}`;
-    ourFetchWithToken(url).then(response => {
+    ourFetchWithToken(url).then((response) => {
       this.setState({
-        videos: response.result
+        videos: response.result,
       });
     });
   }
 
   loadCountOfWords(startDate, endDate) {
     const url = `${conf.apiUrl}/statistics/getcountofwords?startdate=${startDate}&enddate=${endDate}`;
-    ourFetchWithToken(url).then(response => {
+    ourFetchWithToken(url).then((response) => {
       this.setState({
-        words: response.result.count
+        words: response.result.count,
       });
     });
   }
 
   handleStartDateChange(startDate) {
     this.setState({
-      startDate: startDate.getTime()
+      startDate: startDate.getTime(),
     });
   }
 
   handleEndDateChange(endDate) {
     this.setState({
-      endDate: endDate.getTime()
+      endDate: endDate.getTime(),
     });
   }
 
@@ -188,7 +199,7 @@ class SummaryOfTimeRange extends Component {
               <DatePicker
                 placeholderText="Start Date"
                 selected={this.state.startDate}
-                onChange={value => this.handleStartDateChange(value)}
+                onChange={(value) => this.handleStartDateChange(value)}
               />
             </div>
             <span style={{ marginLeft: 10, marginRight: 10 }}></span>
@@ -197,7 +208,7 @@ class SummaryOfTimeRange extends Component {
               <DatePicker
                 placeholderText="End Date"
                 selected={this.state.endDate}
-                onChange={value => this.handleEndDateChange(value)}
+                onChange={(value) => this.handleEndDateChange(value)}
               />
             </div>
             <span style={{ marginLeft: 10, marginRight: 10 }}></span>
@@ -255,9 +266,29 @@ class SummaryOfTimeRange extends Component {
                 </th>
               </tr>
               <tr>
-                <th>Count Of Audio Descriptions Created</th>
+                <th>Total Audio Descriptions Created</th>
                 <th>
-                  {this.state.audioDescriotions}&nbsp;
+                  {parseInt(this.state.audioDescriptionDrafts) +
+                    parseInt(this.state.audioDescriptions)}
+                  &nbsp;
+                  <Link to={this.getRoute("Audio Descriptions")} target="daily">
+                    View Daily Count
+                  </Link>
+                </th>
+              </tr>
+              <tr>
+                <th>Count Of Audio Description Drafts Created</th>
+                <th>
+                  {this.state.audioDescriptionDrafts}&nbsp;
+                  <Link to={this.getRoute("Audio Descriptions")} target="daily">
+                    View Daily Count
+                  </Link>
+                </th>
+              </tr>
+              <tr>
+                <th>Count Of Audio Descriptions Published </th>
+                <th>
+                  {this.state.audioDescriptions}&nbsp;
                   <Link to={this.getRoute("Audio Descriptions")} target="daily">
                     View Daily Count
                   </Link>

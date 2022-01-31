@@ -6,15 +6,20 @@ module.exports = () => {
   let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
   let audioClipsUploadsPath =
     "https://api.youdescribe.org/audio-descriptions-files";
-
+  // let apiUrl = `https://dev-api.youdescribe.org/${apiVersion}`;
+  // let audioClipsUploadsPath =
+  //   "https://api.youdescribe.org/audio-descriptions-files";
+  // let apiUrl = `http://localhost:8080/${apiVersion}`;
+  //let audioClipsUploadsPath = "https://api.youdescribe.org/audio-descriptions-files";
   const youTubeApiUrl = "https://www.googleapis.com/youtube/v3";
-  
+
   // YouDescribe APIKey
   const youTubeApiKey = "AIzaSyDV8QMir3NE8S2jA1GyXvLXyTuSq72FPyE";
 
   // YouDescribe Google Client Id
-  const googleClientId = "1056671841574-e1r4soednlur8hl2sl0ooumpvftt1s2k.apps.googleusercontent.com";
-  
+  const googleClientId =
+    "1056671841574-e1r4soednlur8hl2sl0ooumpvftt1s2k.apps.googleusercontent.com";
+
   // Video player setup.
   const seekToPositionDelayFix = 1; // Seconds.
 
@@ -33,7 +38,7 @@ module.exports = () => {
     8: "Description does not match video tone",
     9: "Description has innappropriate content",
     10: "Description given before action",
-    11: "Needs to read all onscreen text"
+    11: "Needs to read all onscreen text",
   };
 
   const startDateTimeStamp = 1352707200000;
@@ -48,6 +53,6 @@ module.exports = () => {
     googleClientId,
     nudgeIncrementDecrementValue,
     audioDescriptionFeedbacks,
-    startDateTimeStamp
+    startDateTimeStamp,
   };
 };

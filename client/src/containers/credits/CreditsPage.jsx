@@ -84,6 +84,7 @@ class CreditsPage extends Component {
         description:
           "Photo os Ilmi Yoon, an asian woman with fair skin and with long wavy brown hair. She is smiling brightly at the camera.",
       },
+
       {
         name: "Jianfei Zhao",
         bio: "",

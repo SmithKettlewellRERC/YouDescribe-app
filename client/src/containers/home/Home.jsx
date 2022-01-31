@@ -52,12 +52,6 @@ class Home extends Component {
       })
       .then(() => {
         const url = `${conf.apiUrl}/videos/getyoutubedatafromcache?youtubeids=${ids}&key=home`;
-
-        console.log("working");
-        console.log(url);
-        console.log(url);
-        console.log(url);
-
         ourFetch(url).then((response) => {
           this.parseFetchedData(JSON.parse(response.result), youDescribeVideosIds);
         });
