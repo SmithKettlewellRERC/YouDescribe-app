@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import SupportNav from './SupportNav.jsx';
 import * as Icon from "react-bootstrap-icons";
-import embedded from './images/embedded_link.png';
+// import embedded from './images/embedded_link.png';
+import path from "path";
+
 
 class Embed_Tutorial extends Component {
   componentDidMount() {
@@ -36,11 +38,50 @@ class Embed_Tutorial extends Component {
           <h3>Finding the embedded link to the selected video:</h3>
 
           <p>If you click on <Icon.PlusSquareFill></Icon.PlusSquareFill> button, an embedded link to the video will be copied to the clipboard. You can use that link to directly access the video. </p>
-          <img src={embedded} alt="Embedded Link"></img>
+          {/* <img src={embedded} alt="Embedded Link"></img> */}
+          <img
+            alt="yo"
+            src={path.join(
+            __dirname,
+            "assets",
+            "img",
+            "embedded_link.png"
+            )}
+            className="w3-image"
+          />
+          <img
+            alt="yo"
+            src={path.join(
+            __dirname,
+            "assets",
+            "img",
+            "embedded_video.png"
+            )}
+            className="w3-image"
+          />
           <h3>Finding the html snippet for the video:</h3>
 
           <p>If you click on <Icon.Code></Icon.Code> button, a html snippet will be copied to the clipboard. You can use that link to directly access the video. </p>
-
+          <img
+            alt="yo"
+            src={path.join(
+            __dirname,
+            "assets",
+            "img",
+            "html_snippet.png"
+            )}
+            className="w3-image"
+          />
+          <img
+            alt="yo"
+            src={path.join(
+            __dirname,
+            "assets",
+            "img",
+            "html_code.png"
+            )}
+            className="w3-image"
+          />
           <p><a href="#top">Back to top</a></p>
 
         </main>
