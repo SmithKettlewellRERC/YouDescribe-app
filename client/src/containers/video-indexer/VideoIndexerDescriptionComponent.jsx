@@ -2,34 +2,23 @@ import React, { Component } from "react";
 import { Link } from "react-router";
 import Iframe from "react-iframe";
 import { Slider, Direction } from "react-player-controls";
-import {
-  Navbar,
-  Nav,
-  NavDropdown,
-  Button,
-  FormControl,
-  Form,
-  Table,
-} from "react-bootstrap";
+import { Navbar, Nav, NavDropdown, Button, FormControl, Form, Table } from "react-bootstrap";
 import Question from "./Question.jsx";
-import {
-  ourFetch,
-  convertSecondsToCardFormat,
-} from "../../shared/helperFunctions";
+import { ourFetch, convertSecondsToCardFormat } from "../../shared/helperFunctions";
 import ContentEditable from "react-contenteditable";
-import axios from "axios";
-import Speech from "react-speech";
-import Modal from "react-awesome-modal";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import axios from 'axios';
+import Speech from 'react-speech';
+import Modal from 'react-awesome-modal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-class VideoIndexerDescriptionComponent extends Component {
-  constructor(props) {
+class VideoIndexerDescriptionComponent extends Component{
+  constructor(props){
     super(props);
     this.state = {
       qnaData: [],
       show: false,
-      visible: false,
+      visible : false,
       buttonText: "Convert Text to Speech",
       startTime: this.props.startTime,
       endTime: this.props.endTime,
@@ -59,7 +48,7 @@ class VideoIndexerDescriptionComponent extends Component {
       return;
     }
     const sentences = {};
-    this.state.descriptions.forEach((description) => {
+    this.state.descriptions.forEach(description => {
       sentences[description["sentence id"]] = description["sentence"];
     });
     this.setState({
@@ -91,10 +80,8 @@ class VideoIndexerDescriptionComponent extends Component {
       has_ai: true,
     });
     const qnaData = this.state.qnaData;
-    const elements =
-      Array.prototype.slice.call(document.getElementsByName("humanQuestion")) ||
-      [];
-    elements.forEach((element) => {
+    const elements = Array.prototype.slice.call(document.getElementsByName("humanQuestion")) || [];
+    elements.forEach(element => {
       const sceneId = element.getAttribute("sceneid");
       if (!qnaData[sceneId]) {
         qnaData[sceneId] = [];
@@ -106,14 +93,14 @@ class VideoIndexerDescriptionComponent extends Component {
         answer: "",
       });
     });
-
+    
     // console.log(sceneArr);
     // console.log(qnaData);
     const urlToSave = `http://18.221.192.73:5001/saveAiDescription`;
     const optionObj = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         user_id: "9fe1e2c6-5cd2-11ea-bc55-0242ac130003",
@@ -127,19 +114,16 @@ class VideoIndexerDescriptionComponent extends Component {
       const urlToFetch = `http://18.221.192.73:5001/generateAudioDescriptionMp3ForScene?videoId=${this.youtubeId}&volunteerId=9fe1e2c6-5cd2-11ea-bc55-0242ac130003&sceneId=${this.sceneId}`;
       ourFetch(urlToFetch).then((response) => {
         const sentences = {};
-        this.setState(
-          {
-            descriptions: response[this.sceneId]["sentences"],
-          },
-          () => {
-            this.loadSentences();
-            this.callback(this.sceneId, response[this.sceneId]);
-          }
-        );
+        this.setState({
+          descriptions: response[this.sceneId]["sentences"],
+        }, () => {
+          this.loadSentences();
+          this.callback(this.sceneId, response[this.sceneId]);
+        });
       });
     });
 
-    toast.success("Saved!", {
+    toast.success('Saved!', {
       position: "bottom-center",
       autoClose: 1000,
       hideProgressBar: true,
@@ -160,9 +144,9 @@ class VideoIndexerDescriptionComponent extends Component {
   // }
 
   toggleDiv() {
-    const { show } = this.state;
+    const {show} = this.state;
     this.setState({
-      show: !show,
+      show: !show
     });
   }
 
@@ -194,14 +178,11 @@ class VideoIndexerDescriptionComponent extends Component {
 
   eventToggle() {
     //console.log('eventHandler1 called!');
-    let buttonText =
-      this.state.buttonText == "Convert Text to Speech"
-        ? "View Saved Notes"
-        : "Convert Text to Speech";
+    let buttonText = this.state.buttonText == "Convert Text to Speech" ? "View Saved Notes" : "Convert Text to Speech"
     this.setState({
-      buttonText: buttonText,
+      buttonText: buttonText
     });
-    // console.log("buttonText "+this.state.buttonText);
+   // console.log("buttonText "+this.state.buttonText);
     this.props.indexerDescription.handleClickConvert();
   }
 
@@ -213,34 +194,18 @@ class VideoIndexerDescriptionComponent extends Component {
         endtime={this.state.endTime}
         descriptions={this.state.descriptions}
         ocr={this.state.ocr}
-        style={{
-          padding: 10,
-          border: "3px solid gray",
-          marginBlockStart: 25,
-          marginBlockEnd: 25,
-        }}
+        style={{padding: 10, border: "3px solid gray", marginBlockStart: 25, marginBlockEnd: 25}}
       >
-        <div style={{ display: "flex" }}>
-          <h5>
-            <b>Scene {this.props.scene_num} </b>
-          </h5>
-          <br />
-          <span
-            style={{
-              marginLeft: 50,
-              width: 220,
-              paddingTop: 1,
-              color: "#008CBA",
-              fontWeight: "bold",
-            }}
-          >
-            {convertSecondsToCardFormat(this.props.startTime)} -{" "}
-            {convertSecondsToCardFormat(this.props.endTime)}
-            <Slider isEnabled={true} direction={Direction.HORIZONTAL}>
-              <div
-                style={Object.assign(
-                  {},
-                  {
+          <div style={{display: "flex"}}>
+            <h5><b>Scene {this.props.scene_num} </b></h5><br/>
+            <span style={{marginLeft: 50, width: 220, paddingTop: 1, color:"#008CBA",fontWeight:"bold"}}>
+              {convertSecondsToCardFormat(this.props.startTime)} - {convertSecondsToCardFormat(this.props.endTime)}
+              <Slider
+                isEnabled={true}
+                direction={Direction.HORIZONTAL}
+              >
+                <div
+                  style={Object.assign({}, {
                     position: "absolute",
                     background: "#878c88",
                     borderRadius: 4,
@@ -249,14 +214,11 @@ class VideoIndexerDescriptionComponent extends Component {
                     left: 0,
                     width: "105%",
                     height: 4,
-                  }
-                )}
-              />
-              <div
-                id={this.sceneId + "_progress_bar"}
-                style={Object.assign(
-                  {},
-                  {
+                  })}
+                />
+                <div
+                  id={this.sceneId + "_progress_bar"}
+                  style={Object.assign({}, {
                     position: "absolute",
                     width: 16,
                     height: 16,
@@ -264,34 +226,22 @@ class VideoIndexerDescriptionComponent extends Component {
                     borderRadius: "100%",
                     top: 0,
                     left: 0,
-                  }
-                )}
-              />
-            </Slider>
-          </span>
-        </div>
-        <br />
-        <div style={{ display: "flex" }}>
-          <h6>
-            <b>Description </b>
-          </h6>
-          <div
-            style={{
-              backgroundColor: "#FFFFFF",
-              padding: 5,
-              border: "2px solid gray",
-              marginBlockEnd: 25,
-              width: 410,
-              marginInlineStart: 8,
-            }}
-          >
+                  })}
+                />
+              </Slider>
+            </span>
+          </div>
+          <br/>
+          <div style={{display: "flex"}}>
+            <h6><b>Description </b></h6>
+            <div style={{backgroundColor: "#FFFFFF", padding: 5, border: "2px solid gray", marginBlockEnd: 25, width: 410, marginInlineStart: 8}}>
             {Object.entries(this.state.sentences).map(([key, value]) => (
               <ContentEditable
                 key={key}
                 id={key + "_textarea"}
                 html={value}
                 onChange={(event) => this.handleSentenceChange(event, key)}
-                style={{ wordBreak: "break-all" }}
+                style={{wordBreak: "break-all"}}
               />
             ))}
             {/* {Object.entries(this.state.sentences).map(([key, value]) => (
@@ -302,27 +252,17 @@ class VideoIndexerDescriptionComponent extends Component {
                 onChange={(event) => this.handleSentenceChange(event, key)}
               />
             ))} */}
+            </div>
           </div>
-        </div>
-        <div style={{ display: "flex" }}>
-          <h6>
-            <b>Text on Screen </b>
-          </h6>
-          <ContentEditable
-            html={this.state.ocr}
-            onChange={(event) => this.handleOcrChange(event)}
-            style={{
-              wordBreak: "break-all",
-              backgroundColor: "#FFFFFF",
-              padding: 5,
-              border: "2px solid gray",
-              marginBlockEnd: 15,
-              width: 390,
-              marginInlineStart: 5,
-            }}
-          />
-        </div>
-        {/* <Button onClick={this.toggleDiv} type="submit" style={{fontWeight:"bold", marginTop: 20,marginBlockStart: 2,    marginBottom: 10, marginInlineStart:433}} variant="warning">Next</Button>
+          <div style={{display: "flex"}}>
+            <h6><b>Text on Screen </b></h6>
+            <ContentEditable
+              html={this.state.ocr}
+              onChange={(event) => this.handleOcrChange(event)}
+              style={{wordBreak: "break-all", backgroundColor: "#FFFFFF", padding: 5, border: "2px solid gray", marginBlockEnd: 15, width: 390, marginInlineStart: 5}}
+            />
+          </div>
+          {/* <Button onClick={this.toggleDiv} type="submit" style={{fontWeight:"bold", marginTop: 20,marginBlockStart: 2,    marginBottom: 10, marginInlineStart:433}} variant="warning">Next</Button>
           {
             this.state.show &&
             <Question
@@ -330,42 +270,13 @@ class VideoIndexerDescriptionComponent extends Component {
               qnaList={this.props.qnaList}
             /> 
           }*/}
-        <div>
-          <Button
-            type="submit"
-            onClick={this.handleSaveClick}
-            style={{
-              fontWeight: "bold",
-              width: 100,
-              marginTop: 20,
-              marginBlockStart: 2,
-              marginBottom: 10,
-              marginInlineStart: 400,
-            }}
-            variant="success"
-          >
-            Save
-          </Button>
-          <ToastContainer />
-
-          <Button
-            type="submit"
-            onClick={() => {
-              this.eventToggle();
-            }}
-            style={{
-              fontWeight: "bold",
-              width: 200,
-              marginTop: 20,
-              marginBlockStart: 2,
-              marginBottom: 10,
-              marginInlineStart: 300,
-            }}
-            variant="primary"
-          >
-            {this.state.buttonText}
-          </Button>
-        </div>
+          <div>
+            <Button type="submit" onClick={this.handleSaveClick} style={{fontWeight:"bold",width:100, marginTop: 20,marginBlockStart: 2, marginBottom: 10,marginInlineStart:400 }} variant="success">Save</Button>
+            <ToastContainer />
+          
+            <Button type="submit" onClick={() => {this.eventToggle();}} style={{fontWeight:"bold",width:200, marginTop: 20, marginBlockStart: 2, marginBottom: 10, marginInlineStart:300 }} variant="primary">{this.state.buttonText}</Button>
+            
+          </div>
       </div>
     );
   }

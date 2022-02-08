@@ -14,6 +14,17 @@ class Track extends Component {
     super(props);
   }
 
+  componentDidMount() {
+    if (this.props.data.label) {
+      var element = document.getElementById("init-text");
+      if (element) {
+        var event = new Event("change");
+        element.dispatchEvent(event);
+        element.value = this.props.data.label;
+      }
+    }
+  }
+
   render() {
     let label;
     let switchTrackTypeComponent = null;
@@ -64,7 +75,7 @@ class Track extends Component {
         <input
           type="text"
           data-id=""
-          value={this.props.data.label}
+          id="init-text"
           placeholder={this.props.translate("Label for this track")}
           onChange={this.props.updateTrackLabel}
           onKeyPress={(evt) => {
