@@ -10,8 +10,7 @@ import RatingsInfoCard from "../../components/ratings-info-card/RatingsInfoCard.
 import Button from "../../components/button/Button.jsx";
 import RatingPopup from "../../components/rating-popup/RatingPopup.jsx";
 import FeedbackPopup from "../../components/feedback-popup/FeedbackPopup.jsx";
-import ReactNotification from "react-notifications-component";
-
+import { ToastContainer } from "react-toastify";
 import {
   ourFetch,
   convertISO8601ToSeconds,
@@ -175,7 +174,9 @@ class VideoPage extends Component {
         }
       });
     }
+
     console.log("audioDescriptionsIdsUsers", audioDescriptionsIdsUsers);
+
     this.setState(
       {
         videoData,
@@ -493,6 +494,8 @@ class VideoPage extends Component {
               self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
             }
             self.setState({ inlineClipsCurrentlyPlaying });
+
+            this.audioClipsPlayed.delete(audioClipId);
           }
         },
       });
@@ -862,7 +865,7 @@ class VideoPage extends Component {
       <div id="video-page">
         <main role="main" title="Video page">
           <section id="video-area">
-            <ReactNotification />
+            <ToastContainer />
             <ShareBar videoTitle={this.state.videoTitle} />
             <div id="video">
               <Spinner translate={this.props.translate} />

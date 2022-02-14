@@ -9,3 +9,4 @@ settings.json
 npm-debug.log
 deploy.sh
 package-lock.json
+client/src/shared/config.js

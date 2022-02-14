@@ -91,6 +91,7 @@ class AuthoringTool extends Component {
     this.nudgeTrackLeft = this.nudgeTrackLeft.bind(this);
     this.nudgeTrackRight = this.nudgeTrackRight.bind(this);
     this.autoSave = this.autoSave.bind(this);
+    this.playFromStart = this.playFromStart.bind(this);
 
     /* start of custom tags */
     this.handleDelete = this.handleDelete.bind(this);
@@ -539,7 +540,9 @@ class AuthoringTool extends Component {
       if (tracks[i].props.data.url === "") {
         // this.alertBoxOpen('unused-track');
         alert(
-          this.props.translate("Finish using your available record tracks")
+          this.props.translate(
+            "There is an unused track. Please record or delete the previous track to add a new one. "
+          )
         );
         return;
       }
@@ -548,11 +551,7 @@ class AuthoringTool extends Component {
     // Don't allow adding more tracks while recording.
     if (this.state.selectedTrackComponentStatus === "recording") {
       // this.alertBoxOpen('recording-in-process');
-      alert(
-        this.props.translate(
-          "You can just add more tracks when you finish recording the existing one"
-        )
-      );
+      alert(this.props.translate("There is a track currently recording."));
       return;
     }
 
@@ -560,7 +559,7 @@ class AuthoringTool extends Component {
 
     const audioClip = {
       id: newTrackId,
-      label: "",
+      label: window.getSelection().toString() || "",
       playback_type: playbackType,
       start_time: 0,
       url: "",
@@ -593,7 +592,7 @@ class AuthoringTool extends Component {
       playheadTailHeight,
       selectedTrackComponentId: null,
       selectedTrackComponentStatus: null,
-      selectedTrackComponentLabel: "",
+      selectedTrackComponentLabel: audioClip.label,
       selectedTrackComponentUrl: "",
       selectedTrackComponentAudioClipStartTime: 0,
       selectedTrackComponentAudioClipSEndTime: -1,
@@ -1049,6 +1048,20 @@ class AuthoringTool extends Component {
     }
   }
 
+  playFromStart() {
+    this.state.videoPlayer.seekTo(0, true);
+
+    this.pauseAudioClips();
+    this.resetPlayedAudioClips();
+
+    this.setState({
+      currentVideoProgress: 0,
+      currentVideoProgressToDisplay: convertSecondsToEditorFormat(0),
+      playheadPosition: 0,
+    });
+    this.state.videoPlayer.playVideo();
+  }
+
   /* start of email */
   sendOptInEmail() {
     const ref = `${window.location.protocol}//${window.location.host}/video/${this.state.videoId}?ad=${this.state.audioDescriptionId}`;
@@ -1133,10 +1146,12 @@ class AuthoringTool extends Component {
   updateTrackLabel(e) {
     const audioClipId = e.target.dataset["id"];
     const label = e.target.value;
+    console.log(label);
     const audioClipsUpdated = Object.assign(
       {},
       this.state.audioDescriptionAudioClips
     );
+
     if (audioClipId) {
       audioClipsUpdated[audioClipId].label = label;
       this.setState(
@@ -1392,6 +1407,7 @@ class AuthoringTool extends Component {
                 alertBoxClose={this.alertBoxClose}
                 addAudioClipTrack={this.addAudioClipTrack}
                 recordAudioClip={this.recordAudioClip}
+                playFromStart={this.playFromStart}
                 deleteTrack={this.deleteTrack}
                 deleteAudioDescription={this.deleteAudioDescription}
                 saveLabelsAndNotes={this.saveLabelsAndNotes}

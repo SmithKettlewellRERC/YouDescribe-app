@@ -3,10 +3,14 @@ module.exports = () => {
   const apiVersion = "v1";
 
   // DON'T CHANGE THESE URLS!
-  // let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
-  // let audioClipsUploadsPath = "https://api.youdescribe.org/audio-descriptions-files";
+  //let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
   let apiUrl = `https://dev-api.youdescribe.org/${apiVersion}`;
-  let audioClipsUploadsPath = "https://api.youdescribe.org/audio-descriptions-files";
+  let audioClipsUploadsPath =
+    "https://api.youdescribe.org/audio-descriptions-files";
+  // let audioClipsUploadsPath =
+  //   "https://api.youdescribe.org/audio-descriptions-files";
+  //let apiUrl = `http://localhost:8080/${apiVersion}`;
+  //let audioClipsUploadsPath = "https://api.youdescribe.org/audio-descriptions-files";
   const youTubeApiUrl = "https://www.googleapis.com/youtube/v3";
 
   // YouDescribe APIKey
@@ -14,7 +18,7 @@ module.exports = () => {
 
   // YouDescribe Google Client Id
   const googleClientId =
-    "1056671841574-e1r4soednlur8hl2sl0ooumpvftt1s2k.apps.googleusercontent.com";
+    "1061361249208-9799kv6172rjgmk4gad077639dfrck82.apps.googleusercontent.com";
 
   // Video player setup.
   const seekToPositionDelayFix = 1; // Seconds.

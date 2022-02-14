@@ -1,9 +1,8 @@
 import React from "react";
-import ReactNotification from "react-notifications-component";
-import "react-notifications-component/dist/theme.css";
-import * as Icon from "react-bootstrap-icons";
 
-import { store } from "react-notifications-component";
+import * as Icon from "react-bootstrap-icons";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ShareBar = (props) => {
   const twitterText = `Check out ${props.videoTitle.substring(
@@ -45,18 +44,14 @@ const ShareBar = (props) => {
           navigator.clipboard.writeText(
             window.location.href.replace("video", "embed") //returns link to the embed page with video id
           );
-          store.addNotification({
-            title: "",
-            message: "The embed link has been copied to your clipboard!",
-            type: "default",
-            insert: "top",
-            container: "bottom-center",
-            animationIn: ["animate__animated", "animate__fadeIn"],
-            animationOut: ["animate__animated", "animate__fadeOut"],
-            dismiss: {
-              duration: 2000,
-              onScreen: true,
-            },
+          toast.info("The embed link has been copied to your clipboard!", {
+            position: "bottom-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
           });
         }}
       >
@@ -76,18 +71,14 @@ const ShareBar = (props) => {
               `src=${window.location.href.replace("video", "embed")} />`
           );
 
-          store.addNotification({
-            title: "",
-            message: "The snippet has been copied to your clipboard!",
-            type: "default",
-            insert: "top",
-            container: "bottom-center",
-            animationIn: ["animate__animated", "animate__fadeIn"],
-            animationOut: ["animate__animated", "animate__fadeOut"],
-            dismiss: {
-              duration: 2000,
-              onScreen: true,
-            },
+          toast.info("The snippet has been copied to your clipboard!", {
+            position: "bottom-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
           });
         }}
       >

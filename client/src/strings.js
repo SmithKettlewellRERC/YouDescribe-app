@@ -17,21 +17,25 @@ const strings = {
       "YouDescribe - Áudio Descrição para vídeos do YouTube",
     "Search for a YouTube video. If a video with an audio description matching the search criteria exists, it will be available in the first section. If not, Youtube videos without audio descriptions matching the search criteria will be listed in the second section and requests for any of those videos can be made.":
       "Busque por um vídeo do YouTube. Se um vídeo com audio descrição for encontrado, ele estará no primeiro bloco. Caso contrário estará no segundo bloco e você poderá solicitar uma audio descrição.",
-    "You must sign in to perform this action": "Você precisa estar logado para usar esse recurso",
-    "You have to be logged in in order to vote": "Você precisa estar logado para votar",
+    "You must sign in to perform this action":
+      "Você precisa estar logado para usar esse recurso",
+    "You have to be logged in in order to vote":
+      "Você precisa estar logado para votar",
     "It was impossible to vote. Maybe your session has expired. Try to logout and login again.":
       "Não foi possível votar. Tente logar novamente com seu usuário.",
     "YouDescribe - Authoring Tool": "YouDescribe - Ferramenta de edição",
     "You have to be logged in in order to describe this video":
       "Você precisa estar logado para poder descrever este vídeo",
-    "Finish using your available record tracks": "Termine de usar suas trilhas disponíveis",
+    "Finish using your available record tracks":
+      "Termine de usar suas trilhas disponíveis",
     "You can just add more tracks when you finish recording the existing one":
       "Você só pode adicionar mais trilhas quando terminar de usar as disponíveis",
     "Are you sure you want to remove this track? This action cannot be undone!":
       "Você tem certeza que deseja apagar esta trilha? Não será possível desfazer essa ação",
     "Impossible to descrease the start time. It is already 0":
       "Não é possível diminuir o tempo de início, pois já está em 0",
-    "Impossible to increase the start time more": "Não é possível aumentar mais o tempo de início",
+    "Impossible to increase the start time more":
+      "Não é possível aumentar mais o tempo de início",
     "Are you sure you want to change from EXTENDED to INLINE?":
       "Você tem certeza que quer mudar de EXTENDIDA para LINEAR?",
     "Are you sure you want to change from INLINE to EXTENDED?":
@@ -54,7 +58,8 @@ const strings = {
     Publish: "Publicar",
     Delete: "Apagar",
     "Complete remove this audio description": "Remove esta áudio descrição",
-    "Unpublish this audio description for the current video": "Despublicar esta áudio descrição",
+    "Unpublish this audio description for the current video":
+      "Despublicar esta áudio descrição",
     "Publish the video along with all audio description tracks":
       "Publicar este vídeo com áudio descrição",
     "Save notes and labels anytime": "Grava as notas e os títulos das trilhas",
@@ -66,32 +71,41 @@ const strings = {
     "YouDescribe - Wish List": "YouDescribe - Lista de desejos",
     Author: "Autor",
     "Published on": "Publicado em",
-    "Turn off descriptions for this video": "Desligar a áudio descrição deste vídeo",
+
+    "Turn off descriptions for this video":
+      "Desligar a áudio descrição deste vídeo",
     "Turn off descriptions": "Desligar áudio descrição",
-    "Add a new description for this video": "Adicionar uma nova áudio descrição para este vídeo",
+    "Add a new description for this video":
+      "Adicionar uma nova áudio descrição para este vídeo",
     "Add description": "Adicionar áudio descrição",
-    "Turn on descriptions for this video": "Ligar a áudio descrição deste vídeo",
+    "Turn on descriptions for this video":
+      "Ligar a áudio descrição deste vídeo",
     "Turn on descriptions": "Ligar áudio descrição",
     "Selected description": "Áudio descrição selecionada",
-    "Rate this describer's audio description": "Avalie a áudio descrição deste descritor",
+    "Rate this describer's audio description":
+      "Avalie a áudio descrição deste descritor",
     "Rate description": "Avalie a áudio descrição",
-    "Select this describer's audio description": "Selecione a áudio descrição deste descritor",
+    "Select this describer's audio description":
+      "Selecione a áudio descrição deste descritor",
     "Use description": "Utilize esta áudio desrição",
     "Descriptions off": "Áudio descrições desligadas",
-    "Request an audio description for this video": "Solicite uma áudio descrição para este vídeo",
+    "Request an audio description for this video":
+      "Solicite uma áudio descrição para este vídeo",
     "Add to wish list": "Adicionar na lista de desejos",
     "Search results page": "Página de resultados de busca",
     "DESCRIBED VIDEOS": "VÍDEOS COM ÁUDIO DESCRIÇÃO",
     "NON-DESCRIBED VIDEOS": "VÍDEOS SEM ÁUDIO DESCRIÇÃO",
     "There are no described videos that match your search":
       "Não existem vídeos com áudio descrição que satisfaçam a sua busca",
-    "Create an audio description for this video": "Crie uma áudio descrição para este vídeo",
+    "Create an audio description for this video":
+      "Crie uma áudio descrição para este vídeo",
     Describe: "Descrever",
     "Sign out": "Sair",
     "View my described videos": "Ver meus vídeos com áudio descrição",
     "MY DESCRIBED VIDEOS": "MEUS VÍDEOS COM ÁUDIO DESCRIÇÃO",
     Edit: "Editar",
-    "Edit the audio description for this video": "Editar a áudio descrição deste vídeo",
+    "Edit the audio description for this video":
+      "Editar a áudio descrição deste vídeo",
     "Other description options": "Outras opções para a áudio descrição",
     Notes: "Anotações",
     Language: "Idioma",
@@ -119,12 +133,15 @@ const strings = {
     "Needs more description": "Precisa de mais descrição",
     "Description does not match video tone":
       "O volume da descrição não está de acordo com o volume do vídeo",
-    "Description has innappropriate content": "A descrição tem conteúdo inapropriado",
+    "Description has innappropriate content":
+      "A descrição tem conteúdo inapropriado",
     "Description given before action": "Descrições antes das ações",
-    "Needs to read all onscreen text": "Precisa ler todos os textos que aparecem na tela",
+    "Needs to read all onscreen text":
+      "Precisa ler todos os textos que aparecem na tela",
     Submit: "Enviar",
     "Submit feedback": "Enviar avaliação",
-    "General information about YouDescribe": "Informações gerais sobre o YouDescribe",
+    "General information about YouDescribe":
+      "Informações gerais sobre o YouDescribe",
     "FAQ pages for viewers": "Perguntas frequentes para videntes",
     "FAQ for describers": "Perguntas frequentes para áudio descritores",
     "A step-by-step audio description tutorial with a trouble shooting section":
@@ -141,7 +158,7 @@ const strings = {
     Admin: "Admin",
   },
   "en-us": {
-    "RECENT DESCRIPTIONS": "RECENT DESCRIPTIONS1",
+    "RECENT DESCRIPTIONS": "RECENT DESCRIPTIONS",
     "WISH LIST": "WISH LIST",
     HOME: "HOME",
     Close: "Close",
@@ -158,21 +175,25 @@ const strings = {
       "YouDescribe - Audio Description for YouTube Videos",
     "Search for a YouTube video. If a video with an audio description matching the search criteria exists, it will be available in the first section. If not, Youtube videos without audio descriptions matching the search criteria will be listed in the second section and requests for any of those videos can be made.":
       "Search for a YouTube video. If a video with an audio description matching the search criteria exists, it will be available in the first section. If not, Youtube videos without audio descriptions matching the search criteria will be listed in the second section and requests for any of those videos can be made.",
-    "You must sign in to perform this action": "You must sign in to perform this action",
-    "You have to be logged in in order to vote": "You have to be logged in in order to vote",
+    "You must sign in to perform this action":
+      "You must sign in to perform this action",
+    "You have to be logged in in order to vote":
+      "You have to be logged in in order to vote",
     "It was impossible to vote. Maybe your session has expired. Try to logout and login again.":
       "It was impossible to vote. Maybe your session has expired. Try to logout and login again.",
     "YouDescribe - Authoring Tool": "YouDescribe - Authoring Tool",
     "You have to be logged in in order to describe this video":
       "You have to be logged in in order to describe this video",
-    "Finish using your available record tracks": "Finish using your available record tracks",
+    "Finish using your available record tracks":
+      "Finish using your available record tracks",
     "You can just add more tracks when you finish recording the existing one":
       "You can just add more tracks when you finish recording the existing one",
     "Are you sure you want to remove this track? This action cannot be undone!":
       "Are you sure you want to remove this track? This action cannot be undone!",
     "Impossible to descrease the start time. It is already 0":
       "Impossible to descrease the start time. It is already 0",
-    "Impossible to increase the start time more": "Impossible to increase the start time more",
+    "Impossible to increase the start time more":
+      "Impossible to increase the start time more",
     "Are you sure you want to change from EXTENDED to INLINE?":
       "Are you sure you want to change from EXTENDED to INLINE?",
     "Are you sure you want to change from INLINE to EXTENDED?":
@@ -194,13 +215,17 @@ const strings = {
     Unpublish: "Unpublish",
     Publish: "Publish",
     Delete: "Delete",
-    "Complete remove this audio description": "Complete remove this audio description",
+    "Complete remove this audio description":
+      "Complete remove this audio description",
     "Unpublish this audio description for the current video":
       "Unpublish this audio description for the current video",
     "Publish the video along with all audio description tracks":
       "Publish the video along with all audio description tracks",
     "Save notes and labels anytime": "Save notes and labels anytime",
     Save: "Save",
+    "Play audio description from the start":
+      "Play audio description from the start",
+    "Play from Start": "Play from Start",
     "Add an inline audio description track which plays concurrently with the video's audio":
       "Add an inline audio description track which plays concurrently with the video's audio",
     "Add an extended audio description track which pauses the video as it plays and then resumes the video when it finishes":
@@ -208,32 +233,40 @@ const strings = {
     "YouDescribe - Wish List": "YouDescribe - Wish List",
     Author: "Author",
     "Published on": "Published on",
-    "Turn off descriptions for this video": "Turn off descriptions for this video",
+    "Turn off descriptions for this video":
+      "Turn off descriptions for this video",
     "Turn off descriptions": "Turn off descriptions",
-    "Add a new description for this video": "Add a new description for this video",
+    "Add a new description for this video":
+      "Add a new description for this video",
     "Add description": "Add description",
-    "Turn on descriptions for this video": "Turn on descriptions for this video",
+    "Turn on descriptions for this video":
+      "Turn on descriptions for this video",
     "Turn on descriptions": "Turn on descriptions",
     "Selected description": "Selected description",
-    "Rate this describer's audio description": "Rate this describer's audio description",
+    "Rate this describer's audio description":
+      "Rate this describer's audio description",
     "Rate description": "Rate description",
-    "Select this describer's audio description": "Select this describer's audio description",
+    "Select this describer's audio description":
+      "Select this describer's audio description",
     "Use description": "Use description",
     "Descriptions off": "Descriptions off",
-    "Request an audio description for this video": "Request an audio description for this video",
+    "Request an audio description for this video":
+      "Request an audio description for this video",
     "Add to wish list": "Add to wish list",
     "Search results page": "Search results page",
     "DESCRIBED VIDEOS": "DESCRIBED VIDEOS",
     "NON-DESCRIBED VIDEOS": "NON-DESCRIBED VIDEOS",
     "There are no described videos that match your search":
       "There are no described videos that match your search",
-    "Create an audio description for this video": "Create an audio description for this video",
+    "Create an audio description for this video":
+      "Create an audio description for this video",
     Describe: "Describe",
     "Sign out": "Sign out",
     "View my described videos": "View my described videos",
     "MY DESCRIBED VIDEOS": "MY DESCRIBED VIDEOS",
     Edit: "Edit",
-    "Edit the audio description for this video": "Edit the audio description for this video",
+    "Edit the audio description for this video":
+      "Edit the audio description for this video",
     "Other description options": "Other description options",
     Notes: "Notes",
     Language: "Language",
@@ -246,7 +279,8 @@ const strings = {
       "Use this space as your notepad while you are recording all your descriptions tracks.",
     "Please rate this description with 1 star being unusable and 5 stars being perfect":
       "Please rate this description with 1 star being unusable and 5 stars being perfect",
-    "Thanks for rating this description!": "Thanks for rating this description!",
+    "Thanks for rating this description!":
+      "Thanks for rating this description!",
     "Thank you for your feedback!": "Thank you for your feedback!",
     "Optional feedback": "Optional feedback",
     "Please give additional feedback to help describers make adjustments":
@@ -260,12 +294,15 @@ const strings = {
     "Needs less description": "Needs less description",
     "Needs more description": "Needs more description",
     "Needs to read all onscreen text": "Needs to read all onscreen text",
-    "Description does not match video tone": "Description does not match video tone",
-    "Description has innappropriate content": "Description has innappropriate content",
+    "Description does not match video tone":
+      "Description does not match video tone",
+    "Description has innappropriate content":
+      "Description has innappropriate content",
     "Description given before action": "Description given before action",
     Submit: "Submit",
     "Submit feedback": "Submit feedback",
-    "General information about YouDescribe": "General information about YouDescribe",
+    "General information about YouDescribe":
+      "General information about YouDescribe",
     "FAQ pages for viewers": "FAQ pages for viewers",
     "FAQ for describers": "FAQ for describers",
     "A step-by-step audio description tutorial with a trouble shooting section":
