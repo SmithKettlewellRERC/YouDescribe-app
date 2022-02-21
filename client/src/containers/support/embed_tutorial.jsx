@@ -72,13 +72,14 @@ class Embed_Tutorial extends Component {
             )}
             className="w3-image"
           />
+          <p>The users can use the html snippet in their own websites as following.</p>
           <img
             alt="yo"
             src={path.join(
             __dirname,
             "assets",
             "img",
-            "html_code.png"
+            "website_eg.png"
             )}
             className="w3-image"
           />
