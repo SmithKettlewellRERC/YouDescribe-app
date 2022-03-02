@@ -559,7 +559,7 @@ class AuthoringTool extends Component {
 
     const audioClip = {
       id: newTrackId,
-      label: window.getSelection().toString(),
+      label: window.getSelection().toString() || "",
       playback_type: playbackType,
       start_time: 0,
       url: "",
@@ -592,7 +592,7 @@ class AuthoringTool extends Component {
       playheadTailHeight,
       selectedTrackComponentId: null,
       selectedTrackComponentStatus: null,
-      selectedTrackComponentLabel: "",
+      selectedTrackComponentLabel: audioClip.label,
       selectedTrackComponentUrl: "",
       selectedTrackComponentAudioClipStartTime: 0,
       selectedTrackComponentAudioClipSEndTime: -1,
@@ -1146,10 +1146,12 @@ class AuthoringTool extends Component {
   updateTrackLabel(e) {
     const audioClipId = e.target.dataset["id"];
     const label = e.target.value;
+    console.log(label);
     const audioClipsUpdated = Object.assign(
       {},
       this.state.audioDescriptionAudioClips
     );
+
     if (audioClipId) {
       audioClipsUpdated[audioClipId].label = label;
       this.setState(
