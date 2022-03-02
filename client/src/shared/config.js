@@ -3,8 +3,8 @@ module.exports = () => {
   const apiVersion = "v1";
 
   // DON'T CHANGE THESE URLS!
-  //let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
-  let apiUrl = `https://dev-api.youdescribe.org/${apiVersion}`;
+  let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
+  //let apiUrl = `https://dev-api.youdescribe.org/${apiVersion}`;
   let audioClipsUploadsPath =
     "https://api.youdescribe.org/audio-descriptions-files";
   // let audioClipsUploadsPath =
