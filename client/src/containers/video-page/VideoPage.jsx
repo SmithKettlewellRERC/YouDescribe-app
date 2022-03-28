@@ -571,7 +571,12 @@ class VideoPage extends Component {
 
   pauseAudioClips() {
     if (this.state.currentClip) {
-      this.state.currentClip.audio.pause();
+      if (this.state.currentClip.playbackType === "inline") {
+        this.state.currentClip.audio.stop();
+        this.state.currentClip = null;
+      } else {
+        this.state.currentClip.audio.pause();
+      }
     }
   }
 
