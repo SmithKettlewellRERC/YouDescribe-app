@@ -20,6 +20,7 @@ import {
   convertLikesToCardFormat,
 } from "../../shared/helperFunctions";
 import ShareBar from "../../components/share-bar/ShareBar.jsx";
+import { CloudSnowFill } from "react-bootstrap-icons";
 
 const conf = require("../../shared/config")();
 
@@ -43,6 +44,7 @@ class VideoPage extends Component {
       selectedAudioDescriptionId: props.location.query.ad || null,
       previousSelectedAudioDescriptionId: null,
       showDescribersList: true,
+      currentClip: null,
 
       // Video controls and data
       videoTitle: "",
@@ -77,7 +79,7 @@ class VideoPage extends Component {
     this.goToErrorPage = this.goToErrorPage.bind(this);
     this.upVote = this.upVote.bind(this);
     this.getHighestRatingADId = this.getHighestRatingADId.bind(this);
-
+    this.checkSeek = this.checkSeek.bind(this);
     /* start of email */
     this.sendOptInEmail = this.sendOptInEmail.bind(this);
     /* end of email */
@@ -362,93 +364,147 @@ class VideoPage extends Component {
     }
 
     function onPlayerStateChange(event) {
+      console.log("playerStateChange", event.data);
       self.setState({ videoState: event.data }, () => {
         switch (event.data) {
+          case -1: // unstarted
+            // self.stopProgressWatcher();
+            break;
           case 0: // ended
-            self.stopProgressWatcher();
+            // self.stopProgressWatcher();
             break;
           case 1: // playing
-            self.startProgressWatcher();
+            if (
+              self.state.currentClip &&
+              self.state.currentClip.playbackType === "extended"
+            ) {
+              self.state.videoPlayer.pauseVideo();
+              if (self.state.currentClip.audio.playing()) {
+                self.pauseAudioClips();
+              } else {
+                self.state.currentClip.audio.play();
+              }
+            } else {
+              self.checkSeek();
+              self.startProgressWatcher();
+            }
             break;
           case 2: // paused
-            // stops all inline clip instances
-            for (const clip in self.audioClipsPlayed) {
-              if (self.audioClipsPlayed[clip].playbackType === "inline") {
-                self.audioClipsPlayed[clip].stop();
-              }
+            //self.stopProgressWatcher();
+            if (
+              self.state.currentClip &&
+              self.state.currentClip.playbackType !== "extended"
+            ) {
+              self.pauseAudioClips();
             }
 
-            // clears out the inline clips array so audio no longer ducked
-            self.setState({ inlineClipsCurrentlyPlaying: [] });
-
-            self.stopProgressWatcher();
             break;
           case 3: // buffering
+            if (
+              self.state.currentClip &&
+              self.state.currentClip.playbackType !== "extended"
+            ) {
+              self.state.currentClip.audio.stop();
+              self.state.currentClip = null;
+            }
+
             break;
           case 5: // video cued
+            // Starting the watcher.
             self.state.videoPlayer.playVideo();
-            self.startProgressWatcher();
+            // self.startProgressWatcher();
             break;
           default:
-            self.stopProgressWatcher();
         }
       });
     }
   }
 
+  checkSeek() {
+    if (this.state.currentClip) {
+      this.state.currentClip.audio.stop();
+      this.state.currentClip = null;
+    }
+
+    const audioClips = Object.values(
+      this.state.audioDescriptionsIdsAudioClips
+    )[0];
+    console.log(audioClips);
+    let videoTimestamp = this.state.videoPlayer.getCurrentTime();
+
+    //check nearest video. If video is inline, check the start time + duration of clip. If the video timestamp
+    //falls in between, seek to the time (video timestamp - clip duration) of that clip. Then, play clip.
+
+    //round to 2 nearest dec
+    videoTimestamp = Math.round(videoTimestamp * 100) / 100;
+
+    for (let i = 0; i < audioClips.length; i += 1) {
+      const clip = audioClips[i];
+      console.log(clip);
+      if (clip.playback_type === "inline") {
+        let startTime = Math.round(clip.start_time * 100) / 100;
+        let duration = Math.round(clip.duration * 100) / 100;
+        console.log(startTime);
+        console.log(duration);
+        //clip and video are overlapping, seek through audio clip and exit loop
+        if (startTime > videoTimestamp) {
+          break;
+        }
+        if (
+          startTime < videoTimestamp &&
+          videoTimestamp < startTime + duration
+        ) {
+          const diff = videoTimestamp - startTime;
+          this.playAudioClip(clip, diff);
+          break;
+        }
+      }
+    }
+  }
+
   // 10
   startProgressWatcher() {
-    console.log("startProgressWatcher");
     const self = this;
-    const audioClips = this.getAudioClips();
+    console.log("10 -> startProgressWatcher");
 
-    // Interval specification. Can modifiy as necessary
-    const interval = 250;
+    const audioClips = Object.values(
+      this.state.audioDescriptionsIdsAudioClips
+    )[0];
+    const interval = 10;
 
     if (this.watcher) {
       this.stopProgressWatcher();
     }
 
     this.watcher = setInterval(() => {
-      const currentVideoProgress = self.state.videoPlayer.getCurrentTime();
-
-      // audio ducking
-      self.state.inlineClipsCurrentlyPlaying.length
-        ? self.state.videoPlayer.setVolume(
-            (100 - self.state.balancerValue) * 0.3
-          )
-        : self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
-
-      for (const clip in this.audioClipsPlayed) {
-        this.audioClipsPlayed[clip].volume(self.state.balancerValue / 100);
-
-        console.log(this.audioClipsPlayed[clip].volume());
-      }
+      const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
+      const videoVolume = this.state.videoPlayer.getVolume();
+      const playheadPosition =
+        756 * (currentVideoProgress / this.videoDurationInSeconds);
 
       this.setState({
-        videoPlayerAccessibilitySeekbarValue:
-          currentVideoProgress / this.state.videoDurationInSeconds,
-        currentVideoProgress: convertSecondsToEditorFormat(
-          Math.floor(currentVideoProgress)
-        ),
+        currentVideoProgress,
+        currentVideoProgressToDisplay:
+          convertSecondsToEditorFormat(currentVideoProgress),
+        playheadPosition,
+        videoVolume,
       });
 
-      const currentVideoProgressFloor = Math.floor(currentVideoProgress);
+      const currentVideoProgressFloor =
+        Math.round(currentVideoProgress * 100) / 100;
 
       for (let i = 0; i < audioClips.length; i += 1) {
         const audioClip = audioClips[i];
-
-        // Always try to play the clip
-        if (Math.floor(audioClip.start_time) === currentVideoProgressFloor) {
-          console.log("here");
-          self.playAudioClip(audioClip);
+        if (
+          Math.round(audioClip.start_time * 100) / 100 ===
+          currentVideoProgressFloor
+        ) {
+          if (!this.state.currentClip) {
+            self.playAudioClip(audioClip);
+          }
         }
       }
     }, interval);
-
-    /* start of email */
-    this.sendOptInEmail(1);
-    /* end of email */
   }
 
   stopProgressWatcher() {
@@ -458,67 +514,70 @@ class VideoPage extends Component {
       this.watcher = null;
     }
   }
-
-  playAudioClip(audioClip) {
-    const self = this;
-    const audioClipId = audioClip._id;
-    const playbackType = audioClip.playback_type;
-
-    if (!this.audioClipsPlayed.hasOwnProperty(audioClipId)) {
-      this.audioClipsPlayed[audioClipId] = new Howl({
-        src: [audioClip.url],
+  playAudioClip(audioClip, timestamp = null) {
+    if (this.state.currentClip === null) {
+      const self = this;
+      const playbackType = audioClip.playback_type;
+      const url = audioClip.url;
+      const clip = new Howl({
+        src: [url],
         html5: false,
-        volume: self.state.balancerValue / 30,
+
         onplay: () => {
           if (playbackType === "extended") {
+            //self.stopProgressWatcher();
             self.state.videoPlayer.pauseVideo();
-          }
-          if (playbackType === "inline") {
-            const inlineClipsCurrentlyPlaying =
-              self.state.inlineClipsCurrentlyPlaying;
-
-            inlineClipsCurrentlyPlaying.push(audioClipId);
-            self.setState({ inlineClipsCurrentlyPlaying });
           }
         },
         onend: () => {
+          this.state.currentClip = null;
           if (playbackType === "extended") {
             self.state.videoPlayer.playVideo();
           }
-          if (playbackType === "inline") {
-            const inlineClipsCurrentlyPlaying =
-              self.state.inlineClipsCurrentlyPlaying;
+          self.startProgressWatcher();
+        },
 
-            inlineClipsCurrentlyPlaying.pop();
-            if (!inlineClipsCurrentlyPlaying.length) {
-              self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
-            }
-            self.setState({ inlineClipsCurrentlyPlaying });
-
-            this.audioClipsPlayed.delete(audioClipId);
-          }
+        onstop: () => {
+          this.state.currentClip = null;
         },
       });
 
-      console.log(
-        "Audio clip playback started",
-        playbackType,
-        audioClip.start_time
-      );
-      this.audioClipsPlayed[audioClipId].playbackType = playbackType;
-      this.audioClipsPlayed[audioClipId].play();
+      // Audio ducking.
+      // if (playbackType === 'inline') {
+      //   self.audioClipsPlayed[audioClipId].volume(self.state.balancerValue / 100);
+      //   self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4);
+      // } else {
+      //   self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
+      // }
+
+      this.state.currentClip = {
+        audio: clip,
+        playbackType: playbackType,
+        duration: audioClip.duration,
+        start_time: audioClip.start_time,
+      };
+
+      if (timestamp) {
+        clip.seek(timestamp);
+      }
+      clip.play();
     }
   }
-
   resetPlayedAudioClips() {
-    const audioClipsIds = Object.keys(this.audioClipsPlayed);
-    audioClipsIds.forEach((id) => this.audioClipsPlayed[id].stop());
-    this.audioClipsPlayed = {};
+    // const audioClipsIds = Object.keys(this.audioClipsPlayed);
+    // audioClipsIds.forEach((id) => this.audioClipsPlayed[id].stop());
+    // this.audioClipsPlayed = {};
   }
 
   pauseAudioClips() {
-    const audioClipsObjs = Object.values(this.audioClipsPlayed);
-    audioClipsObjs.forEach((howler) => howler.stop());
+    if (this.state.currentClip) {
+      if (this.state.currentClip.playbackType === "inline") {
+        this.state.currentClip.audio.stop();
+        this.state.currentClip = null;
+      } else {
+        this.state.currentClip.audio.pause();
+      }
+    }
   }
 
   changeAudioDescription(selectedAudioDescriptionId) {

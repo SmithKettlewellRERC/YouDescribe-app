@@ -50,6 +50,7 @@ class AuthoringTool extends Component {
       audioDescriptionNotes: "",
       audioDescriptionSelectedLanguage: "",
       audioDescriptionAudioClips: {},
+      currentClip: null,
 
       // Tracks controls.
       tracksComponents: [],
@@ -92,7 +93,7 @@ class AuthoringTool extends Component {
     this.nudgeTrackRight = this.nudgeTrackRight.bind(this);
     this.autoSave = this.autoSave.bind(this);
     this.playFromStart = this.playFromStart.bind(this);
-
+    this.checkSeek = this.checkSeek.bind(this);
     /* start of custom tags */
     this.handleDelete = this.handleDelete.bind(this);
     this.handleAddition = this.handleAddition.bind(this);
@@ -312,6 +313,7 @@ class AuthoringTool extends Component {
   // 7
   initVideoPlayer() {
     console.log("7 -> initVideoPlayer");
+
     const self = this;
 
     if (YT.loaded) {
@@ -367,20 +369,41 @@ class AuthoringTool extends Component {
             break;
           case 0: // ended
             // self.stopProgressWatcher();
-            self.resetPlayedAudioClips();
             break;
           case 1: // playing
-            // self.pauseAudioClips();
-            self.startProgressWatcher();
+            if (
+              self.state.currentClip &&
+              self.state.currentClip.playbackType === "extended"
+            ) {
+              self.state.videoPlayer.pauseVideo();
+              if (self.state.currentClip.audio.playing()) {
+                self.pauseAudioClips();
+              } else {
+                self.state.currentClip.audio.play();
+              }
+            } else {
+              self.checkSeek();
+              self.startProgressWatcher();
+            }
             break;
           case 2: // paused
-            self.pauseAudioClips("inline");
-            // self.stopProgressWatcher();
+            //self.stopProgressWatcher();
+            if (
+              self.state.currentClip &&
+              self.state.currentClip.playbackType === "inline"
+            ) {
+              self.pauseAudioClips();
+            }
+
             break;
           case 3: // buffering
-            // buffering
-            self.resetPlayedAudioClips();
-            // self.stopProgressWatcher();
+            if (
+              self.state.currentClip &&
+              self.state.currentClip.playbackType !== "extended"
+            ) {
+              self.state.currentClip = null;
+            }
+
             break;
           case 5: // video cued
             // Starting the watcher.
@@ -397,13 +420,52 @@ class AuthoringTool extends Component {
     return `${conf.audioClipsUploadsPath}${audioClip.file_path}/${audioClip.file_name}`;
   }
 
+  checkSeek() {
+    if (this.state.currentClip) {
+      this.state.currentClip.audio.stop();
+      this.state.currentClip = null;
+    }
+
+    const audioClips = Object.values(this.state.audioDescriptionAudioClips);
+    let videoTimestamp = this.state.videoPlayer.getCurrentTime();
+
+    //check nearest video. If video is inline, check the start time + duration of clip. If the video timestamp
+    //falls in between, seek to the time (video timestamp - clip duration) of that clip. Then, play clip.
+
+    //round to 2 nearest dec
+    videoTimestamp = Math.round(videoTimestamp * 100) / 100;
+
+    for (let i = 0; i < audioClips.length; i += 1) {
+      const clip = audioClips[i];
+
+      if (clip.playback_type === "inline") {
+        let startTime = Math.round(clip.start_time * 100) / 100;
+        let duration = Math.round(clip.duration * 100) / 100;
+
+        //clip and video are overlapping, seek through audio clip and exit loop
+        if (startTime > videoTimestamp) {
+          break;
+        }
+        if (
+          startTime < videoTimestamp &&
+          videoTimestamp < startTime + duration
+        ) {
+          const diff = videoTimestamp - startTime;
+
+          this.playAudioClip(clip, diff);
+          break;
+        }
+      }
+    }
+  }
+
   // 10
   startProgressWatcher() {
-    console.log("10 -> startProgressWatcher");
     const self = this;
-    const audioClips = Object.values(this.state.audioDescriptionAudioClips);
-    const interval = 100;
+    console.log("10 -> startProgressWatcher");
 
+    const audioClips = Object.values(this.state.audioDescriptionAudioClips);
+    const interval = 10;
     if (this.watcher) {
       this.stopProgressWatcher();
     }
@@ -413,7 +475,6 @@ class AuthoringTool extends Component {
       const videoVolume = this.state.videoPlayer.getVolume();
       const playheadPosition =
         756 * (currentVideoProgress / this.videoDurationInSeconds);
-
       this.setState({
         currentVideoProgress,
         currentVideoProgressToDisplay:
@@ -422,18 +483,17 @@ class AuthoringTool extends Component {
         videoVolume,
       });
 
-      // if (this.currentClip && this.currentClip.playbackType === 'inline') {
-      //   console.log(this.state.videoPlayer.getVolume());
-      //   this.state.videoPlayer.setVolume(40);
-      // } else {
-      //   this.state.videoPlayer.setVolume(100);
-      // }
-
-      const currentVideoProgressFloor = Math.floor(currentVideoProgress);
+      const currentVideoProgressFloor =
+        Math.round(currentVideoProgress * 100) / 100;
       for (let i = 0; i < audioClips.length; i += 1) {
         const audioClip = audioClips[i];
-        if (Math.floor(audioClip.start_time) === currentVideoProgressFloor) {
-          self.playAudioClip(audioClip);
+        if (
+          Math.round(audioClip.start_time * 100) / 100 ===
+          currentVideoProgressFloor
+        ) {
+          if (!this.state.currentClip) {
+            self.playAudioClip(audioClip);
+          }
         }
       }
     }, interval);
@@ -447,24 +507,31 @@ class AuthoringTool extends Component {
     }
   }
 
-  playAudioClip(audioClip) {
-    const self = this;
-    const audioClipId = audioClip._id;
-    const playbackType = audioClip.playback_type;
-    const url = this.getAudioClipUrl(audioClip);
-    if (!this.audioClipsPlayed.hasOwnProperty(audioClipId)) {
-      this.audioClipsPlayed[audioClipId] = new Howl({
+  playAudioClip(audioClip, timestamp = null) {
+    if (this.state.currentClip === null) {
+      const self = this;
+      const playbackType = audioClip.playback_type;
+      const url = this.getAudioClipUrl(audioClip);
+      const clip = new Howl({
         src: [url],
         html5: false,
+
         onplay: () => {
           if (playbackType === "extended") {
-            // self.stopProgressWatcher();
+            //self.stopProgressWatcher();
             self.state.videoPlayer.pauseVideo();
           }
         },
         onend: () => {
-          self.state.videoPlayer.playVideo();
+          this.state.currentClip = null;
+          if (playbackType === "extended") {
+            self.state.videoPlayer.playVideo();
+          }
           self.startProgressWatcher();
+        },
+
+        onstop: () => {
+          this.state.currentClip = null;
         },
       });
 
@@ -476,49 +543,41 @@ class AuthoringTool extends Component {
       //   self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
       // }
 
-      this.audioClipsPlayed[audioClipId].play();
+      this.state.currentClip = {
+        audio: clip,
+        playbackType: playbackType,
+        duration: audioClip.duration,
+        start_time: audioClip.start_time,
+      };
+
+      if (timestamp) {
+        clip.seek(timestamp);
+      }
+      clip.play();
     }
   }
 
   resetPlayedAudioClips() {
-    const audioClipsIds = Object.keys(this.audioClipsPlayed);
-    audioClipsIds.forEach((id) => {
-      this.audioClipsPlayed[id].stop();
-    });
-    this.audioClipsPlayed = {};
+    // const audioClipsIds = Object.keys(this.audioClipsPlayed);
+    // audioClipsIds.forEach((id) => {
+    //   this.audioClipsPlayed[id].stop();
+    // });
+    // this.audioClipsPlayed = {};
   }
 
-  pauseAudioClips(playbackType = "") {
-    const self = this;
-
-    // Howler objects.
-    const audioClipsIdsPlayed = Object.keys(this.audioClipsPlayed);
-
-    // Simple objects.
-    const audioClips = Object.values(this.state.audioDescriptionAudioClips);
-
-    for (let i = 0; i < audioClips.length; i++) {
-      const audioClip = audioClips[i];
-
-      // As we don't have any howler object, we should skip.
-      if (!self.audioClipsPlayed[audioClip._id]) {
-        continue;
-      }
-
-      if (playbackType === "") {
-        this.audioClipsPlayed[audioClip._id].stop();
-        continue;
-      }
-
-      if (audioClip.playback_type === playbackType) {
-        this.audioClipsPlayed[audioClip._id].stop();
+  pauseAudioClips() {
+    if (this.state.currentClip) {
+      if (this.state.currentClip.playbackType === "inline") {
+        this.state.currentClip.audio.stop();
+        this.state.currentClip = null;
+      } else {
+        this.state.currentClip.audio.pause();
       }
     }
   }
 
   componentWillUnmount() {
     this.state.videoPlayer.stopVideo();
-    this.resetPlayedAudioClips();
     this.stopProgressWatcher();
   }
 
