@@ -72,7 +72,7 @@ class Embed_Tutorial extends Component {
             )}
             className="w3-image"
           />
-          <p>The users can use the html snippet in their own websites as following.</p>
+          <p>The users can use the html snippet in their own websites as follows.</p>
           <img
             alt="yo"
             src={path.join(
