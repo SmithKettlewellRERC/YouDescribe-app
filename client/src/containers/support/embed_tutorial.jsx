@@ -38,6 +38,7 @@ class Embed_Tutorial extends Component {
           <h3>Finding the embedded link to the selected video:</h3>
 
           <p>If you click on <Icon.PlusSquareFill></Icon.PlusSquareFill> button, an embedded link to the video will be copied to the clipboard. You can use that link to directly access the video. </p>
+          <p>Step 1: Click on the <Icon.PlusSquareFill></Icon.PlusSquareFill> button to copy the embedded link to the video.</p>
           {/* <img src={embedded} alt="Embedded Link"></img> */}
           <img
             alt="yo"
@@ -45,10 +46,39 @@ class Embed_Tutorial extends Component {
             __dirname,
             "assets",
             "img",
-            "embedded_link.png"
+            "embedded_copy.png"
             )}
-            className="w3-image"
+            width="700px"
+            height="500px"
           />
+          <p></p>
+          <p>Step 2 : You will be shown a pop-up that says the link is copied to the clipboard.</p>
+          <img
+            alt="yo"
+            src={path.join(
+            __dirname,
+            "assets",
+            "img",
+            "embedded_popup.png"
+            )}
+            width="700px"
+            height="500px"
+          />
+          <p></p>
+          <p>Step 3 : You can use the embedded link wherever you want to access the video.</p>
+          <img
+            alt="yo"
+            src={path.join(
+            __dirname,
+            "assets",
+            "img",
+            "pasted_embedding_link.png"
+            )}
+            width="700px"
+            height="500px"
+          />
+          <p></p>
+          <p>Step 4: The video can be directly accessed as shown below.</p>
           <img
             alt="yo"
             src={path.join(
@@ -57,32 +87,79 @@ class Embed_Tutorial extends Component {
             "img",
             "embedded_video.png"
             )}
-            className="w3-image"
+            width="700px"
+            height="500px"
           />
+          <p></p>
+          <h3>The users can use the html snippet in their own websites as follows: Here is an example of a website that has quick recipes of various food items. This website makes use of the embedded video from YouDescribe.</h3>
+          <p></p>
+          <img
+            alt="yo"
+            src={path.join(
+            __dirname,
+            "assets",
+            "img",
+            "template.png"
+            )}
+            width="700px"
+            height="500px"
+          />
+          <p></p>
           <h3>Finding the html snippet for the video:</h3>
-
-          <p>If you click on <Icon.Code></Icon.Code> button, a html snippet will be copied to the clipboard. You can use that link to directly access the video. </p>
+          
+          {/* <p>If you click on <Icon.Code></Icon.Code> button, a html snippet will be copied to the clipboard. You can use that link to directly access the video. </p> */}
+          <p>Step 1: Click on the <Icon.Code></Icon.Code> button to copy the html snippet.</p>
           <img
             alt="yo"
             src={path.join(
             __dirname,
             "assets",
             "img",
-            "html_snippet.png"
+            "hovering_over_icon.png"
             )}
-            className="w3-image"
+            width="700px"
+            height="500px"
           />
-          <p>The users can use the html snippet in their own websites as follows.</p>
+          <p></p>
+          <p>Step 2: You will be shown a pop-up that says the snippet is copied to the clipboard.</p>
           <img
             alt="yo"
             src={path.join(
             __dirname,
             "assets",
             "img",
-            "website_eg.png"
+            "snippet_popup.png"
             )}
-            className="w3-image"
+            width="700px"
+            height="500px"
           />
+          <p></p>
+          <p>Step 3: You can use the copied snippet in making a website of your own.</p>
+          <img
+            alt="yo"
+            src={path.join(
+            __dirname,
+            "assets",
+            "img",
+            "pasted_snippet_in_code.png"
+            )}
+            width="700px"
+            height="500px"
+          />
+          <p></p>
+          <p>Step 4: The embedded video used in an external website will look something like this.</p>
+          <img
+            alt="yo"
+            src={path.join(
+            __dirname,
+            "assets",
+            "img",
+            "template_copy.png"
+            )}
+            width="700px"
+            height="500px"
+          />
+          <p></p>
           <p><a href="#top">Back to top</a></p>
 
         </main>
