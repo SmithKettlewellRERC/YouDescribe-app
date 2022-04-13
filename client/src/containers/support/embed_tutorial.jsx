@@ -35,12 +35,30 @@ class Embed_Tutorial extends Component {
           <h3>Logging in:</h3>
           <p>Log in to your account using your Google ID at the top right by clicking the box that says “Signin with Google.” (you must have a google ID to add descriptions, if you don’t have one, an account is free and easy to get at: <a href="https://accounts.google.com/SignUp?hl=en">https://accounts.google.com/SignUp?hl=en</a>) You will be prompted to type in your google address, and password. Once you have logged in, you are ready to start describing, and will be able to save your work.</p>
 
-          <h3>Finding the embedded link to the selected video:</h3>
+          <h2><strong>Finding the embedded link to the selected video:</strong></h2>
 
           <p>If you click on <Icon.PlusSquareFill></Icon.PlusSquareFill> button, an embedded link to the video will be copied to the clipboard. You can use that link to directly access the video. </p>
-          <p>Step 1: Click on the <Icon.PlusSquareFill></Icon.PlusSquareFill> button to copy the embedded link to the video.</p>
+          <table style={{border: '2px solid black'}}>
+            <tr>
+              <th><p>Step 1: Click on the <Icon.PlusSquareFill></Icon.PlusSquareFill> button to copy the embedded link to the video.</p></th>
+              <th>
+                <img
+                    alt="yo"
+                    src={path.join(
+                    __dirname,
+                    "assets",
+                    "img",
+                    "embedded_copy.png"
+                    )}
+                    width="700px"
+                    height="500px"
+                  />
+              </th>
+            </tr>
+          </table>
+          {/* <p>Step 1: Click on the <Icon.PlusSquareFill></Icon.PlusSquareFill> button to copy the embedded link to the video.</p> */}
           {/* <img src={embedded} alt="Embedded Link"></img> */}
-          <img
+          {/* <img
             alt="yo"
             src={path.join(
             __dirname,
@@ -50,10 +68,12 @@ class Embed_Tutorial extends Component {
             )}
             width="700px"
             height="500px"
-          />
+          /> */}
           <p></p>
-          <p>Step 2 : You will be shown a pop-up that says the link is copied to the clipboard.</p>
-          <img
+          <table style={{border: '2px solid black'}}>
+            <tr>
+              <th> <p>Step 2 : You will be shown a pop-up that says the link is copied to the clipboard.</p></th>
+              <th><img
             alt="yo"
             src={path.join(
             __dirname,
@@ -63,10 +83,14 @@ class Embed_Tutorial extends Component {
             )}
             width="700px"
             height="500px"
-          />
+          /></th>
+            </tr>
+          </table>
           <p></p>
-          <p>Step 3 : You can use the embedded link wherever you want to access the video.</p>
-          <img
+          <table style={{border: '2px solid black'}}>
+            <tr>
+              <th><p>Step 3 : You can use the embedded link wherever you want to access the video.</p></th>
+              <th> <img
             alt="yo"
             src={path.join(
             __dirname,
@@ -76,10 +100,16 @@ class Embed_Tutorial extends Component {
             )}
             width="700px"
             height="500px"
-          />
+          /></th>
+            </tr>
+          </table>
+          
+         
           <p></p>
-          <p>Step 4: The video can be directly accessed as shown below.</p>
-          <img
+          <table style={{border: '2px solid black'}}>
+            <tr>
+              <th> <p>Step 4: The video can be directly accessed as shown below.</p></th>
+              <th> <img
             alt="yo"
             src={path.join(
             __dirname,
@@ -89,11 +119,16 @@ class Embed_Tutorial extends Component {
             )}
             width="700px"
             height="500px"
-          />
+          /></th>
+            </tr>
+          </table>
+         
+         
           <p></p>
           <h3>The users can use the html snippet in their own websites as follows: Here is an example of a website that has quick recipes of various food items. This website makes use of the embedded video from YouDescribe.</h3>
           <p></p>
-          <img
+          
+             <img
             alt="yo"
             src={path.join(
             __dirname,
@@ -103,13 +138,18 @@ class Embed_Tutorial extends Component {
             )}
             width="700px"
             height="500px"
+            style={{marginLeft: '100px'}}
+          
           />
+          
           <p></p>
-          <h3>Finding the html snippet for the video:</h3>
+          <h2><strong>Finding the html snippet for the video:</strong></h2>
           
           {/* <p>If you click on <Icon.Code></Icon.Code> button, a html snippet will be copied to the clipboard. You can use that link to directly access the video. </p> */}
-          <p>Step 1: Click on the <Icon.Code></Icon.Code> button to copy the html snippet.</p>
-          <img
+          <table style={{border: '2px solid black'}}>
+            <tr>
+              <th><p>Step 1: Click on the <Icon.Code></Icon.Code> button to copy the html snippet.</p></th>
+              <th> <img
             alt="yo"
             src={path.join(
             __dirname,
@@ -119,10 +159,16 @@ class Embed_Tutorial extends Component {
             )}
             width="700px"
             height="500px"
-          />
+          /></th>
+            </tr>
+          </table>
+          
+         
           <p></p>
-          <p>Step 2: You will be shown a pop-up that says the snippet is copied to the clipboard.</p>
-          <img
+          <table style={{border: '2px solid black'}}>
+            <tr>
+              <th> <p>Step 2: You will be shown a pop-up that says the snippet is copied to the clipboard.</p></th>
+              <th><img
             alt="yo"
             src={path.join(
             __dirname,
@@ -132,10 +178,16 @@ class Embed_Tutorial extends Component {
             )}
             width="700px"
             height="500px"
-          />
+          /></th>
+            </tr>
+          </table>
+         
+          
           <p></p>
-          <p>Step 3: You can use the copied snippet in making a website of your own.</p>
-          <img
+          <table style={{border: '2px solid black'}}>
+            <tr>
+              <th> <p>Step 3: You can use the copied snippet in making a website of your own.</p></th>
+              <th><img
             alt="yo"
             src={path.join(
             __dirname,
@@ -145,10 +197,16 @@ class Embed_Tutorial extends Component {
             )}
             width="700px"
             height="500px"
-          />
+          /></th>
+            </tr>
+          </table>
+         
+          
           <p></p>
-          <p>Step 4: The embedded video used in an external website will look something like this.</p>
-          <img
+          <table style={{border: '2px solid black'}}>
+            <tr>
+              <th><p>Step 4: The embedded video used in an external website will look something like this.</p></th>
+              <th><img
             alt="yo"
             src={path.join(
             __dirname,
@@ -158,7 +216,11 @@ class Embed_Tutorial extends Component {
             )}
             width="700px"
             height="500px"
-          />
+          /></th>
+            </tr>
+          </table>
+          
+          
           <p></p>
           <p><a href="#top">Back to top</a></p>
 
