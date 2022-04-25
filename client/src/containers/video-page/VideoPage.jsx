@@ -482,6 +482,14 @@ class VideoPage extends Component {
       const playheadPosition =
         756 * (currentVideoProgress / this.videoDurationInSeconds);
 
+      //Audio ducking.
+      if (this.state.currentClip) {
+        this.state.currentClip.audio.volume(self.state.balancerValue / 100);
+        this.state.videoPlayer.setVolume(
+          (100 - self.state.balancerValue) * 0.4
+        );
+      }
+
       this.setState({
         currentVideoProgress,
         currentVideoProgressToDisplay:
@@ -534,6 +542,7 @@ class VideoPage extends Component {
           if (playbackType === "extended") {
             self.state.videoPlayer.playVideo();
           }
+          this.state.videoPlayer.setVolume(100);
           self.startProgressWatcher();
         },
 
@@ -541,14 +550,6 @@ class VideoPage extends Component {
           this.state.currentClip = null;
         },
       });
-
-      // Audio ducking.
-      // if (playbackType === 'inline') {
-      //   self.audioClipsPlayed[audioClipId].volume(self.state.balancerValue / 100);
-      //   self.state.videoPlayer.setVolume((100 - self.state.balancerValue) * 0.4);
-      // } else {
-      //   self.state.videoPlayer.setVolume(100 - self.state.balancerValue);
-      // }
 
       this.state.currentClip = {
         audio: clip,
