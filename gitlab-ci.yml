@@ -1,0 +1,24 @@
+image: 
+  name: node:14
+
+variables:
+    CI_PROJECT_NAME: dev.youdescribe.org
+
+stages:
+  - deploy
+ 
+cache:
+  paths:
+    - node_modules/
+
+deploy job:
+    
+    only:
+        - master
+    stage: deploy
+    tags:
+        - dev
+    script:
+        - pwd
+        - docker build -t "${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_JOB_ID}" .
+        - docker run -v /mnt/ebs:/mnt/ebs -d -p 0.0.0.0:3000:3000 ${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_JOB_ID}
