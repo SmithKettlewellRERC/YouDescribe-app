@@ -22,6 +22,7 @@ import Support from "./containers/support/Support.jsx";
 import About from "./containers/support/About.jsx";
 import Describers from "./containers/support/Describers.jsx";
 import Tutorial from "./containers/support/Tutorial.jsx";
+import Embed_Tutorial from "./containers/support/embed_tutorial.jsx";
 import Viewers from "./containers/support/Viewers.jsx";
 import Privacy from "./containers/support/Privacy.jsx";
 import UnsupportedBrowser from "./containers/unsupported-browser/UnsupportedBrowser.jsx";
@@ -82,6 +83,7 @@ ReactDOM.render(
       <Route path="/support/about" component={About} />
       <Route path="/support/describers" component={Describers} />
       <Route path="/support/tutorial" component={Tutorial} />
+      <Route path="/support/embed_tutorial" component={Embed_Tutorial} />
       <Route path="/support/viewers" component={Viewers} />
       <Route path="/support/privacy" component={Privacy} />
       <Route path="/unsupported-browser" component={UnsupportedBrowser} />
