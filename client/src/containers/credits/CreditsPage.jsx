@@ -22,6 +22,24 @@ class CreditsPage extends Component {
 
     const obj = [
       {
+        name: "Rodrigo Leme de Mello",
+        bio: "Rodrigo Leme de Mello, Principal Software Engineer, was the main member of the original Codesmith team that rebuilt from the ground-up YouDescribe in 2017. His career-long passion for accessibility led him to volunteer with the project after the launch, expanding YouDescribe's capabilities and keeping the code running smoothly. Thank you, Rodrigo, for your many long volunteer hours. We are grateful. Rodrigo is currently a Trainer at Amazon/AWS.",
+        img: "rodrigo-2022.png",
+        pdf: "",
+        tenure: "2017 - Present",
+        description:
+          " Photo of Rodrigo Leme de Mello. A light-skinned man with a sparse, close-cropped beard crouches on a frozen lake. He wears a grey knit beanie, black jacket, jeans, and grey sneakers.",
+      },
+      {
+        name: "Ilmi Yoon",
+        bio: "Ilmi Yoon is a professor in the Computer Science Department at San Francisco State University. She started this YouDescribe collaboration from 2016 and supervised her students development in Mobile versions of it. Her research areas are Graphics and Gamification and AI/ML applications. She started development of YouDescribeX (AI enhanced version) with multiple contributors such as Drs. Fazli, iHorn, Siu and Das. and her students listed here. She is currently a PI/Co-PI of 4 NSF grants focusing on Computer Science Education and Diversity in Computing.",
+        img: "ilmi.jpg",
+        pdf: "895Report_Poorva.pdf",
+        tenure: "2018 - Present",
+        description:
+          "Photo os Ilmi Yoon, an asian woman with fair skin and with long wavy brown hair. She is smiling brightly at the camera.",
+      },
+      {
         name: "Rupal Khilari",
         bio: "Rupal Khilari is a software developer and an alumni of San Francisco State University. With a keen interest in art and music, she continues to pursue problems that lie at the intersection of art, media and technology.",
         img: "rupal.png",
@@ -75,16 +93,6 @@ class CreditsPage extends Component {
         description:
           "Photo of Beste Yuksel, a fair skineed woman with black-brown long wavy hair. She has glasses on and is smiling at the camera.",
       },
-      {
-        name: "Ilmi Yoon",
-        bio: "Ilmi Yoon is a professor in the Computer Science Department at San Francisco State University. She started this YouDescribe collaboration from 2016 and supervised her students development in Mobile versions of it. Her research areas are Graphics and Gamification and AI/ML applications. She started development of YouDescribeX (AI enhanced version) with multiple contributors such as Drs. Fazli, iHorn, Siu and Das. and her students listed here. She is currently a PI/Co-PI of 4 NSF grants focusing on Computer Science Education and Diversity in Computing.",
-        img: "ilmi.jpg",
-        pdf: "895Report_Poorva.pdf",
-        tenure: "2018 - Present",
-        description:
-          "Photo os Ilmi Yoon, an asian woman with fair skin and with long wavy brown hair. She is smiling brightly at the camera.",
-      },
-
       {
         name: "Jianfei Zhao",
         bio: "",
@@ -163,18 +171,9 @@ class CreditsPage extends Component {
         description:
           "Photo of Varun Sura, a fair skinned man with long black hair and light stubble. He is wearing a black suit and is smiling at the camera and holding spectacles in his hands.",
       },
-      {
-        name: "Rodrigo Leme de Mello",
-        bio: "Rodrigo Leme de Mello, Software Engineer, was part of the original Codesmith team that rebuilt from the ground-up YouDescribe in 2017. His career-long passion for accessibility led him to volunteer with the project for three years after the launch, expanding YouDescribe's capabilities and keeping the code running smoothly. Thank you, Rodrigo, for your many long volunteer hours. We are grateful. Rodrigo is currently a Partner Trainer for Amazon Web Services.",
-        img: "RodrigoLeme.jpeg",
-        pdf: "895Report_Poorva.pdf",
-        tenure: "2017 - 2018",
-        description:
-          " Photo of Rodrigo Leme de Mello. A light-skinned man with a sparse, close-cropped beard crouches on a frozen lake. He wears a grey knit beanie, black jacket, jeans, and grey sneakers.",
-      },
     ];
 
-    obj.sort((a, b) => (a.name > b.name ? 1 : -1));
+    // obj.sort((a, b) => (a.name > b .name ? 1 : -1));
 
     const publications = [
       {
@@ -516,7 +515,9 @@ class CreditsPage extends Component {
                     <td style={{ width: "1000px" }}>{home.bio}</td>
                     <td style={{ width: "100px" }}>
                       {/* <a href={home.pdf} class="fa fa-file-pdf-o" target="_blank" style={{fontSize:"48px",color:"red"}} download></a> */}
-                      <a
+                      
+
+                      {home.pdf && <a
                         href={path.join(
                           __dirname,
                           "assets",
@@ -527,7 +528,9 @@ class CreditsPage extends Component {
                         className="fa fa-file-pdf-o"
                         target="_blank"
                         style={{ fontSize: "48px", color: "red" }}
-                      ></a>
+                      ></a>}
+
+
                     </td>
                   </tr>
                 </tbody>

@@ -8,14 +8,23 @@ import FullscreenButton from "../fullscreen-button/FullscreenButton.jsx";
 
 const VideoPlayerControls = (props) => {
   return (
-    <div id={props.className || "video-player-controls"}>
-      <div className="">
+    <div id="video-player-controls">
+      <div className="w3-row">
+        {/* <VideoPlayerAccessibleSeekbar
+          updateState={props.updateState}
+          {...props}
+        /> */}
+      </div>
+
+      <div className="w3-row">
         <div>
+          {/* <PlayPauseButton {...props} /> */}
           <VolumeBalancer updateState={props.updateState} />
+          {/* <FullscreenButton playFullscreen={props.playFullscreen} />
+          <VideoTimer {...props} /> */}
         </div>
       </div>
     </div>
   );
 };
-
 export default VideoPlayerControls;

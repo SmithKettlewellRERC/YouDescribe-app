@@ -21,7 +21,7 @@ class Credits extends Component {
     const headsDetails = [
       {
         name: "Dr. Joshua Miele",
-        designation: "YouDescribe Creator ",
+        designation: "YouDescribe Creator",
         tenure: "2013 - Present",
         img: "Josh.jpeg",
         description:
@@ -35,6 +35,14 @@ class Credits extends Component {
         description:
           "Photo of Charity Pitcher-Cooper, a light skinned woman with long brown hair with heavy bangs smiles warmly from her home office. She wears a headset with a microphone, and her chin rests casually on her hand.",
       },
+      {
+        name: "Rodrigo Leme de Mello",
+        designation: "Principal Engineer | ",
+        tenure: "2017 - Present",
+        img: "rodrigo-2022.png",
+        description:
+          " Photo of Rodrigo Leme de Mello. A light-skinned man with a sparse, close-cropped beard crouches on a frozen lake. He wears a grey knit beanie, black jacket, jeans, and grey sneakers.",
+      }
     ];
     const sortedDetails = [
       {
@@ -145,14 +153,6 @@ class Credits extends Component {
         img: "brenna_2.jpg",
         description:
           "Photo of Brenna Tirumalashetty, a fair skinned woman with short blonde hair. she is wearing a white dress and is smilling at the camera.",
-      },
-      {
-        name: "Rodrigo Leme de Mello",
-        designation: "YouDescribe ",
-        tenure: "2017 - 2020",
-        img: "RodrigoLeme.jpeg",
-        description:
-          " Photo of Rodrigo Leme de Mello. A light-skinned man with a sparse, close-cropped beard crouches on a frozen lake. He wears a grey knit beanie, black jacket, jeans, and grey sneakers.",
       },
       {
         name: "Manish Patil",
