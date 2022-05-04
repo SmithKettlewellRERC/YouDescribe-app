@@ -2,7 +2,7 @@ image:
   name: node:14
 
 variables:
-    CI_PROJECT_NAME: dev.youdescribe.org
+    CI_PROJECT_NAME: youdescribe
 
 stages:
   - deploy
@@ -17,8 +17,9 @@ deploy job:
         - master
     stage: deploy
     tags:
-        - dev
+        - frontend
     script:
-        - pwd
         - docker build -t "${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_JOB_ID}" .
-        - docker run -v /mnt/ebs:/mnt/ebs -d -p 0.0.0.0:3000:3000 ${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_JOB_ID}
+        - docker stop ${CI_PROJECT_NAME}
+        - docker rm ${CI_PROJECT_NAME}
+        - docker run -v /mnt/ebs:/mnt/ebs --name ${CI_PROJECT_NAME} -d -p 0.0.0.0:3000:3000 ${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_JOB_ID}
