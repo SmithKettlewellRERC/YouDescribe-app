@@ -1,6 +1,6 @@
 FROM node:14
 
-WORKDIR /home/dev.youdescribe.org
+WORKDIR /home/youdescribe
 COPY ./ ./
 
 ARG NODE_ENV
