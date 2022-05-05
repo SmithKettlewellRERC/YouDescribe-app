@@ -57,6 +57,7 @@ class VideoPage extends Component {
       balancerValue: 50,
       currentVideoProgress: "00:00:00:00",
       videoDurationToDisplay: "00:00:00:00",
+      oldvolume: 0,
     };
 
     this.updateState = this.updateState.bind(this);
@@ -508,6 +509,7 @@ class VideoPage extends Component {
           currentVideoProgressFloor
         ) {
           if (!this.state.currentClip) {
+            this.state.oldvolume = this.state.videoPlayer.getVolume();
             self.playAudioClip(audioClip);
           }
         }
@@ -541,8 +543,17 @@ class VideoPage extends Component {
           this.state.currentClip = null;
           if (playbackType === "extended") {
             self.state.videoPlayer.playVideo();
+          } else {
+            setInterval(() => {
+              console.log(this.state.videoPlayer.getVolume());
+              if (this.state.videoPlayer.getVolume() <= this.state.oldvolume) {
+                this.state.videoPlayer.setVolume(
+                  this.state.videoPlayer.getVolume() + 1
+                );
+              }
+            }, 10);
           }
-          this.state.videoPlayer.setVolume(100);
+
           self.startProgressWatcher();
         },
 

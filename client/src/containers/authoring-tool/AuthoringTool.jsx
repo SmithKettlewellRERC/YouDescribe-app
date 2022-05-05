@@ -483,14 +483,6 @@ class AuthoringTool extends Component {
         videoVolume,
       });
 
-      //Audio ducking.
-      if (this.state.currentClip) {
-        this.state.currentClip.audio.volume(self.state.balancerValue / 100);
-        this.state.videoPlayer.setVolume(
-          (100 - self.state.balancerValue) * 0.4
-        );
-      }
-
       const currentVideoProgressFloor =
         Math.round(currentVideoProgress * 100) / 100;
       for (let i = 0; i < audioClips.length; i += 1) {
@@ -535,7 +527,7 @@ class AuthoringTool extends Component {
           if (playbackType === "extended") {
             self.state.videoPlayer.playVideo();
           }
-          this.state.videoPlayer.setVolume(100);
+
           self.startProgressWatcher();
         },
 
