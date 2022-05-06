@@ -172,7 +172,10 @@ class AuthoringTool extends Component {
       // This looping won't be necessary when the API just delivery the owned AD for the current user.
       for (let i = 0; i < videoData.audio_descriptions.length; i += 1) {
         const ad = videoData.audio_descriptions[i];
+
         if (ad.user._id === this.props.getUserInfo().userId) {
+          console.log(this.props.getUserInfo());
+          console.log(ad);
           audioDescriptionId = ad["_id"];
           audioDescriptionStatus = ad["status"];
           audioDescriptionNotes = ad["notes"];
@@ -1018,7 +1021,40 @@ class AuthoringTool extends Component {
     this.setState({ tracksComponents: tracks });
   }
 
+  refresh() {
+    let url = `${conf.apiUrl}/audiodescriptions`;
+    let method = "PUT";
+
+    // We already have an audio description.
+
+    // We still don't have a AD.
+    url += `/${this.state.videoId}`;
+    method = "POST";
+
+    ourFetch(url, true, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: this.state.videoTitle,
+        description: this.state.videoDescription,
+        userId: this.props.getAppState().userId,
+        userToken: this.props.getAppState().userToken,
+        notes: this.state.audioDescriptionNotes,
+        audioDescriptionSelectedLanguage:
+          this.state.audioDescriptionSelectedLanguage,
+      }),
+    }).then(() => {
+      if (method === "POST") {
+        this.getYDVideoData();
+      } else {
+        this.refs.spinner.off();
+      }
+    });
+  }
+
   uploadAudioRecorded(args) {
+    this.refresh();
+
     const self = this;
     const formData = new FormData();
     formData.append("wavfile", args.audioBlob);
@@ -1054,6 +1090,7 @@ class AuthoringTool extends Component {
       );
     }
     formData.append("duration", args.duration);
+
     const url = `${conf.apiUrl}/audioclips/${this.state.videoId}`;
     const xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
@@ -1075,7 +1112,7 @@ class AuthoringTool extends Component {
     const self = this;
     const resultConfirm = confirm(
       this.props.translate(
-        "Are you sure you wanna publish this audio description?"
+        "Are you sure you want to publish this audio description?"
       )
     );
     if (resultConfirm) {
@@ -1151,7 +1188,7 @@ class AuthoringTool extends Component {
     const self = this;
     const resultConfirm = confirm(
       this.props.translate(
-        "Are you sure you wanna unpublish this audio description?"
+        "Are you sure you want to unpublish this audio description?"
       )
     );
     if (resultConfirm) {
