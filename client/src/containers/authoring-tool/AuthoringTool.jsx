@@ -15,6 +15,7 @@ import { browserHistory } from "react-router";
 /* start of custom tags */
 import { WithContext as ReactTags } from "react-tag-input";
 import Button from "../../components/button/Button.jsx";
+import { ChevronCompactLeft } from "react-bootstrap-icons";
 /* end of custom tags */
 
 const conf = require("../../shared/config")();
@@ -466,6 +467,7 @@ class AuthoringTool extends Component {
     console.log("10 -> startProgressWatcher");
 
     const audioClips = Object.values(this.state.audioDescriptionAudioClips);
+    console.log(audioClips);
     const interval = 10;
     if (this.watcher) {
       this.stopProgressWatcher();

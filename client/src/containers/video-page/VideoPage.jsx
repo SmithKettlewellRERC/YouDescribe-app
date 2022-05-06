@@ -421,43 +421,45 @@ class VideoPage extends Component {
   }
 
   checkSeek() {
-    if (this.state.currentClip) {
-      this.state.currentClip.audio.stop();
-      this.state.currentClip = null;
-    }
+    if (this.state.selectedAudioDescriptionId) {
+      if (this.state.currentClip) {
+        this.state.currentClip.audio.stop();
+        this.state.currentClip = null;
+      }
 
-    const audioClips =
-      this.state.audioDescriptionsIdsAudioClips[
-        this.state.selectedAudioDescriptionId
-      ];
+      const audioClips =
+        this.state.audioDescriptionsIdsAudioClips[
+          this.state.selectedAudioDescriptionId
+        ];
 
-    let videoTimestamp = this.state.videoPlayer.getCurrentTime();
+      let videoTimestamp = this.state.videoPlayer.getCurrentTime();
 
-    //check nearest video. If video is inline, check the start time + duration of clip. If the video timestamp
-    //falls in between, seek to the time (video timestamp - clip duration) of that clip. Then, play clip.
+      //check nearest video. If video is inline, check the start time + duration of clip. If the video timestamp
+      //falls in between, seek to the time (video timestamp - clip duration) of that clip. Then, play clip.
 
-    //round to 2 nearest dec
-    videoTimestamp = Math.round(videoTimestamp * 100) / 100;
+      //round to 2 nearest dec
+      videoTimestamp = Math.round(videoTimestamp * 100) / 100;
 
-    for (let i = 0; i < audioClips.length; i += 1) {
-      const clip = audioClips[i];
-      console.log(clip);
-      if (clip.playback_type === "inline") {
-        let startTime = Math.round(clip.start_time * 100) / 100;
-        let duration = Math.round(clip.duration * 100) / 100;
-        console.log(startTime);
-        console.log(duration);
-        //clip and video are overlapping, seek through audio clip and exit loop
-        if (startTime > videoTimestamp) {
-          break;
-        }
-        if (
-          startTime < videoTimestamp &&
-          videoTimestamp < startTime + duration
-        ) {
-          const diff = videoTimestamp - startTime;
-          this.playAudioClip(clip, diff);
-          break;
+      for (let i = 0; i < audioClips.length; i += 1) {
+        const clip = audioClips[i];
+        console.log(clip);
+        if (clip.playback_type === "inline") {
+          let startTime = Math.round(clip.start_time * 100) / 100;
+          let duration = Math.round(clip.duration * 100) / 100;
+          console.log(startTime);
+          console.log(duration);
+          //clip and video are overlapping, seek through audio clip and exit loop
+          if (startTime > videoTimestamp) {
+            break;
+          }
+          if (
+            startTime < videoTimestamp &&
+            videoTimestamp < startTime + duration
+          ) {
+            const diff = videoTimestamp - startTime;
+            this.playAudioClip(clip, diff);
+            break;
+          }
         }
       }
     }
@@ -465,56 +467,58 @@ class VideoPage extends Component {
 
   // 10
   startProgressWatcher() {
-    const self = this;
-    console.log("10 -> startProgressWatcher");
+    if (this.state.selectedAudioDescriptionId) {
+      const self = this;
+      console.log("10 -> startProgressWatcher");
 
-    const audioClips = Object.values(
-      this.state.audioDescriptionsIdsAudioClips
-    )[0];
-    const interval = 10;
+      const audioClips = Object.values(
+        this.state.audioDescriptionsIdsAudioClips
+      )[this.state.selectedAudioDescriptionId];
+      const interval = 10;
 
-    if (this.watcher) {
-      this.stopProgressWatcher();
-    }
-
-    this.watcher = setInterval(() => {
-      const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
-      const videoVolume = this.state.videoPlayer.getVolume();
-      const playheadPosition =
-        756 * (currentVideoProgress / this.videoDurationInSeconds);
-
-      //Audio ducking.
-      if (this.state.currentClip) {
-        this.state.currentClip.audio.volume(self.state.balancerValue / 100);
-        this.state.videoPlayer.setVolume(
-          (100 - self.state.balancerValue) * 0.4
-        );
+      if (this.watcher) {
+        this.stopProgressWatcher();
       }
 
-      this.setState({
-        currentVideoProgress,
-        currentVideoProgressToDisplay:
-          convertSecondsToEditorFormat(currentVideoProgress),
-        playheadPosition,
-        videoVolume,
-      });
+      this.watcher = setInterval(() => {
+        const currentVideoProgress = this.state.videoPlayer.getCurrentTime();
+        const videoVolume = this.state.videoPlayer.getVolume();
+        const playheadPosition =
+          756 * (currentVideoProgress / this.videoDurationInSeconds);
 
-      const currentVideoProgressFloor =
-        Math.round(currentVideoProgress * 100) / 100;
+        //Audio ducking.
+        if (this.state.currentClip) {
+          this.state.currentClip.audio.volume(self.state.balancerValue / 100);
+          this.state.videoPlayer.setVolume(
+            (100 - self.state.balancerValue) * 0.4
+          );
+        }
 
-      for (let i = 0; i < audioClips.length; i += 1) {
-        const audioClip = audioClips[i];
-        if (
-          Math.round(audioClip.start_time * 100) / 100 ===
-          currentVideoProgressFloor
-        ) {
-          if (!this.state.currentClip) {
-            this.state.oldvolume = this.state.videoPlayer.getVolume();
-            self.playAudioClip(audioClip);
+        this.setState({
+          currentVideoProgress,
+          currentVideoProgressToDisplay:
+            convertSecondsToEditorFormat(currentVideoProgress),
+          playheadPosition,
+          videoVolume,
+        });
+
+        const currentVideoProgressFloor =
+          Math.round(currentVideoProgress * 100) / 100;
+
+        for (let i = 0; i < audioClips.length; i += 1) {
+          const audioClip = audioClips[i];
+          if (
+            Math.round(audioClip.start_time * 100) / 100 ===
+            currentVideoProgressFloor
+          ) {
+            if (!this.state.currentClip) {
+              this.state.oldvolume = this.state.videoPlayer.getVolume();
+              self.playAudioClip(audioClip);
+            }
           }
         }
-      }
-    }, interval);
+      }, interval);
+    }
   }
 
   stopProgressWatcher() {
