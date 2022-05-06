@@ -214,6 +214,7 @@ class VideoPage extends Component {
   // 4
   setAudioDescriptionActive() {
     // console.log('4 -> setAudioDescriptionActive');
+
     let selectedAudioDescriptionId = null;
     if (this.state.selectedAudioDescriptionId !== null) {
       selectedAudioDescriptionId = this.state.selectedAudioDescriptionId;
@@ -294,9 +295,7 @@ class VideoPage extends Component {
             videoLikes: convertLikesToCardFormat(
               data.items[0].statistics.likeCount
             ),
-            videoDislikes: convertLikesToCardFormat(
-              data.items[0].statistics.dislikeCount
-            ),
+
             videoDurationInSeconds: this.videoDurationInSeconds,
             videoDurationToDisplay: convertSecondsToEditorFormat(
               this.videoDurationInSeconds
@@ -427,10 +426,11 @@ class VideoPage extends Component {
       this.state.currentClip = null;
     }
 
-    const audioClips = Object.values(
-      this.state.audioDescriptionsIdsAudioClips
-    )[0];
-    console.log(audioClips);
+    const audioClips =
+      this.state.audioDescriptionsIdsAudioClips[
+        this.state.selectedAudioDescriptionId
+      ];
+
     let videoTimestamp = this.state.videoPlayer.getCurrentTime();
 
     //check nearest video. If video is inline, check the start time + duration of clip. If the video timestamp
@@ -593,11 +593,13 @@ class VideoPage extends Component {
   }
 
   changeAudioDescription(selectedAudioDescriptionId) {
+    console.log(selectedAudioDescriptionId);
     this.state.videoPlayer.stopVideo();
-    this.resetPlayedAudioClips();
+
     this.setState(
       {
-        selectedAudioDescriptionId,
+        selectedAudioDescriptionId: selectedAudioDescriptionId,
+        currentClip: null,
       },
       () => {
         this.setAudioDescriptionActive();
@@ -606,9 +608,12 @@ class VideoPage extends Component {
   }
 
   handleDescriberChange(id) {
+    if (this.state.currentClip) {
+      this.state.currentClip.audio.stop();
+    }
     this.changeAudioDescription(id);
-    document.getElementById("play-pause-button").style.outline = "none";
-    document.getElementById("play-pause-button").focus();
+    // document.getElementById("play-pause-button").style.outline = "none";
+    // document.getElementById("play-pause-button").focus();
   }
 
   handleAddDescription() {

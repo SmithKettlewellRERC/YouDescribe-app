@@ -131,6 +131,7 @@ class AuthoringTool extends Component {
     console.log("2 -> getYDVideoData");
     const self = this;
     const url = `${conf.apiUrl}/videos/${this.props.params.videoId}`;
+
     ourFetch(url)
       .then((response) => {
         if (response.result) {
@@ -973,8 +974,10 @@ class AuthoringTool extends Component {
         () => {
           this.state.videoPlayer.seekTo(seekToValueWithCorrection, true);
           this.state.videoPlayer.unMute();
-          this.state.videoPlayer.pauseVideo();
-          this.pauseAudioClips();
+
+          if (this.state.currentClip) {
+            this.state.currentClip.audio.stop();
+          }
         }
       );
     } else {
@@ -1336,6 +1339,7 @@ class AuthoringTool extends Component {
   /* start of custom tags */
   loadYTVideoTags() {
     const url = `${conf.apiUrl}/videos/getyoutubetags?id=${this.state.videoId}`;
+
     ourFetch(url).then((response) => {
       const video = response.result;
       const tags = [];
