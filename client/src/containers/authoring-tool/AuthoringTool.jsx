@@ -588,7 +588,12 @@ class AuthoringTool extends Component {
   }
 
   componentWillUnmount() {
-    this.state.videoPlayer.stopVideo();
+    if (this.state.currentClip) {
+      this.state.currentClip.audio.stop();
+    }
+    if (this.state.videoPlayer) {
+      this.state.videoPlayer.stopVideo();
+    }
     this.stopProgressWatcher();
   }
 

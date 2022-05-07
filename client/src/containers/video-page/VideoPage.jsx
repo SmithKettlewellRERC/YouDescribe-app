@@ -629,10 +629,13 @@ class VideoPage extends Component {
   }
 
   componentWillUnmount() {
+    if (this.state.currentClip) {
+      this.state.currentClip.audio.stop();
+    }
     if (this.state.videoPlayer) {
       this.state.videoPlayer.stopVideo();
     }
-    this.resetPlayedAudioClips();
+
     this.stopProgressWatcher();
   }
 
