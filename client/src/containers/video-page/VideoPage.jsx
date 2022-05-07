@@ -471,9 +471,10 @@ class VideoPage extends Component {
       const self = this;
       console.log("10 -> startProgressWatcher");
 
-      const audioClips = Object.values(
-        this.state.audioDescriptionsIdsAudioClips
-      )[this.state.selectedAudioDescriptionId];
+      const audioClips =
+        this.state.audioDescriptionsIdsAudioClips[
+          this.state.selectedAudioDescriptionId
+        ];
       const interval = 10;
 
       if (this.watcher) {
