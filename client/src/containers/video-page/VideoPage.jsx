@@ -550,7 +550,6 @@ class VideoPage extends Component {
             self.state.videoPlayer.playVideo();
           } else {
             setInterval(() => {
-              console.log(this.state.videoPlayer.getVolume());
               if (this.state.videoPlayer.getVolume() <= this.state.oldvolume) {
                 this.state.videoPlayer.setVolume(
                   this.state.videoPlayer.getVolume() + 1
