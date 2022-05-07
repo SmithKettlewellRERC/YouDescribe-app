@@ -15,7 +15,7 @@ import { browserHistory } from "react-router";
 /* start of custom tags */
 import { WithContext as ReactTags } from "react-tag-input";
 import Button from "../../components/button/Button.jsx";
-import { ChevronCompactLeft } from "react-bootstrap-icons";
+import { ChevronCompactLeft, TrophyFill } from "react-bootstrap-icons";
 /* end of custom tags */
 
 const conf = require("../../shared/config")();
@@ -97,6 +97,7 @@ class AuthoringTool extends Component {
     this.autoSave = this.autoSave.bind(this);
     this.playFromStart = this.playFromStart.bind(this);
     this.checkSeek = this.checkSeek.bind(this);
+    this.generateTags = this.generateTags.bind(this);
     /* start of custom tags */
     this.handleDelete = this.handleDelete.bind(this);
     this.handleAddition = this.handleAddition.bind(this);
@@ -176,8 +177,6 @@ class AuthoringTool extends Component {
         const ad = videoData.audio_descriptions[i];
 
         if (ad.user._id === this.props.getUserInfo().userId) {
-          console.log(this.props.getUserInfo());
-          console.log(ad);
           audioDescriptionId = ad["_id"];
           audioDescriptionStatus = ad["status"];
           audioDescriptionNotes = ad["notes"];
@@ -206,6 +205,9 @@ class AuthoringTool extends Component {
         audioDescriptionSelectedLanguage,
       },
       () => {
+        if (this.state.audioDescriptionId === null) {
+          this.generateTags();
+        }
         this.preLoadAudioClips(this.getYTVideoInfo);
       }
     );
@@ -472,7 +474,7 @@ class AuthoringTool extends Component {
     console.log("10 -> startProgressWatcher");
 
     const audioClips = Object.values(this.state.audioDescriptionAudioClips);
-    console.log(audioClips);
+
     const interval = 10;
     if (this.watcher) {
       this.stopProgressWatcher();
@@ -1024,7 +1026,6 @@ class AuthoringTool extends Component {
   }
 
   touchAD(args) {
-    console.log(this.state.audioDescriptionId);
     if (this.state.audioDescriptionId === null) {
       this.refs.spinner.on();
       let url = `${conf.apiUrl}/audiodescriptions`;
@@ -1055,10 +1056,8 @@ class AuthoringTool extends Component {
           .then((response) => {
             if (response.result) {
               const videoData = response.result;
-              console.log(videoData);
+
               videoData["audio_descriptions"].forEach((ad) => {
-                console.log("ads");
-                console.log(ad);
                 if (ad.user._id === this.props.getUserInfo().userId) {
                   let audioDescriptionId = ad["_id"];
                   let audioDescriptionStatus = ad["status"];
@@ -1074,7 +1073,6 @@ class AuthoringTool extends Component {
                       audioDescriptionSelectedLanguage,
                     },
                     () => {
-                      console.log(this.state.audioDescriptionId);
                       this.sendAudio(args);
                     }
                   );
@@ -1428,6 +1426,7 @@ class AuthoringTool extends Component {
 
     ourFetch(url).then((response) => {
       const video = response.result;
+
       const tags = [];
       video.tags.forEach((tag) => {
         tags.push({
@@ -1438,6 +1437,30 @@ class AuthoringTool extends Component {
       this.setState({
         tags: tags,
       });
+    });
+  }
+
+  generateTags() {
+    const url = `${conf.apiUrl}/videos/updateyoutubeid`;
+    const optionObj = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: this.state.videoData._id,
+        youtube_id: this.state.videoId,
+      }),
+    };
+
+    ourFetch(url, true, optionObj).then((response) => {
+      let count = 0;
+      setInterval(() => {
+        if (count < 3) {
+          this.loadYTVideoTags();
+          count++;
+        }
+      }, 1000);
     });
   }
 
