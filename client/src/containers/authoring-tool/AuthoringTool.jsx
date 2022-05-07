@@ -75,6 +75,8 @@ class AuthoringTool extends Component {
 
     this.handleClick = this.handleClick.bind(this);
     this.getATState = this.getATState.bind(this);
+    this.touchAD = this.touchAD.bind(this);
+    this.sendAudio = this.sendAudio.bind(this);
     this.updateState = this.updateState.bind(this);
     this.publishAudioDescription = this.publishAudioDescription.bind(this);
     this.unpublishAudioDescription = this.unpublishAudioDescription.bind(this);
@@ -1021,40 +1023,81 @@ class AuthoringTool extends Component {
     this.setState({ tracksComponents: tracks });
   }
 
-  refresh() {
-    let url = `${conf.apiUrl}/audiodescriptions`;
-    let method = "PUT";
+  touchAD(args) {
+    console.log(this.state.audioDescriptionId);
+    if (this.state.audioDescriptionId === null) {
+      this.refs.spinner.on();
+      let url = `${conf.apiUrl}/audiodescriptions`;
+      let method = "PUT";
 
-    // We already have an audio description.
+      // We still don't have a AD.
+      url += `/${this.state.videoId}`;
+      method = "POST";
 
-    // We still don't have a AD.
-    url += `/${this.state.videoId}`;
-    method = "POST";
+      ourFetch(url, true, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: this.state.videoTitle,
+          description: this.state.videoDescription,
+          userId: this.props.getAppState().userId,
+          userToken: this.props.getAppState().userToken,
+          notes: this.state.audioDescriptionNotes,
+          audioDescriptionSelectedLanguage:
+            this.state.audioDescriptionSelectedLanguage,
+        }),
+      }).then(() => {
+        console.log("2 -> getYDVideoData");
 
-    ourFetch(url, true, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: this.state.videoTitle,
-        description: this.state.videoDescription,
-        userId: this.props.getAppState().userId,
-        userToken: this.props.getAppState().userToken,
-        notes: this.state.audioDescriptionNotes,
-        audioDescriptionSelectedLanguage:
-          this.state.audioDescriptionSelectedLanguage,
-      }),
-    }).then(() => {
-      if (method === "POST") {
-        this.getYDVideoData();
-      } else {
-        this.refs.spinner.off();
-      }
-    });
+        const url = `${conf.apiUrl}/videos/${this.props.params.videoId}`;
+
+        ourFetch(url)
+          .then((response) => {
+            if (response.result) {
+              const videoData = response.result;
+              console.log(videoData);
+              videoData["audio_descriptions"].forEach((ad) => {
+                console.log("ads");
+                console.log(ad);
+                if (ad.user._id === this.props.getUserInfo().userId) {
+                  let audioDescriptionId = ad["_id"];
+                  let audioDescriptionStatus = ad["status"];
+                  let audioDescriptionNotes = ad["notes"];
+                  let audioDescriptionSelectedLanguage = ad["language"];
+
+                  this.setState(
+                    {
+                      videoData: response.result,
+                      audioDescriptionId,
+                      audioDescriptionStatus,
+                      audioDescriptionNotes,
+                      audioDescriptionSelectedLanguage,
+                    },
+                    () => {
+                      console.log(this.state.audioDescriptionId);
+                      this.sendAudio(args);
+                    }
+                  );
+                }
+              });
+            }
+          })
+          .catch(() => {});
+      });
+    }
   }
 
   uploadAudioRecorded(args) {
-    this.refresh();
+    console.log("start touch");
 
+    if (this.state.audioDescriptionId === null) {
+      this.touchAD(args);
+    } else {
+      this.sendAudio(args);
+    }
+  }
+
+  sendAudio(args) {
     const self = this;
     const formData = new FormData();
     formData.append("wavfile", args.audioBlob);
@@ -1090,6 +1133,10 @@ class AuthoringTool extends Component {
       );
     }
     formData.append("duration", args.duration);
+
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ", " + pair[1]);
+    }
 
     const url = `${conf.apiUrl}/audioclips/${this.state.videoId}`;
     const xhr = new XMLHttpRequest();
