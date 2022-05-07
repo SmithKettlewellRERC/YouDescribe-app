@@ -598,6 +598,9 @@ class VideoPage extends Component {
 
   changeAudioDescription(selectedAudioDescriptionId) {
     console.log(selectedAudioDescriptionId);
+    if (this.state.currentClip) {
+      this.state.currentClip.audio.stop();
+    }
     this.state.videoPlayer.stopVideo();
 
     this.setState(
@@ -615,6 +618,7 @@ class VideoPage extends Component {
     if (this.state.currentClip) {
       this.state.currentClip.audio.stop();
     }
+    this.stopProgressWatcher();
     this.changeAudioDescription(id);
     // document.getElementById("play-pause-button").style.outline = "none";
     // document.getElementById("play-pause-button").focus();
@@ -832,12 +836,16 @@ class VideoPage extends Component {
   }
 
   handleTurnOffDescriptions() {
+    if (this.state.currentClip) {
+      this.state.currentClip.audio.stop();
+      this.stopProgressWatcher();
+    }
     this.setState({ showDescribersList: false }, () => {
       document.getElementById("describers").style.display = "none";
       document.getElementById("descriptions-off").style.display = "block";
       const currentSelected = this.state.selectedAudioDescriptionId;
       this.state.videoPlayer.stopVideo();
-      this.resetPlayedAudioClips();
+
       this.setState(
         {
           previousSelectedAudioDescriptionId: currentSelected,
@@ -856,7 +864,7 @@ class VideoPage extends Component {
       document.getElementById("descriptions-off").style.display = "none";
       const previousSelected = this.state.previousSelectedAudioDescriptionId;
       this.state.videoPlayer.stopVideo();
-      this.resetPlayedAudioClips();
+
       this.setState(
         {
           previousSelectedAudioDescriptionId: null,
