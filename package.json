@@ -5,7 +5,9 @@
   "main": "webpack.config.js",
   "scripts": {
     "start": "nodemon server/index.js",
-    "w": "webpack --config webpack.config.dev.js"
+    "w": "webpack --config webpack.config.dev.js",
+    "build": "webpack --config webpack.config.dev.js",
+    "build:prod" :"webpack --config webpack.config.prd.js"
   },
   "repository": {
     "type": "git",
