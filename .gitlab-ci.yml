@@ -5,21 +5,96 @@ variables:
     CI_PROJECT_NAME: youdescribe
 
 stages:
+  - build
+  # - test # Will add this test stage when automated tests are created
   - deploy
  
 cache:
   paths:
     - node_modules/
 
-deploy job:
+build-stage:
+  stage: build
+  tags:
+    - frontend
+    - staging
+
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev"
+      when: always
+
+  script:
+    - echo "Building YouDescribe in staging" 
+    - docker build -t "${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_PIPELINE_ID}" .
+    - echo "Build complete"
+
+build-prod:
+  stage: build
+  tags:
+    - frontend
+    - prod
+
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      when: always
+  
+  script:
+    - echo "Building YouDescribe in prod" 
+    - docker build -t "${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_PIPELINE_ID}" .
+    - echo "Build completed"
+
+
+# We don't have any unit tests for now, and especially for the frontend,
+# it is hard to create automated tests. We can just assume that if the docker
+# build completes, the frontend "passes".
+
+# test:
+#   stage: test
+
+#   script:
+#     - echo "Running tests against new YouDescribe build"
+#     - docker stop ${CI_PROJECT_NAME}
+#     - docker rm ${CI_PROJECT_NAME}
+#     - echo "Finished running tests"
+
+deploy-stage:
+  stage: deploy
+  tags:
+    - frontend
+    - staging
+
+  rules:
+  - if: $CI_COMMIT_BRANCH == "dev"
+    when: on_success
     
-    only:
-        - master
-    stage: deploy
-    tags:
-        - frontend
-    script:
-        - docker build -t "${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_JOB_ID}" .
-        - docker stop ${CI_PROJECT_NAME}
-        - docker rm ${CI_PROJECT_NAME}
-        - docker run -v /mnt/ebs:/mnt/ebs --name ${CI_PROJECT_NAME} -d -p 0.0.0.0:3000:3000 ${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_JOB_ID}
+  script:
+    - echo "Stopping old YouDescribe instance"
+    # Stop the currently running YouDescribe container if there is one running
+    - docker stop $(docker ps -a -q --filter="name=${CI_PROJECT_NAME}") || true
+    - echo "Deleting old YouDescribe container"
+    # Delete the last YouDescribe container if one exists
+    - docker rm $(docker ps -a -q --filter="name=${CI_PROJECT_NAME}") || true
+    - echo "Starting up/Deploying newest YouDescribe build"
+    - docker run -v /mnt/ebs:/mnt/ebs --name ${CI_PROJECT_NAME} -d -p 0.0.0.0:3000:3000 ${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_PIPELINE_ID}
+    - echo "Finished deploying YouDescribe build to staging"
+
+deploy-prod:
+  stage: deploy
+  tags:
+    - frontend
+    - prod
+
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      when: on_success
+    
+  script:
+    - echo "Stopping old YouDescribe instance"
+    # Stop the currently running YouDescribe container if there is one running
+    - docker stop $(docker ps -a -q --filter="name=${CI_PROJECT_NAME}") || true
+    - echo "Deleting old YouDescribe container"
+    # Delete the last YouDescribe container if one exists
+    - docker rm $(docker ps -a -q --filter="name=${CI_PROJECT_NAME}") || true
+    - echo "Starting up/Deploying newest YouDescribe build"
+    - docker run -v /mnt/ebs:/mnt/ebs --name ${CI_PROJECT_NAME} -d -p 0.0.0.0:3000:3000 ${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_PIPELINE_ID}
+    - echo "Finished deploying YouDescribe build to prod"
