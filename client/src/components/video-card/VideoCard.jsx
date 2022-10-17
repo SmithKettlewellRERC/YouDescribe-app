@@ -110,6 +110,8 @@ class VideoCard extends Component {
               </div>
               <div id="card-author">
                 <span>{this.props.translate('Author')}: {this.props.author}</span>
+                <br/>
+                <span>{'Votes'}: {this.props.votes}</span>
                 {/* <a href="#">{this.props.describer}</a> */}
               </div>
             </div>

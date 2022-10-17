@@ -4,8 +4,9 @@ module.exports = () => {
 
   // DON'T CHANGE THESE URLS!
 
-  let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
-  //let apiUrl = `https://dev-api.youdescribe.org/${apiVersion}`;
+  // let apiUrl = `https://api.youdescribe.org/${apiVersion}`;
+  // let apiUrl = `http://localhost:8080/${apiVersion}`;
+  let apiUrl = `https://dev-api.youdescribe.org/${apiVersion}`;
 
   let audioClipsUploadsPath =
     "https://api.youdescribe.org/audio-descriptions-files";
