@@ -60,8 +60,8 @@ class SearchPage extends Component {
       q = url.searchParams.get("v");
     }
     const serverVideoIds = [];
-    // const url = `${conf.apiUrl}/videos/search?q=${q}&page=${page}`;
-    const url = `https://api.youdescribe.org/v1/videos/search?q=${q}&page=${page}`;
+    const url = `${conf.apiUrl}/videos/search?q=${q}&page=${page}`;
+    // const url = `https://api.youdescribe.org/v1/videos/search?q=${q}&page=${page}`;
     ourFetch(url)
     .then((response) => {
       this.videoDbResonseVideos = response.result;
