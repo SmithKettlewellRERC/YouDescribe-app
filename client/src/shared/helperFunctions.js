@@ -8,6 +8,17 @@ function getLang() {
   return defaultLang.toLowerCase();
 }
 
+function getTimeZoneOffset(date, timeZone) {
+
+  let iso = date.toLocaleString('en-CA', { timeZone, hour12: false }).replace(', ', 'T');
+  
+  iso += '.' + date.getMilliseconds().toString().padStart(3, '0');
+  
+  const temp = new Date(iso + 'Z');
+
+  return -(temp - date) / 60 / 1000;
+}
+
 function convertTimeToCardFormat(time) {
   const year = 31536000000;
   const month = 2629740000;
@@ -180,6 +191,7 @@ export {
   convertLikesToCardFormat,
   convertISO8601ToSeconds,
   convertISO8601ToDate,
+  getTimeZoneOffset,
   convertSecondsToCardFormat,
   convertSecondsToEditorFormat,
   ourFetch,
