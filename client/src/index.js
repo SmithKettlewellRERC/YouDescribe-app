@@ -51,12 +51,13 @@ import SummaryOfTimeRange from "./containers/statistics/SummaryOfTimeRange.jsx";
 import DailyCountOfDataRecords from "./containers/statistics/DailyCountOfDataRecords.jsx";
 
 //Google Analytics
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import { createBrowserHistory } from "history";
 
 const history = createBrowserHistory();
 //const trackingId = "UA-171142756-3"; //live site key
-const trackingId = "UA-174046676-1"; //dev key
+// const trackingId = "UA-174046676-1"; //dev key
+const trackingId = "G-TZJSBYYKYP"; // GA4 key
 ReactGA.initialize(trackingId);
 
 history.listen(location => {
