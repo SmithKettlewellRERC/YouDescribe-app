@@ -51,18 +51,24 @@ import SummaryOfTimeRange from "./containers/statistics/SummaryOfTimeRange.jsx";
 import DailyCountOfDataRecords from "./containers/statistics/DailyCountOfDataRecords.jsx";
 
 //Google Analytics
-import ReactGA from "react-ga4";
+import ReactGA from "react-ga";
+import ReactGA4 from "react-ga4";
 import { createBrowserHistory } from "history";
 
 const history = createBrowserHistory();
 //const trackingId = "UA-171142756-3"; //live site key
-// const trackingId = "UA-174046676-1"; //dev key
-const trackingId = "G-TZJSBYYKYP"; // GA4 key
-ReactGA.initialize(trackingId);
+const trackingIdUA = "UA-174046676-1"; //dev key
+const trackingIdGA = "G-TZJSBYYKYP"; // GA4 key
+ReactGA.initialize(trackingIdUA);
+ReactGA4.initialize(trackingIdGA);
 
 history.listen(location => {
   ReactGA.set({ page: location.pathname }); // Update the user's current page
   ReactGA.pageview(location.pathname); // Record a pageview for the given page
+
+  // Google Analytics 4
+  ReactGA4.set({ page: location.pathname }); // Update the user's current page
+  ReactGA4.pageview(location.pathname); // Record a pageview for the given page
 });
 
 ReactDOM.render(
