@@ -19,7 +19,7 @@
     }
   }
   #card-title-container {
-    height: 80px;
+    min-height: 120px;
     #card-title {
       color: #337ab7;
       line-height: 18px;
@@ -30,7 +30,7 @@
       -webkit-box-orient: vertical;
     }
     #card-author {
-      padding-bottom: 24px;
+      padding-bottom: 5px;
     }
   }
   #card-stats {

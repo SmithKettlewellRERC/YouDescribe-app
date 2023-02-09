@@ -6,6 +6,7 @@ import Footer from '../../components/footer/Footer.jsx';
 import { ourFetch, getLang } from '../../shared/helperFunctions.js';
 import strings from './../../strings';
 import ReactGA from "react-ga";
+import ReactGA4 from "react-ga4";
 
 const { detect } = require('detect-browser');
 const conf = require('./../../shared/config')();
@@ -14,8 +15,10 @@ const polyglot = new Polyglot({
     phrases: strings[getLang()],
 });
 const translate = polyglot.t.bind(polyglot);
-const trackingId = "UA-171142756-3";
-ReactGA.initialize(trackingId);
+const trackingIdUA = "UA-174046676-1"; //dev key
+const trackingIdGA = "G-TZJSBYYKYP"; // GA4 key
+ReactGA.initialize(trackingIdUA);
+ReactGA4.initialize(trackingIdGA);
 
 class App extends Component {
   constructor(props, context) {

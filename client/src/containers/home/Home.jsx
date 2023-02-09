@@ -68,6 +68,7 @@ class Home extends Component {
         </h1>
       );
     } else {
+
       for (let i = 0; i < data.items.length; i += 1) {
         const item = data.items[i];
         if (!item.statistics || !item.snippet) {
@@ -150,7 +151,23 @@ class Home extends Component {
       </div>
     );
 
-    if (this.state.videos.length > 20) {
+    /**
+     * TODO: Need to implement a better way to decide when the "Load More" button should be visible when implementing this in YouDescribeX
+     * 
+     * NOTE: All of the pages that show videos suffer from this same problem.
+     * 
+     * Current implementation is not good because if we do get to the very end and there are no more
+     * "Recent Descriptions", then the "Load More" button will still be visible because
+     * this.state.videos contains all of the videos being shown. For some reason, even though the
+     * YouDescribe API has a return limit of 50 and there is much more than 50 recent
+     * descriptions, it only returns 20.
+     * 
+     * Possible Solution: Create a count query endpoint. This returns the total number of recent
+     * descriptions. Then we can just compare the number of videos in this.state.videos with
+     * the total count to see if we should show the load more button.
+     * 
+     */
+    if (this.state.videos.length >= 20) {
       YDloadMoreButton = (
         <div className="w3-margin-top w3-center load-more">
           <Button
