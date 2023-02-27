@@ -10,7 +10,7 @@ const { detect } = require("detect-browser");
 const conf = require("./../../shared/config")();
 const polyglot = new Polyglot({
   locale: getLang(),
-  phrases: strings[getLang()]
+  phrases: strings[getLang()],
 });
 const translate = polyglot.t.bind(polyglot);
 
@@ -30,10 +30,12 @@ class App extends Component {
       userToken: "",
       userName: "",
       userPicture: "",
-      userAdmin: 0
+      userAdmin: 0,
     };
-    this.initGoogleAuth = this.initGoogleAuth.bind(this);
-    this.googleSignInSuccess = this.googleSignInSuccess.bind(this);
+    this.newGoogleAuth = this.newGoogleAuth.bind(this);
+    this.newGoogleLogin = this.newGoogleLogin.bind(this);
+    // this.initGoogleAuth = this.initGoogleAuth.bind(this);
+    // this.googleSignInSuccess = this.googleSignInSuccess.bind(this);
     this.signOut = this.signOut.bind(this);
     this.getAppState = this.getAppState.bind(this);
     this.getUserInfo = this.getUserInfo.bind(this);
@@ -45,111 +47,141 @@ class App extends Component {
 
   componentWillMount() {
     this.setState({ searchValue: this.props.location.query.q });
+    this.newGoogleLogin();
   }
 
-  // Call back from Google authentication process.
-  googleSignInSuccess() {
-    const googleUser = this.state.auth2.currentUser.get();
-    const googleToken = googleUser.getAuthResponse().id_token;
-    ourFetch(`${conf.apiUrl}/auth`, true, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ googleToken })
-    }).then(res => {
-      localStorage.setItem("userAdmin", res.result.admin);
+  newGoogleAuth() {
+    const url = `${conf.apiUrl}/auth/google`;
+    window.open(url, "_self");
+  }
+
+  async newGoogleLogin() {
+    try {
+      const url = `${conf.apiUrl}/auth/login/success`;
+      const response = await fetch(url, { credentials: "include" });
+      const data = await response.json();
       this.setState(
         {
           isSignedIn: true,
-          userName: res.result.name,
-          userId: res.result._id,
-          userToken: res.result.token,
-          userPicture: res.result.picture,
-          userAdmin: res.result.admin
+          userName: data.result.name,
+          userId: data.result._id,
+          userToken: data.result.token,
+          userPicture: data.result.picture,
+          userAdmin: data.result.admin,
         },
         () => {
           this.setCookie();
         }
       );
-    });
+    } catch (error) {
+      console.log("Error signing in the user", error);
+    }
   }
 
+  // Old code using deprecated library. TODO: Delete the commented code.
   // Call back from Google authentication process.
-  googleSignInFailure() {
-    console.log("sign in failure");
-  }
+  // googleSignInSuccess() {
+  //   const googleUser = this.state.auth2.currentUser.get();
+  //   const googleToken = googleUser.getAuthResponse().id_token;
+  //   ourFetch(`${conf.apiUrl}/auth`, true, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ googleToken }),
+  //   }).then((res) => {
+  //     localStorage.setItem("userAdmin", res.result.admin);
+  //     this.setState(
+  //       {
+  //         isSignedIn: true,
+  //         userName: res.result.name,
+  //         userId: res.result._id,
+  //         userToken: res.result.token,
+  //         userPicture: res.result.picture,
+  //         userAdmin: res.result.admin,
+  //       },
+  //       () => {
+  //         this.setCookie();
+  //       }
+  //     );
+  //   });
+  // }
 
-  initGoogleAuth() {
-    const self = this;
-    gapi.load("auth2", function() {
-      const auth2 = gapi.auth2.init({
-        client_id: conf.googleClientId,
-        fetch_basic_profile: true,
-        scope: "email profile openid"
-      });
-      auth2.isSignedIn.listen(self.signinChanged);
-      auth2.then(() => {
-        self.setState(
-          {
-            auth2
-          },
-          () => {
-            self.state.auth2.attachClickHandler(
-              "btn-sign-in",
-              {},
-              self.googleSignInSuccess,
-              self.googleSignInFailure
-            );
-            self.refreshUserInfo();
-          }
-        );
-      });
-    });
-  }
+  // // Call back from Google authentication process.
+  // googleSignInFailure() {
+  //   console.log("sign in failure");
+  // }
 
-  signinChanged(val) {
-    // console.log('Signin state changed to ', val);
-  }
+  // initGoogleAuth() {
+  //   const self = this;
+  //   gapi.load("auth2", function () {
+  //     const auth2 = gapi.auth2.init({
+  //       client_id: conf.googleClientId,
+  //       fetch_basic_profile: true,
+  //       scope: "email profile openid",
+  //     });
+  //     auth2.isSignedIn.listen(self.signinChanged);
+  //     auth2.then(() => {
+  //       self.setState(
+  //         {
+  //           auth2,
+  //         },
+  //         () => {
+  //           self.state.auth2.attachClickHandler(
+  //             "btn-sign-in",
+  //             {},
+  //             self.googleSignInSuccess,
+  //             self.googleSignInFailure
+  //           );
+  //           self.refreshUserInfo();
+  //         }
+  //       );
+  //     });
+  //   });
+  // }
 
-  refreshUserInfo() {
-    const self = this;
-    this.state.auth2.then(() => {
-      if (this.state.auth2.isSignedIn.get()) {
-        const userId = this.getCookie("userId");
-        const userToken = this.getCookie("userToken");
-        const userName = this.getCookie("userName");
-        const userPicture = this.getCookie("userPicture");
-        if (userId && userToken && userName && userPicture) {
-          self.setState(
-            {
-              isSignedIn: true,
-              userName,
-              userId,
-              userToken,
-              userPicture
-            },
-            () => {
-              self.setCookie();
-            }
-          );
-        } else {
-          self.setState(
-            {
-              isSignedIn: false,
-              userName: "",
-              userId: "",
-              userToken: "",
-              userPicture: ""
-            },
-            () => {
-              self.resetCookie();
-            }
-          );
-        }
-      }
-    });
-  }
+  // signinChanged(val) {
+  //   // console.log('Signin state changed to ', val);
+  // }
+
+  // refreshUserInfo() {
+  //   const self = this;
+  //   this.state.auth2.then(() => {
+  //     if (this.state.auth2.isSignedIn.get()) {
+  //       const userId = this.getCookie("userId");
+  //       const userToken = this.getCookie("userToken");
+  //       const userName = this.getCookie("userName");
+  //       const userPicture = this.getCookie("userPicture");
+  //       if (userId && userToken && userName && userPicture) {
+  //         self.setState(
+  //           {
+  //             isSignedIn: true,
+  //             userName,
+  //             userId,
+  //             userToken,
+  //             userPicture,
+  //           },
+  //           () => {
+  //             self.setCookie();
+  //           }
+  //         );
+  //       } else {
+  //         self.setState(
+  //           {
+  //             isSignedIn: false,
+  //             userName: "",
+  //             userId: "",
+  //             userToken: "",
+  //             userPicture: "",
+  //           },
+  //           () => {
+  //             self.resetCookie();
+  //           }
+  //         );
+  //       }
+  //     }
+  //   });
+  // }
 
   getUserInfo() {
     const userId = this.getCookie("userId");
@@ -161,28 +193,29 @@ class App extends Component {
         userId,
         userName,
         userToken,
-        userPicture
+        userPicture,
       };
     }
     return null;
   }
 
   signOut() {
-    this.state.auth2.signOut().then(() => {
-      this.setState(
-        {
-          isSignedIn: false,
-          userName: "",
-          userId: "",
-          userToken: ""
-        },
-        () => {
-          this.resetCookie();
-          this.initGoogleAuth();
-          location.href = "/";
-        }
-      );
-    });
+    this.setState(
+      {
+        isSignedIn: false,
+        userName: "",
+        userId: "",
+        userToken: "",
+      },
+      () => {
+        this.resetCookie();
+        // this.initGoogleAuth();
+        // location.href = "/";
+        const url = `${conf.apiUrl}/auth/logout`;
+        window.open(url, "_self");
+        //We need to use window.open instead of making a GET request because Google's CORS policy will block Cross-site GET requests.
+      }
+    );
   }
 
   setCookie() {
@@ -236,13 +269,14 @@ class App extends Component {
     ) {
       browserHistory.push(`/unsupported-browser`);
     } else {
-      window.addEventListener("google-auth-lib-loaded", this.initGoogleAuth);
+      // window.addEventListener("google-auth-lib-loaded", this.initGoogleAuth);
+      document.getElementById("btn-sign-in").onclick = this.newGoogleAuth;
     }
   }
 
   clickHandler(searchValue) {
     this.setState({
-      searchValue
+      searchValue,
     });
     const q = encodeURIComponent(searchValue);
     browserHistory.push(`/search?q=${q}`);
@@ -255,13 +289,13 @@ class App extends Component {
           getAppState={this.getAppState}
           signOut={this.signOut}
           translate={translate}
-          updateSearch={searchValue => this.clickHandler(searchValue)}
+          updateSearch={(searchValue) => this.clickHandler(searchValue)}
         />
         {React.cloneElement(this.props.children, {
           getAppState: this.getAppState,
           getVideoProgress: this.getVideoProgress,
           translate: translate,
-          getUserInfo: this.getUserInfo
+          getUserInfo: this.getUserInfo,
         })}
         <Footer translate={translate} />
       </div>
