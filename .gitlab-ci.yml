@@ -91,10 +91,10 @@ deploy-prod:
   script:
     - echo "Stopping old YouDescribe instance"
     # Stop the currently running YouDescribe container if there is one running
-    - docker stop $(docker ps -a -q --filter="name=${CI_PROJECT_NAME}") || true
+    - docker stop $(docker ps -a -q --filter="name='${CI_PROJECT_NAME}'") || true
     - echo "Deleting old YouDescribe container"
     # Delete the last YouDescribe container if one exists
-    - docker rm $(docker ps -a -q --filter="name=${CI_PROJECT_NAME}") || true
+    - docker rm $(docker ps -a -q --filter="name='${CI_PROJECT_NAME}'") || true
     - echo "Starting up/Deploying newest YouDescribe build"
     - docker run -v /mnt/ebs:/mnt/ebs --name ${CI_PROJECT_NAME} --restart unless-stopped -d -p 0.0.0.0:3000:3000 ${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_PIPELINE_ID}
     - echo "Finished deploying YouDescribe build to prod"
