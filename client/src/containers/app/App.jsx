@@ -78,6 +78,7 @@ class App extends Component {
     }
   }
 
+  // Old code using deprecated library. TODO: Delete the commented code.
   // Call back from Google authentication process.
   // googleSignInSuccess() {
   //   const googleUser = this.state.auth2.currentUser.get();
@@ -212,6 +213,7 @@ class App extends Component {
         // location.href = "/";
         const url = `${conf.apiUrl}/auth/logout`;
         window.open(url, "_self");
+        //We need to use window.open instead of making a GET request because Google's CORS policy will block Cross-site GET requests.
       }
     );
   }

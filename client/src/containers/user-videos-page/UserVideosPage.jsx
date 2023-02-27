@@ -73,10 +73,6 @@ class UserVideosPage extends Component {
           window.localStorage.setItem("userVideosSortedIds", sortedIds);
           const url = `${conf.youTubeApiUrl}/videos?id=${youTubeIds}&part=contentDetails,snippet,statistics&key=${conf.youTubeApiKey}`;
           ourFetch(url).then((data) => {
-            console.log(
-              "loading user videos page from youtube; quota consumption: " +
-                this.youTubeVideosIds.length
-            );
             window.localStorage.setItem(
               "userVideosYoutubeData",
               JSON.stringify(data)
