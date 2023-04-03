@@ -510,7 +510,7 @@ class VideoPage extends Component {
           const audioClip = audioClips[i];
           if (
             currentVideoProgressFloor >= parseFloat(parseFloat(audioClip.start_time) - 0.07) &&
-            currentVideoProgressFloor >= parseFloat(parseFloat(audioClip.start_time) + 0.07)
+            currentVideoProgressFloor <= parseFloat(parseFloat(audioClip.start_time) + 0.07)
           ) {
             if (!this.state.currentClip) {
               this.state.oldvolume = this.state.videoPlayer.getVolume();
