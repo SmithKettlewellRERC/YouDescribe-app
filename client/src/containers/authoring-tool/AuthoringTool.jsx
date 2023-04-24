@@ -475,7 +475,7 @@ class AuthoringTool extends Component {
 
     const audioClips = Object.values(this.state.audioDescriptionAudioClips);
 
-    const interval = 10;
+    const interval = 50;
     if (this.watcher) {
       this.stopProgressWatcher();
     }
@@ -498,8 +498,8 @@ class AuthoringTool extends Component {
       for (let i = 0; i < audioClips.length; i += 1) {
         const audioClip = audioClips[i];
         if (
-          Math.round(audioClip.start_time * 100) / 100 ===
-          currentVideoProgressFloor
+          currentVideoProgressFloor >= parseFloat(parseFloat(audioClip.start_time) - 0.07) &&
+            currentVideoProgressFloor <= parseFloat(parseFloat(audioClip.start_time) + 0.07)
         ) {
           if (!this.state.currentClip) {
             self.playAudioClip(audioClip);
