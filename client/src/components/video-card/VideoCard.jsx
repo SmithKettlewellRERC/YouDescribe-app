@@ -46,7 +46,8 @@ class VideoCard extends Component {
 
   describeThisVideo() {
     if (this.props.getAppState().isSignedIn) {
-      browserHistory.push('/authoring-tool/' + this.props.youTubeId);
+      alert('We are upgrading our systems! This feature is currently unavailable')
+      // browserHistory.push('/authoring-tool/' + this.props.youTubeId);
     } else {
       alert(this.props.translate('You have to be logged in in order to describe this video'));
     }
