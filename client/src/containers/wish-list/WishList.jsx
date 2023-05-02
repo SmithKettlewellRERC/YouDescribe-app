@@ -141,6 +141,7 @@ class WishList extends Component {
 
   describeThisVideo(youTubeId) {
     if (this.props.getAppState().isSignedIn) {
+      // alert('We are upgrading our systems! This feature is currently unavailable')
       browserHistory.push("/authoring-tool/" + youTubeId);
     } else {
       alert(

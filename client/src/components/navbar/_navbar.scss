@@ -10,3 +10,16 @@
     padding: 8px 12px 8px 12px;
   }
 }
+.upgrade-notice {
+  width: 100%;
+  padding: 1.25rem 3.75rem;
+  text-align: center;
+  font-size: 1rem;
+  background-color: rgba(240, 235, 141, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.upgrade-icon {
+  margin-right: 12px;
+}
