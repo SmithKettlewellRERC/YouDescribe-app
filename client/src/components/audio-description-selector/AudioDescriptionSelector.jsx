@@ -11,6 +11,7 @@ class AudioDescriptionSelector extends Component {
     const selectedAudioDescriptionId = e.target.value;
     if (selectedAudioDescriptionId === 'add') {
       if (this.props.getAppState().isSignedIn) {
+        // alert('We are upgrading our systems! This feature is currently unavailable')
         browserHistory.push('/authoring-tool/' + this.props.videoId);
       } else {
         alert(this.props.translate('You must sign in to perform this action'));
