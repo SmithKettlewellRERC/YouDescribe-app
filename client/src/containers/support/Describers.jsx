@@ -38,6 +38,9 @@ class Describers extends Component {
 
           <p>Many frequently asked questions are answered in our description tutorial playlist. Go to our <a href="https://www.youtube.com/playlist?list=PLNJrbI_nyy9uzywoJfyDRoeKA1SaIEFJ7">Description Tutorial Playlist</a></p>
 
+          <h3>Q: Why is should I refrain from creating audio descriptions starting from 05/08/2023 until 05/15/2023</h3>
+          <p>A: We are in the process of upgrading YouDescribe's systems. We will be starting the upgrade process on 05/08/2023. Until 05/15/2023, users will not be able to create/add new Audio Descriptions to make sure that none of our users' hard work is lost during the upgrade. After 05/15/2023, we will continue to upgrade our systems, but users will be allowed to create/add new Audio Descriptions. We are making some quality of life improvements to improve our users' experience on the YouDescribe platform. We are also very excited to announce that we are rolling out a new YouDescribe Audio Description Editor interface that will hopefully make it easier for users to create new audio descriptions.</p>
+
           <h3>Q: Do I need any kind of training or certification to be a YouDescribe describer?</h3>
           <p>A: No, but the more you know about good audio description, the better and more useful your descriptions will be. Go to <a href="https://www.youtube.com/playlist?list=PLNJrbI_nyy9uzywoJfyDRoeKA1SaIEFJ7">Description Tutorial Playlist</a> to learn the basics of good AD.</p>
 

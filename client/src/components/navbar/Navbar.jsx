@@ -187,7 +187,7 @@ class Navbar extends Component {
             We are upgrading our systems! Starting 05/08/2023 please refrain
             from creating audio descriptions until 05/15/2023 to make sure that
             none of your hard work is lost! Please see the&nbsp;
-            <Link to="/support" className="w3-bar-item">
+            <Link to="/support/describers" className="w3-bar-item">
               support page
             </Link>
             &nbsp;for more details
