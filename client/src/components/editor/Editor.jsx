@@ -114,9 +114,10 @@ const Editor = (props) => {
 
       <div id="tracks">
         {props.tracksComponents}
-        <div id="add-track-row" className="w3-row w3-display-container">
+      </div>
+      <div id="add-track-row" className="w3-row w3-display-container">
           <div className="w3-col l3 m3 s3">
-            <div className="cont">
+            <div className="cont w3-padding-8">
               <div className="w3-left" style={{ paddingRight: "14px" }}>
                 <Button
                   title={props.translate(
@@ -143,7 +144,6 @@ const Editor = (props) => {
             <div id="add-track-space" />
           </div>
         </div>
-      </div>
 
       <div class="w3-row w3-border-top w3-border-black w3-padding">
         <div class="w3-col m1 l1 w3-left-align">
