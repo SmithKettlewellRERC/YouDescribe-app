@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { browserHistory } from "react-router";
 import Polyglot from "node-polyglot";
+
+import Alert from 'react-bootstrap/Alert';
+import { Link } from "react-router";
+
 import Navbar from "../../components/navbar/Navbar.jsx";
 import Footer from "../../components/footer/Footer.jsx";
 import { ourFetch, getLang } from "../../shared/helperFunctions.js";

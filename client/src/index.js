@@ -27,6 +27,8 @@ import Viewers from "./containers/support/Viewers.jsx";
 import Privacy from "./containers/support/Privacy.jsx";
 import UnsupportedBrowser from "./containers/unsupported-browser/UnsupportedBrowser.jsx";
 
+import SystemUpgradeWarning from "./containers/support/SystemUpgradeWarning.jsx";
+
 // video indexer
 import VideoIndexerMerge from "./containers/video-indexer/VideoIndexerMerge.jsx";
 import VideoIndexerDescription from "./containers/video-indexer/VideoIndexerDescription.jsx";
@@ -93,6 +95,7 @@ ReactDOM.render(
       <Route path="/support/embed_tutorial" component={Embed_Tutorial} />
       <Route path="/support/viewers" component={Viewers} />
       <Route path="/support/privacy" component={Privacy} />
+      <Route path="/support/system-upgrade-warning" component={SystemUpgradeWarning} />
       <Route path="/unsupported-browser" component={UnsupportedBrowser} />
       // Video Indexer
       <Route path="/video-indexer-merge" component={VideoIndexerMerge} />
