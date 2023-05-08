@@ -626,8 +626,8 @@ class VideoPage extends Component {
 
   handleAddDescription() {
     if (this.props.getAppState().isSignedIn) {
-      // alert('We are upgrading our systems! This feature is currently unavailable')
-      browserHistory.push("/authoring-tool/" + this.state.videoId);
+      alert('We are upgrading our systems! This feature is currently unavailable')
+      // browserHistory.push("/authoring-tool/" + this.state.videoId);
     } else {
       alert(this.props.translate("You must sign in to perform this action"));
     }
