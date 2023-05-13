@@ -2,12 +2,16 @@ import React from 'react';
 import Button from '../button/Button.jsx';
 import { browserHistory } from 'react-router';
 
+const conf = require("../../shared/config")();
+
+
 const SearchBar = (props) => {
   const updateSearch = (e) => {
     e.preventDefault();
     const searchValue = e.target[0].value;
     const q = encodeURIComponent(searchValue);
-    browserHistory.push(`/search?q=${q}`);
+    // browserHistory.push(`/search?q=${q}`);
+    window.location.replace(`${conf.youDescribeRedirectUrl}/search?q=${q}`);
   };
 
   return (

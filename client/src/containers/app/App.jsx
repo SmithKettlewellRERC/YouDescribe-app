@@ -283,7 +283,8 @@ class App extends Component {
       searchValue,
     });
     const q = encodeURIComponent(searchValue);
-    browserHistory.push(`/search?q=${q}`);
+    // browserHistory.push(`/search?q=${q}`);
+    window.location.replace(`${conf.youDescribeRedirectUrl}/search?q=${q}`);
   }
 
   render() {

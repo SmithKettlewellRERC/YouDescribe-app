@@ -10,6 +10,9 @@ module.exports = () => {
 
   let audioClipsUploadsPath =
     "https://api.youdescribe.org/audio-descriptions-files";
+
+  const youDescribeRedirectUrl = "https://"
+  
   // let audioClipsUploadsPath =
   //   "https://api.youdescribe.org/audio-descriptions-files";
   //let apiUrl = `http://localhost:8080/${apiVersion}`;
@@ -52,6 +55,7 @@ module.exports = () => {
     audioClipsUploadsPath,
     youTubeApiUrl,
     youTubeApiKey,
+    youDescribeRedirectUrl,
     seekToPositionDelayFix,
     googleClientId,
     nudgeIncrementDecrementValue,

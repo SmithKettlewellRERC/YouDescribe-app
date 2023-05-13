@@ -5,6 +5,8 @@ import SearchBar from "../search-bar/SearchBar.jsx";
 import SignInButton from "../sign-in-button/SignInButton.jsx";
 import UserAvatar from "../user-avatar/UserAvatar.jsx";
 import { ExclamationTriangleFill } from "react-bootstrap-icons";
+const conf = require("../../shared/config")();
+
 
 class Navbar extends Component {
   constructor(props) {
@@ -60,7 +62,12 @@ class Navbar extends Component {
           {/* Navbar (sit on top) */}
           <div className="w3-top">
             <div className="w3-bar w3-white w3-card-2 w3-text-indigo">
-              <Link
+              {/* <Link
+                to="/"
+                id="logo"
+                className="w3-bar-item w3-hide-small w3-hide-medium"
+              > */}
+              <a
                 to="/"
                 id="logo"
                 className="w3-bar-item w3-hide-small w3-hide-medium"
@@ -75,9 +82,11 @@ class Navbar extends Component {
                     "youdescribe_logo_full_(indigo_and_grey).png"
                   )}
                 />
-              </Link>
+                </a>
+              {/* </Link> */}
 
-              <Link to="/" id="logo" className="w3-bar-item w3-hide-large">
+              {/* <Link to="/" id="logo" className="w3-bar-item w3-hide-large"> */}
+              <a to="/" id="logo" className="w3-bar-item w3-hide-large">
                 <img
                   alt="YouDescribe home"
                   height="100%"
@@ -88,7 +97,8 @@ class Navbar extends Component {
                     "youdescribe_logo_small_(indigo_and_grey).png"
                   )}
                 />
-              </Link>
+                </a>
+              {/* </Link> */}
 
               <div className="w3-left">
                 <SearchBar
@@ -101,8 +111,13 @@ class Navbar extends Component {
 
               {/* Right-sided navbar links */}
               <div className="w3-right w3-hide-small w3-hide-medium">
-                <Link
+                {/* <Link
                   to="/"
+                  className="w3-bar-item w3-small"
+                  style={{ position: "relative", top: "11px", padding: "8px" }}
+                > */}
+                <a
+                  href="/"
                   className="w3-bar-item w3-small"
                   style={{ position: "relative", top: "11px", padding: "8px" }}
                 >
@@ -110,9 +125,15 @@ class Navbar extends Component {
                     &nbsp;&nbsp;
                   </i>
                   {this.props.translate("RECENT DESCRIPTIONS")}
-                </Link>
-                <Link
+                  </a>
+                {/* </Link> */}
+                {/* <Link
                   to="/wishlist"
+                  className="w3-bar-item w3-small"
+                  style={{ position: "relative", top: "11px", padding: "8px" }}
+                > */}
+                <a
+                  href={`${conf.youDescribeRedirectUrl}/wishlist`}
                   className="w3-bar-item w3-small"
                   style={{ position: "relative", top: "11px", padding: "8px" }}
                 >
@@ -120,7 +141,8 @@ class Navbar extends Component {
                     &nbsp;&nbsp;
                   </i>
                   {this.props.translate("WISH LIST")}
-                </Link>
+                </a>
+                {/* </Link> */}
                 <Link
                   to="/support"
                   className="w3-bar-item w3-small"
@@ -160,24 +182,36 @@ class Navbar extends Component {
             <a onClick={this.navMenuClose} className="w3-large w3-padding-16">
               {this.props.translate("Close")} ×
             </a>
-            <Link
+            {/* <Link
+              to="/"
+              className="w3-bar-item w3-button"
+              onClick={() => document.getElementById("home-heading").focus()}
+            > */}
+            <a
               to="/"
               className="w3-bar-item w3-button"
               onClick={() => document.getElementById("home-heading").focus()}
             >
               <i className="fa fa-home" aria-hidden="true" />{" "}
               {this.props.translate("HOME")}
-            </Link>
-            <Link
+              </a>
+            {/* </Link> */}
+            {/* <Link
               to="/wishlist"
               className="w3-bar-item w3-button"
               onClick={() =>
                 document.getElementById("wish-list-heading").focus()
               }
-            >
+            > */}
+            <a
+                  href={`${conf.youDescribeRedirectUrl}/wishlist`}
+                  className="w3-bar-item w3-button"
+                  style={{ position: "relative", top: "11px", padding: "8px" }}
+                >
               <i className="fa fa-heart" aria-hidden="true" />{" "}
               {this.props.translate("WISH LIST")}
-            </Link>
+              </a>
+            {/* </Link> */}
             {signInComponent}
           </div>
         </nav>

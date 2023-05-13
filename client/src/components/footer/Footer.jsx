@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router';
 import path from 'path';
+const conf = require("../../shared/config")();
+
 
 const getYear = () => {
   const date = new Date();
@@ -21,7 +23,8 @@ const Footer = (props) => (
       {props.translate('YouDescribe is a project of')} <a href="http://www.ski.org" title="External link">The Smith-Kettlewell Eye Research Institute</a>.
     </h5>
     <div>
-      <Link to="/credits" className="footer-links">{props.translate('Credits')}</Link>
+      {/* <Link to="/credits" className="footer-links">{props.translate('Credits')}</Link> */}
+      <a href={`${conf.youDescribeRedirectUrl}/credits`} className="footer-links">{props.translate('Credits')}</a>
       <Link to="/contact" className="footer-links">{props.translate('Contact Us')}</Link>
       <Link to="/support" className="footer-links">{props.translate('Support')}</Link>
     </div>
