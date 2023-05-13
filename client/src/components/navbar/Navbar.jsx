@@ -135,6 +135,7 @@ class Navbar extends Component {
                 <a
                   href={`${conf.youDescribeRedirectUrl}/wishlist`}
                   className="w3-bar-item w3-small"
+                  target='_self'
                   style={{ position: "relative", top: "11px", padding: "8px" }}
                 >
                   <i className="fa fa-heart" aria-hidden="true">
@@ -205,6 +206,7 @@ class Navbar extends Component {
             > */}
             <a
                   href={`${conf.youDescribeRedirectUrl}/wishlist`}
+                  target='_self'
                   className="w3-bar-item w3-button"
                   style={{ position: "relative", top: "11px", padding: "8px" }}
                 >

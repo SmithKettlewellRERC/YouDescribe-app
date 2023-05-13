@@ -24,7 +24,7 @@ const Footer = (props) => (
     </h5>
     <div>
       {/* <Link to="/credits" className="footer-links">{props.translate('Credits')}</Link> */}
-      <a href={`${conf.youDescribeRedirectUrl}/credits`} className="footer-links">{props.translate('Credits')}</a>
+      <a href={`${conf.youDescribeRedirectUrl}/credits`} className="footer-links" target='_self'>{props.translate('Credits')}</a>
       <Link to="/contact" className="footer-links">{props.translate('Contact Us')}</Link>
       <Link to="/support" className="footer-links">{props.translate('Support')}</Link>
     </div>
