@@ -11,7 +11,7 @@ module.exports = () => {
   let audioClipsUploadsPath =
     "https://api.youdescribe.org/audio-descriptions-files";
 
-  const youDescribeRedirectUrl = "https://"
+  const youDescribeRedirectUrl = "https://ydx-dev.youdescribe.org"
   
   // let audioClipsUploadsPath =
   //   "https://api.youdescribe.org/audio-descriptions-files";
