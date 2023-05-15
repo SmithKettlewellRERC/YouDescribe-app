@@ -184,7 +184,7 @@ class Navbar extends Component {
         <div className="upgrade-notice">
           <ExclamationTriangleFill size={24} className="upgrade-icon" />
           <span>
-            We are still in the process of upgrading our systems. However, users can resume creating audio descriptions. Thank you for your patience. Please see the&nbsp;
+            Phase 1 of the YouDescribe System Upgrade has been completed. Users can resume creating audio descriptions. Phase 2 of the YouDescribe System Upgrade will start in the next couple of weeks. Please see the&nbsp;
             <Link to="/support/system-upgrade-warning" className="w3-bar-item">
               support page
             </Link>
