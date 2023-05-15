@@ -182,11 +182,9 @@ class Navbar extends Component {
           </div>
         </nav>
         <div className="upgrade-notice">
-          <ExclamationTriangleFill size={24} className="upgrade-icon"/>
+          <ExclamationTriangleFill size={24} className="upgrade-icon" />
           <span>
-            We are upgrading our systems! Starting 05/08/2023 please refrain
-            from creating audio descriptions until 05/15/2023 to make sure that
-            none of your hard work is lost! Please see the&nbsp;
+            We are still in the process of upgrading our systems. However, users can resume creating audio descriptions. Thank you for your patience. Please see the&nbsp;
             <Link to="/support/system-upgrade-warning" className="w3-bar-item">
               support page
             </Link>
