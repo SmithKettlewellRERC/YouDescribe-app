@@ -31,6 +31,9 @@ class Home extends Component {
   }
 
   componentDidMount() {
+
+    window.location.replace(`${conf.youDescribeRedirectUrl}`);
+    return;
     document.getElementById("navbar").focus();
     document.title = this.props.translate("YouDescribe - Audio Description for YouTube Videos");
     this.fetchingVideosToHome();

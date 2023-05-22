@@ -38,7 +38,7 @@ class SearchPage extends Component {
   }
 
   componentDidMount() {
-    window.location.replace(`https://ydx-dev.youdescribe.org${window.location.pathname}${window.location.search}`);
+    window.location.replace(`${conf.youDescribeRedirectUrl}${window.location.pathname}${window.location.search}`);
     return;
     document.title = `YouDescribe - Search Page`;
     document.getElementById('search-page').focus();
