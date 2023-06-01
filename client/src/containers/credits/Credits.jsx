@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import MemberCard from "../../components/member-card/MemberCard.jsx";
 import { Link } from "react-router";
 import { Container, Row, Col } from "react-grid-system";
+import path from "path";
 
 class Credits extends Component {
   constructor(props) {
@@ -245,8 +246,55 @@ class Credits extends Component {
           <Row justify="center">{this.state.members}</Row>
         </Container>
 
-        {KnowMoreButton}
-      </div>
+        <h1 style={{ textAlign: "center", marginTop: "2rem" }}>
+          This work was supported by grants from:
+        </h1>
+        <Container>
+          <Row justify="center" className="justify-content-md-center">
+            <Col md="content" sm="content" xs="content" className="justify-content-center m-auto">
+              <img
+                alt={"The logo of Ability Central"}
+                src={path.join(
+                  __dirname,
+                  "assets",
+                  "img",
+                  "creditPage",
+                  "AbilityCentral_Credit.png"
+                )}
+                style={{
+                  width: "auto",
+                  height: "100px",
+                }}
+              />
+              <div>
+                Ability Central (formerly The Disabilities Communication Fund)
+              </div>
+            </Col>
+            <Col md="content" sm="content" xs="content" className="justify-content-center m-auto">
+              <img
+                alt={"The logo of NIDILRR (The National Institute on Disability, Independent Living, and Rehabilitation Research)"}
+                src={path.join(
+                  __dirname,
+                  "assets",
+                  "img",
+                  "creditPage",
+                  "NILDLRR_Credit.gif"
+                )}
+                style={{
+                  width: "auto",
+                  height: "100px",
+                }}
+                className="mx-auto d-block"
+              />
+              <div>
+                NILDILRR - RERC on Blindness and Low Vision
+              </div>
+            </Col>
+          </Row>
+        </Container>
+
+        { KnowMoreButton }
+      </div >
     );
   }
 }
