@@ -112,7 +112,7 @@ class VideoCard extends Component {
               <div id="card-author">
                 <div style={{ maxHeight: "50px", overflow: "hidden" }}>
                   <span>
-                    {this.props.translate("Author")}:{this.props.author}
+                    {`${this.props.translate("Author")}: ${this.props.author}`}
                   </span>
                 </div>
                 <span>
