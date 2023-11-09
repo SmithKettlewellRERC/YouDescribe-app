@@ -29,18 +29,18 @@ class VideoCard extends Component {
           userToken: this.props.getAppState().userToken,
         }),
       })
-      .then((res) => {
-        console.log('Success upVote', res);
-      })
-      .catch(err => {
-        switch (err.code) {
-          case 67:
-            alert(this.props.translate('It is not possible to vote again for this video.'));
-            break;
-          default:
-            alert(this.props.translate('It was impossible to vote. Maybe your session has expired. Try to logout and login again.'));
-        }
-      });
+        .then((res) => {
+          console.log('Success upVote', res);
+        })
+        .catch(err => {
+          switch (err.code) {
+            case 67:
+              alert(this.props.translate('It is not possible to vote again for this video.'));
+              break;
+            default:
+              alert(this.props.translate('It was impossible to vote. Maybe your session has expired. Try to logout and login again.'));
+          }
+        });
     }
   }
 
@@ -110,9 +110,14 @@ class VideoCard extends Component {
                 <h3><Link role="link" to={'/video/' + this.props.youTubeId}>{this.props.title}</Link></h3>
               </div>
               <div id="card-author">
-                <span>{this.props.translate('Author')}: {this.props.author}</span>
-                <br/>
-                <span>{'Votes'}: {this.props.votes}</span>
+                <div style={{ maxHeight: "50px", overflow: "hidden" }}>
+                  <span>
+                    {this.props.translate("Author")}:{this.props.author}
+                  </span>
+                </div>
+                <span>
+                  {"Votes"} : {this.props.votes}
+                </span>
                 {/* <a href="#">{this.props.describer}</a> */}
               </div>
             </div>
