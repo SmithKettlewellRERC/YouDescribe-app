@@ -17,7 +17,7 @@ module.exports = () => {
   const youTubeApiUrl = "https://www.googleapis.com/youtube/v3";
 
   // YouDescribe APIKey
-  const youTubeApiKey = "AIzaSyBQFD0fJoEO2l8g0OIrqbtjj2qXXVNO__U";
+  const youTubeApiKey = "AIzaSyDV8QMir3NE8S2jA1GyXvLXyTuSq72FPyE";
 
   // YouDescribe Google Client Id
   const googleClientId =
