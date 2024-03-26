@@ -309,9 +309,16 @@ class VideoPage extends Component {
       })
       .catch((err) => {
         console.log("Unable to load the video you are trying to edit.", err);
-        alert(
-          "Thank you for visiting YouDescribe. This video is not viewable at this time due to YouTube API key limits. Our key is reset by Google at midnight Pacific time."
-        );
+        if(data.items.length == 0){
+          alert(
+            "Video Unavailable!"
+          );
+        }
+        else{
+          alert(
+            "Thank you for visiting YouDescribe. This video is not viewable at this time due to YouTube API key limits. Our key is reset by Google at midnight Pacific time."
+          );
+        }
         //this.goToErrorPage();
       });
   }
