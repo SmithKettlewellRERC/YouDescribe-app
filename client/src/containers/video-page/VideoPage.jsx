@@ -316,7 +316,7 @@ class VideoPage extends Component {
         }
         else{
           alert(
-            "Thank you for visiting YouDescribe. This video is not viewable at this time due to YouTube API key limits. Our key is reset by Google at midnight Pacific time."
+            "Thank you for visiting YouDescribe. This video is not viewable due to YouTube API key limits. Google resets our key at midnight Pacific time."
           );
         }
         //this.goToErrorPage();
