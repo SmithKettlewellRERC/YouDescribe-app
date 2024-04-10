@@ -275,52 +275,51 @@ class VideoPage extends Component {
     const self = this;
     const url = `${conf.youTubeApiUrl}/videos?id=${this.state.videoId}&part=contentDetails,snippet,statistics&forUsername=iamOTHER&key=${conf.youTubeApiKey}`;
 
-    // Use custom fetch for cross-browser compatability
+    // Use custom fetch for cross-browser compatibility
     ourFetch(url)
-      .then((data) => {
-        this.videoDurationInSeconds = convertISO8601ToSeconds(
-          data.items[0].contentDetails.duration
-        );
-        this.setState(
-          {
-            videoTitle: data.items[0].snippet.title,
-            videoAuthor: data.items[0].snippet.channelTitle,
-            videoPublishedAt: convertISO8601ToDate(
-              data.items[0].snippet.publishedAt
-            ),
-            videoDescription: data.items[0].snippet.description,
-            videoViews: convertViewsToCardFormat(
-              data.items[0].statistics.viewCount
-            ),
-            videoLikes: convertLikesToCardFormat(
-              data.items[0].statistics.likeCount
-            ),
+        .then((data) => {
 
-            videoDurationInSeconds: this.videoDurationInSeconds,
-            videoDurationToDisplay: convertSecondsToEditorFormat(
-              this.videoDurationInSeconds
-            ),
-          },
-          () => {
-            document.title = `YouDescribe - ${this.state.videoTitle}`;
-            self.initVideoPlayer();
+          if (data.items.length === 0) {
+            console.log("Video Unavailable!");
+            alert("Video Unavailable!");
+            return;
           }
-        );
-      })
-      .catch((err) => {
-        console.log("Unable to load the video you are trying to edit.", err);
-        if(data.items.length == 0){
-          alert(
-            "Video Unavailable!"
+
+          this.videoDurationInSeconds = convertISO8601ToSeconds(
+              data.items[0].contentDetails.duration
           );
-        }
-        else{
-          alert(
-            "Thank you for visiting YouDescribe. This video is not viewable due to YouTube API key limits. Google resets our key at midnight Pacific time."
+          this.setState(
+              {
+                videoTitle: data.items[0].snippet.title,
+                videoAuthor: data.items[0].snippet.channelTitle,
+                videoPublishedAt: convertISO8601ToDate(
+                    data.items[0].snippet.publishedAt
+                ),
+                videoDescription: data.items[0].snippet.description,
+                videoViews: convertViewsToCardFormat(
+                    data.items[0].statistics.viewCount
+                ),
+                videoLikes: convertLikesToCardFormat(
+                    data.items[0].statistics.likeCount
+                ),
+
+                videoDurationInSeconds: this.videoDurationInSeconds,
+                videoDurationToDisplay: convertSecondsToEditorFormat(
+                    this.videoDurationInSeconds
+                ),
+              },
+              () => {
+                document.title = `YouDescribe - ${this.state.videoTitle}`;
+                self.initVideoPlayer();
+              }
           );
-        }
-        //this.goToErrorPage();
-      });
+        })
+        .catch((err) => {
+          console.log("Unable to load the video you are trying to edit.", err);
+          alert(
+              "Thank you for visiting YouDescribe. This video is not viewable due to YouTube API key limits. Google resets our key at midnight Pacific time."
+          );
+        });
   }
 
   // 7
