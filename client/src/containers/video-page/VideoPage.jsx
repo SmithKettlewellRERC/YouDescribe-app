@@ -35,6 +35,7 @@ class VideoPage extends Component {
 
     this.state = {
       videoId: props.params.videoId,
+      videoUnavailable: false,
 
       // Audio descriptions
       inlineClipsCurrentlyPlaying: [],
@@ -281,6 +282,7 @@ class VideoPage extends Component {
 
           if (data.items.length === 0) {
             console.log("Video Unavailable!");
+            self.setState({ videoUnavailable: true });
             alert("Video Unavailable!");
             return;
           }
@@ -966,8 +968,16 @@ class VideoPage extends Component {
             <ToastContainer />
             <ShareBar videoTitle={this.state.videoTitle} />
             <div id="video">
-              <Spinner translate={this.props.translate} />
-              <div id="playerVP" />
+              {this.state.videoUnavailable ? (
+                  <div className="video-unavailable">
+                    {this.props.translate("Video Unavailable")}
+                  </div>
+              ) : (
+                  <div>
+                    <Spinner translate={this.props.translate} />
+                    <div id="playerVP" />
+                  </div>
+              )}
             </div>
             <VideoPlayerControls
               getAppState={this.props.getAppState}
