@@ -188,11 +188,12 @@ class Navbar extends Component {
             significant upgrade. Our latest version now includes AI-generated
             audio descriptions, making it easier than ever to create and access
             high-quality audio content. We've also introduced multiple updates
-            to improve functionality and user experience. Visit our updated
+            to improve functionality and user experience. 
+            {/* Visit our updated
             website to explore the new features and improvements:{" "}
             <a href="https://ydx.youdescribe.org/" className="w3-bar-item">
               YouDescribe
-            </a>
+            </a> */}
           </span>
         </div>
       </React.Fragment>
