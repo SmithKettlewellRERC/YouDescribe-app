@@ -184,11 +184,15 @@ class Navbar extends Component {
         <div className="upgrade-notice">
           <ExclamationTriangleFill size={24} className="upgrade-icon" />
           <span>
-            Phase 1 of the YouDescribe System Upgrade has been completed. Users can resume creating audio descriptions. Phase 2 of the YouDescribe System Upgrade will start in the next couple of weeks. Please see the&nbsp;
-            <Link to="/support/system-upgrade-warning" className="w3-bar-item">
-              support page
-            </Link>
-            &nbsp;for more details
+            We are thrilled to announce that YouDescribe has undergone a
+            significant upgrade. Our latest version now includes AI-generated
+            audio descriptions, making it easier than ever to create and access
+            high-quality audio content. We've also introduced multiple updates
+            to improve functionality and user experience. Visit our updated
+            website to explore the new features and improvements:{" "}
+            <a href="https://ydx.youdescribe.org/" className="w3-bar-item">
+              YouDescribe
+            </a>
           </span>
         </div>
       </React.Fragment>
