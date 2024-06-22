@@ -17,7 +17,7 @@ const Support = (props) => (
 
       <SupportNav translate={props.translate} />
 
-      <p>If you cannot find an answer to your question, please email <a href="mailto: info@youdescribe.org">info@youdescribe.org</a></p>
+      <p>If you cannot find an answer to your question, please email <a href="mailto: ilmi@sfsu.edu">ilmi@sfsu.edu</a></p>
 
     </main>
   </div>

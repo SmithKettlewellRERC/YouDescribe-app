@@ -43,7 +43,7 @@ class Viewers extends Component {
           <p>A: Yes, as long as the video is posted at YouTube. You can create a channel of your own to upload the content you want. Directions supplied at <a href="https://support.google.com/youtube/answer/1646861?hl=en">Google Support - How to create your own YouTube channel</a>.</p>
 
           <h3>Q: How can I send feedback or reach technical support?</h3>
-          <p>A: Please email us at: <a href="mailto: info@youdescribe.org">info@youdescribe.org</a></p>
+          <p>A: Please email us at: <a href="mailto: ilmi@sfsu.edu">ilmi@sfsu.edu</a></p>
 
           <p><a href="#top">Back to top</a></p>
         </main>
