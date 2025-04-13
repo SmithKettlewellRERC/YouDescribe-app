@@ -14,7 +14,7 @@ const Contact = () => (
         2318 Fillmore St<br />
         San Francisco, CA 94115<br />
       </p>
-      <p>Email questions, comments, bug reports, and feature requests to: <a href="mailto:ilmi@sfsu.edu?subject=[YouDescribe Feedback]">ilmi@sfsu.edu</a></p>
+      <p>Email questions, comments, bug reports, and feature requests to: <a href="mailto:info@youdescribe.org?subject=[YouDescribe Feedback]">info@youdescribe.org</a></p>
     </main>
 
   </div>

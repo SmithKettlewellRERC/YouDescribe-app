@@ -16,7 +16,7 @@ const UnsupportedBrowser = () => (
 
       <p>We recommend <a href="https://www.google.com/chrome/">Google Chrome</a> or <a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a> to view, describe, and rate our current selection of videos.</p>
 
-      <p>If you need other assistance please email us at <a href="mailto:ilmi@sfsu.edu">ilmi@sfsu.edu</a></p>
+      <p>If you need other assistance please email us at <a href="mailto:info@youdescribe.org">info@youdescribe.org</a></p>
 
     </main>
   </div>

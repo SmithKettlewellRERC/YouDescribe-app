@@ -106,7 +106,7 @@ class Tutorial extends Component {
           <p>A: Your descriptions will be stored on YouDescribe until you delete them.</p>
 
           <h3>Q: How can I send feedback or reach technical support?</h3>
-          <p>A: Please email us at: <a href="mailto: ilmi@sfsu.edu">ilmi@sfsu.edu</a> or join our online community at <a href="https://www.facebook.com/youdescribe/">Facebook</a>.</p>
+          <p>A: Please email us at: <a href="mailto: info@youdescribe.org">info@youdescribe.org</a> or join our online community at <a href="https://www.facebook.com/youdescribe/">Facebook</a>.</p>
 
           <p><a href="#top">Back to top</a></p>
 

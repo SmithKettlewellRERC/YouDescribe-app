@@ -59,7 +59,7 @@ class About extends Component {
           <p>A: Sharing can be done in a couple of ways. On the left of every video is a quick share link for email, Facebook, and twitter. It generates an easy to share template for each social media platform. To share on a webpage one can copy the web address from the browser field at the top and use iframe or an object tag to embed the desired video.</p>
 
           <h3>Q: How can I send feedback or reach technical support?</h3>
-          <p>A: Please email us at: <a href="mailto: ilmi@sfsu.edu">ilmi@sfsu.edu</a></p>
+          <p>A: Please email us at: <a href="mailto: info@youdescribe.org">info@youdescribe.org</a></p>
 
           <p><a href="#top">Back to top</a></p>
         </main>
