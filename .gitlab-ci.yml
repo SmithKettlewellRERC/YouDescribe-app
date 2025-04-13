@@ -89,6 +89,7 @@ deploy-prod:
       when: on_success
     
   script:
+    - git config --global --add safe.directory $(pwd)
     - echo "Stopping old YouDescribe instance"
     # Stop the currently running YouDescribe container if there is one running
     - docker stop $(docker ps -a -q --filter="name=${CI_PROJECT_NAME}") || true
