@@ -1,6 +1,5 @@
 const webpack = require("webpack");
 const path = require("path");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
   entry: [path.join(__dirname, "client", "src", "index.js")],
@@ -14,7 +13,11 @@ module.exports = {
       {
         test: /\.jsx?$/,
         loader: "babel-loader",
-        exclude: /node_modules/,
+        exclude: /node_modules\/(?!react-tag-input)/,
+        options: {
+          presets: ["es2015", "react"],
+          plugins: ["transform-es2015-destructuring", "transform-object-rest-spread"]
+        }
       },
       {
         test: /\.scss$/,
