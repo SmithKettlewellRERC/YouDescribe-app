@@ -1,5 +1,5 @@
 image: 
-  name: node:14
+  name: node:18
 
 variables:
     CI_PROJECT_NAME: youdescribe
