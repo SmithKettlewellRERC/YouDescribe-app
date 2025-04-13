@@ -1,6 +1,5 @@
 const webpack = require("webpack");
 const path = require("path");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
   entry: [path.join(__dirname, "client", "src", "index.js")],
@@ -10,29 +9,29 @@ module.exports = {
     filename: "bundle.js",
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
-        loader: "babel-loader",
-        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+          },
+        },
+        exclude: /node_modules\/(?!react-tag-input)/,
       },
       {
         test: /\.scss$/,
-        loaders: ["style-loader", "css-loader", "sass-loader"],
+        use: ["style-loader", "css-loader", "sass-loader"],
       },
-      /* start of css loader */
       {
         test: /\.css$/,
         include: /node_modules/,
-        loaders: ["style-loader", "css-loader"],
+        use: ["style-loader", "css-loader"],
       },
-      /* end of css loader */
     ],
   },
   stats: {
     colors: true,
   },
-  // plugins: [
-  //   new webpack.NoEmitOnErrorsPlugin(),
-  // ],
 };

@@ -81,7 +81,7 @@
     "@babel/core": "^7.23.2",
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-react": "^7.22.15",
-    "babel": "^6.23.0",
+    "babel": "^8.2.2",
     "babel-core": "^6.26.3",
     "babel-loader": "^6.4.1",
     "babel-plugin-transform-es2015-destructuring": "^6.23.0",
