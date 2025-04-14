@@ -1,14 +1,14 @@
-image: 
+image:
   name: node:14
 
 variables:
-    CI_PROJECT_NAME: youdescribe
+  CI_PROJECT_NAME: youdescribe
 
 stages:
   - build
   # - test # Will add this test stage when automated tests are created
   - deploy
- 
+
 cache:
   paths:
     - node_modules/
@@ -24,7 +24,7 @@ build-stage:
       when: always
 
   script:
-    - echo "Building YouDescribe in staging" 
+    - echo "Building YouDescribe in staging"
     - docker build -t "${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_PIPELINE_ID}" .
     - echo "Build complete"
 
@@ -39,7 +39,7 @@ build-prod:
       when: always
   
   script:
-    - echo "Building YouDescribe in prod" 
+    - echo "Building YouDescribe in prod"
     - docker build -t "${CI_PROJECT_NAME}:${CI_COMMIT_REF_NAME}-1.${CI_PIPELINE_ID}" .
     - echo "Build completed"
 
@@ -64,9 +64,9 @@ deploy-stage:
     - staging
 
   rules:
-  - if: $CI_COMMIT_BRANCH == "dev"
-    when: on_success
-    
+    - if: $CI_COMMIT_BRANCH == "dev"
+      when: on_success
+
   script:
     - echo "Stopping old YouDescribe instance"
     # Stop the currently running YouDescribe container if there is one running
@@ -87,9 +87,8 @@ deploy-prod:
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
       when: on_success
-    
+
   script:
-    - git config --global --add safe.directory $(pwd)
     - echo "Stopping old YouDescribe instance"
     # Stop the currently running YouDescribe container if there is one running
     - docker stop $(docker ps -a -q --filter="name=${CI_PROJECT_NAME}") || true

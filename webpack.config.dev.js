@@ -1,37 +1,52 @@
-const webpack = require("webpack");
-const path = require("path");
+const webpack = require('webpack');
+const path = require('path');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 
 module.exports = {
-  entry: [path.join(__dirname, "client", "src", "index.js")],
+  entry: [
+    'webpack-hot-middleware/client?reload=true',
+    path.join(__dirname, 'client', 'src', 'index.js'),
+  ],
   output: {
-    path: path.join(__dirname, "client", "build", "assets"),
-    publicPath: "/assets/",
-    filename: "bundle.js",
+    path: path.join(__dirname, 'client', 'build', 'assets'),
+    publicPath: '/assets/',
+    filename: 'bundle.js',
   },
   module: {
-    rules: [
+    loaders: [
       {
         test: /\.jsx?$/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env", "@babel/preset-react"],
-          },
-        },
-        exclude: /node_modules\/(?!react-tag-input)/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
       },
       {
         test: /\.scss$/,
-        use: ["style-loader", "css-loader", "sass-loader"],
+        loaders: ['style-loader', 'css-loader', 'sass-loader'],
       },
+      /* start of css loader */
       {
         test: /\.css$/,
         include: /node_modules/,
-        use: ["style-loader", "css-loader"],
+        loaders: ['style-loader', 'css-loader'],
       },
+      /* end of css loader */
     ],
   },
   stats: {
     colors: true,
   },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
+    // new ExtractTextPlugin({
+    //   filename: './main.css',
+    //   allChunks: true,
+    // }),
+  ],
+  // resolve: {
+  //   root: [
+  //     path.resolve('./client'),
+  //   ],
+  // },
 };
