@@ -49,8 +49,8 @@
     "react-contenteditable": "^3.3.4",
     "react-data-table-component": "^6.11.8",
     "react-datepicker": "^2.11.0",
-    "react-dnd": "7.4.5",
-    "react-dnd-html5-backend": "7.4.4",
+    "react-dnd": "7.6.2",
+    "react-dnd-html5-backend": "7.6.2",
     "react-dom": "17.0.2",
     "react-draggable": "4.4.1",
     "react-easy-table": "^1.0.3",
@@ -101,8 +101,5 @@
     "style-loader": "^0.13.2",
     "webpack-dev-middleware": "^1.10.1",
     "webpack-hot-middleware": "^2.17.1"
-  },
-  "resolutions": {
-    "dnd-core": "7.4.4"
   }
 }
