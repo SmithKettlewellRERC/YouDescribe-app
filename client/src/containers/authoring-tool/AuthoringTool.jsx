@@ -13,7 +13,7 @@ import { ourFetch, getLang } from "../../shared/helperFunctions";
 import { browserHistory } from "react-router";
 
 /* start of custom tags */
-import { WithOutContext as ReactTags } from "react-tag-input";
+import Select from "react-select";
 import Button from "../../components/button/Button.jsx";
 import { ChevronCompactLeft, TrophyFill } from "react-bootstrap-icons";
 /* end of custom tags */
@@ -1504,6 +1504,11 @@ class AuthoringTool extends Component {
 
   handleSave() {
     const url = `${conf.apiUrl}/videos/updatecustomtags`;
+    const formattedTags = this.state.tags.map(tag => ({
+      id: tag.id || tag.value,
+      text: tag.text || tag.label
+    }));
+
     const optionObj = {
       method: "POST",
       headers: {
@@ -1511,13 +1516,21 @@ class AuthoringTool extends Component {
       },
       body: JSON.stringify({
         id: this.state.videoId,
-        tags: this.state.tags,
+        tags: formattedTags,
       }),
     };
+
     ourFetch(url, true, optionObj).then((response) => {
       alert("Your custom tags have been successfully saved!");
     });
   }
+
+  handleSelectChange = (newValue) => {
+    this.setState({
+      tags: newValue || []
+    });
+  };
+
   /* end of custom tags */
 
   // 1
@@ -1603,16 +1616,16 @@ class AuthoringTool extends Component {
             <br />
             <br />
             <div className="w3-col w3-margin-bottom">
-              <ReactTags
-                placeholder="Add custom tags here"
-                tags={this.state.tags}
-                suggestions={this.state.suggestions}
-                delimiters={this.state.delimiters}
-                handleDelete={this.handleDelete}
-                handleAddition={this.handleAddition}
-                handleDrag={this.handleDrag}
-                handleTagClick={this.handleTagClick}
-                inputFieldPosition="top"
+              <Select
+                  placeholder="Add custom tags here"
+                  value={this.state.tags}
+                  options={this.state.suggestions}
+                  onChange={this.handleSelectChange}
+                  isMulti
+                  isClearable
+                  isCreatable
+                  className="react-select-container"
+                  classNamePrefix="react-select"
               />
               <br />
               <Button
