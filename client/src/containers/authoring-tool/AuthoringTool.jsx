@@ -104,6 +104,7 @@ class AuthoringTool extends Component {
     this.handleDrag = this.handleDrag.bind(this);
     this.handleTagClick = this.handleTagClick.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
     /* end of custom tags */
     /* start of email */
     this.sendOptInEmail = this.sendOptInEmail.bind(this);
@@ -1525,11 +1526,11 @@ class AuthoringTool extends Component {
     });
   }
 
-  handleSelectChange = (newValue) => {
+  handleSelectChange(newValue) {
     this.setState({
       tags: newValue || []
     });
-  };
+  }
 
   /* end of custom tags */
 
