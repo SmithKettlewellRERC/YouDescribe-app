@@ -13,7 +13,7 @@ import { ourFetch, getLang } from "../../shared/helperFunctions";
 import { browserHistory } from "react-router";
 
 /* start of custom tags */
-import { WithContext as ReactTags } from "react-tag-input";
+import { WithOutContext as ReactTags } from "react-tag-input";
 import Button from "../../components/button/Button.jsx";
 import { ChevronCompactLeft, TrophyFill } from "react-bootstrap-icons";
 /* end of custom tags */
