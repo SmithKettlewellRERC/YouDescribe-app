@@ -297,7 +297,7 @@ class App extends Component {
           translate={translate}
           updateSearch={(searchValue) => this.clickHandler(searchValue)}
         />
-        <UpgradeModal />
+        {/*<UpgradeModal />*/}
         <FloatingNotification />
         {React.cloneElement(this.props.children, {
           getAppState: this.getAppState,

@@ -181,19 +181,19 @@ class Navbar extends Component {
             {signInComponent}
           </div>
         </nav>
-        <div className="upgrade-notice">
-          <ExclamationTriangleFill size={24} className="upgrade-icon" />
-          <span>
-            We are thrilled to announce that YouDescribe has undergone a
-            significant upgrade. Our latest version now includes AI-generated
-            audio descriptions, making it easier than ever to create and access
-            high-quality audio content. We've also introduced multiple updates
-            to improve functionality and user experience. Visit our updated
-            website to explore the new features and improvements:{" "}
-            <a href="https://ydx.youdescribe.org/" className="w3-bar-item">
-              YouDescribe
+        <div className="upgrade-notice-enhanced">
+          <div className="upgrade-notice-content">
+            <div className="upgrade-icon-container">
+              <ExclamationTriangleFill size={28} className="upgrade-icon pulse" />
+            </div>
+            <div className="upgrade-text">
+              <strong>IMPORTANT:</strong> The old version will be discontinued in 30 days!
+              <span className="highlight-text">Switch now to access AI-powered audio descriptions</span>
+            </div>
+            <a href="https://ydx.youdescribe.org/" className="upgrade-cta-button">
+              Switch to New Version
             </a>
-          </span>
+          </div>
         </div>
       </React.Fragment>
     );
