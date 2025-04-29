@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { browserHistory } from "react-router";
 import Polyglot from "node-polyglot";
-import UpgradeModal from '../../components/upgrade-modal/UpgradeModal';
-import FloatingNotification from '../../components/floating-notification/FloatingNotification';
+import UpgradeModal from '../../components/upgrade-modal/UpgradeModal.jsx';
+import FloatingNotification from '../../components/floating-notification/FloatingNotification.jsx';
 
 import Alert from 'react-bootstrap/Alert';
 import { Link } from "react-router";
