@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { browserHistory } from "react-router";
 import Polyglot from "node-polyglot";
+import UpgradeModal from '../../components/upgrade-modal/UpgradeModal';
+import FloatingNotification from '../../components/floating-notification/FloatingNotification';
 
 import Alert from 'react-bootstrap/Alert';
 import { Link } from "react-router";
@@ -295,6 +297,8 @@ class App extends Component {
           translate={translate}
           updateSearch={(searchValue) => this.clickHandler(searchValue)}
         />
+        <UpgradeModal />
+        <FloatingNotification />
         {React.cloneElement(this.props.children, {
           getAppState: this.getAppState,
           getVideoProgress: this.getVideoProgress,

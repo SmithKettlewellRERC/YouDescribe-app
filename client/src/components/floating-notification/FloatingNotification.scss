@@ -1,0 +1,119 @@
+.floating-notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  font-family: sans-serif;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+
+  &.collapsed {
+    width: 50px;
+    height: 50px;
+
+    .notification-collapsed {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #3f51b5;
+      color: white;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      position: relative;
+
+      svg {
+        animation: pulse 2s infinite;
+      }
+
+      .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: #f44336;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        font-weight: bold;
+      }
+    }
+  }
+
+  &.expanded {
+    width: 300px;
+
+    .notification-expanded {
+      background-color: white;
+      border: 2px solid #3f51b5;
+      border-radius: 8px;
+      overflow: hidden;
+
+      .notification-header {
+        background-color: #3f51b5;
+        color: white;
+        padding: 0.5rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h4 {
+          margin: 0;
+          font-size: 1rem;
+        }
+
+        .minimize-button {
+          background: none;
+          border: none;
+          color: white;
+          font-size: 1.5rem;
+          line-height: 1;
+          cursor: pointer;
+          padding: 0;
+        }
+      }
+
+      .notification-content {
+        padding: 1rem;
+
+        p {
+          margin-top: 0;
+          margin-bottom: 1rem;
+        }
+
+        .switch-button {
+          display: block;
+          background-color: #3f51b5;
+          color: white;
+          text-align: center;
+          padding: 0.5rem;
+          border-radius: 4px;
+          text-decoration: none;
+          font-weight: bold;
+
+          &:hover {
+            background-color: #303f9f;
+          }
+        }
+      }
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}

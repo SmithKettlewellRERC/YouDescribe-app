@@ -1,0 +1,62 @@
+.upgrade-modal {
+  .modal-content {
+    border-radius: 8px;
+    border: none;
+  }
+
+  .modal-header {
+    background-color: #3f51b5;
+    color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+
+    .close {
+      color: white;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+  }
+
+  .upgrade-feature-list {
+    h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      padding-left: 1.5rem;
+      margin-bottom: 1.5rem;
+
+      li {
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    p {
+      font-weight: bold;
+      color: #f44336;
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: space-between;
+
+    .form-check {
+      flex-grow: 1;
+    }
+
+    .btn-primary {
+      background-color: #3f51b5;
+      border-color: #3f51b5;
+
+      &:hover {
+        background-color: #303f9f;
+        border-color: #303f9f;
+      }
+    }
+  }
+}
